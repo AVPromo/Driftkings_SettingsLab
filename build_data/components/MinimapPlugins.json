@@ -1,0 +1,7 @@
+{
+    "enabled": true,
+    "files": {
+        "res/scripts/client/Driftkings/battle/minimap.pyc": "build/staging/res/scripts/client/Driftkings/battle/minimap.pyc",
+        "res/gui/maps/Driftkings/Minimap/**": "mod/res/gui/maps/Driftkings/Minimap/**"
+    }
+}

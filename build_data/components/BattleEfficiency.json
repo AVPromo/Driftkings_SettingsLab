@@ -1,0 +1,10 @@
+{
+    "enabled": true,
+    "files": {
+        "res/scripts/client/Driftkings/components/battle_efficiency.pyc": "build/staging/res/scripts/client/Driftkings/components/battle_efficiency.pyc",
+        "res/gui/gameface/mods/Driftkings/BattleEfficiency/model.html": "mod/res/gui/gameface/mods/Driftkings/BattleEfficiency/model.html",
+        "res/gui/gameface/mods/Driftkings/BattleEfficiency/results.css": "mod/res/gui/gameface/mods/Driftkings/BattleEfficiency/results.css",
+        "res/gui/gameface/mods/Driftkings/BattleEfficiency/results.js": "mod/res/gui/gameface/mods/Driftkings/BattleEfficiency/results.js",
+        "res/gui/gen_resources/driftkings.DriftkingsBattleEfficiency.json": "mod/res/gui/gen_resources/driftkings.DriftkingsBattleEfficiency.json"
+    }
+}

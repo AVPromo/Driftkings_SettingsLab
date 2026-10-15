@@ -1,0 +1,9 @@
+<audio_mods.xml>
+    <loadBanks>
+        <bank><name>driftkings_sixthsense.bnk</name></bank>
+    </loadBanks>
+    <events/>
+    <switches/>
+    <RTPCs/>
+    <states/>
+</audio_mods.xml>

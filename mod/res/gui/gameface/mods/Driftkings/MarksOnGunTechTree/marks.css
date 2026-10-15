@@ -1,0 +1,25 @@
+.dk-tech-marks {
+    position: absolute;
+    left: 0;
+    top: -18rem;
+    display: flex;
+    align-items: center;
+    color: #f8f4e8;
+    font-size: 14rem;
+    font-weight: bold;
+    line-height: 18rem;
+    white-space: nowrap;
+    text-shadow: 0 1rem 3rem #000;
+    pointer-events: none;
+    z-index: 5;
+}
+.dk-tech-marks__mastery {
+    width: 24rem;
+    height: 24rem;
+    object-fit: contain;
+    margin-left: 5rem;
+}
+
+.dk-tech-marks { border:1rem solid rgba(255,255,255,.10);border-radius:3rem;background:rgba(18,21,24,.75);padding:2rem 5rem;line-height:18rem;letter-spacing:.2rem; }
+.dk-tech-marks__percent { color:#E8E4DA; }
+.dk-tech-marks__mastery { width:20rem;height:20rem;margin-left:6rem; }

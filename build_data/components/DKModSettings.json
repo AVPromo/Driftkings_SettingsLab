@@ -1,0 +1,7 @@
+{
+    "enabled": true,
+    "files": {
+        "res/gui/gameface/mods/Driftkings/DKModSettings/**": "mod/res/gui/gameface/mods/Driftkings/DKModSettings/**",
+        "res/gui/gen_resources/driftkings.DriftkingsDKModSettings.json": "mod/res/gui/gen_resources/driftkings.DriftkingsDKModSettings.json"
+    }
+}

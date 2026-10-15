@@ -1,0 +1,8 @@
+{
+    "enabled": true,
+    "files": {
+        "res/scripts/client/Driftkings/battle/sixth_sense.pyc": "build/staging/res/scripts/client/Driftkings/battle/sixth_sense.pyc",
+        "res/gui/maps/icons/SixthSense/**": "mod/res/gui/maps/icons/SixthSense/**",
+        "res/audioww/driftkings_sixthsense.xml": "mod/res/audioww/driftkings_sixthsense.xml"
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "enabled": true,
+    "files": {
+        "res/scripts/client/Driftkings/lobby/hangar_options.pyc": "build/staging/res/scripts/client/Driftkings/lobby/hangar_options.pyc",
+        "res/gui/gameface/mods/Driftkings/HangarClock/model.html": "mod/res/gui/gameface/mods/Driftkings/HangarClock/model.html",
+        "res/gui/gameface/mods/Driftkings/HangarClock/clock.js": "mod/res/gui/gameface/mods/Driftkings/HangarClock/clock.js",
+        "res/gui/gameface/mods/Driftkings/HangarClock/clock.css": "mod/res/gui/gameface/mods/Driftkings/HangarClock/clock.css",
+        "res/gui/gen_resources/driftkings.DriftkingsHangarClock.json": "mod/res/gui/gen_resources/driftkings.DriftkingsHangarClock.json",
+        "res/gui/maps/Driftkings/clock/clockBg.png": "mod/res/gui/maps/Driftkings/clock/clockBg.png",
+        "res/gui/maps/Driftkings/clock/XVM-LICENSE.txt": "mod/res/gui/maps/Driftkings/clock/XVM-LICENSE.txt",
+        "res/gui/gameface/mods/Driftkings/HangarClock/header_options.js": "mod/res/gui/gameface/mods/Driftkings/HangarClock/header_options.js"
+    }
+}

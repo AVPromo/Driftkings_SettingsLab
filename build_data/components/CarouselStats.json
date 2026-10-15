@@ -1,0 +1,14 @@
+{
+    "enabled": true,
+    "files": {
+        "res/gui/maps/Driftkings/Carroucel/**": "mod/res/gui/maps/Driftkings/Carroucel/**",
+        "res/scripts/client/Driftkings/lobby/carousel.pyc": "build/staging/res/scripts/client/Driftkings/lobby/carousel.pyc",
+        "res/gui/gameface/mods/Driftkings/CarouselStats/model.html": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/model.html",
+        "res/gui/gameface/mods/Driftkings/CarouselStats/carousel.js": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel.js",
+        "res/gui/gameface/mods/Driftkings/CarouselStats/carousel.css": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel.css",
+        "res/gui/gameface/mods/Driftkings/CarouselStats/carousel_layout.js": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel_layout.js",
+        "res/gui/gameface/mods/Driftkings/CarouselStats/carousel_native.js": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel_native.js",
+        "res/gui/gameface/_dist/production/mono/hangar/main/bundle.js": "build/gameface/carousel/bundle.js",
+        "res/gui/gen_resources/driftkings.DriftkingsCarouselStats.json": "mod/res/gui/gen_resources/driftkings.DriftkingsCarouselStats.json"
+    }
+}

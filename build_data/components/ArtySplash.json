@@ -1,0 +1,7 @@
+{
+    "enabled": true,
+    "files": {
+        "res/scripts/client/Driftkings/battle/arty_splash.pyc": "build/staging/res/scripts/client/Driftkings/battle/arty_splash.pyc",
+        "res/objects/**": "mod/res/objects/**"
+    }
+}

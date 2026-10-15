@@ -1,0 +1,11 @@
+{
+  "game_version": "2.4.1.0",
+  "game_root": "D:/Games/World_of_Tanks_EU",
+  "ui_dependency_directory": "build/dependencies/2.4.1",
+  "ui_dependency_files": [
+    "me.poliroid.modslistapi_1.8.0.wotmod",
+    "net.openwg.gameface_1.2.2.wotmod"
+  ],
+  "reference_source_version": "2.4.1.5488",
+  "reference_source": "E:\\Wot_Mods_\\Drift_Kings_ModPack\\WoT_Tools\\wot-src-EU"
+}
