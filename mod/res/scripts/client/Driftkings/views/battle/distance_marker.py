@@ -23,7 +23,7 @@ def _component():
 
 def serializeConfigParams():
     textColor = settings_service.getComponentDict(_component().config)[DISTANCE_MARKER.TEXT_COLOR]
-    if isinstance(textColor, str):
+    if isinstance(textColor, basestring):
         if textColor.startswith('#'):
             textColor = textColor[1:]
         hex_color = '0x' + textColor
