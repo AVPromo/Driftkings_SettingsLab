@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from Driftkings.core.hooks import on_event
+from Driftkings.common.utils import events
 import gui.shared.tooltips.vehicle as tooltips
 from CurrentVehicle import g_currentVehicle
 from HeroTank import HeroTank
@@ -316,9 +318,8 @@ class AutoLoginHandler:
 autoLogin = AutoLoginHandler()
 
 
-@override(LoginView, '_populate')
-def new__LoginViewPopulate(func, self):
-    func(self)
+@on_event(events.LoginView.populate.after)
+def new__LoginViewPopulate(self):
     if not isReplay() and not getattr(self.loginManager, 'wgcAvailable', False):
         autoLogin.auto_login(self)
 

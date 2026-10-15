@@ -27,10 +27,18 @@ class BattleViews(object):
             self.visibility = hudVisibility
             self.registration = BattlePackageRegistration()
             self.register(ALIAS, OverlayView, OverlayConfig())
-        if self.visibility is not None:
-            self.visibility.start()
-        self.registration.install(self.definitions)
-        self.active = True
+        try:
+            if self.visibility is not None:
+                self.visibility.start()
+            self.registration.install(self.definitions)
+            self.active = True
+        except Exception:
+            try:
+                self.registration.uninstall()
+            finally:
+                if self.visibility is not None:
+                    self.visibility.stop()
+            raise
 
     def stop(self):
         if not self.active:

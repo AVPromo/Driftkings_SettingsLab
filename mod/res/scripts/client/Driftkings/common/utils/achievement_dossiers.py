@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 from gui.shared.gui_items.dossier.achievements.mark_on_gun import MarkOnGunAchievement
 
-from Driftkings.common.utils.monkeypatch import override
+from Driftkings.core.hooks import override
 
 _dossiers = OrderedDict()
 _MAX_DOSSIERS = 256
@@ -22,3 +22,11 @@ def _rememberDossier(func, self, dossier, value=None):
 def getAchievementDossier(achievement):
     item = _dossiers.get(id(achievement))
     return item[1] if item is not None and item[0] is achievement else None
+
+
+class DossierService(object):
+    def start(self):
+        pass
+
+    def stop(self):
+        _dossiers.clear()

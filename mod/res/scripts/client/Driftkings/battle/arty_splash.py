@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Driftkings.common.utils import events
 import BigWorld
 import Math
 from Avatar import PlayerAvatar
@@ -9,7 +10,7 @@ from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
 from Driftkings._constants import ARTY_SPLASH, GLOBAL
 from Driftkings.common import checkKeys, getPlayer, sendPanelMessage, logException
-from Driftkings.core.hooks import override
+from Driftkings.core.hooks import override, on_event
 from Driftkings.core.keyboard import keyboard
 from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.battle.arty_splash import ArtySplashSettings as Settings
@@ -183,15 +184,13 @@ config = Settings()
 controller = ArtySplashController(config)
 
 
-@override(PlayerAvatar, '_PlayerAvatar__startGUI')
-def new_startGUI(func, *args):
-    func(*args)
+@on_event(events.PlayerAvatar.startGUI.after)
+def new_startGUI(*args):
     controller.startBattle()
 
 
-@override(PlayerAvatar, '_PlayerAvatar__destroyGUI')
-def new_destroyGUI(func, *args):
-    func(*args)
+@on_event(events.PlayerAvatar.destroyGUI.after)
+def new_destroyGUI(*args):
     controller.stopBattle()
 
 

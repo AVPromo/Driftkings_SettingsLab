@@ -53,7 +53,7 @@ Distribution defaults live in [res/configs/Driftkings](res/configs/Driftkings). 
 
 ## Architecture, UI and updater
 
-`settings.service.SettingsService` owns section initialization, JSON persistence and change notifications. `settings/definitions` declares controls and feature normalization; `controls_schema.py` resolves declarative metadata, and `panel/sections.py` binds it to the owned Gameface panel. ConfigInterface, ConfigNoInterface, TemplateBuilder and the old template adapter have been removed. Existing JSON formats and persisted panel identities remain compatible. Explicit Core startup and consolidation of lifecycle hooks are the next phase.
+`settings.service.SettingsService` owns section initialization, JSON persistence and change notifications. `settings/definitions` declares controls and feature normalization; `controls_schema.py` resolves declarative metadata, and `panel/sections.py` binds it to the owned Gameface panel. ConfigInterface, ConfigNoInterface, TemplateBuilder and the old template adapter have been removed. Existing JSON formats and persisted panel identities remain compatible. Core startup now uses lazy service factories with explicit dependencies and partial-failure cleanup. Shared battle/login/hangar events replace duplicate observer hooks; subscriptions follow their component owner. The next phase organizes interface catalogs and resources; in-game validation is deferred until the end of the reorganization.
 
 Settings/hangar use Gameface. Battle retains the owned Scaleform/DAAPI library and Python/AS3 contracts. OpenWG owns global injection/resource registration; Driftkings owns feature lifecycle. See [UI bridge](docs/UI_BRIDGE.md) and [4B.8 closure](docs/architecture/PHASE4B8_FINAL_ARCHITECTURE.md).
 

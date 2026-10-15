@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Driftkings.common.utils import events
 import math
 from collections import defaultdict
 from functools import partial
@@ -31,7 +32,7 @@ from messenger.storage import MessengerStorageDescriptor, UsersStorage
 from Driftkings._constants import BATTLE_OPTIONS, GLOBAL
 from Driftkings.common import getPlayer, logInfo, square_position, isReplay
 from Driftkings.core.callbacks import callback
-from Driftkings.core.hooks import override
+from Driftkings.core.hooks import override, on_event
 from Driftkings.settings.service import settings_service
 from Driftkings.ui import g_events
 from Driftkings.views.battle.battle_options import BattleClock, destroy_clock
@@ -45,9 +46,8 @@ config = Settings()
 battle_clock = BattleClock()
 
 
-@override(PlayerAvatar, '_PlayerAvatar__startGUI')
-def new_startGUI(func, *args):
-    func(*args)
+@on_event(events.PlayerAvatar.startGUI.after)
+def new_startGUI(*args):
     battle_clock.start()
 
 
@@ -154,9 +154,8 @@ def new_getBorderColor(func, self, colorBlind):
     return result
 
 
-@override(PlayerAvatar, '_PlayerAvatar__destroyGUI')
-def new_destroyGUI(func, *args):
-    func(*args)
+@on_event(events.PlayerAvatar.destroyGUI.after)
+def new_destroyGUI(*args):
     if not settings_service.getComponentDict(config)[GLOBAL.ENABLED] or not settings_service.getComponentDict(config)[BATTLE_OPTIONS.IN_BATTLE]:
         return
     battle_clock.stop()

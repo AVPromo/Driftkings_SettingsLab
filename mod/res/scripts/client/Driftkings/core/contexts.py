@@ -10,6 +10,7 @@ class Contexts(object):
         self.loader = loader
         self.current = None
         self.active = False
+        self.enteredBound = self.leftBound = False
 
     def start(self):
         if self.active:
@@ -17,10 +18,16 @@ class Contexts(object):
         if self.loader is None:
             from gui.shared.personality import ServicesLocator
             self.loader = ServicesLocator.appLoader
-        self.loader.onGUISpaceEntered += self.enter
-        self.loader.onGUISpaceLeft += self.leave
         self.active = True
-        self.enter(self.loader.getSpaceID())
+        try:
+            self.loader.onGUISpaceEntered += self.enter
+            self.enteredBound = True
+            self.loader.onGUISpaceLeft += self.leave
+            self.leftBound = True
+            self.enter(self.loader.getSpaceID())
+        except Exception:
+            self.stop()
+            raise
 
     def notify(self, method, space, reverse=False):
         modules = reversed(self.modules) if reverse else self.modules
@@ -50,6 +57,10 @@ class Contexts(object):
         if not self.active:
             return
         self.leave(self.current)
-        self.loader.onGUISpaceEntered -= self.enter
-        self.loader.onGUISpaceLeft -= self.leave
+        if self.enteredBound:
+            self.loader.onGUISpaceEntered -= self.enter
+            self.enteredBound = False
+        if self.leftBound:
+            self.loader.onGUISpaceLeft -= self.leave
+            self.leftBound = False
         self.active = False

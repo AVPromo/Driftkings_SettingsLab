@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Driftkings.common.utils import events
 import math
 
 import CommandMapping
@@ -12,7 +13,7 @@ from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from Driftkings._constants import GLOBAL, SERVER_TURRET_EXTENDED
 from Driftkings.common import checkKeys, getPlayer, sendPanelMessage, serverTime
 from Driftkings.core.callbacks import callback, cancelCallback
-from Driftkings.core.hooks import override
+from Driftkings.core.hooks import override, on_event
 from Driftkings.core.keyboard import keyboard
 from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.battle.server_turret import ServerTurretExtendedSettings as Settings
@@ -156,17 +157,15 @@ def new__vehicleGunRotatorSetShotPosition(func, self, vehicleID, shotPos, shotVe
     return func(self, vehicleID, shotPos, shotVec, dispersionAngle, forceValueRefresh)
 
 
-@override(PlayerAvatar, '_PlayerAvatar__startGUI')
-def new__startGUI(func, *args):
-    func(*args)
+@on_event(events.PlayerAvatar.startGUI.after)
+def new__startGUI(*args):
     support.start_battle()
     movement_control.start_battle()
 
 
-@override(PlayerAvatar, '_PlayerAvatar__destroyGUI')
-def new__destroyGUI(func, *args):
+@on_event(events.PlayerAvatar.destroyGUI.before)
+def new__destroyGUI(*args):
     movement_control.endBattle()
-    func(*args)
 
 
 @override(PlayerAvatar, 'updateSiegeStateStatus')

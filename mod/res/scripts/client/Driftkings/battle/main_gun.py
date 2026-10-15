@@ -11,7 +11,7 @@ from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from Driftkings._constants import GLOBAL, MAIN_GUN
 from Driftkings.common import getPlayer
 from Driftkings.core.battle_events import battleEvents
-from Driftkings.core.hooks import override
+from Driftkings.core.hooks import override, on_event
 from Driftkings.settings.service import settings_service, affects
 from Driftkings.settings.definitions.battle.main_gun import MainGunSettings as Settings
 from Driftkings.views.battle.main_gun import _startFlash
@@ -313,12 +313,10 @@ def new__onPlayerFeedbackReceived(func, self, events):
     return result
 
 
-@override(Vehicle, 'onHealthChanged')
-def new__onHealthChanged(func, self, newHealth, oldHealth, attackerID, attackReasonID, *args, **kwargs):
-    result = func(self, newHealth, oldHealth, attackerID, attackReasonID, *args, **kwargs)
+@on_event(battleEvents.healthDetailed)
+def new__onHealthChanged(self, newHealth, oldHealth, attackerID, attackReasonID, *args, **kwargs):
     if scl.inBattle:
         scl.onHealthChanged(self, newHealth, oldHealth, attackerID, attackReasonID)
-    return result
 
 
 # Initialize the mod

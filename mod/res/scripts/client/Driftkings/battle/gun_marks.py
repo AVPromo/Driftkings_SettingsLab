@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
+from Driftkings.core.battle_events import battleEvents
+from Driftkings.common.utils import events
 
 import datetime
 import math
@@ -27,7 +29,7 @@ from Driftkings.common import loadJson, checkKeys, getPlayer, sendPanelMessage, 
 from Driftkings.common.utils.achievement_dossiers import getAchievementDossier
 from Driftkings.core.cache import cache_directory
 from Driftkings.core.callbacks import callback
-from Driftkings.core.hooks import override
+from Driftkings.core.hooks import override, on_event
 from Driftkings.core.keyboard import keyboard
 from Driftkings.core.overlay import ElementType
 from Driftkings.settings.service import settings_service
@@ -725,17 +727,15 @@ def new__updateCrewModel(func, *args):
     return func(*args)
 
 
-@override(PlayerAvatar, 'onBattleEvents')
-def new_onBattleEvents(func, *args):
-    func(*args)
+@on_event(battleEvents.feedback)
+def new_onBattleEvents(*args):
     if getPlayer().arena.bonusType == ARENA_BONUS_TYPE.REGULAR:
         worker.onBattleEvents(args[1])
 
 
-@override(Vehicle, 'onHealthChanged')
-def new_onHealthChanged(func, self, newHealth, oldHealth, attackerID, attackReasonID, *args, **kwargs):
+@on_event(battleEvents.healthBefore)
+def new_onHealthChanged(self, newHealth, oldHealth, attackerID, attackReasonID, *args, **kwargs):
     worker.shots(self, newHealth, attackerID)
-    func(self, newHealth, oldHealth, attackerID, attackReasonID, *args, **kwargs)
 
 
 @override(Vehicle, 'startVisual')
@@ -744,16 +744,15 @@ def new_vehicleStartVisual(func, *args):
     worker.initVehicle(args[0])
 
 
-@override(PlayerAvatar, '_PlayerAvatar__startGUI')
-def new_startGUI(func, *args):
-    func(*args)
+@on_event(events.PlayerAvatar.startGUI.after)
+def new_startGUI(*args):
     if getPlayer().arena.bonusType == ARENA_BONUS_TYPE.REGULAR:
         g_flash.startBattle()
         worker.startBattle()
 
 
-@override(PlayerAvatar, '_PlayerAvatar__destroyGUI')
-def new_destroyGUI(func, *args):
+@on_event(events.PlayerAvatar.destroyGUI.before)
+def new_destroyGUI(*args):
     try:
         if getPlayer().arena.bonusType == ARENA_BONUS_TYPE.REGULAR:
             g_flash.stopBattle()
@@ -761,7 +760,6 @@ def new_destroyGUI(func, *args):
             worker.clearData()
     except StandardError:
         pass
-    func(*args)
 
 
 @override(MarkOnGunAchievement, 'getUserCondition')

@@ -23,8 +23,8 @@ class SettingsService(object):
         settings.client_version = getClientVersion()
         settings.start(str(getClientLanguage()))
         controller.adapter = SectionPanelBinding(settings, self.registry)
-        controller.start(settings)
         self.controller = controller
+        controller.start(settings)
         try:
             from gui.modsListApi import g_modsListApi
         except ImportError:
@@ -44,8 +44,6 @@ class SettingsService(object):
             self.controller.onContextLeft(space)
 
     def stop(self):
-        if not self.active:
-            return
         self.active = False
         if self.controller is not None:
             self.controller.stop()

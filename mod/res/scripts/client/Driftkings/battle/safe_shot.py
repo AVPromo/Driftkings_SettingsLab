@@ -5,7 +5,8 @@ from gui.Scaleform.daapi.view.battle.classic.stats_exchange import FragsCollecta
 from Driftkings._constants import GLOBAL, SAFE_SHOT
 from Driftkings.common import getPlayer, getTarget, serverTime, checkKeys, sendPanelMessage, sendChatMessage
 from Driftkings.core.callbacks import callback
-from Driftkings.core.hooks import override
+from Driftkings.core.hooks import override, on_event
+from Driftkings.common.utils import events
 from Driftkings.core.keyboard import keyboard
 from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.battle.safe_shot import SafeShotSettings as Settings
@@ -23,8 +24,8 @@ class SafeShotController(object):
         override(PlayerAvatar, 'shoot', self.new__shoot)
         override(PlayerAvatar, 'shootDualGun', self.new__shootDualGun)
         override(PlayerAvatar, 'onBecomePlayer', self.new__onBecomePlayer)
-        override(PlayerAvatar, '_PlayerAvatar__destroyGUI', self.new__destroyGUI)
-        override(PlayerAvatar, '_PlayerAvatar__startGUI', self.new__startGUI)
+        on_event(events.PlayerAvatar.destroyGUI.after, self.new__destroyGUI)
+        on_event(events.PlayerAvatar.startGUI.after, self.new__startGUI)
 
 
     def isShotAllowed(self):
@@ -85,13 +86,11 @@ class SafeShotController(object):
         func(orig)
         self.isEventBattle = getPlayer().guiSessionProvider.arenaVisitor.gui.isEventBattle()
 
-    def new__startGUI(self, func, *args):
-        func(*args)
+    def new__startGUI(self, *args):
         self.start_battle()
         support.start_battle()
 
-    def new__destroyGUI(self, func, orig, *args):
-        func(orig, *args)
+    def new__destroyGUI(self, orig, *args):
         self.endBattle()
         self.isEventBattle = False
         self.isKeyPressed = True

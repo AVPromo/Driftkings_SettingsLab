@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Driftkings.core.battle_events import battleEvents
 from Avatar import PlayerAvatar
 from BattleFeedbackCommon import BATTLE_EVENT_TYPE
 from gui.battle_control.controllers import feedback_events
@@ -6,7 +7,7 @@ from gui.battle_control.controllers.personal_efficiency_ctrl import _AGGREGATED_
 
 from Driftkings._constants import GLOBAL, SPOTTED_EXTENDED_LIGHT
 from Driftkings.common import sendPanelMessage, getPlayer
-from Driftkings.core.hooks import override
+from Driftkings.core.hooks import override, on_event
 from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.battle.spotted_light import SpottedExtendedLightSettings as Settings
 
@@ -116,7 +117,6 @@ config = Settings()
 controller = SpottedLightController(config)
 
 
-@override(PlayerAvatar, 'onBattleEvents')
-def new__onBattleEvents(func, *args):
-    func(*args)
+@on_event(battleEvents.feedback)
+def new__onBattleEvents(*args):
     controller.postMessage(args[1])

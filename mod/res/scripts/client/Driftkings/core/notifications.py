@@ -5,7 +5,7 @@ import BigWorld
 from notification.NotificationsCollection import NotificationsCollection
 from notification.actions_handlers import NotificationsActionsHandlers
 
-from Driftkings.common.utils.monkeypatch import override
+from Driftkings.core.hooks import override
 
 __all__ = ()
 
@@ -28,3 +28,11 @@ def new_handleAction(func, self, model, typeID, entityID, actionName, *args, **k
         BigWorld.wg_openWebBrowser(actionName)
     else:
         func(self, model, typeID, entityID, actionName, *args, **kwargs)
+
+
+class NotificationsService(object):
+    def start(self):
+        pass
+
+    def stop(self):
+        pass

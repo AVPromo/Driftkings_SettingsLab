@@ -12,6 +12,7 @@ class KeyboardService(object):
         self.callbacks = []
         self.interface_callbacks = []
         self.active = False
+        self.downBound = self.upBound = False
 
     @staticmethod
     def settingsOpen():
@@ -35,14 +36,24 @@ class KeyboardService(object):
         if self.handler is None:
             from gui import InputHandler
             self.handler = InputHandler.g_instance
-        self.handler.onKeyDown += self.onKey
-        self.handler.onKeyUp += self.onKey
         self.active = True
+        try:
+            self.handler.onKeyDown += self.onKey
+            self.downBound = True
+            self.handler.onKeyUp += self.onKey
+            self.upBound = True
+        except Exception:
+            self.stop()
+            raise
 
     def stop(self):
         if self.active:
-            self.handler.onKeyDown -= self.onKey
-            self.handler.onKeyUp -= self.onKey
+            if self.downBound:
+                self.handler.onKeyDown -= self.onKey
+                self.downBound = False
+            if self.upBound:
+                self.handler.onKeyUp -= self.onKey
+                self.upBound = False
             self.active = False
         self.callbacks[:] = []
         self.interface_callbacks[:] = []

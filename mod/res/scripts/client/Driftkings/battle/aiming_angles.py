@@ -17,7 +17,8 @@ from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 
 from Driftkings.common import getPlayer
 from Driftkings.core.callbacks import callback, cancelCallback
-from Driftkings.core.hooks import override
+from Driftkings.core.hooks import override, on_event
+from Driftkings.common.utils import events
 from Driftkings.settings.definitions.battle.aiming_angles import AimingAnglesSettings as Settings
 from Driftkings.views.battle.aiming_angles import AimingAnglesView
 
@@ -68,7 +69,7 @@ class AimingAnglesController(AimingAnglesView):
         override(AvatarInputHandler, 'onControlModeChanged', self.AvatarInputHandler_onControlModeChanged)
         override(InterfaceScaleSetting, 'setSystemValue', self.InterfaceScaleSetting_setSystemValue)
         override(PlayerAvatar, 'onEnterWorld', self.Vehicle_onEnterWorld)
-        override(PlayerAvatar, '_PlayerAvatar__destroyGUI', self.onDestroyGUI)
+        on_event(events.PlayerAvatar.destroyGUI.before, self.onDestroyGUI)
         override(plugins, '_makeSettingsVO', self.plugins_makeSettingsVO)
         override(MapCaseMode, 'activateMapCase', self.anglesAiming_activateMapCase)
         override(MapCaseMode, 'turnOffMapCase', self.anglesAiming_turnOffMapCase)
@@ -154,12 +155,8 @@ class AimingAnglesController(AimingAnglesView):
         self.hideCorners()
         self.ON_ANGLES_AIMING()
 
-    def onDestroyGUI(self, func, *args, **kwargs):
-        try:
-            self.endBattle()
-        finally:
-            result = func(*args, **kwargs)
-        return result
+    def onDestroyGUI(self, *args, **kwargs):
+        self.endBattle()
 
     def anglesAiming_activateMapCase(self, func, *args, **kwargs):
         result = func(*args, **kwargs)

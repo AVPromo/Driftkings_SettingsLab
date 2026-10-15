@@ -97,6 +97,8 @@ class SettingsService(object):
         from Driftkings.settings.hotkeys import processHotKeys
         from Driftkings.settings.settings_data import defaults, default_keys
         from Driftkings.settings.sections import previous_name
+        from Driftkings.core.hooks import hooks
+        section.runtime_owner = hooks.current
         section.manager = self
         section.defaultKeys = default_keys(section.NAME)
         section.data = defaults(section.NAME)

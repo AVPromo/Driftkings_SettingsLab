@@ -20,7 +20,8 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID
 from Driftkings.common.utils.filesystem import atomicWrite, recoverFile
 from Driftkings.core.accounts import AccountService, AccountError
 from Driftkings.core.callbacks import callback, cancelCallback
-from Driftkings.core.hooks import override
+from Driftkings.core.hooks import override, on_event
+from Driftkings.common.utils import events
 from Driftkings.settings.definitions.components.account_manager import AccountManagerSettings as ConfigsInterface
 
 LOG = logging.getLogger('Driftkings.AccountManager')
@@ -87,15 +88,13 @@ class AccountsManagerController(object):
         self.login = None
         self.active = False
         self.space = None
-        override(LoginView, '_populate', self.loginPopulated)
+        on_event(events.LoginView.populate.after, self.loginPopulated)
         override(LoginView, '_dispose', self.loginDisposed)
         override(LoginView, 'update', self.loginUpdated)
 
-    def loginPopulated(self, original, view, *args, **kwargs):
-        result = original(view, *args, **kwargs)
+    def loginPopulated(self, view, *args, **kwargs):
         self.login = weakref.ref(view)
         self.scheduleLauncher()
-        return result
 
     def loginDisposed(self, original, view, *args, **kwargs):
         if self.login is not None and self.login() is view:

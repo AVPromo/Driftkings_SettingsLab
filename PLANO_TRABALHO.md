@@ -2,8 +2,8 @@
 
 Atualizado em 2026-10-15. Este documento regista as prioridades acordadas e deve
 ser consultado antes de iniciar a próxima fase. A comparação foi guardada a pedido
-do utilizador. A unificação dos defaults e nomes está concluída localmente. A fase 1 da
-reorganização foi implementada e validada localmente; falta confirmação em jogo.
+do utilizador. A unificação dos defaults e nomes está concluída localmente. As fases 1 e 2 da
+reorganização foram implementadas e validadas localmente; teste em jogo no fim.
 Antes do ponto 2, o utilizador pediu a substituição da arquitetura antiga de
 ConfigInterface/TemplateBuilder; consultar [análise das configurações](#organização-das-configurações--direção-da-refatoração).
 Também foi analisada a organização de Flash/Gameface da referência; consultar
@@ -11,7 +11,7 @@ Também foi analisada a organização de Flash/Gameface da referência; consulta
 de vistas e recursos. A reorganização específica das interfaces Flash/Gameface continua pendente.
 Foi também guardada a [auditoria dos hooks](#auditoria-de-hooks-e-overrides): priorizar a
 consolidação dos produtores de eventos de batalha e remover a sobreposição com
-as pontes antigas durante esta refatoração. A redução ainda não foi implementada.
+as pontes antigas durante esta refatoração. A primeira consolidação foi implementada na fase 2; consultar o estado abaixo.
 
 ## Contexto e decisões a preservar
 
@@ -25,7 +25,8 @@ as pontes antigas durante esta refatoração. A redução ainda não foi impleme
 - As imagens do carrossel devem ser lidas dos recursos montados no `.wotmod`.
 - O compilador suporta Python 2.7, Flash, versão do mod e canais beta/stable.
 - Os testes e a pasta `build/` ficam locais e não são enviados para o GitHub.
-- O último envio de código foi `8aeaddadf02bd97154c9ee37525c0f36aeccb3e7`, na branch
+- A base anterior à reorganização foi `8aeaddadf02bd97154c9ee37525c0f36aeccb3e7`.
+  A fase 1 foi enviada em `02d2fc2`. Os commits de cada etapa ficam na branch
   `main` de `https://github.com/dkruben/Driftkings_SettingsLab`.
 - Ainda temos de definir como serão atualizados os modpacks. O commit/push anterior
   não publicou uma release nem distribuiu uma atualização aos utilizadores.
@@ -48,7 +49,7 @@ compatibilidade, configuração e atualização que devem ser consolidados.
 
 ### 1. Unificar os defaults
 
-**Concluído localmente em 2026-10-15; ainda sem commit/push desta fase.**
+**Concluído em 2026-10-15 e enviado no commit `02d2fc2`, juntamente com a fase 1.**
 
 - `build_tools/generate_defaults.py` gera `settings/default_values.py` a partir
   dos JSON canónicos. `settings_data.py` mantém metadados e os accessors, sem os
@@ -213,6 +214,49 @@ A compatibilidade com nomes persistidos antigos fica apenas nas fronteiras de le
 
 ### Fase 2 — Unificar arranque, serviços e eventos
 
+**Implementada e validada localmente em 2026-10-15; teste em jogo no fim.**
+
+- A entrada `mod_Driftkings.py` importa/cria o Core apenas em `init()`, com suporte
+  explícito EU/NA/ASIA e `init()`/`fini()` idempotentes.
+- O construtor do Core guarda fábricas de serviços; a criação e o arranque ocorrem
+  em fases explícitas, primeiro a base e depois as interfaces/updater.
+- `ServiceSpec` declara dependências. Serviços dependentes ficam bloqueados quando
+  uma dependência falha; componentes sem serviços obrigatórios não são ativados.
+- O perfil é validado antes dos consumidores. Componentes com falha são retirados
+  dos contextos e das entradas de configuração pertencentes ao seu proprietário.
+- Removidos o bootstrap de common, callbacks de hooks durante imports e aliases
+  adiados. Os hooks de notificações foram preservados num serviço explícito;
+  helpers de diálogos sem consumidores foram removidos.
+- Há um único produtor por alvo de startGUI, destroyGUI, saúde, aparência,
+  feedback de batalha e populate de login/hangar. Os consumidores usam eventos;
+  a limpeza de gunmarks, mira e movimento continua antes do destroy nativo.
+- Saúde dispõe de sinais completos antes/depois, além do sinal reduzido existente.
+  São preservados veículo, HP novo/anterior, atacante e motivo.
+- `HookRegistry` identifica alvo/handler/proprietário, instala cada declaração uma
+  vez e gere a ligação/desligação das subscrições. Importações falhadas abandonam
+  as suas declarações. Wrappers desativados encaminham para o original; não se
+  repõe cegamente um método que outro mod possa ter envolvido posteriormente.
+- Contextos, teclado, vistas e serviços fazem limpeza de arranque parcial; os
+  callbacks de cada componente são cancelados na sua desativação.
+- O resumo de arranque usa o log nativo, incluindo versões, região, componentes,
+  estado dos serviços, falhas e motivos de bloqueio, mesmo sem erros.
+- Contagem estática: 186 → 162 pontos de instalação, 42 → 37 ficheiros. Os
+  alvos acima têm um produtor cada. Não é medição de hooks simultâneos nem de FPS.
+- Verificação local: 21 testes existentes, 7 de configurações e 17 novos de Core,
+  ownership e produtores de eventos, em Python 2.7 com APIs do jogo simuladas.
+  Inclui método nativo chamado uma vez, argumentos/retornos/exceções, falhas
+  parciais, ciclos de batalha, 20 reativações e preservação de um wrapper externo.
+- Build protegida `0.1.2-beta.1`: 248 módulos Python, 169 assets, 48 defaults,
+  duas dependências; Flash, ponte do carrossel e helpers recompilados.
+- Os hooks de handleKey foram avaliados e conservados: a recarga precisa da
+  execução nativa anterior e observar a tecla no KeyboardService não demonstra
+  aceitação do comando. A sua remoção exige contrato equivalente validado.
+- Limites: permanecem wrappers inativos na cadeia, por compatibilidade com outros
+  mods. A reorganização de recursos/vistas pertence à fase 3; o teste real no jogo
+  continua reservado para o fim. Não foi instalada nem publicada uma release.
+
+Objetivos desta fase:
+
 - Criar os serviços em init(), eliminando bootstrap e instanciação durante imports.
 - Definir ordem, dependências obrigatórias, falhas isoladas e um proprietário da limpeza.
 - Consolidar start/destroy de batalha, saúde, aparência, feedback e entrada no hangar.
@@ -292,7 +336,7 @@ finais de novos módulos serão fixados ao migrar os seus consumidores.
 
 ### Regras de execução
 
-- Próximo trabalho: fase 2, arranque/serviços/eventos. Por indicação do utilizador,
+- Próximo trabalho: fase 3, organização de interfaces e recursos. Por indicação do utilizador,
   a validação em jogo será realizada apenas no fim da reorganização.
 - Migrar por conjuntos funcionais verificáveis; remover a camada obsoleta quando os seus
   consumidores estiverem migrados, sem manter uma segunda arquitetura permanente.
@@ -443,7 +487,8 @@ no painel. A remoção de `ID`, por si só, não retirava essa cadeia; a fase 1 
   do utilizador. Executar compilação e verificação em Python 2.7 e testar em jogo.
 - Manter testes e artefactos de build locais, conforme instrução do utilizador.
 
-Esta etapa foi implementada localmente; a confirmação em jogo precede o fecho da fase. A atualização completa do
+Esta etapa foi implementada localmente; a confirmação em jogo será feita no fim,
+por indicação do utilizador. A atualização completa do
 modpack continua pendente e não deve ser publicada durante esta refatoração.
 
 ## Flash e Gameface — análise de organização
@@ -590,8 +635,8 @@ atualizações do modpack continua como etapa posterior, ainda pendente.
 
 Análise estática em 2026-10-15. Referência: Battle Observer,
 commit `4c01dd5b11ec8f44dfdc78e4d5cccd1bad1b2966`.
-Não foram medidos FPS, tempos de frame ou cadeias ativas no cliente. Nenhuma
-alteração ao runtime foi feita nesta auditoria.
+Não foram medidos FPS, tempos de frame ou cadeias ativas no cliente. Esta
+auditoria regista o estado inicial; a consolidação posterior está descrita na fase 2.
 
 ### Inventário e limites
 

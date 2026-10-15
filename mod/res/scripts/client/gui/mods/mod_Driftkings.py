@@ -1,25 +1,31 @@
 # -*- coding: utf-8 -*-
-"""Single game entry point; Core owns the application lifecycle."""
+"""The game calls init/fini; importing this entry point creates no services."""
 import logging
 
-try:
-    from realm import CURRENT_REALM
-except ImportError:
-    CURRENT_REALM = None
-
 _core = None
-if CURRENT_REALM in ('EU', 'NA', 'ASIA'):
-    from Driftkings.core import Core
-    _core = Core()
-else:
-    logging.getLogger('Driftkings.Loader').warning('Unsupported client realm: %s; Driftkings disabled', CURRENT_REALM)
 
 
 def init():
+    global _core
     if _core is not None:
-        _core.start()
+        return
+    from realm import CURRENT_REALM
+    if CURRENT_REALM not in ('EU', 'NA', 'ASIA'):
+        logging.getLogger('Driftkings.Loader').warning('Unsupported client realm: %s; Driftkings disabled', CURRENT_REALM)
+        return
+    from Driftkings.core import Core
+    core = Core()
+    _core = core
+    try:
+        core.start()
+    except Exception:
+        core.stop()
+        _core = None
+        logging.getLogger('Driftkings.Loader').exception('Driftkings startup failed')
 
 
 def fini():
-    if _core is not None:
-        _core.stop()
+    global _core
+    core, _core = _core, None
+    if core is not None:
+        core.stop()

@@ -92,7 +92,7 @@ class HudVisibility(object):
 
     def installHooks(self):
         # Core service hooks have their own lifecycle, like BattleEvents.
-        from Driftkings.common.utils.monkeypatch import override
+        from Driftkings.core.hooks import override
         from gui.Scaleform.daapi.view.meta.BattlePageMeta import BattlePageMeta
         for method in ('as_setComponentsVisibilityS', 'as_setComponentsVisibilityWithFadeS'):
             override(BattlePageMeta, method, self.nativeVisibility)

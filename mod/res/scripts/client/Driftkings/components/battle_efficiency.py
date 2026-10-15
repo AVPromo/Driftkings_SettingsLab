@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from Driftkings.core.battle_events import battleEvents
+from Driftkings.common.utils import events
 import logging
 import math
 import weakref
@@ -14,7 +16,7 @@ from gui.battle_control.battle_constants import PERSONAL_EFFICIENCY_TYPE
 
 from Driftkings._constants import BATTLE_EFFICIENCY, GLOBAL
 from Driftkings.common import getPlayer, getStatisticColor, replaceMacros
-from Driftkings.core.hooks import override
+from Driftkings.core.hooks import override, on_event
 from Driftkings.settings.service import settings_service, affects
 from Driftkings.settings.definitions.components.battle_efficiency import BattleEfficiencySettings as Settings
 from Driftkings.stats import getVehicleInfoData, calculateXvmScale, calculateXTE
@@ -192,18 +194,16 @@ g_battleEfficiency = BattleEfficiency()
 g_calculator = EfficiencyCalculator()
 
 
-@override(PlayerAvatar, 'vehicle_onAppearanceReady')
-def new_onAppearanceReady(func, self, vehicle):
-    func(self, vehicle)
+@on_event(battleEvents.appearanceDetailed)
+def new_onAppearanceReady(self, vehicle):
     if not settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
         return
     if vehicle.id == self.playerVehicleID:
         g_calculator.registerVInfoData(vehicle.typeDescriptor.type.compactDescr)
 
 
-@override(PlayerAvatar, '_PlayerAvatar__startGUI')
-def new_startGUI(func, *args):
-    func(*args)
+@on_event(events.PlayerAvatar.startGUI.after)
+def new_startGUI(*args):
     g_battleEfficiency.startBattle()
 
 
@@ -243,9 +243,8 @@ def new_onTotalEfficiencyUpdated(func, self, diff):
         g_battleEfficiency.startBattle()
 
 
-@override(PlayerAvatar, '_PlayerAvatar__destroyGUI')
-def new_destroyGUI(func, *args):
-    func(*args)
+@on_event(events.PlayerAvatar.destroyGUI.after)
+def new_destroyGUI(*args):
     g_battleEfficiency.stopBattle()
     g_calculator.stopBattle()
 
