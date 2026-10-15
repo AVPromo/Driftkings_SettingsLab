@@ -45,5 +45,7 @@ class SettingsService(object):
 
     def stop(self):
         self.active = False
+        from Driftkings.core.diagnostics import diagnostics
+        diagnostics.configure(False)
         if self.controller is not None:
             self.controller.stop()

@@ -216,14 +216,14 @@ def atomic_copy(source, destination):
 
 def replace_directory(source, destination):
     """Bound transient Windows scanner/sharing locks; never retry other errors."""
-    for attempt in range(5):
+    for attempt in range(8):
         try:
             os.replace(source, destination)
             return
         except OSError as error:
-            if getattr(error, 'winerror', None) not in (5, 32, 33) or attempt == 4:
+            if getattr(error, 'winerror', None) not in (5, 32, 33) or attempt == 7:
                 raise
-            time.sleep(0.1 * (2 ** attempt))
+            time.sleep(min(2.0, 0.25 * (2 ** attempt)))
 
 
 def publish_local(root, candidate, destination, config, generated, compiled, plan):

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Delayed work owned by components, with battle and application cleanup."""
 from functools import partial
+from Driftkings.core.diagnostics import diagnostics
 
 
 class CallbackService(object):
@@ -28,15 +29,28 @@ class CallbackService(object):
         token = [None]
         def run():
             self.pending.pop(token[0], None)
+            if diagnostics.enabled:
+                return diagnostics.call('callback.' + owner + '.' + getattr(function, '__name__', 'handler'), method, *args, **kwargs)
             return method(*args, **kwargs)
         token[0] = self.backend.callback(delay, run)
         self.pending[token[0]] = owner
+        if diagnostics.enabled:
+            diagnostics.count('callback.' + owner + '.scheduled')
         return token[0]
 
     def cancel(self, token):
         if token in self.pending:
-            self.pending.pop(token)
-            return self.backend.cancelCallback(token)
+            owner = self.pending.pop(token)
+            result = self.backend.cancelCallback(token)
+            if diagnostics.enabled:
+                diagnostics.count('callback.' + owner + '.cancelled')
+            return result
+
+    def snapshot(self):
+        owners = {}
+        for owner in list(self.pending.values()):
+            owners[owner] = owners.get(owner, 0) + 1
+        return dict(pending=len(self.pending), owners=owners)
 
     def cancelOwner(self, owner):
         for token, name in list(self.pending.items()):

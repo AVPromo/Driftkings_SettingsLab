@@ -2,6 +2,7 @@
 """Declare hooks during import; Core installs them and owns their lifetime."""
 from functools import partial, wraps
 from inspect import isclass
+from Driftkings.core.diagnostics import diagnostics
 
 
 class HookRegistry(object):
@@ -21,9 +22,14 @@ class HookRegistry(object):
         metadata = handler
         while isinstance(metadata, partial):
             metadata = metadata.func
+        metric = 'hook.' + str(owner) + '.' + getattr(metadata, '__name__', 'handler')
+        if isinstance(key, tuple) and len(key) == 3:
+            metric += ':' + getattr(key[0], '__name__', 'target') + '.' + str(key[1]) + '.' + str(key[2])
         @wraps(metadata)
         def guarded(original, *args, **kwargs):
             if valid[0] and owner in self.active:
+                if diagnostics.enabled:
+                    return diagnostics.call(metric, handler, original, *args, **kwargs)
                 return handler(original, *args, **kwargs)
             # Classmethod hooks receive cls explicitly although original is bound.
             if args and isclass(getattr(original, '__self__', None)) and isclass(args[0]):

@@ -8,6 +8,7 @@ import logging
 import math
 import weakref
 from Driftkings.core.hooks import override
+from Driftkings.core.diagnostics import diagnostics
 
 class GamefaceLoading(object):
     def __init__(self,owner):
@@ -128,9 +129,17 @@ class GamefaceLoading(object):
             # Resolved row configs are immutable snapshots. Compare before
             # serializing: most battle ticks have no TAB/loading changes.
             if data!=record.get('data'):
-                payload=json.dumps(data)
+                if diagnostics.enabled:
+                    payload=diagnostics.call('gameface.ratings.serialize',json.dumps,data)
+                else:
+                    payload=json.dumps(data)
                 with record['child'].getViewModel().transaction() as model: model._setString(0,payload)
                 record['data']=data
+                if diagnostics.enabled:
+                    diagnostics.count('gameface.ratings.sent')
+                    diagnostics.count('gameface.ratings.bytes',len(payload))
+            elif diagnostics.enabled:
+                diagnostics.count('gameface.ratings.skipped')
 
     def clear(self):
         self.update(False,[])

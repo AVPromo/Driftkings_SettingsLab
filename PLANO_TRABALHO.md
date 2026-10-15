@@ -452,6 +452,67 @@ ou configurações pessoais. A existência de helpers não equivale a distribui�
 
 ### Fase 6 — Medir, otimizar e estabilizar
 
+Estado: etapa 6.1 concluída localmente; etapa 6.2, validação e medições no cliente,
+fica para o teste final combinado com o utilizador.
+
+- `core/diagnostics.py` agrega chamadas, erros, contagens e tempos inclusivos de
+  hooks ativos, consumidores de eventos e callbacks do serviço central. Não mede
+  os callbacks internos do jogo nem todos os usos diretos de BigWorld.callback.
+  Capacidade máxima de 256 entradas, incluindo overflow; sem histórico de eventos,
+  conteúdo de mensagens, dados dos jogadores, novos hooks ou callbacks periódicos.
+- Usa o debug existente do painel, sem alterar os defaults. Desligado não consulta
+  o relógio nem recolhe amostras. Ligado expõe o snapshot na lista de instalados e
+  escreve até 20 linhas de resumo ao desligar a captura ou parar o serviço.
+  Tempos são inclusivos, podem sobrepor-se e não devem ser somados como tempo de CPU.
+- Pontes de roster Flash e Gameface registam chamadas; Gameface também regista
+  serializações, bytes enviados e envios evitados. Mantida a comparação existente
+  antes de serializar. Os diagnósticos próprios do Player Panel continuam independentes.
+  O contador de bytes mede o JSON serializado, sem overhead do transporte nativo.
+- Flight Timer e Dispersion Timer deixam de repetir o mesmo texto para a mesma
+  instância Flash. A cache é invalidada em populate/dispose, perda de DAAPI e
+  troca de proxy; apenas guarda o valor após envio bem-sucedido. Limpeza com texto
+  vazio e nova tentativa após erro continuam funcionais. Não foi aplicada a
+  setters com animações, efeitos ou retornos cuja repetição possa ser significativa.
+- Comparação com `9081ac9`, usando APIs simuladas: 10 000 pedidos com 100 valores
+  consecutivos distintos passam de 10 000 para 100 chamadas em cada temporizador.
+  A sequência visual mantém-se. Evidência local em `build/performance_report.json`.
+  Isto mede chamadas evitadas nessa sequência; não demonstra melhoria de FPS no jogo.
+- Corrigida reentrância do tick do roster: refresh durante uma atualização deixava
+  duas cadeias recorrentes. Mantém agora o tick já agendado e não reagenda após stop.
+  O teste reproduz duas chamadas pendentes antes e uma depois, mantendo a cadência
+  normal de 0,25 s e verificando a estabilidade ao longo de 20 execuções.
+- Mantidas as caches de estatísticas e de linhas já existentes: não foi acrescentada
+  outra cache sem evidência de necessidade ou alterado o intervalo das consultas.
+- Identificado o bloqueio da promoção através de Windows Restart Manager: Pylance
+  do VS Code mantinha artefactos abertos. Nas definições locais ignoradas do editor,
+  build foi excluída da análise e do watcher. As tentativas para erros Windows
+  5/32/33 passaram a oito, com espera total máxima de 9,75 s; outras falhas continuam
+  imediatas e preservam a recuperação. O comando normal voltou a concluir a build.
+- Passaram 135 verificações locais: 41 gerais, 7 configurações, 17 core, 9 UI Python,
+  6 compatibilidade, 10 inventário Python 2.7, 21 instalação C#, 8 JavaScript e
+  16 diagnósticos/estabilização. Testes e relatório de medição continuam locais.
+- Build protegida `0.1.2-beta.1+performance`: 253 módulos Python, Flash, 171 recursos,
+  48 defaults e duas dependências. Compilação, verificação e promoção da saída
+  concluíram pelo comando normal, incluindo uma reconstrução da mesma versão.
+
+Etapa 6.2, critérios para o teste final:
+
+1. Entrada/saída repetida de batalha, hangar e replay; não acumular callbacks,
+   listeners ou filhos Gameface. Confirmar ponteiros da mira e reposicionamento
+   ao alterar resolução/HUD, incluindo texto vazio e reabertura das vistas.
+2. Reload com C, Safe Shot, Sixth Sense, marcas, estatísticas, minimapa, Flight
+   Timer e Dispersion Timer; confirmar comportamentos e ausência de erros no log.
+3. Roster Flash, TAB e loading Gameface: saúde, ordem, mudanças de modo, perfis,
+   hotkeys e aplicação das configurações, sem perder atualizações ou filas duplicadas.
+4. Modos disponíveis no cliente: Random, Comp7, Frontline, eventos e replay;
+   verificar os motivos das restrições e coexistência com outros mods.
+5. Confirmar o fluxo de atualização autorizado: progresso, cancelamento, fecho,
+   resultado no arranque, recuperação e preservação das configurações pessoais.
+6. Ativar debug apenas durante uma captura controlada, consultar a lista de
+   instalados e desligá-lo para emitir resumo. Comparar cenários equivalentes,
+   incluindo custos com debug desligado. Só afirmar ganhos de FPS com medições
+   antes/depois no cliente; publicação continua separada da validação.
+
 - Medir callbacks, frequência de hooks e tráfego Python → Flash/Gameface.
 - Evitar propriedades inalteradas, agrupar atualizações e reutilizar dados partilhados.
 - Rever caches de estatísticas e informação de veículos sem duplicar serviços existentes.
@@ -484,7 +545,7 @@ finais de novos módulos serão fixados ao migrar os seus consumidores.
 
 ### Regras de execução
 
-- Próximo trabalho: fase 6, medição, otimização e estabilização. Por indicação do utilizador,
+- Próximo trabalho: etapa 6.2, validação final e medições no cliente. Por indicação do utilizador,
   a validação em jogo será realizada apenas no fim da reorganização.
 - Migrar por conjuntos funcionais verificáveis; remover a camada obsoleta quando os seus
   consumidores estiverem migrados, sem manter uma segunda arquitetura permanente.

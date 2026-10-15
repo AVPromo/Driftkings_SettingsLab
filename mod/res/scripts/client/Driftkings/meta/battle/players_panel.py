@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from Driftkings.meta.battle.base import ComponentMeta
+from Driftkings.core.diagnostics import diagnostics
 
 
 class PlayersPanelMeta(ComponentMeta):
@@ -7,6 +8,8 @@ class PlayersPanelMeta(ComponentMeta):
 
     def as_setRosterS(self, payload):
         if self._isDAAPIInited():
+            if diagnostics.enabled:
+                return diagnostics.call('flash.ratings.roster', self.flashObject.as_setRoster, payload)
             return self.flashObject.as_setRoster(payload)
 
     def reportState(self, state):

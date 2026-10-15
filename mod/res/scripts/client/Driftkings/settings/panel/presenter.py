@@ -105,7 +105,10 @@ class Presenter(object):
     def diagnostics(self):
         from Driftkings.settings.panel import VERSION
         from Driftkings.settings.panel.sound import sound_manager
+        from Driftkings.core.diagnostics import diagnostics
+        from Driftkings.core.callbacks import callbacks
         return {'framework': VERSION, 'registeredMods': len(self.registry.mods),
+                'performance': diagnostics.snapshot(), 'callbacks': callbacks.snapshot(),
                 'viewModel': 'active', 'game': getattr(self.api, 'client_version', ''),
                 'soundBanks': [{'mod': key, 'bank': data['bank'], 'loaded': sound_manager.status(key)}
                                for key, data in sound_manager.banks.items()]}

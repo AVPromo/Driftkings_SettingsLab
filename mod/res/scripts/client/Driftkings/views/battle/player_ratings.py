@@ -403,4 +403,7 @@ class RatingViews(object):
                          metrics['ticks'],metrics['ms']/metrics['ticks'],metrics['max'],metrics['resolved'],metrics['sent'],causes)
                 self.invalidationCauses.clear()
                 self.metrics={'ticks':0,'ms':0.0,'max':0.0,'resolved':0,'sent':0,'since':started}
-        self.callback=BigWorld.callback(0.25,self.tick)
+        # refresh() can run synchronously during stats/native updates. Preserve
+        # its queued tick instead of creating a second recurring chain.
+        if self.active and self.callback is None:
+            self.callback=BigWorld.callback(0.25,self.tick)

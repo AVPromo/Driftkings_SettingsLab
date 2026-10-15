@@ -233,3 +233,34 @@ packaged resources before compiling. Battle and ratings factories remain in one
 SWF; injected Gameface views use the generated bootstrap catalog. Standalone
 windows retain their HTML-owned assets. Runtime checks with simulated APIs do
 not replace the final in-game validation.
+
+## Runtime measurement and stabilization
+
+Enable the existing core debug option in the settings panel for a bounded capture.
+The installed-mods dialog includes `performance` aggregates and central callback
+queue counts. Disable debug to write up to 20 summary lines through the settings
+log channel. Capture resets on the next enable. No extra polling callback or hook
+is installed, and disabled instrumentation does not read a clock or collect samples.
+
+The collector covers active managed hooks, Signal consumers, central callback
+executions and selected Flash/Gameface bridges. It stores at most 256 numeric
+aggregate entries including overflow; it never records payload contents. Timings
+are inclusive wall time, overlap between layers and are not additive CPU costs.
+It does not claim to count every native callback or every UI message in the game.
+The Gameface byte counter measures serialized JSON, excluding native transport overhead.
+Player Panel's existing feature diagnostics remain available independently.
+
+Flight/Dispersion Timer text setters suppress consecutive identical values only
+for the same live Flash proxy. Lifecycle/readiness changes reset the cache;
+failed sends remain retryable. Roster ticks preserve a refresh already queued
+during an update and stop rescheduling after deactivation. Synthetic comparison
+with commit `9081ac9` measures 10,000 requests with 100 distinct consecutive values
+as 10,000 versus 100 bridge calls for each text setter. This is call-count evidence,
+not an FPS measurement. Local checks and their `build/performance_report.json`
+artifact stay excluded from Git publication.
+
+If Pylance indexes build archives, exclude `**/build/**` in workspace-local
+`python.analysis.exclude` and `files.watcherExclude`. The compiler tolerates
+transient Windows sharing/access errors for up to eight attempts (9.75 seconds
+of total backoff), then reports the error and preserves the previous output.
+The final in-game checklist is maintained in `PLANO_TRABALHO.md`.

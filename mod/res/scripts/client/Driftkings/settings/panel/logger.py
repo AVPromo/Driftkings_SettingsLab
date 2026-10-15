@@ -25,6 +25,9 @@ def _text(message, args):
 
 def set_debug(enabled):
     _state['debug'] = bool(enabled)
+    from Driftkings.core.diagnostics import diagnostics
+    diagnostics.reporter = lambda message: info('Performance: %s', message)
+    diagnostics.configure(enabled)
 
 
 def debug_enabled():

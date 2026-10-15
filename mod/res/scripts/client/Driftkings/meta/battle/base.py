@@ -9,9 +9,41 @@ from skeletons.gui.battle_session import IBattleSessionProvider
 from Driftkings.core.hud_visibility import hudVisibility
 from Driftkings.core.battle_capabilities import battle_capabilities
 from Driftkings.settings.service import settings_service
+from Driftkings.core.diagnostics import diagnostics
 
 
 class ComponentMeta(BaseDAAPIComponent):
+    def _populate(self):
+        self._sentValues = {}
+        super(ComponentMeta, self)._populate()
+
+    def _dispose(self):
+        try:
+            super(ComponentMeta, self)._dispose()
+        finally:
+            self._sentValues = {}
+
+    def _sendChanged(self, method, *values):
+        """Deduplicate scalar, void setters only; commit cache after success."""
+        if not self._isDAAPIInited():
+            self._sentValues = {}
+            return
+        flash = self.flashObject
+        cache = getattr(self, '_sentValues', None)
+        if cache is None:
+            cache = self._sentValues = {}
+        previous = cache.get(method)
+        if previous is not None and previous[0] is flash and previous[1] == values:
+            if diagnostics.enabled:
+                diagnostics.count('flash.' + self.FLASH_CLASS + '.' + method + '.skipped')
+            return
+        if diagnostics.enabled:
+            result = diagnostics.call('flash.' + self.FLASH_CLASS + '.' + method, getattr(flash, method), *values)
+        else:
+            result = getattr(flash, method)(*values)
+        cache[method] = (flash, values)
+        return result
+
     def as_setComponentVisible(self, visible):
         if self._isDAAPIInited():
             return self.flashObject.setCompVisible(visible)
