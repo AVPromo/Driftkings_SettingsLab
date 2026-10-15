@@ -62,7 +62,7 @@ python build_tools/validate_build_data.py
 .\release.cmd --version 0.1.2-beta.2 --channel beta
 ```
 
-The current build contract uses the NA installation as its resource source and an EU source reference. Local tool paths belong in ignored `build_data/toolchain.local.json`. Builds compile Python 2.7, Flash and native helpers, generate the carousel integration and verify the packages. Outputs go to `build/`; compilation does not install or publish them.
+The current build contract uses the (EU, NA) installation as its resource source and an EU source reference. Local tool paths belong in ignored `build_data/toolchain.local.json`. Builds compile Python 2.7, Flash and native helpers, generate the carousel integration and verify the packages. Outputs go to `build/`; compilation does not install or publish them.
 
 | Directory | Contents |
 | --- | --- |
@@ -80,6 +80,4 @@ See the [build contract](build_data/README.md), [documentation index](docs/READM
 
 [Report an issue](https://github.com/dkruben/Driftkings_SettingsLab/issues) with the mod version, game version/realm, reproduction steps and relevant `game.log` excerpts. Remove personal information before sharing logs.
 
-Dependencies: ModsListAPI by poliroid and OpenWG Gameface. The [Battle Observer project](https://github.com/Armagomen/battle_observer) informed the organization review and this README's presentation.
-
-Read the [English license](LICENSE_EN.md), [Portuguese license](LICENSE_PT.md) and [third-party notices](docs/XVM-CONFIG-NOTICE.md). Included third-party materials retain their respective terms.
+Dependencies: ModsListAPI by poliroid and OpenWG Gameface.
