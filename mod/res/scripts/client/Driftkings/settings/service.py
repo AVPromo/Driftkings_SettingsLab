@@ -84,18 +84,74 @@ def restore(target, snapshot):
 
 
 class SettingsService(object):
-    def __init__(self, settings=None):
+    def __init__(self, settings=None, loader=None):
+        self.loader = loader
         self.settings = user_settings if settings is None else settings
         self.onModSettingsChanged = SettingsChanged()
         self._applying = set()
         self._handlers = {}
+
+    def initialize(self, section):
+        """Own section setup and persistence; definitions never initialize a UI builder."""
+        from helpers import getClientLanguage
+        from Driftkings.settings.hotkeys import processHotKeys
+        from Driftkings.settings.settings_data import defaults, default_keys
+        from Driftkings.settings.sections import previous_name
+        section.manager = self
+        section.defaultKeys = default_keys(section.NAME)
+        section.data = defaults(section.NAME)
+        processHotKeys(section.data, section.defaultKeys, 'read')
+        section.i18n = {}
+        section.lang = str(getClientLanguage()).lower()
+        section.configPath = './mods/configs/Driftkings/%s/' % previous_name(section.NAME)
+        section.loadLang()
+        # Register only fully loaded sections; a failed load leaves no panel entry.
+        restore(section.data, self._read(section))
+        self.register(section)
+        from Driftkings.settings.registry import registry
+        registry.register(section)
+
+    def _loader(self):
+        if self.loader is not None:
+            return self.loader
+        from Driftkings.settings.loader import settings_loader
+        return settings_loader
+
+    def _storage(self, section):
+        if section.STORAGE_CLASS is None:
+            return None
+        return self._loader().split_store(section.NAME, section.STORAGE_CLASS,
+                                          section.STORAGE_FILES, section.configPath)
+
+    def _read(self, section):
+        from Driftkings.settings.hotkeys import processHotKeys
+        from Driftkings.settings.settings_data import defaults
+        from Driftkings.settings.store import load_config
+        store = self._storage(section)
+        # File loading works on persisted key names, never on the live dictionary.
+        if store is not None:
+            values = store.load()
+        else:
+            values = load_config(section, self._loader(), defaults(section.NAME))
+        processHotKeys(values, section.defaultKeys, 'read')
+        return section.normalize_loaded(values)
+
+    def _save(self, section, values):
+        from Driftkings.settings.hotkeys import processHotKeys
+        persisted = copy.deepcopy(values)
+        processHotKeys(persisted, section.defaultKeys, 'write')
+        store = self._storage(section)
+        if store is None:
+            self._loader().save(section.NAME, persisted)
+        else:
+            store.save(persisted)
 
     def register(self, config):
         self.settings.register(config)
         self._bind(config)
 
     def _bind(self, config):
-        section = part_name(config.ID)
+        section = part_name(config.NAME)
         handler = getattr(config, 'onModSettingsChanged', None)
         previous = self._handlers.get(section)
         if previous == handler:
@@ -109,7 +165,7 @@ class SettingsService(object):
             self._handlers.pop(section, None)
 
     def getConfig(self, component):
-        if hasattr(component, 'data') or hasattr(component, 'ID') and callable(getattr(component, 'getData', None)):
+        if hasattr(component, 'data') or hasattr(component, 'NAME') and callable(getattr(component, 'getData', None)):
             return component
         key = component.NAME if hasattr(component, 'NAME') else part_name(component)
         return self.settings.configs[key]
@@ -154,54 +210,56 @@ class SettingsService(object):
         config = self.getConfig(config)
         before = copy.deepcopy(config.data)
         try:
-            config.readData(quiet)
-            config.readCurrentSettings(quiet)
+            restore(config.data, self._read(config))
         except Exception:
             restore(config.data, before)
             raise
         changes = changed_values(before, config.data)
         if changes:
             self._bind(config)
-            self.onModSettingsChanged.emit(part_name(config.ID),
+            self.onModSettingsChanged.emit(part_name(config.NAME),
                 SettingsChanges(changes, changed_paths(before, config.data)))
         return changes
 
-    def apply(self, config, values, block=None, persist=True):
-        """Keep feature validation/storage, suppress no-ops, then publish a diff."""
+    def apply(self, config, values, persist=True):
+        """Normalize and persist a candidate before publishing it to live consumers."""
         if not isinstance(values, dict):
             raise ValueError('Settings must be a dictionary')
         config = self.getConfig(config)
-        current = config.data if block is None else config.getData(block)
+        current = config.data
         before = copy.deepcopy(current)
         changes = changed_values(before, merge(before, values))
         if not changes:
             return {}
-        token = (id(config), block)
+        token = id(config)
         if token in self._applying:
-            raise RuntimeError('Recursive settings application: ' + config.ID)
+            raise RuntimeError('Recursive settings application: ' + config.NAME)
         self._bind(config)
         self._applying.add(token)
         try:
             if not persist:
                 restore(current, merge(before, values))
-            elif block is None:
-                config.onApplySettings(changes)
+            elif callable(getattr(config, 'persist_values', None)):
+                candidate = config.persist_values(merge(before, values))
+                restore(current, candidate)
             else:
-                config.onApplySettings(changes, blockID=block)
+                candidate = config.normalize_changes(merge(before, values), changes)
+                from Driftkings.settings.loader import validate_types
+                validate_types(before, candidate)
+                self._save(config, candidate)
+                restore(current, candidate)
         except Exception:
             restore(current, before)
             raise
         finally:
             self._applying.remove(token)
-        current = config.data if block is None else config.getData(block)
+        current = config.data
         changes = changed_values(before, current)
         if changes:
-            section = part_name(config.ID)
+            section = part_name(config.NAME)
             paths = changed_paths(before, current)
-            if block is not None:
-                paths = frozenset((block,) + path for path in paths)
             self.onModSettingsChanged.emit(section, SettingsChanges(
-                changes if block is None else {block: changes}, paths))
+                changes, paths))
         return changes
 
 

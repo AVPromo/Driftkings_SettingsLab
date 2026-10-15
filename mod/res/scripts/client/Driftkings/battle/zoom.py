@@ -11,7 +11,7 @@ from Driftkings.common import isReplay, getPlayer
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service
-from Driftkings.settings.templates.battle.zoom import ZoomExtendedSettings as Settings
+from Driftkings.settings.definitions.battle.zoom import ZoomExtendedSettings as Settings
 
 MIN_ZOOM = 2.0
 SMALL_CALIBER_THRESHOLD = 60

@@ -9,7 +9,7 @@ from Driftkings._constants import ARCADE_ZOOM, GLOBAL, MinMax
 from Driftkings.common import logError
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service
-from Driftkings.settings.templates.battle.arcade_zoom import ArcadeZoomSettings as Settings
+from Driftkings.settings.definitions.battle.arcade_zoom import ArcadeZoomSettings as Settings
 
 config = Settings()
 
@@ -37,7 +37,7 @@ def new_read_configs(func, self, dataSection):
     try:
         camera_state.prepare(self)
     except Exception as e:
-        logError(config.ID, "Error in new_read_configs: {}", e)
+        logError(config.NAME, "Error in new_read_configs: {}", e)
         LOG_CURRENT_EXCEPTION()
     finally:
         return func(self, dataSection)
@@ -68,7 +68,7 @@ def new_update_arcade_properties(func, self, state=None):
             scroll_sensitivity = settings_service.getComponentDict(config)[ARCADE_ZOOM.SCROLL_SENSITIVITY]
             state = state._replace(distRange=dist_range, scrollSensitivity=scroll_sensitivity)
     except Exception as e:
-        logError(config.ID, 'Error in new_update_arcade_properties: {}', e)
+        logError(config.NAME, 'Error in new_update_arcade_properties: {}', e)
         LOG_CURRENT_EXCEPTION()
     finally:
         return func(self, state=state)

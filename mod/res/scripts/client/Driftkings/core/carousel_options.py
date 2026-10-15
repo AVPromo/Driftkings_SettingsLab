@@ -8,7 +8,7 @@ STAT_SORT_KEYS = ('battles', 'winRate', 'markOfMastery', 'damageRating', 'marksO
 
 def defaults():
     from Driftkings.settings.settings_data import defaults as component_defaults
-    data = component_defaults('CarouselStats')['carousel']
+    data = component_defaults('carousel_stats')['carousel']
     return dict((key, value) for key, value in data.items() if key not in ('normal', 'small', 'rows', 'cellType'))
 
 

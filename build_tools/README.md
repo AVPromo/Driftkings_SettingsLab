@@ -7,6 +7,38 @@ the game, starts it, creates Git tags or publishes to GitHub.
 
 ## Commands
 
+Defaults are authored only in `res/configs/Driftkings`. The compiler generates
+the packaged `settings/default_values.pyc` directly from these JSON documents,
+without changing runtime source files or installed user configurations. The
+checked-in `settings/default_values.py` supports source tools and is verified
+by the build-data validator. After an intentional defaults change, run:
+
+```powershell
+python build_tools/generate_defaults.py --write --refresh-snapshot
+```
+
+Without flags, the generator checks for stale fallbacks. `--write` regenerates
+them; `--refresh-snapshot` records intentional JSON edits while preserving the
+original import hashes as provenance. Package verification imports the generated
+bytecode in Python 2.7 and compares all 33 components with the canonical JSON.
+Existing user files retain precedence; missing values use the generated defaults.
+
+PlayerPanelPro uses its nine split files, CarouselStats its three, and
+MinimapPlugins its four current split files. The older `minimap_plugins.json`
+is retained as a legacy distribution input; it does not override the split files
+when generating fallbacks. Hotkey values and the initial profile selector also
+come from the JSON.
+
+Runtime settings use a single section name (`arcade_zoom`, `player_panel_pro`,
+etc.) throughout constants, generated defaults, settings registration and i18n.
+Configuration classes declare only `NAME`, not a second `ID`. The existing
+central manager exposes the same live dictionaries through
+`settings_service.settings.arcade_zoom` and
+`settings_service.getSetting('arcade_zoom', 'max')`.
+`settings/sections.py` retains previous names only for compatibility with older
+central JSON, translation overrides, legacy paths and persistent panel identities.
+The compiler rejects configuration classes that reintroduce `ID`.
+
 Run from the repository root:
 
 ```powershell

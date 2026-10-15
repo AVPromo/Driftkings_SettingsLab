@@ -3,7 +3,7 @@
 from gui.shared.personality import ServicesLocator
 
 from Driftkings.core import player_ratings
-from Driftkings.settings.templates.battle.players_panel import PlayerPanelProSettings
+from Driftkings.settings.definitions.battle.players_panel import PlayerPanelProSettings
 from Driftkings.views.battle.player_ratings import RatingViews
 
 g_config = PlayerPanelProSettings()

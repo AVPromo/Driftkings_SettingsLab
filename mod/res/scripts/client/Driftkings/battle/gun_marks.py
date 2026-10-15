@@ -31,13 +31,14 @@ from Driftkings.core.hooks import override
 from Driftkings.core.keyboard import keyboard
 from Driftkings.core.overlay import ElementType
 from Driftkings.settings.service import settings_service
-from Driftkings.settings.templates.battle.gun_marks import MarksOnGunBattleSettings as Settings
+from Driftkings.settings.definitions.battle.gun_marks import MarksOnGunBattleSettings as Settings
 from Driftkings.views.battle.gun_marks import Flash
 
 
 class MarksBattleCache(object):
     def __init__(self, component):
-        self.component = component
+        from Driftkings.settings.sections import previous_name
+        self.component = previous_name(component)
         self.path = cache_directory('gun_marks_battle')
         self.values = {}
 
@@ -591,7 +592,7 @@ class Worker(object):
         if not settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
             return
         if settings_service.getComponentDict(config)[MARKS_ON_GUN_BATTLE.SHOW_IN_BATTLE]:
-            message = 'Mod: Marks of Excellence %s [by github.com/spoter]' % config.ID
+            message = 'Mod: Marks of Excellence %s [by github.com/spoter]' % config.NAME
             message += '\nRe-Worked for [Driftkings]'
             color = 'Purple'
             sendPanelMessage(message, color)
@@ -713,7 +714,7 @@ class Worker(object):
 
 g_flash = Flash()
 config = Settings()
-marks_cache = MarksBattleCache(config.ID)
+marks_cache = MarksBattleCache(config.NAME)
 marks_cache.load(quiet=False)
 worker = Worker()
 

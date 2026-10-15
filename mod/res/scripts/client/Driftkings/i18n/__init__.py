@@ -7,6 +7,7 @@ import logging
 import os
 
 from Driftkings.settings.store import SettingsStore, merge, recover_file
+from Driftkings.settings.sections import LEGACY_NAMES, previous_name, section_name
 
 from Driftkings.locale_support import CODES as LANGUAGES, language_code
 LOG = logging.getLogger('Driftkings.i18n')
@@ -35,6 +36,18 @@ def client_text(value):
     return value
 
 
+def canonical_sections(document):
+    # Older overrides keep their original file and section names on disk.
+    # Explicit canonical sections take precedence if both spellings exist.
+    result = {}
+    for canonical in (False, True):
+        for name, values in document.items():
+            if (name not in LEGACY_NAMES) == canonical:
+                section = LEGACY_NAMES.get(name, name)
+                result[section] = merge(result.get(section, {}), values)
+    return result
+
+
 class TranslationCatalog(object):
     def __init__(self, root='./mods/configs/Driftkings'):
         self.root = os.path.abspath(root)
@@ -49,7 +62,7 @@ class TranslationCatalog(object):
     def migrate(self, language, components, path):
         sections = {}
         for component in components:
-            legacy = os.path.join(self.root, component, 'i18n', language + '.json')
+            legacy = os.path.join(self.root, previous_name(component), 'i18n', language + '.json')
             if not os.path.isfile(legacy):
                 continue
             try:
@@ -73,7 +86,7 @@ class TranslationCatalog(object):
             stat = os.stat(path)
             signature = (stat.st_mtime, stat.st_size)
             if language not in self.cache or self.cache[language][0] != signature:
-                overrides = read_catalog(path)
+                overrides = canonical_sections(read_catalog(path))
                 self.cache[language] = (signature, merge(self.bundled(language), overrides))
             return self.cache[language][1]
         except (ValueError, IOError, OSError):
@@ -81,6 +94,7 @@ class TranslationCatalog(object):
             return self.bundled(language)
 
     def section(self, component, language='en'):
+        component = section_name(component)
         catalog = self.read(language)
         return client_text(merge(catalog.get('common', {}), catalog.get(component, {'UI_description': component})))
 

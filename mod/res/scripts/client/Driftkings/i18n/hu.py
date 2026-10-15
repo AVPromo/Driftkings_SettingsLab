@@ -3,1166 +3,236 @@ from __future__ import unicode_literals
 
 # Catalog completed from en.py; machine-translated additions need native review.
 
-TEXT = {'AccountManager': {'UI_description': 'AccountManager',
-                    'UI_setting_acceptDeleteAccount': 'Fiók törlésének elfogadása',
-                    'UI_setting_accountDelete': 'Fiók törlése lehetőségre',
-                    'UI_setting_accountManager': 'Számlavezető',
-                    'UI_setting_add': 'Hozzáadás',
-                    'UI_setting_autoEnter': 'Automatikus bejelentkezés',
-                    'UI_setting_cancel': 'Mégse',
-                    'UI_setting_delete': 'Törölje',
-                    'UI_setting_deleteAccount': "<font color='#FF4500' size='18'>Törölje</font>",
-                    'UI_setting_edit': "<font color='#9ACD32' size='18'>Szerkesztés</font>",
-                    'UI_setting_email': 'E-mail',
-                    'UI_setting_empty': 'Nincsenek mentett fiókok.',
-                    'UI_setting_enter': "<font color='#FFFF33' size='18'>Enter</font>",
-                    'UI_setting_error': 'A művelet nem fejezhető be.',
-                    'UI_setting_keepPassword': 'Hagyd üresen a mentett jelszó megtartásához.',
-                    'UI_setting_loginOnly': 'Válassz fiókot a bejelentkezési képernyőn.',
-                    'UI_setting_manageYourAccount': 'Kezelje fiókját',
-                    'UI_setting_nick': 'Nick:',
-                    'UI_setting_password': 'Jelszó',
-                    'UI_setting_save': 'Mentés',
-                    'UI_setting_server': 'Szerver:',
-                    'UI_setting_showPassword': 'Jelszó megjelenítése'},
- 'AimingAngles': {'UI_description': 'AimingAngles',
-                  'UI_setting_horizontal_0': 'Letiltva',
-                  'UI_setting_horizontal_1': 'Sarkok',
-                  'UI_setting_horizontal_2': 'Szögletes zárójelek',
-                  'UI_setting_horizontal_3': 'Nagy félkör',
-                  'UI_setting_horizontal_4': 'Félkör',
-                  'UI_setting_horizontal_5': 'Nyolcszög',
-                  'UI_setting_horizontal_6': 'ktulho',
-                  'UI_setting_horizontal_text': 'Vízszintes marker típus',
-                  'UI_setting_horizontal_tooltip': 'A szálkereszttől balra és jobbra található jelzők '
-                                                   'típusa, amelyek a fegyvere vízszintes élhelyzetét '
-                                                   'mutatják.\n'
-                                                   '\n'
-                                                   "<img src='img://gui/AimingAngles/1/Left.png'> <img "
-                                                   "src='img://gui/AimingAngles/1/Right.png'>\t<img "
-                                                   "src='img://gui/AimingAngles/2/Left.png'> <img "
-                                                   "src='img://gui/AimingAngles/2/Right.png'>\t<img "
-                                                   "src='img://gui/AimingAngles/3/Left.png'> <img "
-                                                   "src='img://gui/AimingAngles/3/Right.png'>\t<img "
-                                                   "src='img://gui/AimingAngles/4/Left.png'> <img "
-                                                   "src='img://gui/AimingAngles/4/Right.png'>\t<img "
-                                                   "src='img://gui/AimingAngles/5/Left.png'> <img "
-                                                   "src='img://gui/AimingAngles/5/Right.png'>\t<img "
-                                                   "src='img://gui/AimingAngles/6/Left.png'> <img "
-                                                   "src='img://gui/AimingAngles/6/Right.png'>",
-                  'UI_setting_vertical_0': 'Letiltva',
-                  'UI_setting_vertical_1': 'Függőleges kötőjel',
-                  'UI_setting_vertical_2': 'Dot',
-                  'UI_setting_vertical_3': 'Háromszög',
-                  'UI_setting_vertical_4': 'Dióda',
-                  'UI_setting_vertical_5': 'Nyolcszög',
-                  'UI_setting_vertical_6': 'ktulho',
-                  'UI_setting_vertical_text': 'Függőleges marker típus',
-                  'UI_setting_vertical_tooltip': 'A szálkereszt felett és alatt lévő jelzők típusa, amelyek '
-                                                 'a fegyvere függőleges élhelyzetét mutatják.\n'
-                                                 '\n'
-                                                 "<img src='img://gui/AimingAngles/1/Bottom.png'>\t<img "
-                                                 "src='img://gui/AimingAngles/2/Bottom.png'>\t<img "
-                                                 "src='img://gui/AimingAngles/3/Bottom.png'>\t<img "
-                                                 "src='img://gui/AimingAngles/4/Bottom.png'>\t<img "
-                                                 "src='img://gui/AimingAngles/5/Bottom.png'>\t<img "
-                                                 "src='img://gui/AimingAngles/6/Bottom.png'>"},
- 'ArcadeZoom': {'UI_description': 'ArcadeZoom',
-                'UI_setting_max_text': 'Max Kicsinyítés',
-                'UI_setting_max_tooltip': 'A kamera maximális távolsága a járműtől',
-                'UI_setting_min_text': 'Minimális kicsinyítés',
-                'UI_setting_min_tooltip': 'A kamera minimális távolsága a járműtől',
-                'UI_setting_scrollSensitivity_text': 'Görgetési érzékenység',
-                'UI_setting_scrollSensitivity_tooltip': 'Állítsa be az egérgörgő zoom érzékenységét',
-                'UI_setting_startDeadDist_text': 'Indítsa el a Holt távolságot',
-                'UI_setting_startDeadDist_tooltip': 'A kamera kezdeti távolsága post mortem módban'},
- 'ArmorCalculator': {'UI_colors': {'green': '#60CB00',
-                                   'orange': '#FF9900',
-                                   'purple': '#6F6CD3',
-                                   'red': '#ED070A',
-                                   'yellow': '#FFC900'},
-                     'UI_description': 'ArmorCalculator',
-                     'UI_noDamage': 'Kritikus találat, sérülésmentes.',
-                     'UI_ricochet': 'Ricochet',
-                     'UI_setting_displayOnAllies_text': 'Megjelenítés a szövetségeseken',
-                     'UI_setting_displayOnAllies_tooltip': ''},
- 'ArtySplash': {'UI_artySplash_messageDotOff': 'Erősen robbanásveszélyes robbanás: rejtse el a középpontot',
-                'UI_artySplash_messageDotOn': 'Erősen robbanásveszélyes robbanás: mutasd meg a középpontot',
-                'UI_artySplash_messageSplashOff': 'Erősen robbanásveszélyes robbanás: rejtse el a robbanási '
+TEXT = {'account_manager': {'UI_description': 'AccountManager',
+                     'UI_setting_acceptDeleteAccount': 'Fiók törlésének elfogadása',
+                     'UI_setting_accountDelete': 'Fiók törlése lehetőségre',
+                     'UI_setting_accountManager': 'Számlavezető',
+                     'UI_setting_add': 'Hozzáadás',
+                     'UI_setting_autoEnter': 'Automatikus bejelentkezés',
+                     'UI_setting_cancel': 'Mégse',
+                     'UI_setting_delete': 'Törölje',
+                     'UI_setting_deleteAccount': "<font color='#FF4500' size='18'>Törölje</font>",
+                     'UI_setting_edit': "<font color='#9ACD32' size='18'>Szerkesztés</font>",
+                     'UI_setting_email': 'E-mail',
+                     'UI_setting_empty': 'Nincsenek mentett fiókok.',
+                     'UI_setting_enter': "<font color='#FFFF33' size='18'>Enter</font>",
+                     'UI_setting_error': 'A művelet nem fejezhető be.',
+                     'UI_setting_keepPassword': 'Hagyd üresen a mentett jelszó megtartásához.',
+                     'UI_setting_loginOnly': 'Válassz fiókot a bejelentkezési képernyőn.',
+                     'UI_setting_manageYourAccount': 'Kezelje fiókját',
+                     'UI_setting_nick': 'Nick:',
+                     'UI_setting_password': 'Jelszó',
+                     'UI_setting_save': 'Mentés',
+                     'UI_setting_server': 'Szerver:',
+                     'UI_setting_showPassword': 'Jelszó megjelenítése'},
+ 'aiming_angles': {'UI_description': 'AimingAngles',
+                   'UI_setting_horizontal_0': 'Letiltva',
+                   'UI_setting_horizontal_1': 'Sarkok',
+                   'UI_setting_horizontal_2': 'Szögletes zárójelek',
+                   'UI_setting_horizontal_3': 'Nagy félkör',
+                   'UI_setting_horizontal_4': 'Félkör',
+                   'UI_setting_horizontal_5': 'Nyolcszög',
+                   'UI_setting_horizontal_6': 'ktulho',
+                   'UI_setting_horizontal_text': 'Vízszintes marker típus',
+                   'UI_setting_horizontal_tooltip': 'A szálkereszttől balra és jobbra található jelzők '
+                                                    'típusa, amelyek a fegyvere vízszintes élhelyzetét '
+                                                    'mutatják.\n'
+                                                    '\n'
+                                                    "<img src='img://gui/AimingAngles/1/Left.png'> <img "
+                                                    "src='img://gui/AimingAngles/1/Right.png'>\t<img "
+                                                    "src='img://gui/AimingAngles/2/Left.png'> <img "
+                                                    "src='img://gui/AimingAngles/2/Right.png'>\t<img "
+                                                    "src='img://gui/AimingAngles/3/Left.png'> <img "
+                                                    "src='img://gui/AimingAngles/3/Right.png'>\t<img "
+                                                    "src='img://gui/AimingAngles/4/Left.png'> <img "
+                                                    "src='img://gui/AimingAngles/4/Right.png'>\t<img "
+                                                    "src='img://gui/AimingAngles/5/Left.png'> <img "
+                                                    "src='img://gui/AimingAngles/5/Right.png'>\t<img "
+                                                    "src='img://gui/AimingAngles/6/Left.png'> <img "
+                                                    "src='img://gui/AimingAngles/6/Right.png'>",
+                   'UI_setting_vertical_0': 'Letiltva',
+                   'UI_setting_vertical_1': 'Függőleges kötőjel',
+                   'UI_setting_vertical_2': 'Dot',
+                   'UI_setting_vertical_3': 'Háromszög',
+                   'UI_setting_vertical_4': 'Dióda',
+                   'UI_setting_vertical_5': 'Nyolcszög',
+                   'UI_setting_vertical_6': 'ktulho',
+                   'UI_setting_vertical_text': 'Függőleges marker típus',
+                   'UI_setting_vertical_tooltip': 'A szálkereszt felett és alatt lévő jelzők típusa, amelyek '
+                                                  'a fegyvere függőleges élhelyzetét mutatják.\n'
+                                                  '\n'
+                                                  "<img src='img://gui/AimingAngles/1/Bottom.png'>\t<img "
+                                                  "src='img://gui/AimingAngles/2/Bottom.png'>\t<img "
+                                                  "src='img://gui/AimingAngles/3/Bottom.png'>\t<img "
+                                                  "src='img://gui/AimingAngles/4/Bottom.png'>\t<img "
+                                                  "src='img://gui/AimingAngles/5/Bottom.png'>\t<img "
+                                                  "src='img://gui/AimingAngles/6/Bottom.png'>"},
+ 'arcade_zoom': {'UI_description': 'ArcadeZoom',
+                 'UI_setting_max_text': 'Max Kicsinyítés',
+                 'UI_setting_max_tooltip': 'A kamera maximális távolsága a járműtől',
+                 'UI_setting_min_text': 'Minimális kicsinyítés',
+                 'UI_setting_min_tooltip': 'A kamera minimális távolsága a járműtől',
+                 'UI_setting_scrollSensitivity_text': 'Görgetési érzékenység',
+                 'UI_setting_scrollSensitivity_tooltip': 'Állítsa be az egérgörgő zoom érzékenységét',
+                 'UI_setting_startDeadDist_text': 'Indítsa el a Holt távolságot',
+                 'UI_setting_startDeadDist_tooltip': 'A kamera kezdeti távolsága post mortem módban'},
+ 'armor_calculator': {'UI_colors': {'green': '#60CB00',
+                                    'orange': '#FF9900',
+                                    'purple': '#6F6CD3',
+                                    'red': '#ED070A',
+                                    'yellow': '#FFC900'},
+                      'UI_description': 'ArmorCalculator',
+                      'UI_noDamage': 'Kritikus találat, sérülésmentes.',
+                      'UI_ricochet': 'Ricochet',
+                      'UI_setting_displayOnAllies_text': 'Megjelenítés a szövetségeseken',
+                      'UI_setting_displayOnAllies_tooltip': ''},
+ 'arty_splash': {'UI_artySplash_messageDotOff': 'Erősen robbanásveszélyes robbanás: rejtse el a középpontot',
+                 'UI_artySplash_messageDotOn': 'Erősen robbanásveszélyes robbanás: mutasd meg a középpontot',
+                 'UI_artySplash_messageSplashOff': 'Erősen robbanásveszélyes robbanás: rejtse el a robbanási '
+                                                   'területet',
+                 'UI_artySplash_messageSplashOn': 'Erősen robbanásveszélyes robbanás: mutasd meg a robbanási '
                                                   'területet',
-                'UI_artySplash_messageSplashOn': 'Erősen robbanásveszélyes robbanás: mutasd meg a robbanási '
-                                                 'területet',
-                'UI_artySplash_name': 'Nagy robbanásveszélyes sugár',
-                'UI_description': 'ArtySplash',
-                'UI_setting_buttonShowDot_text': 'Gomb: pont megjelenítése|elrejtése',
-                'UI_setting_buttonShowDot_tooltip': '',
-                'UI_setting_buttonShowSplash_text': 'Gomb: Splash megjelenítése|elrejtése',
-                'UI_setting_buttonShowSplash_tooltip': '',
-                'UI_setting_showDotOnDefault_text': 'A Pont megjelenítése alapértelmezés szerint',
-                'UI_setting_showDotOnDefault_tooltip': '',
-                'UI_setting_showModeArcade_text': 'Árkád mód elérhető',
-                'UI_setting_showModeArcade_tooltip': '',
-                'UI_setting_showModeArty_text': 'Művészi mód elérhető',
-                'UI_setting_showModeArty_tooltip': '',
-                'UI_setting_showModeSniper_text': 'Sniper mód elérhető',
-                'UI_setting_showModeSniper_tooltip': '',
-                'UI_setting_showSplashOnDefault_text': 'Splash megjelenítése alapértelmezés szerint',
-                'UI_setting_showSplashOnDefault_tooltip': ''},
- 'AutoAimOptimize': {'UI_description': 'AutoAimOptimize',
-                     'UI_setting_angle_text': 'Állítsa be a cél elkapásának szögét',
-                     'UI_setting_angle_value': 'x',
-                     'UI_setting_catchHiddenTarget_text': 'Kapd el a célt egy akadály mögött',
-                     'UI_setting_catchHiddenTarget_tooltip': '',
-                     'UI_setting_disableArtyMode_text': 'Letiltás Arty módban',
-                     'UI_setting_disableArtyMode_tooltip': ''},
- 'AutoClaimClan': {'UI_description': 'AutoClaimClan',
-                   'UI_setting_enabled_text': 'Engedélyezve',
-                   'UI_setting_enabled_tooltip': 'A mod engedélyezése/letiltása.'},
- 'BanksLoader': {'UI_description': 'BanksLoader',
-                 'UI_restart_button_close': 'Folytatás',
-                 'UI_restart_button_restart': 'Indítsa újra',
-                 'UI_restart_button_shutdown': 'Leállítás',
-                 'UI_restart_create': ' • szakaszok <b>létre</b> bankok számára: ',
-                 'UI_restart_delete': ' • szakaszok <b>törölve</b> bankok számára: ',
-                 'UI_restart_header': 'Banks Loader a Driftkingstől: Indítsa újra',
-                 'UI_restart_memory': ' • értékek <b>megváltozott</b> memória beállításokhoz: ',
-                 'UI_restart_move': ' • szakaszok <b>megmozdult</b> bankok számára: ',
-                 'UI_restart_reason': ' Pontos változások:\n{}.',
-                 'UI_restart_reason_new': 'Új audio modokat telepített, ezért a játék konfigurációja '
-                                          'megváltozott.',
-                 'UI_restart_reason_update': 'A rendszer játékkliens frissítést észlelt, ezért a játék '
-                                             'konfigurációs módosításait újra alkalmaztuk.',
-                 'UI_restart_remap': ' • szakaszok <b>megváltozott</b> beállításokhoz: ',
-                 'UI_restart_section': ' • szakaszok <b>eltolódott</b> bankok számára: ',
-                 'UI_restart_text': '{reason}{reasons}\n'
-                                    'A módosítások elfogadásához a játékkliens újraindítása szükséges.\n'
-                                    'A hangmodellek megfelelő viselkedése <b>NEM GARANTÁLT</b> a következő '
-                                    'játékindításig.\n'
-                                    'Ez lesz <b>nem</b> később szükséges.\n'
-                                    'Most újra akarod indítani a játékot?',
-                 'UI_restart_wotmod': ' • konfigurációk <b>eltávolították</b> csomagokból: '},
- 'BattleEfficiency': {'UI_description': 'BattleEfficiency',
-                      'UI_setting_battleResultsFormat_text': 'Csata eredmények ablak módosítása',
-                      'UI_setting_battleResultsFormat_tooltip': 'Elérhető makrók:\n'
-                                                                "WN8:'{wn8}', Szín:'{c:wn8}'\n"
-                                                                "XWN8:'{xwn8}', Szín:'{c:x}'\n"
-                                                                "EFF:'{eff}', Szín:'{c:eff}'\n"
-                                                                "XEFF:'{xeff}', Szín:'{c:x}'\n"
-                                                                "DIFF:'{diff}', Szín:'{c:diff}'\n"
-                                                                "DMG:'{dmg}', Szín:'{c:dmg}'\n"
-                                                                "XTE:'{xte}', Szín:'{c:x}'\n"
-                                                                '{mapName} - Térkép neve\n'
-                                                                '{battleType} - Harc típus',
-                      'UI_setting_battleResultsWindow_text': 'Csata eredmények ablak',
-                      'UI_setting_battleResultsWindow_tooltip': 'A csata eredménye ablak engedélyezése.',
-                      'UI_setting_colorRatting_NoobMeter': 'NoobMeter',
-                      'UI_setting_colorRatting_WotLabs': 'WotLabs',
-                      'UI_setting_colorRatting_XVM': 'XVM',
-                      'UI_setting_colorRatting_text': 'Válassza a Színbesorolás lehetőséget',
-                      'UI_setting_colorRatting_tooltip': 'Válassza ki a színsémát az értékelésekhez',
-                      'UI_setting_format_text': 'Szövegformátum, elérhető makrók:',
-                      'UI_setting_format_tooltip': 'Elérhető makrók:\n'
-                                                   " WN8:'{wn8}', Szín:'{c:wn8}'\n"
-                                                   "XWN8:'{xwn8}', Szín:'{c:x}'\n"
-                                                   "EFF:'{eff}', Szín:'{c:eff}'\n"
-                                                   "XEFF:'{xeff}', Szín:'{c:x}'\n"
-                                                   "DIFF:'{diff}', Szín:'{c:diff}'\n"
-                                                   "DMG:'{dmg}', Szín:'{c:dmg}'\n"
-                                                   "XTE:'{xte}', Szín:'{c:x}'",
-                      'UI_setting_textLock_text': 'Szövegzár',
-                      'UI_setting_textLock_tooltip': 'Húzza a szöveget a csatában'},
- 'BattleOptions': {'UI_description': 'BattleOptions',
-                   'UI_setting_addEnemyName_text': 'Add hozzá az ellenség nevét',
-                   'UI_setting_addEnemyName_tooltip': 'Hozzáadja az ellenséges jármű nevét a kárnaplóhoz.',
-                   'UI_setting_clipLoad_text': 'Újratöltés állapota',
-                   'UI_setting_clipLoad_tooltip': 'Klip betöltési idejű masszázs',
-                   'UI_setting_colorCheck_text': 'Válassza ki a térkép szegélyének színét:',
-                   'UI_setting_color_text': "<font color='#%(color)s'>Jelenlegi szín: #%(color)s</font>",
-                   'UI_setting_color_tooltip': 'Ez a szín minden térképen érvényes lesz',
-                   'UI_setting_directivesOnlyFromStorage_text': 'Csak a tárolásból származó irányelvek',
-                   'UI_setting_directivesOnlyFromStorage_tooltip': 'A felülbíráló direktívák letiltása a '
-                                                                   'tárolóból.',
-                   'UI_setting_disableSoundCommander_text': 'A Sound Commander letiltása',
-                   'UI_setting_disableSoundCommander_tooltip': 'A Sound Commander letiltása csatában.',
-                   'UI_setting_hideBadges_text': 'Jelvények elrejtése',
-                   'UI_setting_hideBadges_tooltip': 'Jelvények elrejtése a játékosok panelen.',
-                   'UI_setting_hideBattlePrestige_text': 'A Battle Prestige elrejtése',
-                   'UI_setting_hideBattlePrestige_tooltip': 'A Battle Prestige elrejtése a játékosok '
-                                                            'panelen.',
-                   'UI_setting_hideClanName_text': 'Klánnév elrejtése',
-                   'UI_setting_hideClanName_tooltip': 'Távolítsa el a klán nevét a játékosok panelről.',
-                   'UI_setting_hideHint_text': 'Tipp elrejtése',
-                   'UI_setting_hideHint_tooltip': 'Harci tipp letiltása.',
-                   'UI_setting_inBattle_text': 'Harci óra',
-                   'UI_setting_inBattle_tooltip': 'Mutasd az órát a csatában',
-                   'UI_setting_loadTxt_text': 'Szövegformátum',
-                   'UI_setting_loadTxt_tooltip': 'Használjon makrókat az üzenet szerkesztéséhez\n'
-                                                 " (makrók: '{load}' - '{pos}')",
-                   'UI_setting_maxChatLines_text': 'Max Chat vonalak',
-                   'UI_setting_maxChatLines_tooltip': 'Korlátozza a harci chat-vonalak számát.',
-                   'UI_setting_muteTeamBaseSound_text': 'Csapatbázis hang némítása',
-                   'UI_setting_muteTeamBaseSound_tooltip': 'Csapatbázis hang letiltása, ha ez az opció '
-                                                           'engedélyezve van.',
-                   'UI_setting_postmortemTips_text': 'Halál utáni tippek elrejtése',
-                   'UI_setting_postmortemTips_tooltip': 'Halál után tiltsa le a felugró panelt az alján.',
-                   'UI_setting_showAnonymous_text': 'Névtelen megjelenítése',
-                   'UI_setting_showAnonymous_tooltip': 'Az „Anonymous” név megjelenítése a játékosok '
-                                                       'panelen.',
-                   'UI_setting_showBattleHint_text': 'Pályanézet elrejtése.',
-                   'UI_setting_showBattleHint_tooltip': 'A stratégiai módban változó célzási mód tippjeit '
-                                                        'elrejti.',
-                   'UI_setting_showFriends_text': 'Mutasd a barátokat',
-                   'UI_setting_showFriends_tooltip': 'Ismerősök megjelenítése a játékosok panelen.',
-                   'UI_setting_showPlayerSatisfactionWidget_text': 'Játékos elégedettség widget '
-                                                                   'megjelenítése',
-                   'UI_setting_showPlayerSatisfactionWidget_tooltip': 'A csata értékelésének „játékos '
-                                                                      'elégedettsége” widget megjelenítése.',
-                   'UI_setting_showPostmortemDogTag_text': 'Postmortem DogTag megjelenítése',
-                   'UI_setting_showPostmortemDogTag_tooltip': 'A kutyacímkével rendelkező előugró panel '
-                                                              'letiltása.',
-                   'UI_setting_stunSound_text': 'Lenyűgöző hanghatás',
-                   'UI_setting_stunSound_tooltip': 'A Stun Sound Effect letiltása.'},
- 'BattleStat': {'UI_description': 'BattleStat',
-                'UI_setting_colorRating_text': 'Színtáblázat',
-                'UI_setting_colorRating_tooltip': 'Színskála a statisztikákhoz.',
-                'UI_setting_format_text': 'Szövegformátum',
-                'UI_setting_format_tooltip': 'Beállítja a szöveg formátumát',
-                'UI_setting_teamChances_text': 'Mutasd meg a csapat esélyeit',
-                'UI_setting_teamChances_tooltip': 'Megjeleníti az egyes csapatok nyerési esélyeinek '
-                                                  'százalékát a csata során'},
- 'CarouselStats': {'UI_description': 'CarouselStats',
-                   'UI_setting_colorRating_text': 'Színtáblázat',
-                   'UI_setting_showIcons_text': 'Ikonok megjelenítése'},
- 'CrewSettings': {'UI_description': 'A legénység konfigurációja',
-                  'UI_message_crewNotAvailable': 'A személyzet nem áll rendelkezésre visszaküldésre',
-                  'UI_message_crewReturned': 'A személyzet visszakerült a járműbe',
-                  'UI_setting_autoReturnDelay_text': 'Automatikus visszatérés késleltetése (másodperc)',
-                  'UI_setting_autoReturnDelay_tooltip': 'Késés a személyzet automatikus visszatérése előtt',
-                  'UI_setting_crewAutoReturn_text': 'Crew automatikus visszatérés',
-                  'UI_setting_crewAutoReturn_tooltip': 'A személyzet automatikusan visszaküldése a '
-                                                       'járművéhez',
-                  'UI_setting_crewReturnByDefault_text': 'A személyzet visszatérése alapértelmezés szerint',
-                  'UI_setting_crewReturnByDefault_tooltip': 'Alapértelmezés szerint a személyzet '
-                                                            'visszaküldése járműváltáskor',
-                  'UI_setting_excludePremiumVehicles_text': 'Prémium járművek kizárása',
-                  'UI_setting_excludePremiumVehicles_tooltip': 'Ne küldje vissza automatikusan a '
-                                                               'személyzetet a prémium járművekhez',
-                  'UI_setting_showNotifications_text': 'Értesítések megjelenítése',
-                  'UI_setting_showNotifications_tooltip': 'Rendszerértesítések megjelenítése, amikor a '
-                                                          'személyzet visszatér'},
- 'DispersionCircle': {'UI_description': 'Reticle',
-                      'UI_setting_gunMarkerMinimumSize_text': 'Fegyverjelző minimális mérete',
-                      'UI_setting_gunMarkerMinimumSize_tooltip': 'A fegyverjelölő minimális mérete pixelben',
-                      'UI_setting_percentCorrection_text': 'Reticle méret korrekció',
-                      'UI_setting_percentCorrection_tooltip': 'Állítsa be az irányzék léptéktényezőjét',
-                      'UI_setting_serverReticleAimingCircleOpacity_text': 'Cél a kör átlátszatlansága',
-                      'UI_setting_serverReticleAimingCircleOpacity_tooltip': 'Állítsa be a kiszolgáló '
-                                                                             'célzókörének átlátszatlanságát',
-                      'UI_setting_serverReticleAimingCircleShape_text': 'Célzó kör alakú',
-                      'UI_setting_serverReticleAimingCircleShape_tooltip': 'Válassza ki a szerver célzókör '
-                                                                           'alakját',
-                      'UI_setting_serverReticleGunMarkerOpacity_text': 'Fegyverjelző átlátszatlansága',
-                      'UI_setting_serverReticleGunMarkerOpacity_tooltip': 'Állítsa be a kiszolgáló '
-                                                                          'pisztolyjelző átlátszatlanságát',
-                      'UI_setting_serverReticleGunMarkerShape_text': 'Fegyverjelölő alakja',
-                      'UI_setting_serverReticleGunMarkerShape_tooltip': 'Válassza ki a kiszolgáló '
-                                                                        'fegyverjelölő alakját',
-                      'UI_setting_showClientAndServerReticleBeta_text': 'Ügyfél- és szerverhálózat (béta)',
-                      'UI_setting_showClientAndServerReticleBeta_tooltip': 'Egyszerre jelenítse meg a kliens '
-                                                                           'és a kiszolgáló hálóját',
-                      'UI_setting_showServerSpgStrategicReticle_text': 'SPG Stratégiai Reticle',
-                      'UI_setting_showServerSpgStrategicReticle_tooltip': 'Engedélyezze a kiszolgáló hálóját '
-                                                                          'az SPG stratégiai módhoz'},
- 'DispersionTimer': {'UI_description': 'DispersionTimer',
-                     'UI_setting_blue_text': "<font color='#%(blue)s'>Jelenlegi szín: #%(blue)s</font>",
-                     'UI_setting_blue_tooltip': '',
-                     'UI_setting_colorBlue_text': 'A diszperziós időzítő színének kiválasztása nagyon jó:',
-                     'UI_setting_colorGreen_text': 'Válassza ki a színt a jó diszperziós időzítőhöz:',
-                     'UI_setting_colorOrange_text': 'Válassza ki a színt az alacsony diszperziós időzítőhöz:',
-                     'UI_setting_colorPurple_text': 'Válasszon színt a diszperziós időzítőhöz:',
-                     'UI_setting_colorRed_text': 'Válassza ki a színt, ha a diszperziós időzítő rossz:',
-                     'UI_setting_colorYellow_text': 'Válassza ki a színt a diszperziós időzítő normál '
-                                                    'értékéhez:',
-                     'UI_setting_green_text': "<font color='#%(green)s'>Jelenlegi szín: #%(green)s</font>",
-                     'UI_setting_green_tooltip': '',
-                     'UI_setting_orange_text': "<font color='#%(orange)s'>Jelenlegi szín: #%(orange)s</font>",
-                     'UI_setting_orange_tooltip': '',
-                     'UI_setting_purple_text': "<font color='#%(purple)s'>Jelenlegi szín: #%(purple)s</font>",
-                     'UI_setting_purple_tooltip': '',
-                     'UI_setting_red_text': "<font color='#%(red)s'>Jelenlegi szín: #%(red)s</font>",
-                     'UI_setting_red_tooltip': '',
-                     'UI_setting_template_text': 'Sablon',
-                     'UI_setting_template_tooltip': "Makrók%(color)s', %(timer).1fs, %(percent)d%%",
-                     'UI_setting_x_text': 'X pozíció',
-                     'UI_setting_x_tooltip': '',
-                     'UI_setting_y_text': 'Y pozíció',
-                     'UI_setting_y_tooltip': '',
-                     'UI_setting_yellow_text': "<font color='#%(yellow)s'>Jelenlegi szín: #%(yellow)s</font>",
-                     'UI_setting_yellow_tooltip': ''},
- 'DistanceMarker': {'UI_setting_anchorHorizontalOffset_text': 'Vízszintes eltolás',
-                    'UI_setting_anchorHorizontalOffset_tooltip': 'Beállítja a jelölő vízszintes helyzetét',
-                    'UI_setting_anchorPosition_tankBottom': 'Tartály alja',
-                    'UI_setting_anchorPosition_tankCenter': 'Tank központ',
-                    'UI_setting_anchorPosition_tankMarker': 'Tankjelző',
-                    'UI_setting_anchorPosition_text': 'Horgonyhelyzet',
-                    'UI_setting_anchorPosition_tooltip': 'Meghatározza, hogy a jelző hol helyezkedjen el a '
-                                                         'járműhöz képest',
-                    'UI_setting_anchorVerticalOffset_text': 'Függőleges eltolás',
-                    'UI_setting_anchorVerticalOffset_tooltip': 'Beállítja a jelölő függőleges helyzetét',
-                    'UI_setting_decimalPrecision_text': 'Tizedes pontosság',
-                    'UI_setting_decimalPrecision_tooltip': 'Meghatározza, hogy hány tizedesjegy jelenjen meg '
-                                                           'a távolságban',
-                    'UI_setting_displayMode_always': 'Mindig',
-                    'UI_setting_displayMode_onAltPressed': 'Ha megnyomja az Alt gombot',
-                    'UI_setting_displayMode_text': 'Kijelző mód',
-                    'UI_setting_displayMode_tooltip': 'Meghatározza, hogy mikor jelenjen meg a távolságjelző',
-                    'UI_setting_drawTextShadow_text': 'Szöveg árnyék',
-                    'UI_setting_drawTextShadow_tooltip': 'Árnyékot ad a szöveghez a láthatóság javítása '
-                                                         'érdekében',
-                    'UI_setting_lockPositionOffsets_text': 'Zárolási pozíció eltolások',
-                    'UI_setting_lockPositionOffsets_tooltip': 'Megakadályozza a jelölők pozícióinak '
-                                                              'megváltoztatását játék közben',
-                    'UI_setting_markerTarget_allyAndEnemy': 'Szövetségesek és ellenségek',
-                    'UI_setting_markerTarget_onlyEnemy': 'Csak ellenségek',
-                    'UI_setting_markerTarget_text': 'Céljelzők',
-                    'UI_setting_markerTarget_tooltip': 'Meghatározza, hogy mely járművek kapják meg a '
-                                                       'távolságjelzőt',
-                    'UI_setting_textAlpha_text': 'Szöveg átlátszósága',
-                    'UI_setting_textAlpha_tooltip': 'Beállítja a jelölő szövegének átlátszóságát',
-                    'UI_setting_textColor_text': 'Szöveg színe',
-                    'UI_setting_textColor_tooltip': 'Beállítja a jelölő szöveg színét',
-                    'UI_setting_textSize_text': 'Szöveg mérete',
-                    'UI_setting_textSize_tooltip': 'Beállítja a jelölő betűméretét',
-                    'modDisplayName': 'Távolságjelző'},
- 'Driftkings': {'UI_description': 'Driftkings profilok',
-                'UI_profile_active': 'Aktív profil: {0}',
-                'UI_profile_copy': 'Készítsen másolatot az aktív profilról (opcionális)',
-                'UI_profile_restart': 'Indítsa újra a játékot egy másik profil alkalmazásához.',
-                'UI_profile_select': 'Profil a következő játékkezdéshez'},
- 'FlightTimer': {'UI_description': 'FlightTimer',
-                 'UI_setting_spgOnly_text': 'Csak az SPG-hez?',
-                 'UI_setting_spgOnly_tooltip': 'Ha be van jelölve, akkor az időzítő csak SPG esetén lesz '
-                                               'látható.',
-                 'UI_setting_template_text': 'Sablon',
-                 'UI_setting_template_tooltip': "Makrók%(flightTime).1fs', %(distance)dm",
-                 'UI_setting_x_text': 'X pozíció',
-                 'UI_setting_x_tooltip': '',
-                 'UI_setting_y_text': 'Y pozíció',
-                 'UI_setting_y_tooltip': ''},
- 'HangarOptions': {'UI_clock_analog': 'Analóg',
-                   'UI_clock_digital': 'Digitális',
-                   'UI_clock_flip': 'Lapozós',
-                   'UI_clock_minimal': 'Minimalista',
-                   'UI_clock_panel': 'Panel',
-                   'UI_description': 'HangarOptions',
-                   'UI_setting_allowChannelButtonBlinking_text': 'Engedélyezze a Csatorna gomb villogását',
-                   'UI_setting_allowChannelButtonBlinking_tooltip': 'Engedélyezze a messenger bar csatorna '
-                                                                    '(klán vagy privát chat) gomb '
-                                                                    'villogását.',
-                   'UI_setting_allowExchangeXPInTechTree_text': 'XP Exchange a Tech Tree-ben',
-                   'UI_setting_allowExchangeXPInTechTree_tooltip': 'Az XP engedélyezése az aranycseréhez a '
-                                                                   'technológiai fában',
-                   'UI_setting_autoLogin_text': 'Automatikus bejelentkezés',
-                   'UI_setting_autoLogin_tooltip': 'Automatikus bejelentkezés a játékba',
-                   'UI_setting_blockVehicleIfLowAmmo_text': 'Blokkolja a csatát alacsony lőszeren',
-                   'UI_setting_blockVehicleIfLowAmmo_tooltip': 'Akadályozza meg a csatába lépést, ha a '
-                                                               'kiválasztott járműnek kevés a lőszere.',
-                   'UI_setting_clock24Hour_text': '24 órás formátum',
-                   'UI_setting_clockScale_text': 'Óra mérete (%)',
-                   'UI_setting_clockSeconds_text': 'Másodpercek megjelenítése',
-                   'UI_setting_clockStyle_text': 'Óra stílusa',
-                   'UI_setting_clockX_text': 'Óra: vízszintes helyzet',
-                   'UI_setting_clockY_text': 'Óra: függőleges helyzet',
-                   'UI_setting_clock_text': 'Óra kijelző',
-                   'UI_setting_clock_tooltip': 'Gameface óra megjelenítése a garázsban',
-                   'UI_setting_customClockFormat_text': 'Egyedi óraformátum',
-                   'UI_setting_customClockFormat_tooltip': 'Használjon egyedi színt és formátumot az óra '
-                                                           'kijelzéséhez',
-                   'UI_setting_customClockText_text': 'Óraformátum (újraindítás szükséges)',
-                   'UI_setting_fieldMail_text': 'Játékon belüli levelezés',
-                   'UI_setting_fieldMail_tooltip': 'A Field Mail megjelenítése/elrejtése.',
-                   'UI_setting_hideBtnCounters_text': 'Eszköztippek letiltása',
-                   'UI_setting_hideBtnCounters_tooltip': '<img '
-                                                         "src='img://gui/maps/uiKit/dialogs/icons/alert.png' "
-                                                         "width='16' height='16'><font color='#FF0000'>Az "
-                                                         'engedélyezéshez/letiltáshoz újra kell indítani a '
-                                                         'játékot.</font><img '
-                                                         "src='img://gui/maps/uiKit/dialogs/icons/alert.png' "
-                                                         "width='16' height='16'>",
-                   'UI_setting_lootBoxesWidget_text': 'Loot box kijelző',
-                   'UI_setting_lootBoxesWidget_tooltip': 'Lootbox widget megjelenítése/elrejtése a hangárban',
-                   'UI_setting_lowAmmoPercentage_text': 'Alacsony lőszerszázalék',
-                   'UI_setting_lowAmmoPercentage_tooltip': 'A lőszer küszöbértéke a jármű készenlétének vagy '
-                                                           'alacsony lőszerének megjelölésére szolgál.',
-                   'UI_setting_premiumTime_text': 'Prémium fiók lejáratának megjelenítése',
-                   'UI_setting_showAchievementPopups_text': 'Teljesítés előugró ablakok',
-                   'UI_setting_showAchievementPopups_tooltip': 'Megjelenítési előugró ablakok '
-                                                               'megjelenítése/elrejtése.',
-                   'UI_setting_showAchievementRewardWindow_text': 'Eredmény-jutalomablak',
-                   'UI_setting_showAchievementRewardWindow_tooltip': 'Teljes képernyős jutalomablak '
-                                                                     'megjelenítése/elrejtése.',
-                   'UI_setting_showBattleCount_text': 'Csataszámláló',
-                   'UI_setting_showBattleCount_tooltip': 'A csataszámlálás kijelzőjének '
-                                                         'megjelenítése/elrejtése',
-                   'UI_setting_showBattlePassWidget_text': 'Battle pass kijelző',
-                   'UI_setting_showBattlePassWidget_tooltip': 'Battle Pass widget megjelenítése/elrejtése a '
-                                                              'hangárban.',
-                   'UI_setting_showButtonCounters_text': 'Gombos számlálók',
-                   'UI_setting_showButtonCounters_tooltip': 'Értesítésszámlálók megjelenítése/elrejtése a '
-                                                            'gombokon',
-                   'UI_setting_showButton_text': 'Statisztika gomb',
-                   'UI_setting_showButton_tooltip': 'A munkamenet statisztika gomb megjelenítése/elrejtése',
-                   'UI_setting_showBuyPremiumButton_text': 'Prémium fiók gomb megjelenítése',
-                   'UI_setting_showDailyQuestWidget_text': 'Napi küldetések',
-                   'UI_setting_showDailyQuestWidget_tooltip': 'Napi küldetés widget megjelenítése/elrejtése '
-                                                              'a hangárban',
-                   'UI_setting_showEventBanner_text': 'Esemény bannerek',
-                   'UI_setting_showEventBanner_tooltip': 'Esemény bannerek megjelenítése/elrejtése a '
-                                                         'hangárban',
-                   'UI_setting_showEventTournamentWidget_text': 'Versenykijelző',
-                   'UI_setting_showEventTournamentWidget_tooltip': 'Verseny banner widget '
-                                                                   'megjelenítése/elrejtése a hangárban.',
-                   'UI_setting_showGeneralChatButton_text': 'Általános csevegés',
-                   'UI_setting_showGeneralChatButton_tooltip': 'Az Általános csevegés gomb '
-                                                               'megjelenítése/elrejtése',
-                   'UI_setting_showHangarPrestigeWidget_text': 'Prestige display a garázsban',
-                   'UI_setting_showHangarPrestigeWidget_tooltip': 'Elit szintű widget '
-                                                                  'megjelenítése/elrejtése a hangárban',
-                   'UI_setting_showPopUpMessages_text': 'Felugró értesítések',
-                   'UI_setting_showPopUpMessages_tooltip': 'Előugró értesítési üzenetek '
-                                                           'megjelenítése/elrejtése',
-                   'UI_setting_showPremiumShopButton_text': 'Jelenítse meg a prémium boltot',
-                   'UI_setting_showProfilePrestigeWidget_text': 'Profil Prestige Display',
-                   'UI_setting_showProfilePrestigeWidget_tooltip': 'Az elit szintű widget '
-                                                                   'megjelenítése/elrejtése a profilban',
-                   'UI_setting_showProgressiveDecalsWindow_text': 'Progresszív matricák',
-                   'UI_setting_showProgressiveDecalsWindow_tooltip': 'A progresszív matricával kapcsolatos '
-                                                                     'értesítések megjelenítése/elrejtése',
-                   'UI_setting_showPromoPremVehicle_text': 'Prémium jármű előnézet',
-                   'UI_setting_showPromoPremVehicle_tooltip': 'Prémium jármű előnézetek '
-                                                              'megjelenítése/elrejtése a hangárban',
-                   'UI_setting_showRankedBattleResults_text': 'Rangsorolt csataeredmények',
-                   'UI_setting_showRankedBattleResults_tooltip': 'A rangsorolt \u200b\u200bcsataeredmények '
-                                                                 'ablakának megjelenítése/elrejtése',
-                   'UI_setting_showReferralButton_text': 'Ajánlóprogram megjelenítése',
-                   'UI_setting_showUnreadCounter_text': 'Értesítési számláló',
-                   'UI_setting_showUnreadCounter_tooltip': 'Olvasatlan értesítésszámlálók '
-                                                           'megjelenítése/elrejtése',
-                   'UI_setting_showWotPlusButton_text': 'A WoT Plus gomb megjelenítése',
-                   'UI_setting_showXpToUnlockVeh_text': 'Jármű XP követelmények',
-                   'UI_setting_showXpToUnlockVeh_tooltip': 'A járművek feloldásához szükséges XP '
-                                                           'megjelenítése'},
- 'InfoPanel': {'UI_delay_format': ' mp.',
-               'UI_description': 'InfoPanel',
-               'UI_setting_aliveOnly_text': 'Csak élve',
-               'UI_setting_aliveOnly_tooltip': 'Csak élő játékosok számára mutasd.',
-               'UI_setting_altKey_text': 'Alt. Kulcs',
-               'UI_setting_altKey_tooltip': 'Kulcs a saját jármű információs kijelzőjéhez.',
-               'UI_setting_backgroundAlpha_text': 'Háttér átlátszatlansága',
-               'UI_setting_backgroundAlpha_tooltip': 'A háttérpanel átlátszatlansága (0-1)',
-               'UI_setting_backgroundEnabled_text': 'Háttér engedélyezése',
-               'UI_setting_backgroundEnabled_tooltip': 'Mutasson hátteret a szöveg mögött',
-               'UI_setting_delay_text': 'Késleltetés',
-               'UI_setting_delay_tooltip': 'Panel késleltetésének elrejtése (másodpercben)',
-               'UI_setting_showFor_text': 'Megjelenítés',
-               'UI_setting_showFor_tooltip': "• <b>Szövetséges</b> - Csak mutasd meg az 'ALLY' játékosoknak "
-                                             'tankokat.\n'
-                                             "• <b>Ellenség</b> - Csak mutasd meg az 'ENEMY' játékosoknak "
-                                             'tankokat.\n'
-                                             "• <b>Mind</b> - Mutasd meg az 'ÖSSZES' játékos tankját.",
-               'UI_setting_templatePreset_text': 'Előre beállított sablon',
-               'UI_setting_templatePreset_tooltip': 'Válasszon egy előre meghatározott sablont az '
-                                                    'információs megjelenítéshez',
-               'UI_setting_textLock_text': 'Szöveg egérhúzásának letiltása',
-               'UI_setting_textLock_tooltip': 'Ez a beállítás szabályozza, hogy mozgathatja-e a szöveges '
-                                              'ablakot egérrel vagy sem.',
-               'UI_showFor_all': 'Mind',
-               'UI_showFor_ally': 'Szövetséges',
-               'UI_showFor_enemy': 'Ellenség',
-               'UI_templatePreset_default': 'Alapértelmezett',
-               'UI_templatePreset_detailed': 'Részletes',
-               'UI_templatePreset_driftkings': 'Driftkings',
-               'UI_templatePreset_full': 'Tele',
-               'UI_templatePreset_kmp': 'KMP',
-               'UI_templatePreset_minimal': 'Minimális',
-               'UI_templatePreset_ndo': 'NDO',
-               'armor_piercing': 'AP',
-               'armor_piercing_cr': 'APCR',
-               'armor_piercing_he': 'HESH',
-               'high_explosive': 'HE',
-               'hollow_charge': 'HEAT'},
- 'LogsSwapper': {'UI_description': 'LogsSwapper',
-                 'UI_setting_logSwapper_text': 'Fordított napló engedélyezése.',
-                 'UI_setting_logSwapper_tooltip': 'Megfordítja a sebzésnapló helyzetét a harci felületen.',
-                 'UI_setting_wgLogHideAssist_text': 'A Wargaming támogatási napló elrejtése',
-                 'UI_setting_wgLogHideAssist_tooltip': 'Elrejti a sebzést segítő üzeneteket a szabványos WG '
-                                                       'csatanaplóban.',
-                 'UI_setting_wgLogHideBlock_text': 'A Wargaming blokkolt sebzésnaplójának elrejtése',
-                 'UI_setting_wgLogHideBlock_tooltip': 'Elrejti a blokkolt sebzésüzeneteket a szabványos WG '
-                                                      'csatanaplóban.',
-                 'UI_setting_wgLogHideCritics_text': 'WG Log Kritikusok elrejtése',
-                 'UI_setting_wgLogHideCritics_tooltip': 'Elrejti a kritikus találatokat a szabványos WG '
-                                                        'csatanaplóban.'},
- 'MainGun': {'UI_description': 'MainGun',
-             'UI_setting_backGroundEnabled_text': 'Háttér',
-             'UI_setting_backGroundEnabled_tooltip': '',
-             'UI_setting_textLock_text': 'TextLock',
-             'UI_setting_textLock_tooltip': ''},
- 'MarksOnGunBattle': {'NaN': '[<b>NaN</b>]',
-                      'UI_HangarStatsEnd': '{c_damageToMark65}, {c_damageToMark85}\n'
-                                           '{c_damageToMark95}, {c_damageToMark100}',
-                      'UI_HangarStatsStart': '<b>{currentPercent}<font size="14">[{currentDamage}]</font> '
-                                             '</b>',
-                      'UI_description': 'MarksOnGunBattle',
-                      'UI_marks_assist': 'Assist',
-                      'UI_marks_combined': 'Combined',
-                      'UI_marks_compact': 'Compact',
-                      'UI_marks_current': 'Jelenlegi KKM',
-                      'UI_marks_damage': 'Damage',
-                      'UI_marks_detailed': 'Detailed',
-                      'UI_marks_legacy': 'Legacy (12 előre beállított / egyéni formátum)',
-                      'UI_marks_normal': 'Normal',
-                      'UI_menu_UIConfig': 'Konfig',
-                      'UI_menu_UIMyp': '<font color="#D042F3">@Myp</font> választás [<font '
-                                       'color="#D042F3">twitch.tv/myp_</font>]',
-                      'UI_menu_UIReplay': 'a Replays számára',
-                      'UI_menu_UIReplayColor': 'Színezett visszajátszásokhoz',
-                      'UI_menu_UIReplayColorDamage': 'Sebzett visszajátszásokhoz színezett',
-                      'UI_menu_UIReplayDamage': 'sebzéses visszajátszásokhoz',
-                      'UI_menu_UIcircon': '<font color="#02C9B3">@Circon</font> választás [<font '
-                                          'color="#02C9B3">twitch.tv/circon</font>]',
-                      'UI_menu_UIkorbenDallasNoMercy': '<font color="#e3256b">@KorbenDallasNoMercy</font> '
-                                                       'választás [<font '
-                                                       'color="#e3256b">youtube.com/c/KorbenDallasNoMercy</font>]',
-                      'UI_menu_UIoldskool': '<font color="#FFD700">@Oldskool</font> választás [<font '
-                                            'color="#FFD700">twitch.tv/oldskool</font>]',
-                      'UI_menu_UIskill4ltu': '<font color="#60FF00">@skill</font> választás [<font '
-                                             'color="#60FF00">twitch.tv/skill4ltu</font>]',
-                      'UI_menu_UIspoter': '<font color="#6595EE">@spoter</font> választás [<font '
-                                          'color="#6595EE">github.com/spoter</font>]',
-                      'UI_menu_UIspoterNew': 'új <font color="#6595EE">@spoter</font> választás [<font '
-                                             'color="#6595EE">github.com/spoter</font>]',
-                      'UI_message': 'MoE változás vizuális %s',
-                      'UI_setting_UI_text': 'UI a csatában',
-                      'UI_setting_UI_tooltip': 'Kibővített felhasználói felület a csatában:\n'
-                                               '<img src="img://objects/ui_extended.png"></img>\n'
-                                               'Egyszerű:\n'
-                                               '<img src="img://objects/ui_simple.png"></img>\n'
-                                               'Konfig:\n'
-                                               '/mods/configs/Driftkings/MarksOnGunExtended/MarksOnGunExtended.json\n',
-                      'UI_setting_background_text': 'Csata: a háttér megjelenítése',
-                      'UI_setting_background_tooltip': '',
-                      'UI_setting_buttonReset_text': 'Gomb: Beállítások visszaállítása',
-                      'UI_setting_buttonReset_tooltip': '',
-                      'UI_setting_buttonShow_text': 'Gomb: Stílus módosítása',
-                      'UI_setting_buttonShow_tooltip': '',
-                      'UI_setting_buttonSizeDown_text': 'Gomb: Méret -10%',
-                      'UI_setting_buttonSizeDown_tooltip': '',
-                      'UI_setting_buttonSizeUp_text': 'Gomb: Méret +10%',
-                      'UI_setting_buttonSizeUp_tooltip': '',
-                      'UI_setting_colorRating_text': 'Színtáblázat',
-                      'UI_setting_colorRating_tooltip': 'Színskála a kiválóságjelekhez.',
-                      'UI_setting_displayMode_text': 'Presentation',
-                      'UI_setting_showDamage_text': 'Mutasd a sérülést',
-                      'UI_setting_showDelta_text': 'Becsült delta megjelenítése',
-                      'UI_setting_showInBattleHalfPercents_text': 'Csata: mutasson sebzést +0,5%-ig',
-                      'UI_setting_showInBattleHalfPercents_tooltip': '',
-                      'UI_setting_showInBattle_text': 'Battle: Hello üzenet',
-                      'UI_setting_showInBattle_tooltip': '',
-                      'UI_setting_showInHangar_text': 'Hangár: Mutasd a MoE mod',
-                      'UI_setting_showInHangar_tooltip': '',
-                      'UI_setting_showInReplay_text': 'Visszajátszás: engedélyezve',
-                      'UI_setting_showInReplay_tooltip': 'Nem jó, de a tesztekhez hasznos',
-                      'UI_setting_showInStatistic_text': 'Statisztika: engedélyezve',
-                      'UI_setting_showInStatistic_tooltip': '',
-                      'UI_setting_showMarks_text': 'Jelek megjelenítése',
-                      'UI_setting_showProgress_text': 'Előrehaladás megjelenítése',
-                      'UI_setting_showTargets_text': 'Célok megjelenítése',
-                      'UI_setting_techTreeMarkOfGunPercentSize_value': '',
-                      'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} aktuális '
-                                     'mozgóátlag sérülés</font>\n'
-                                     '<font color="#FFFFFF" size="12">{currentDamage} jelenlegi összesített '
-                                     'kár</font>\n'
-                                     'To <font color="#FFFFFF" size="12">{nextPercent}% </font>   szükség '
-                                     '<font color="#FFFFFF" size="12">{needDamage}</font> mozgóátlagos '
-                                     'sebzés\n'
-                                     'Ez a statisztika a jármű utolsó csatájához érhető el\n'
-                                     'To <font color="#FFFFFF" size="12">20% </font>   szükség <font '
-                                     'color="{c20}" size="12">~{_20}</font> mozgóátlagos sebzés\n'
-                                     'To <font color="#FFFFFF" size="12">40% </font>   szükség <font '
-                                     'color="{c40}" size="12">~{_40}</font> mozgóátlagos sebzés\n'
-                                     'To <font color="#FFFFFF" size="12">55% </font>   szükség <font '
-                                     'color="{c55}" size="12">~{_55}</font> mozgóátlagos sebzés\n'
-                                     'To <font color="#FFFFFF" size="12">65% </font>   szükség <font '
-                                     'color="{c65}" size="12">~{_65}</font> mozgóátlagos sebzés\n'
-                                     'To <font color="#FFFFFF" size="12">85% </font>   szükség <font '
-                                     'color="{c85}" size="12">~{_85}</font> mozgóátlagos sebzés\n'
-                                     'To <font color="#FFFFFF" size="12">95% </font>   szükség <font '
-                                     'color="{c95}" size="12">~{_95}</font> mozgóátlagos sebzés\n'
-                                     'To <font color="#FFFFFF" size="12">100% </font>  szükség <font '
-                                     'color="{c100}" size="12">~{_100}</font> mozgóátlagos sebzés',
-                      'battleMessageSizeDown': 'MoE mod: Méret <b>-10%</b>',
-                      'battleMessageSizeLimitMax': 'MoE mod: Elérte <b>maximum[1000%]</b>',
-                      'battleMessageSizeLimitMin': 'MoE mod: Elérte <b>minimum[10%]</b>',
-                      'battleMessageSizeReset': 'MoE mod: Beállítások visszaállítása</b>',
-                      'battleMessageSizeUp': 'MoE mod: Méret <b>+10%</b>'},
- 'MarksOnGunHangar': {'UI_description': 'MarksOnGunHangar',
-                      'UI_panel_achieved': 'Megvalósult',
-                      'UI_panel_additionalGoal': 'További cél',
-                      'UI_panel_automatic': 'Automatikus',
-                      'UI_panel_average': 'Kombinált EMA',
-                      'UI_panel_battles': 'csaták',
-                      'UI_panel_chooseVehicle': 'Válasszon egy tankot',
-                      'UI_panel_drag': 'HÚZÁS',
-                      'UI_panel_estimate': 'Célbecslés',
-                      'UI_panel_estimateNote': 'Csak becslés; nem a következő csatában szükséges sebzés.',
-                      'UI_panel_goal1': '1. pont (65%)',
-                      'UI_panel_goal2': '2. pont (85%)',
-                      'UI_panel_goal3': '3. pont (95%)',
-                      'UI_panel_header': 'KIVÁLÓSÁGI JELEK',
-                      'UI_panel_historyWaiting': 'Történelem: várja a következő csatát',
-                      'UI_panel_locked': 'ZÁRVA',
-                      'UI_panel_mark': 'Mark',
-                      'UI_panel_mastery0': 'Nincs mesterség',
-                      'UI_panel_mastery1': '3. osztály',
-                      'UI_panel_mastery2': '2. osztály',
-                      'UI_panel_mastery3': '1. osztály',
-                      'UI_panel_mastery4': 'Ász Tanker',
-                      'UI_panel_noDossier': 'A jármű dokumentációja nem elérhető.',
-                      'UI_panel_noStats': 'Nincs betöltött statisztika',
-                      'UI_panel_observedBattles': 'csatákat figyeltek meg',
-                      'UI_panel_remaining': 'pp maradt',
-                      'UI_panel_selectVehicle': 'Válasszon egy járművet a hangárban.',
-                      'UI_panel_thirdAchieved': '3. ÉRTÉKELÉS',
-                      'UI_panel_tierLimit': 'V. szinttől elérhető védjegyek',
-                      'UI_panel_trend': 'Megfigyelt tendencia',
-                      'UI_panel_winRate': 'NYEREMÉNY',
-                      'UI_setting_colorRating_NoobMeter': 'NoobMeter',
-                      'UI_setting_colorRating_WotLabs': 'WotLabs',
-                      'UI_setting_colorRating_XVM': 'XVM',
-                      'UI_setting_colorRating_text': 'Válassza a Színbesorolás lehetőséget',
-                      'UI_setting_colorRating_tooltip': 'Válassza ki a MoE, WN8 és a winrate színsémáját',
-                      'UI_setting_compactMode_text': 'Kompakt panel',
-                      'UI_setting_compactMode_tooltip': 'Másodlagos járműstatisztikák elrejtése.',
-                      'UI_setting_goalSelection_text': 'Jelölje meg a célt',
-                      'UI_setting_goalSelection_tooltip': 'Az Automatikus kiválasztja a következő meg nem '
-                                                          'érdemelt pontot. A sebzés arányos becslés, nem '
-                                                          'pedig a szerver küszöbértéke vagy a következő '
-                                                          'csatára vonatkozó előrejelzés.',
-                      'UI_setting_historyBattles_text': 'Legutóbbi csaták a történelemben',
-                      'UI_setting_historyBattles_tooltip': 'A frissítések több csatát csoportosíthatnak. Az '
-                                                           'előzmények a verzió telepítésével kezdődnek.',
-                      'UI_setting_positionX_text': 'Vízszintes helyzet (X)',
-                      'UI_setting_positionX_tooltip': 'Kisebb: bal. Nagyobb: jobb.',
-                      'UI_setting_positionY_text': 'Függőleges helyzet (Y)',
-                      'UI_setting_positionY_tooltip': 'Kisebb: fel. Nagyobb: lent.',
-                      'UI_setting_showInHangar_text': 'Hangár: engedélyezve',
-                      'UI_setting_showInHangar_tooltip': '',
-                      'UI_setting_showInStatistic_text': 'Eszköztipp: engedélyezve',
-                      'UI_setting_showInStatistic_tooltip': '',
-                      'UI_setting_showTooltipTargets_text': 'Eszköztipp: célszintek megjelenítése',
-                      'UI_setting_showTooltipTargets_tooltip': '',
-                      'UI_setting_textLock_text': 'Hangár: zárpanel helyzete',
-                      'UI_setting_textLock_tooltip': '',
-                      'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} aktuális '
-                                     'mozgóátlag sérülés</font>\n'
-                                     '<font color="#FFFFFF" size="12">{currentDamage} jelenlegi összesített '
-                                     'kár</font>\n'
-                                     'To <font color="#FFFFFF" size="12">{nextPercent}% </font> szükség '
-                                     '<font color="#FFFFFF" size="12">{needDamage}</font> mozgóátlagos '
-                                     'sebzés\n'
-                                     '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
-                                     'color="#FFFFFF" size="12">WN8: {wn8}</font>   <font color="#FFFFFF" '
-                                     'size="12">WR: {winRate}</font>',
-                      'UI_tooltipsFull': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} aktuális '
-                                         'mozgóátlag sérülés</font>\n'
-                                         '<font color="#FFFFFF" size="12">{currentDamage} jelenlegi '
-                                         'összesített kár</font>\n'
-                                         'To <font color="#FFFFFF" size="12">{nextPercent}% </font> szükség '
-                                         '<font color="#FFFFFF" size="12">{needDamage}</font> mozgóátlagos '
-                                         'sebzés\n'
-                                         '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
-                                         'color="#FFFFFF" size="12">WN8: {wn8}</font>   <font '
-                                         'color="#FFFFFF" size="12">WR: {winRate}</font>\n'
-                                         'Ez a statisztika a jármű legutóbbi csatájából áll rendelkezésre\n'
-                                         'To <font color="#FFFFFF" size="12">20% </font> szükség <font '
-                                         'color="#FF6347" size="12">~{_20}</font>\n'
-                                         'To <font color="#FFFFFF" size="12">40% </font> szükség <font '
-                                         'color="#FE7903" size="12">~{_40}</font>\n'
-                                         'To <font color="#FFFFFF" size="12">55% </font> szükség <font '
-                                         'color="#F8F400" size="12">~{_55}</font>\n'
-                                         'To <font color="#FFFFFF" size="12">65% </font> szükség <font '
-                                         'color="#60FF00" size="12">~{_65}</font>\n'
-                                         'To <font color="#FFFFFF" size="12">85% </font> szükség <font '
-                                         'color="#02C9B3" size="12">~{_85}</font>\n'
-                                         'To <font color="#FFFFFF" size="12">95% </font> szükség <font '
-                                         'color="#D042F3" size="12">~{_95}</font>\n'
-                                         'To <font color="#FFFFFF" size="12">100% </font> szükség <font '
-                                         'color="#D042F3" size="12">~{_100}</font>'},
- 'MarksOnGunTechTree': {'UI_description': 'MarksOnGunTechTree (Gameface)',
-                        'UI_setting_badgeOffsetX_text': 'X pozíció (bal / jobb)',
-                        'UI_setting_badgeOffsetX_tooltip': 'Negatív: bal. Pozitívum: helyes.',
-                        'UI_setting_badgeOffsetY_text': 'Y pozíció (fel / le)',
-                        'UI_setting_badgeOffsetY_tooltip': 'Negatív: fel. Pozitívum: lefelé.',
-                        'UI_setting_colorRating_text': 'Színtáblázat',
-                        'UI_setting_colorRating_tooltip': 'Színskála a kiválóságjelekhez.',
-                        'UI_setting_showInTechTreeMarkOfGunPercent_text': 'TechTree: mutasd a MoE %',
-                        'UI_setting_showInTechTreeMarkOfGunPercent_tooltip': '',
-                        'UI_setting_showInTechTreeMarkOfGunTankNameColored_text': 'TechTree: a MoE kiszínezi '
-                                                                                  'a jármű nevét',
-                        'UI_setting_showInTechTreeMarkOfGunTankNameColored_tooltip': '',
-                        'UI_setting_showInTechTreeMastery_text': 'TechTree: Show Mastery',
-                        'UI_setting_showInTechTreeMastery_tooltip': '',
-                        'UI_setting_showInTechTree_text': 'TechTree: engedélyezve',
-                        'UI_setting_showInTechTree_tooltip': ''},
- 'MinimapPlugins': {'UI_description': 'MinimapPlugins',
-                    'UI_field_alpha': 'Opacity',
-                    'UI_field_mode': 'Visibility',
-                    'UI_minimapAim_0': 'Eredeti sárga',
-                    'UI_minimapAim_1': 'Kék kör',
-                    'UI_minimapAim_2': 'Piros kör',
-                    'UI_minimapAim_3': 'Zöld',
-                    'UI_minimapAim_4': 'Lila hatszög',
-                    'UI_minimapAim_5': 'Fekete',
-                    'UI_minimapAim_6': 'Türkiz',
-                    'UI_mode_always': 'Always',
-                    'UI_mode_bar': 'Bar',
-                    'UI_mode_center': 'Center',
-                    'UI_mode_client': 'Ügyfél beállítása',
-                    'UI_mode_key': 'Miközben lenyomva tartja a minimap gombot',
-                    'UI_mode_left': 'Left',
-                    'UI_mode_never': 'Never',
-                    'UI_mode_off': 'Hide',
-                    'UI_mode_on': 'Show',
-                    'UI_mode_percent': 'Percentage',
-                    'UI_mode_right': 'Right',
-                    'UI_mode_value': 'Value',
-                    'UI_setting_artilleryAim_alpha_text': 'Tüzérségi cél átlátszatlansága (%)',
-                    'UI_setting_artilleryAim_enabled_text': 'Tüzérségi cél a minitérképen',
-                    'UI_setting_artilleryAim_scale_text': 'Tüzérségi célskála (%)',
-                    'UI_setting_artilleryAim_src_text': 'Artillery aim PNG image',
-                    'UI_setting_button_text': 'Zoom gomb',
-                    'UI_setting_button_tooltip': 'Gyorsbillentyű a nagyításhoz.',
-                    'UI_setting_changeColorCircles_text': 'Színes körök megváltoztatása',
-                    'UI_setting_changeColorCircles_tooltip': 'Ha engedélyezve van, megváltoztathatja a körök '
-                                                             'színét a minitérképen.',
-                    'UI_setting_circles_draw_text': 'Rajzolj tartományt',
-                    'UI_setting_circles_maxView_text': 'Maximális látótávolság',
-                    'UI_setting_circles_proximity_text': 'Közelségérzékelés',
-                    'UI_setting_circles_view_text': 'Jármű látótávolság',
-                    'UI_setting_colorDrawCircleCheck_text': 'Rajzolj tartományi kört',
-                    'UI_setting_colorDrawCircle_text': 'Alapértelmezett: <font '
-                                                       "color='#%(colorDrawCircle)s'></font>",
-                    'UI_setting_colorDrawCircle_tooltip': '',
-                    'UI_setting_colorMaxViewCircleCheck_text': 'Max. Tartománykör megtekintése',
-                    'UI_setting_colorMaxViewCircle_text': 'Alapértelmezett: <font '
-                                                          "color='#%(colorMaxViewCircle)s'></font>",
-                    'UI_setting_colorMaxViewCircle_tooltip': '',
-                    'UI_setting_colorMinSpottingCircleCheck_text': 'Min. Folyamatos kör',
-                    'UI_setting_colorMinSpottingCircle_text': 'Alapértelmezett: <font '
-                                                              "color='#%(colorMinSpottingCircle)s'></font>",
-                    'UI_setting_colorMinSpottingCircle_tooltip': '',
-                    'UI_setting_colorViewCircleCheck_text': 'Tartománykör megtekintése',
-                    'UI_setting_colorViewCircle_text': 'Alapértelmezett: <font '
-                                                       "color='#%(colorViewCircle)s'></font>",
-                    'UI_setting_colorViewCircle_tooltip': '',
-                    'UI_setting_extraCircles_text': 'Extra körök (JSON, legfeljebb 8)',
-                    'UI_setting_health_fontSize_text': 'HP betűméret',
-                    'UI_setting_health_height_text': 'HP rúd magasság',
-                    'UI_setting_health_mode_text': 'HP kijelző',
-                    'UI_setting_health_visibility_text': 'HP láthatóság',
-                    'UI_setting_health_width_text': 'HP rúdszélesség',
-                    'UI_setting_health_x_text': 'HP vízszintes eltolás',
-                    'UI_setting_health_y_text': 'HP függőleges eltolás',
-                    'UI_setting_icons_alpha_text': 'Jármű ikon átlátszatlansága',
-                    'UI_setting_icons_scale_text': 'Jármű ikon skála',
-                    'UI_setting_icons_selfAlpha_text': 'Saját nyíl átlátszatlansága',
-                    'UI_setting_icons_selfColor_text': 'Saját nyíl szín',
-                    'UI_setting_icons_selfScale_text': 'Saját nyíl skála',
-                    'UI_setting_labels_align_text': 'Címkeigazítás',
-                    'UI_setting_labels_allyColor_text': 'Szövetséges címke színe',
-                    'UI_setting_labels_ally_text': 'Ally formátum (üres: normál használat)',
-                    'UI_setting_labels_alpha_text': 'Címke átlátszatlansága',
-                    'UI_setting_labels_alternativeAlly_text': 'Alternatív szövetséges formátum',
-                    'UI_setting_labels_alternativeEnemy_text': 'Alternatív ellenséges formátum',
-                    'UI_setting_labels_alternativeSquad_text': 'Alternatív szakasz formátum',
-                    'UI_setting_labels_alternative_text': 'Alternatív címke',
-                    'UI_setting_labels_avoidOverlap_text': 'Csökkentse az átfedő neveket',
-                    'UI_setting_labels_compactLength_text': 'Rövidített névhossz',
-                    'UI_setting_labels_customColors_text': 'Egyedi címke színek',
-                    'UI_setting_labels_deadColor_text': 'Megsemmisült címke színe',
-                    'UI_setting_labels_dead_text': 'Megsemmisült címke',
-                    'UI_setting_labels_enabled_text': 'Egyedi címkék',
-                    'UI_setting_labels_enemyColor_text': 'Ellenséges címke színe',
-                    'UI_setting_labels_enemy_text': 'Enemy formátum (üres: normál használat)',
-                    'UI_setting_labels_fontSize_text': 'Címke betűmérete',
-                    'UI_setting_labels_lost_text': 'Utolsó ismert pozíciócímke',
-                    'UI_setting_labels_normal_text': 'Normál címke',
-                    'UI_setting_labels_shadow_text': 'Címke árnyéka',
-                    'UI_setting_labels_squadColor_text': 'Platon címke színe',
-                    'UI_setting_labels_squad_text': 'Platoon formátum (üres: normál használat)',
-                    'UI_setting_labels_x_text': 'Címke vízszintes eltolás',
-                    'UI_setting_labels_y_text': 'Címke függőleges eltolása',
-                    'UI_setting_lastPositionDuration_text': 'Utolsó pozíció időtartama',
-                    'UI_setting_lastPositionDuration_tooltip': 'Mennyi ideig jelennek meg az utolsó ismert '
-                                                               'pozíciók (másodpercben)',
-                    'UI_setting_lines_alpha_text': 'Vonal átlátszatlansága',
-                    'UI_setting_lines_customStyle_text': 'Egyedi vonalszínek',
-                    'UI_setting_lines_dash_text': 'kötőjel hossza (0: folyamatos)',
-                    'UI_setting_lines_directionColor_text': 'Irányvonal színe',
-                    'UI_setting_lines_direction_text': 'Kamera irányvonal',
-                    'UI_setting_lines_gap_text': 'Szaggatott távolság',
-                    'UI_setting_lines_geometry_text': 'Egyéni vonalgeometria (egyéni stílust igényel)',
-                    'UI_setting_lines_length_text': 'Vonalhossz (minimap egység)',
-                    'UI_setting_lines_sectorColor_text': 'Szektor vonal színe',
-                    'UI_setting_lines_sector_text': 'Fegyver áthaladó szektor',
-                    'UI_setting_lines_thickness_text': 'A löket vastagsága',
-                    'UI_setting_lostMarker_fade_text': 'Az utolsó ismert jelzők elhalványítása',
-                    'UI_setting_lostMarker_minimumAlpha_text': 'Minimális utolsó ismert átlátszatlanság',
-                    'UI_setting_lostMarker_showSeconds_text': 'Másodpercek az utolsó észlelés óta',
-                    'UI_setting_mapSize_color_text': 'Térkép méretek színe',
-                    'UI_setting_mapSize_enabled_text': 'Térkép méreteinek megjelenítése',
-                    'UI_setting_mapSize_fontSize_text': 'A térkép méretei, betűméret',
-                    'UI_setting_mapSize_format_text': 'Térkép méret formátum',
-                    'UI_setting_mapSize_x_text': 'A térkép méretei vízszintes eltolás',
-                    'UI_setting_mapSize_y_text': 'A térkép méretei függőleges eltolás',
-                    'UI_setting_permanentMinimapDeath_text': 'Permanens Minimap Death',
-                    'UI_setting_permanentMinimapDeath_tooltip': 'Mindig mutasd meg a megsemmisültet a '
-                                                                'térképen',
-                    'UI_setting_presentation_alternativeAlpha_text': 'Alternatív térkép átlátszóság',
-                    'UI_setting_presentation_alternativeEnabled_text': 'Alternatív prezentáció engedélyezése',
-                    'UI_setting_presentation_backgroundAlpha_text': 'Térkép háttér átlátszatlansága',
-                    'UI_setting_presentation_center_text': 'Középre alternatív térkép',
-                    'UI_setting_presentation_normalAlpha_text': 'Normál térkép átlátszóság',
-                    'UI_setting_presentation_sizeIndex_text': 'Alternatív térképméret (0-5)',
-                    'UI_setting_presentation_zoom_text': 'Alternatív térkép nagyítása',
-                    'UI_setting_showLastPositions_text': 'Utolsó ismert pozíciók megjelenítése',
-                    'UI_setting_showLastPositions_tooltip': 'Az ellenséges járművek utolsó ismert '
-                                                            'pozícióinak megjelenítése',
-                    'UI_setting_showNames_text': 'Nevek megjelenítése',
-                    'UI_setting_showNames_tooltip': 'Jelenítse meg a megsemmisült tankok nevét',
-                    'UI_setting_showVehicleTypes_text': 'Járműtípusok megjelenítése',
-                    'UI_setting_showVehicleTypes_tooltip': 'A járműtípus ikonok megjelenítése a minitérképen',
-                    'UI_setting_viewRadius_text': 'Valódi kilátás',
-                    'UI_setting_viewRadius_tooltip': 'Távolítsa el a 445m látókör korlátozását',
-                    'UI_setting_yaw_text': 'Lebegési szögek megjelenítése',
-                    'UI_setting_yaw_tooltip': 'Mutassa meg a lebegési szögeket minden járművön, ahol vannak',
-                    'UI_setting_zoomFactorMax_text': 'Maximális nagyítási tényező',
-                    'UI_setting_zoomFactorMax_tooltip': 'A minitérkép maximális nagyítási szintje (1,0-3,0)',
-                    'UI_setting_zoomFactor_text': 'Zoom skála'},
- 'OwnHealth': {'UI_description': 'OwnHealth',
-               'UI_setting_x_text': 'X pozíció',
-               'UI_setting_x_tooltip': '',
-               'UI_setting_y_text': 'Y pozíció',
-               'UI_setting_y_tooltip': ''},
- 'PlayerPanelPro': {'UI_description': 'PlayerPanelPro',
-                    'UI_panel_alpha': 'Panelháttér fedettsége',
-                    'UI_panel_altMode': 'Panelmód az ALT nyomva tartásakor',
-                    'UI_panel_bindToIcon': 'Rögzítés a járműikonhoz',
-                    'UI_panel_clientDefault': 'Játékbeállítás',
-                    'UI_panel_color': 'Color',
-                    'UI_panel_colors': 'Színskála',
-                    'UI_panel_diagnostics': 'Teljesítménydiagnosztika a naplóban',
-                    'UI_panel_enabled': 'Enabled',
-                    'UI_panel_fixedColor': 'Használjon rögzített színt',
-                    'UI_panel_frags': 'Megsemmisült járművek',
-                    'UI_panel_full': 'Teljes panel',
-                    'UI_panel_general': 'General',
-                    'UI_panel_hideIfDead': 'Elrejteni, ha megsemmisült',
-                    'UI_panel_hpKey': 'Életerő megjelenítésének billentyűje',
-                    'UI_panel_hpVisibility': 'Életerő láthatósága',
-                    'UI_panel_hp_always': 'Mindig látható',
-                    'UI_panel_hp_hold': 'A billentyű nyomva tartásakor',
-                    'UI_panel_hp_never': 'Soha nem látható',
-                    'UI_panel_iconAlpha': 'Járműikon fedettsége',
-                    'UI_panel_large': 'Nagy panel',
-                    'UI_panel_layer': 'Réteg',
-                    'UI_panel_loading': 'Harci betöltés',
-                    'UI_panel_loadingTips': 'Feltöltés tippekkel',
-                    'UI_panel_long': 'Hosszú panel',
-                    'UI_panel_medium': 'Közepes panel',
-                    'UI_panel_medium2': 'Közepes panel (járművek)',
-                    'UI_panel_nick': 'Nickname',
-                    'UI_panel_none': 'Rejtett panel',
-                    'UI_panel_panel': 'Játékosok panel',
-                    'UI_panel_rating': 'Értékelés makró r',
-                    'UI_panel_removeHealthPoints': 'A játék HP-sávjainak elrejtése',
-                    'UI_panel_removePlayerStatusIcon': 'A játékos állapotikonjainak elrejtése',
-                    'UI_panel_removePrestigeLevel': 'Elit szintek elrejtése',
-                    'UI_panel_removeRankBadgeIcon': 'Jelvények elrejtése',
-                    'UI_panel_removeSelectedBackground': 'Kijelölt játékos hátterének elrejtése',
-                    'UI_panel_removeSpottedIndicator': 'A játék felderítésjelzőjének cseréje',
-                    'UI_panel_removeSquadIcon': 'A szakasz ikonjainak elrejtése',
-                    'UI_panel_removeTesterIcon': 'Tesztelőikonok elrejtése',
-                    'UI_panel_removeVehicleLevel': 'Járműszintek elrejtése',
-                    'UI_panel_removeVehicleTypeIcon': 'Járműtípus ikonok elrejtése',
-                    'UI_panel_short': 'Rövid panel',
-                    'UI_panel_squadIconOffsetXLeft': 'Bal szakasz ikon: X eltolás',
-                    'UI_panel_squadIconOffsetXRight': 'Jobb szakasz ikon: X eltolás',
-                    'UI_panel_startMode': 'Kezdeti panelmód',
-                    'UI_panel_statistics': 'Játékos statisztikák',
-                    'UI_panel_tab': 'TAB statisztikák',
-                    'UI_panel_text': 'Szöveg / makrók',
-                    'UI_panel_unavailable': 'Nem elérhető statisztikák megjelenítése',
-                    'UI_panel_vehicle': 'Vehicle',
-                    'UI_panel_vehicleIconAlpha': 'Jármű ikon átlátszatlansága',
-                    'UI_panel_vehicleIconOffsetXLeft': 'Bal oldali jármű ikon: X eltolás',
-                    'UI_panel_vehicleIconOffsetXRight': 'Jobb jármű ikon: X eltolás',
-                    'UI_setting_dead_text': 'Halott',
-                    'UI_setting_dead_tooltip': '',
-                    'UI_setting_help_text': 'Segítség:',
-                    'UI_setting_help_tooltip': 'PlayerPanelPro: general.json, playersPanel.json, '
-                                               'battleLoading.json, statisticForm.json és '
-                                               'panelShort/Medium/Long/Full.json.',
-                    'UI_setting_hpEnabled_text': 'Életerő megjelenítése',
-                    'UI_setting_hpEnabled_tooltip': 'Életerő megjelenítése.',
-                    'UI_setting_lost_text': 'Elveszett',
-                    'UI_setting_lost_tooltip': '',
-                    'UI_setting_mode_always': 'Mindig',
-                    'UI_setting_mode_holding': 'Holding',
-                    'UI_setting_mode_text': 'Válassza ki a kívánt lehetőséget',
-                    'UI_setting_mode_toggle': 'Váltás',
-                    'UI_setting_mode_tooltip': ' • <b>Mindig</b> - A HP markerek mindig megjelennek.\n'
-                                               ' • <b>Váltás</b> - A HP markerek be-/kikapcsolódnak a '
-                                               'váltógomb megnyomásával.\n'
-                                               ' • <b>Holding</b> - A HP markerek csak akkor jelennek meg '
-                                               '<b>miközben</b> a váltógomb megnyomva.',
-                    'UI_setting_neverSeen_text': 'Soha nem látott',
-                    'UI_setting_neverSeen_tooltip': '',
-                    'UI_setting_spottedEnabled_text': 'Felderítési állapot megjelenítése',
-                    'UI_setting_spottedEnabled_tooltip': 'Felderítési állapot megjelenítése.',
-                    'UI_setting_spotted_text': 'Foltos',
-                    'UI_setting_spotted_tooltip': '',
-                    'UI_setting_toggleKey_text': 'Váltó gyorsbillentyű',
-                    'UI_setting_toggleKey_tooltip': 'Ennek a gombnak a csata közbeni megnyomása átkapcsolja '
-                                                    'a HP markerek megjelenítését.'},
- 'RepairExtended': {'UI_description': 'RepairExtended',
-                    'UI_setting_autoRepair_text': 'Automatikus használat',
-                    'UI_setting_autoRepair_tooltip': '',
-                    'UI_setting_buttonChassis_text': 'Gomb: Állítsa vissza a házat',
-                    'UI_setting_buttonChassis_tooltip': '',
-                    'UI_setting_buttonRepair_text': 'Gomb: Intelligens javítás',
-                    'UI_setting_buttonRepair_tooltip': '',
-                    'UI_setting_extinguishFire_text': 'Oltsa el a tüzet',
-                    'UI_setting_extinguishFire_tooltip': '',
-                    'UI_setting_healCrew_text': 'Heal legénység',
-                    'UI_setting_healCrew_tooltip': '',
-                    'UI_setting_removeStun_text': 'Távolítsa el a kábítást',
-                    'UI_setting_removeStun_tooltip': '',
-                    'UI_setting_repairDevices_text': 'Eszközök javítása',
-                    'UI_setting_repairDevices_tooltip': '',
-                    'UI_setting_restoreChassis_text': 'Állítsa vissza a házat',
-                    'UI_setting_restoreChassis_tooltip': '',
-                    'UI_setting_timerMax_format': ' mp.',
-                    'UI_setting_timerMax_text': 'Maximális késleltetési automatikus használat',
-                    'UI_setting_timerMin_format': ' mp.',
-                    'UI_setting_timerMin_text': 'Minimális késleltetési automatikus használat',
-                    'UI_setting_useGoldKits_text': 'Használjon aranykészleteket',
-                    'UI_setting_useGoldKits_tooltip': ''},
- 'SafeShot': {'UI_battle_activateMessage': 'SafeShot: aktiválva!',
-              'UI_description': 'SafeShot',
-              'UI_setting_activateMessage_text': 'Aktiválja az Üzenetet',
-              'UI_setting_activateMessage_tooltip': 'Értesítési üzenet megjelenítése csatába lépéskor',
-              'UI_setting_chatMessages_text': 'Üzenet formázása',
-              'UI_setting_chatMessages_tooltip': 'Egyéni üzenetformátum a csapatlövések blokkolásakor. '
-                                                 'Használja {name} és {vehicle} helyőrzőként',
-              'UI_setting_deadShotBlockTimeOut_text': 'A megsemmisült járművekre leadott lövések '
-                                                      'blokkolásának határideje',
-              'UI_setting_deadShotBlockTimeOut_tooltip': 'A lövések blokkolásának ideje másodpercben a jármű '
-                                                         'megsemmisülése után',
-              'UI_setting_deadShotBlock_text': 'Blokkolja a lövéseket a megsemmisült járművekre',
-              'UI_setting_deadShotBlock_tooltip': 'Megakadályozza a lövöldözést a már megsemmisült '
-                                                  'járművekre',
-              'UI_setting_disableKey_text': 'Kulcs letiltása',
-              'UI_setting_disableKey_tooltip': 'Gyorsbillentyű a mod ideiglenes '
-                                               'engedélyezéséhez/letiltásához',
-              'UI_setting_teamKillerShotUnblock_text': 'Team Killer Shot blokkolás feloldása',
-              'UI_setting_teamKillerShotUnblock_tooltip': 'Lehetővé teszi a csapatgyilkosokra való '
-                                                          'lövöldözést',
-              'UI_setting_teamShotBlock_text': 'Blokkolja a szövetséges járművekre irányuló lövéseket',
-              'UI_setting_teamShotBlock_tooltip': 'Megakadályozza a csapattársakra való lövöldözést',
-              'UI_setting_triggerMessage_text': 'Üzenet letiltása',
-              'UI_setting_triggerMessage_tooltip': 'Értesítési üzenetek megjelenítése/elrejtése, ha a '
-                                                   'felvételek blokkolva vannak',
-              'UI_setting_wasteShotBlock_text': 'Hulladék Shot Block',
-              'UI_setting_wasteShotBlock_tooltip': 'Megakadályozza a lövést, ha nincs kiválasztva cél',
-              'UI_triggerText_disabled': 'SafeShot: Letiltva!',
-              'UI_triggerText_enabled': 'SafeShot: Engedélyezve!'},
- 'ServerTurretExtended': {'UI_battle_OFF': 'KI',
-                          'UI_battle_ON': 'BE',
-                          'UI_battle_activateMessage': "'Server Turret Extended': Aktiválva",
-                          'UI_description': 'ServerTurretExtended',
-                          'UI_setting_activateMessage_text': 'Aktiválási üzenet megjelenítése',
-                          'UI_setting_activateMessage_tooltip': 'Aktiválási üzenet megjelenítése csatában',
-                          'UI_setting_autoActivateWheelMode_text': 'Kerekek: Automatikus sebesség mód',
-                          'UI_setting_autoActivateWheelMode_tooltip': 'Automatikusan bekapcsolja a '
-                                                                      'sebességet vagy a manőverezési módot',
-                          'UI_setting_buttonAutoMode_text': 'Gomb: Kerekek automatikus sebessége',
-                          'UI_setting_buttonAutoMode_tooltip': '',
-                          'UI_setting_buttonMaxMode_text': 'Gomb: A kerekek tartják a maximális sebességet',
-                          'UI_setting_buttonMaxMode_tooltip': '',
-                          'UI_setting_fixAccuracyInMove_text': 'Pontosság javítása',
-                          'UI_setting_fixAccuracyInMove_tooltip': 'Amikor tankot mozgatsz, majd megállsz, '
-                                                                  'fix pontossággal használod a célzás '
-                                                                  'elvesztését',
-                          'UI_setting_fixWheelCruiseControl_text': 'Javítsa meg a sebességtartó automatikát '
-                                                                   'a kerekeken',
-                          'UI_setting_fixWheelCruiseControl_tooltip': 'Ha aktiválja a Kerekes üzemmódot a '
-                                                                      'sebességtartó automatikával, a jármű '
-                                                                      'leállt, ez a beállítás letiltja ezt',
-                          'UI_setting_maxWheelMode_text': 'Kerekek: Tartsa a maximális sebességet',
-                          'UI_setting_maxWheelMode_tooltip': 'A maximális sebesség elérésekor nem tiltja le '
-                                                             'a sebesség üzemmódot manőverezés közben',
-                          'UI_setting_serverTurret_text': 'Szervertorony',
-                          'UI_setting_serverTurret_tooltip': 'A torony áthelyezése a szerver cél '
-                                                             'koordinátáira (engedélyezni kell a Server '
-                                                             'Sight-ot a játék beállításaiban)'},
- 'SixthSense': {'UI_description': 'SixthSense',
-                'UI_setting_defaultIconName_text': 'Alapértelmezett ikonnév',
-                'UI_setting_defaultIconName_tooltip': 'Válasszon ki egy beágyazott képet.',
-                'UI_setting_defaultIcon_text': 'Alapértelmezett ikon',
-                'UI_setting_defaultIcon_tooltip': 'Használjon beágyazott képet.',
-                'UI_setting_delay_text': 'Késleltetés',
-                'UI_setting_delay_tooltip': 'A szöveges üzenet ennyi másodpercig a képernyőn marad, mielőtt '
-                                            'elhalványulna.',
-                'UI_setting_helpMessage_text': 'Segítő üzenet',
-                'UI_setting_helpMessage_tooltip': 'Automatikusan küldjön csevegésre (Segítség) üzenetet.',
-                'UI_setting_iconSize_text': 'Képméret',
-                'UI_setting_iconSize_tooltip': 'Képpontban (max. 180)',
-                'UI_setting_infoSpottedMessage_text': 'Kiszúrt üzenetek:',
-                'UI_setting_lampShowTime_text': 'Lámpabeállítási idő',
-                'UI_setting_lampShowTime_tooltip': '<b>Mennyi ideig marad látható a cél?</b><br>Miután '
-                                                   'észrevették, a tartály látható marad közvetlen rálátás '
-                                                   'nélkül is. Normál — ~10 másodperc, 7 és 13 között '
-                                                   'változhat a személyzettől, " "felszereléstől és '
-                                                   'utasításoktól függően.',
-                'UI_setting_playTickSound_text': 'Játssz Tick Sound-ot',
-                'UI_setting_playTickSound_tooltip': 'Játssz kullancs hangot.',
-                'UI_setting_showTimerGraphicsColor_text': 'Grafika színe.',
-                'UI_setting_showTimerGraphicsColor_tooltip': 'A grafikus kör színe.',
-                'UI_setting_showTimerGraphicsRadius_text': 'A grafikus kör sugara.',
-                'UI_setting_showTimerGraphicsRadius_tooltip': 'Az időzítő kör mérete pixelben.',
-                'UI_setting_showTimerGraphics_text': 'Időzítő grafika megjelenítése.',
-                'UI_setting_showTimerGraphics_tooltip': 'Grafikus időzítő kör megjelenítése.',
-                'UI_setting_showTimer_text': 'Időzítő megjelenítése',
-                'UI_setting_showTimer_tooltip': 'Visszaszámláló megjelenítése, ha észreveszi.',
-                'UI_setting_sixthSenseSound_text': 'Érzékelési hang',
-                'UI_setting_spottedMessage_text': 'Foltos',
-                'UI_setting_spottedMessage_tooltip': 'Foltos szöveg engedélyezése a csatában.',
-                'UI_setting_spottedText_text': 'Szövegformátum',
-                'UI_setting_spottedText_tooltip': 'Használjon makrókat az üzenet szerkesztéséhez\n'
-                                                  "(makró:'%(pos)s').",
-                'UI_setting_timerSettings_text': 'Időzítő beállításai:',
-                'UI_setting_userIcon_text': 'Egyedi kép elérési útja',
-                'UI_setting_userIcon_tooltip': 'Akkor használatos, ha a beágyazott kép le van tiltva. PNG '
-                                               'vagy JPEG a mods/configs/. fájlban',
-                'UI_setting_userSound_text': 'Felhasználói hang',
-                'UI_setting_userSound_tooltip': 'Egyéni hang engedélyezése észleléskor.',
-                'UI_sound_SixthSense_01': 'Electro',
-                'UI_sound_SixthSense_02': 'Buzz',
-                'UI_sound_SixthSense_03': 'Buzz időzítő',
-                'UI_sound_SixthSense_04': 'Car',
-                'UI_sound_SixthSense_05': 'Hosszú (hangos)',
-                'UI_sound_SixthSense_06': 'Hosszú (csendes)',
-                'UI_sound_SixthSense_07': 'Sauron',
-                'UI_sound_SixthSense_08': 'Super Mario',
-                'UI_sound_SixthSense_09': 'Trap',
-                'UI_sound_SixthSense_10': 'X-Files'},
- 'SpottedExtendedLight': {'UI_description': 'SpottedExtendedLight',
-                          'UI_macros_help': 'Használja ezeket a makrókat az üzenetformátumokban az '
-                                            'értesítések testreszabásához:\n'
-                                            '• {icons} - Megjeleníti a jármű ikonjait\n'
-                                            '• {names} - Megmutatja a játékosok nevét\n'
-                                            '• {vehicles} - Megmutatja a járművek nevét\n'
-                                            '• {icons_names} - Ikonokat jelenít meg játékosnevekkel\n'
-                                            '• {icons_vehicles} - Ikonokat jelenít meg járműnevekkel\n'
-                                            '• {full} - Teljes információt jelenít meg\n'
-                                            '• {damage} - Mutatja a kár összegét (csak segítő üzeneteknél)',
-                          'UI_macros_help_title': 'Makró használati útmutató',
-                          'UI_setting_AssistRadio_default': 'Alapértelmezett: {icons}{vehicles}{damage}',
-                          'UI_setting_AssistRadio_description': 'A rádiórásegítő károsodása esetén megjelenő '
-                                                                'üzenet formátuma',
-                          'UI_setting_AssistRadio_text': 'Rádiós asszisztens:',
-                          'UI_setting_AssistRadio_tooltip': 'Szabja személyre a rádiós asszisztens sérülése '
-                                                            'esetén megjelenő üzenetet',
-                          'UI_setting_AssistStun_default': 'Alapértelmezett: {icons}{vehicles}{damage}',
-                          'UI_setting_AssistStun_description': 'A kábítást segítő károkról megjelenített '
-                                                               'üzenet formátuma',
-                          'UI_setting_AssistStun_text': 'Kábító segítség:',
-                          'UI_setting_AssistStun_tooltip': 'Szabja testre a kábítást segítő sérülés esetén '
-                                                           'megjelenő üzenetet',
-                          'UI_setting_AssistTrack_default': 'Alapértelmezett: {icons}{vehicles}{damage}',
-                          'UI_setting_AssistTrack_description': 'Az üzenet formátuma a nyomkövető károsodás '
-                                                                'esetén',
-                          'UI_setting_AssistTrack_text': 'Pályasegítő:',
-                          'UI_setting_AssistTrack_tooltip': 'Szabja testre a nyomkövetési sérülés esetén '
-                                                            'megjelenő üzenetet',
-                          'UI_setting_Spotted_default': 'Alapértelmezett: {icons}{vehicles}',
-                          'UI_setting_Spotted_description': 'Az ellenség észlelésekor megjelenő üzenet '
-                                                            'formátuma',
-                          'UI_setting_Spotted_text': 'Foltos:',
-                          'UI_setting_Spotted_tooltip': 'Testreszabhatja az ellenséges jármű észlelésekor '
-                                                        'megjelenő üzenetet',
-                          'UI_setting_iconSizeX_default': 'Alapértelmezett: 47 px',
-                          'UI_setting_iconSizeX_text': 'Ikon szélessége',
-                          'UI_setting_iconSizeX_tooltip': 'A jármű ikonok szélessége az értesítésekben',
-                          'UI_setting_iconSizeX_value': ' px',
-                          'UI_setting_iconSizeY_default': 'Alapértelmezett: 16 képpont',
-                          'UI_setting_iconSizeY_text': 'Ikon magassága',
-                          'UI_setting_iconSizeY_tooltip': 'A jármű ikonok magassága az értesítésekben',
-                          'UI_setting_iconSizeY_value': ' px',
-                          'UI_setting_macrosList': 'Elérhető makrók: {icons} - jármű ikonok, {names} - '
-                                                   'játékos nevek, {vehicles} - járművek nevei, '
-                                                   '{icons_names} - ikonok nevekkel, {icons_vehicles} - '
-                                                   'ikonok járműnevekkel, {full} - teljes körű tájékoztatás, '
-                                                   '{damage} - kár összege',
-                          'UI_setting_messageColorAssistRadioCheck_text': 'Rádiósegéd üzenet színe',
-                          'UI_setting_messageColorAssistRadio_text': 'Jelenlegi: <font '
-                                                                     "color='#%(messageColorAssistRadio)s'>■■■■</font>",
-                          'UI_setting_messageColorAssistRadio_tooltip': 'A „Radio Hit Assist” értesítési '
-                                                                        'szöveghez használt szín',
-                          'UI_setting_messageColorAssistStunCheck_text': 'A kábítást segítő üzenet színe',
-                          'UI_setting_messageColorAssistStun_text': 'Jelenlegi: <font '
-                                                                    "color='#%(messageColorAssistStun)s'>■■■■</font>",
-                          'UI_setting_messageColorAssistStun_tooltip': 'A „Stun Hit Assist” értesítési '
-                                                                       'szöveghez használt szín',
-                          'UI_setting_messageColorAssistTrackCheck_text': 'Nyomkövetési segédüzenet színe',
-                          'UI_setting_messageColorAssistTrack_text': 'Jelenlegi: <font '
-                                                                     "color='#%(messageColorAssistTrack)s'>■■■■</font>",
-                          'UI_setting_messageColorAssistTrack_tooltip': 'A „Track Hit Assist” értesítési '
-                                                                        'szöveghez használt szín',
-                          'UI_setting_messageColorSpottedCheck_text': 'Foltos üzenet színe',
-                          'UI_setting_messageColorSpotted_text': 'Jelenlegi: <font '
-                                                                 "color='#%(messageColorSpotted)s'>■■■■</font>",
-                          'UI_setting_messageColorSpotted_tooltip': 'A „Pettyes” értesítési szöveg színe',
-                          'UI_setting_soundAssist_default': 'Alapértelmezés: gun_intuition',
-                          'UI_setting_soundAssist_text': 'Segéd értesítési hang',
-                          'UI_setting_soundAssist_tooltip': 'Hang lejátszása, amikor asszisztens sérülést '
-                                                            'szenved (rádió, műsorszám vagy kábítás)',
-                          'UI_setting_soundSpotted_default': 'Alapértelmezés: enemy_sighted_for_team',
-                          'UI_setting_soundSpotted_text': 'Foltos értesítési hang',
-                          'UI_setting_soundSpotted_tooltip': 'Hang hallható, amikor ellenséges járművet '
-                                                             'észlel',
-                          'UI_setting_sound_default': 'Alapértelmezett: Engedélyezve',
-                          'UI_setting_sound_text': 'Engedélyezze a harci hangokat',
-                          'UI_setting_sound_tooltip': 'Kapcsolja be a hangos értesítéseket a kiszúrt '
-                                                      'ellenségekről, és segítse a sebzést'},
- 'ZoomExtended': {'UI_description': 'ZoomExtended',
-                  'UI_setting_disableCamAfterShotLatency_text': 'A Cam After Shot késleltetés letiltása',
-                  'UI_setting_disableCamAfterShotLatency_tooltip': 'A kamera automatikus kikapcsolásának '
-                                                                   'késleltetése.',
-                  'UI_setting_disableCamAfterShotSkipClip_text': 'A Cam After Shot Skip Clip letiltása',
-                  'UI_setting_disableCamAfterShotSkipClip_tooltip': 'Ne lépjen ki, ha a tárbetöltő rendszer.',
-                  'UI_setting_disableCamAfterShot_text': 'A Cam After Shot kikapcsolása',
-                  'UI_setting_disableCamAfterShot_tooltip': 'A lövés után kapcsolja ki a mesterlövész módot.',
-                  'UI_setting_noBinoculars_text': 'Távcső letiltása.',
-                  'UI_setting_noBinoculars_tooltip': 'Távolítsa el az áramszünetet mesterlövész módban.',
-                  'UI_setting_noFlashBang_text': 'A Red Flash letiltása.',
-                  'UI_setting_noFlashBang_tooltip': 'Sérüléskor távolítsa el a piros vakut.',
-                  'UI_setting_noShockWave_text': 'Robbanás lökéshullám',
-                  'UI_setting_noShockWave_tooltip': 'Távolítsa el a kamera remegését, amikor a tank elüti.',
-                  'UI_setting_noSniperDynamic_text': 'Dinamikus mesterlövész kamera',
-                  'UI_setting_noSniperDynamic_tooltip': 'A dinamikus kamera letiltása mesterlövész módban.'},
+                 'UI_artySplash_name': 'Nagy robbanásveszélyes sugár',
+                 'UI_description': 'ArtySplash',
+                 'UI_setting_buttonShowDot_text': 'Gomb: pont megjelenítése|elrejtése',
+                 'UI_setting_buttonShowDot_tooltip': '',
+                 'UI_setting_buttonShowSplash_text': 'Gomb: Splash megjelenítése|elrejtése',
+                 'UI_setting_buttonShowSplash_tooltip': '',
+                 'UI_setting_showDotOnDefault_text': 'A Pont megjelenítése alapértelmezés szerint',
+                 'UI_setting_showDotOnDefault_tooltip': '',
+                 'UI_setting_showModeArcade_text': 'Árkád mód elérhető',
+                 'UI_setting_showModeArcade_tooltip': '',
+                 'UI_setting_showModeArty_text': 'Művészi mód elérhető',
+                 'UI_setting_showModeArty_tooltip': '',
+                 'UI_setting_showModeSniper_text': 'Sniper mód elérhető',
+                 'UI_setting_showModeSniper_tooltip': '',
+                 'UI_setting_showSplashOnDefault_text': 'Splash megjelenítése alapértelmezés szerint',
+                 'UI_setting_showSplashOnDefault_tooltip': ''},
+ 'auto_aim_optimize': {'UI_description': 'AutoAimOptimize',
+                       'UI_setting_angle_text': 'Állítsa be a cél elkapásának szögét',
+                       'UI_setting_angle_value': 'x',
+                       'UI_setting_catchHiddenTarget_text': 'Kapd el a célt egy akadály mögött',
+                       'UI_setting_catchHiddenTarget_tooltip': '',
+                       'UI_setting_disableArtyMode_text': 'Letiltás Arty módban',
+                       'UI_setting_disableArtyMode_tooltip': ''},
+ 'auto_claim_clan': {'UI_description': 'AutoClaimClan',
+                     'UI_setting_enabled_text': 'Engedélyezve',
+                     'UI_setting_enabled_tooltip': 'A mod engedélyezése/letiltása.'},
+ 'banks_loader': {'UI_description': 'BanksLoader',
+                  'UI_restart_button_close': 'Folytatás',
+                  'UI_restart_button_restart': 'Indítsa újra',
+                  'UI_restart_button_shutdown': 'Leállítás',
+                  'UI_restart_create': ' • szakaszok <b>létre</b> bankok számára: ',
+                  'UI_restart_delete': ' • szakaszok <b>törölve</b> bankok számára: ',
+                  'UI_restart_header': 'Banks Loader a Driftkingstől: Indítsa újra',
+                  'UI_restart_memory': ' • értékek <b>megváltozott</b> memória beállításokhoz: ',
+                  'UI_restart_move': ' • szakaszok <b>megmozdult</b> bankok számára: ',
+                  'UI_restart_reason': ' Pontos változások:\n{}.',
+                  'UI_restart_reason_new': 'Új audio modokat telepített, ezért a játék konfigurációja '
+                                           'megváltozott.',
+                  'UI_restart_reason_update': 'A rendszer játékkliens frissítést észlelt, ezért a játék '
+                                              'konfigurációs módosításait újra alkalmaztuk.',
+                  'UI_restart_remap': ' • szakaszok <b>megváltozott</b> beállításokhoz: ',
+                  'UI_restart_section': ' • szakaszok <b>eltolódott</b> bankok számára: ',
+                  'UI_restart_text': '{reason}{reasons}\n'
+                                     'A módosítások elfogadásához a játékkliens újraindítása szükséges.\n'
+                                     'A hangmodellek megfelelő viselkedése <b>NEM GARANTÁLT</b> a következő '
+                                     'játékindításig.\n'
+                                     'Ez lesz <b>nem</b> később szükséges.\n'
+                                     'Most újra akarod indítani a játékot?',
+                  'UI_restart_wotmod': ' • konfigurációk <b>eltávolították</b> csomagokból: '},
+ 'battle_efficiency': {'UI_description': 'BattleEfficiency',
+                       'UI_setting_battleResultsFormat_text': 'Csata eredmények ablak módosítása',
+                       'UI_setting_battleResultsFormat_tooltip': 'Elérhető makrók:\n'
+                                                                 "WN8:'{wn8}', Szín:'{c:wn8}'\n"
+                                                                 "XWN8:'{xwn8}', Szín:'{c:x}'\n"
+                                                                 "EFF:'{eff}', Szín:'{c:eff}'\n"
+                                                                 "XEFF:'{xeff}', Szín:'{c:x}'\n"
+                                                                 "DIFF:'{diff}', Szín:'{c:diff}'\n"
+                                                                 "DMG:'{dmg}', Szín:'{c:dmg}'\n"
+                                                                 "XTE:'{xte}', Szín:'{c:x}'\n"
+                                                                 '{mapName} - Térkép neve\n'
+                                                                 '{battleType} - Harc típus',
+                       'UI_setting_battleResultsWindow_text': 'Csata eredmények ablak',
+                       'UI_setting_battleResultsWindow_tooltip': 'A csata eredménye ablak engedélyezése.',
+                       'UI_setting_colorRatting_NoobMeter': 'NoobMeter',
+                       'UI_setting_colorRatting_WotLabs': 'WotLabs',
+                       'UI_setting_colorRatting_XVM': 'XVM',
+                       'UI_setting_colorRatting_text': 'Válassza a Színbesorolás lehetőséget',
+                       'UI_setting_colorRatting_tooltip': 'Válassza ki a színsémát az értékelésekhez',
+                       'UI_setting_format_text': 'Szövegformátum, elérhető makrók:',
+                       'UI_setting_format_tooltip': 'Elérhető makrók:\n'
+                                                    " WN8:'{wn8}', Szín:'{c:wn8}'\n"
+                                                    "XWN8:'{xwn8}', Szín:'{c:x}'\n"
+                                                    "EFF:'{eff}', Szín:'{c:eff}'\n"
+                                                    "XEFF:'{xeff}', Szín:'{c:x}'\n"
+                                                    "DIFF:'{diff}', Szín:'{c:diff}'\n"
+                                                    "DMG:'{dmg}', Szín:'{c:dmg}'\n"
+                                                    "XTE:'{xte}', Szín:'{c:x}'",
+                       'UI_setting_textLock_text': 'Szövegzár',
+                       'UI_setting_textLock_tooltip': 'Húzza a szöveget a csatában'},
+ 'battle_options': {'UI_description': 'BattleOptions',
+                    'UI_setting_addEnemyName_text': 'Add hozzá az ellenség nevét',
+                    'UI_setting_addEnemyName_tooltip': 'Hozzáadja az ellenséges jármű nevét a kárnaplóhoz.',
+                    'UI_setting_clipLoad_text': 'Újratöltés állapota',
+                    'UI_setting_clipLoad_tooltip': 'Klip betöltési idejű masszázs',
+                    'UI_setting_colorCheck_text': 'Válassza ki a térkép szegélyének színét:',
+                    'UI_setting_color_text': "<font color='#%(color)s'>Jelenlegi szín: #%(color)s</font>",
+                    'UI_setting_color_tooltip': 'Ez a szín minden térképen érvényes lesz',
+                    'UI_setting_directivesOnlyFromStorage_text': 'Csak a tárolásból származó irányelvek',
+                    'UI_setting_directivesOnlyFromStorage_tooltip': 'A felülbíráló direktívák letiltása a '
+                                                                    'tárolóból.',
+                    'UI_setting_disableSoundCommander_text': 'A Sound Commander letiltása',
+                    'UI_setting_disableSoundCommander_tooltip': 'A Sound Commander letiltása csatában.',
+                    'UI_setting_hideBadges_text': 'Jelvények elrejtése',
+                    'UI_setting_hideBadges_tooltip': 'Jelvények elrejtése a játékosok panelen.',
+                    'UI_setting_hideBattlePrestige_text': 'A Battle Prestige elrejtése',
+                    'UI_setting_hideBattlePrestige_tooltip': 'A Battle Prestige elrejtése a játékosok '
+                                                             'panelen.',
+                    'UI_setting_hideClanName_text': 'Klánnév elrejtése',
+                    'UI_setting_hideClanName_tooltip': 'Távolítsa el a klán nevét a játékosok panelről.',
+                    'UI_setting_hideHint_text': 'Tipp elrejtése',
+                    'UI_setting_hideHint_tooltip': 'Harci tipp letiltása.',
+                    'UI_setting_inBattle_text': 'Harci óra',
+                    'UI_setting_inBattle_tooltip': 'Mutasd az órát a csatában',
+                    'UI_setting_loadTxt_text': 'Szövegformátum',
+                    'UI_setting_loadTxt_tooltip': 'Használjon makrókat az üzenet szerkesztéséhez\n'
+                                                  " (makrók: '{load}' - '{pos}')",
+                    'UI_setting_maxChatLines_text': 'Max Chat vonalak',
+                    'UI_setting_maxChatLines_tooltip': 'Korlátozza a harci chat-vonalak számát.',
+                    'UI_setting_muteTeamBaseSound_text': 'Csapatbázis hang némítása',
+                    'UI_setting_muteTeamBaseSound_tooltip': 'Csapatbázis hang letiltása, ha ez az opció '
+                                                            'engedélyezve van.',
+                    'UI_setting_postmortemTips_text': 'Halál utáni tippek elrejtése',
+                    'UI_setting_postmortemTips_tooltip': 'Halál után tiltsa le a felugró panelt az alján.',
+                    'UI_setting_showAnonymous_text': 'Névtelen megjelenítése',
+                    'UI_setting_showAnonymous_tooltip': 'Az „Anonymous” név megjelenítése a játékosok '
+                                                        'panelen.',
+                    'UI_setting_showBattleHint_text': 'Pályanézet elrejtése.',
+                    'UI_setting_showBattleHint_tooltip': 'A stratégiai módban változó célzási mód tippjeit '
+                                                         'elrejti.',
+                    'UI_setting_showFriends_text': 'Mutasd a barátokat',
+                    'UI_setting_showFriends_tooltip': 'Ismerősök megjelenítése a játékosok panelen.',
+                    'UI_setting_showPlayerSatisfactionWidget_text': 'Játékos elégedettség widget '
+                                                                    'megjelenítése',
+                    'UI_setting_showPlayerSatisfactionWidget_tooltip': 'A csata értékelésének „játékos '
+                                                                       'elégedettsége” widget megjelenítése.',
+                    'UI_setting_showPostmortemDogTag_text': 'Postmortem DogTag megjelenítése',
+                    'UI_setting_showPostmortemDogTag_tooltip': 'A kutyacímkével rendelkező előugró panel '
+                                                               'letiltása.',
+                    'UI_setting_stunSound_text': 'Lenyűgöző hanghatás',
+                    'UI_setting_stunSound_tooltip': 'A Stun Sound Effect letiltása.'},
+ 'battle_stat': {'UI_description': 'BattleStat',
+                 'UI_setting_colorRating_text': 'Színtáblázat',
+                 'UI_setting_colorRating_tooltip': 'Színskála a statisztikákhoz.',
+                 'UI_setting_format_text': 'Szövegformátum',
+                 'UI_setting_format_tooltip': 'Beállítja a szöveg formátumát',
+                 'UI_setting_teamChances_text': 'Mutasd meg a csapat esélyeit',
+                 'UI_setting_teamChances_tooltip': 'Megjeleníti az egyes csapatok nyerési esélyeinek '
+                                                   'százalékát a csata során'},
+ 'carousel_stats': {'UI_description': 'CarouselStats',
+                    'UI_setting_colorRating_text': 'Színtáblázat',
+                    'UI_setting_showIcons_text': 'Ikonok megjelenítése'},
  'common': {'UI_native_close': 'Bezárás',
             'UI_native_defaults': 'Alapértékek',
             'UI_native_enabled': 'Mod engedélyezése',
@@ -1171,7 +241,954 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
             'UI_native_on': 'Be',
             'UI_native_press': 'Nyomjon meg egy gombot...',
             'UI_native_save': 'Mentés',
-            'UI_native_saved': 'Beállítások mentve'}}
+            'UI_native_saved': 'Beállítások mentve'},
+ 'crew_settings': {'UI_description': 'A legénység konfigurációja',
+                   'UI_message_crewNotAvailable': 'A személyzet nem áll rendelkezésre visszaküldésre',
+                   'UI_message_crewReturned': 'A személyzet visszakerült a járműbe',
+                   'UI_setting_autoReturnDelay_text': 'Automatikus visszatérés késleltetése (másodperc)',
+                   'UI_setting_autoReturnDelay_tooltip': 'Késés a személyzet automatikus visszatérése előtt',
+                   'UI_setting_crewAutoReturn_text': 'Crew automatikus visszatérés',
+                   'UI_setting_crewAutoReturn_tooltip': 'A személyzet automatikusan visszaküldése a '
+                                                        'járművéhez',
+                   'UI_setting_crewReturnByDefault_text': 'A személyzet visszatérése alapértelmezés szerint',
+                   'UI_setting_crewReturnByDefault_tooltip': 'Alapértelmezés szerint a személyzet '
+                                                             'visszaküldése járműváltáskor',
+                   'UI_setting_excludePremiumVehicles_text': 'Prémium járművek kizárása',
+                   'UI_setting_excludePremiumVehicles_tooltip': 'Ne küldje vissza automatikusan a '
+                                                                'személyzetet a prémium járművekhez',
+                   'UI_setting_showNotifications_text': 'Értesítések megjelenítése',
+                   'UI_setting_showNotifications_tooltip': 'Rendszerértesítések megjelenítése, amikor a '
+                                                           'személyzet visszatér'},
+ 'dispersion_circle': {'UI_description': 'Reticle',
+                       'UI_setting_gunMarkerMinimumSize_text': 'Fegyverjelző minimális mérete',
+                       'UI_setting_gunMarkerMinimumSize_tooltip': 'A fegyverjelölő minimális mérete pixelben',
+                       'UI_setting_percentCorrection_text': 'Reticle méret korrekció',
+                       'UI_setting_percentCorrection_tooltip': 'Állítsa be az irányzék léptéktényezőjét',
+                       'UI_setting_serverReticleAimingCircleOpacity_text': 'Cél a kör átlátszatlansága',
+                       'UI_setting_serverReticleAimingCircleOpacity_tooltip': 'Állítsa be a kiszolgáló '
+                                                                              'célzókörének '
+                                                                              'átlátszatlanságát',
+                       'UI_setting_serverReticleAimingCircleShape_text': 'Célzó kör alakú',
+                       'UI_setting_serverReticleAimingCircleShape_tooltip': 'Válassza ki a szerver célzókör '
+                                                                            'alakját',
+                       'UI_setting_serverReticleGunMarkerOpacity_text': 'Fegyverjelző átlátszatlansága',
+                       'UI_setting_serverReticleGunMarkerOpacity_tooltip': 'Állítsa be a kiszolgáló '
+                                                                           'pisztolyjelző átlátszatlanságát',
+                       'UI_setting_serverReticleGunMarkerShape_text': 'Fegyverjelölő alakja',
+                       'UI_setting_serverReticleGunMarkerShape_tooltip': 'Válassza ki a kiszolgáló '
+                                                                         'fegyverjelölő alakját',
+                       'UI_setting_showClientAndServerReticleBeta_text': 'Ügyfél- és szerverhálózat (béta)',
+                       'UI_setting_showClientAndServerReticleBeta_tooltip': 'Egyszerre jelenítse meg a '
+                                                                            'kliens és a kiszolgáló hálóját',
+                       'UI_setting_showServerSpgStrategicReticle_text': 'SPG Stratégiai Reticle',
+                       'UI_setting_showServerSpgStrategicReticle_tooltip': 'Engedélyezze a kiszolgáló '
+                                                                           'hálóját az SPG stratégiai '
+                                                                           'módhoz'},
+ 'dispersion_timer': {'UI_description': 'DispersionTimer',
+                      'UI_setting_blue_text': "<font color='#%(blue)s'>Jelenlegi szín: #%(blue)s</font>",
+                      'UI_setting_blue_tooltip': '',
+                      'UI_setting_colorBlue_text': 'A diszperziós időzítő színének kiválasztása nagyon jó:',
+                      'UI_setting_colorGreen_text': 'Válassza ki a színt a jó diszperziós időzítőhöz:',
+                      'UI_setting_colorOrange_text': 'Válassza ki a színt az alacsony diszperziós '
+                                                     'időzítőhöz:',
+                      'UI_setting_colorPurple_text': 'Válasszon színt a diszperziós időzítőhöz:',
+                      'UI_setting_colorRed_text': 'Válassza ki a színt, ha a diszperziós időzítő rossz:',
+                      'UI_setting_colorYellow_text': 'Válassza ki a színt a diszperziós időzítő normál '
+                                                     'értékéhez:',
+                      'UI_setting_green_text': "<font color='#%(green)s'>Jelenlegi szín: #%(green)s</font>",
+                      'UI_setting_green_tooltip': '',
+                      'UI_setting_orange_text': "<font color='#%(orange)s'>Jelenlegi szín: "
+                                                '#%(orange)s</font>',
+                      'UI_setting_orange_tooltip': '',
+                      'UI_setting_purple_text': "<font color='#%(purple)s'>Jelenlegi szín: "
+                                                '#%(purple)s</font>',
+                      'UI_setting_purple_tooltip': '',
+                      'UI_setting_red_text': "<font color='#%(red)s'>Jelenlegi szín: #%(red)s</font>",
+                      'UI_setting_red_tooltip': '',
+                      'UI_setting_template_text': 'Sablon',
+                      'UI_setting_template_tooltip': "Makrók%(color)s', %(timer).1fs, %(percent)d%%",
+                      'UI_setting_x_text': 'X pozíció',
+                      'UI_setting_x_tooltip': '',
+                      'UI_setting_y_text': 'Y pozíció',
+                      'UI_setting_y_tooltip': '',
+                      'UI_setting_yellow_text': "<font color='#%(yellow)s'>Jelenlegi szín: "
+                                                '#%(yellow)s</font>',
+                      'UI_setting_yellow_tooltip': ''},
+ 'distance_marker': {'UI_setting_anchorHorizontalOffset_text': 'Vízszintes eltolás',
+                     'UI_setting_anchorHorizontalOffset_tooltip': 'Beállítja a jelölő vízszintes helyzetét',
+                     'UI_setting_anchorPosition_tankBottom': 'Tartály alja',
+                     'UI_setting_anchorPosition_tankCenter': 'Tank központ',
+                     'UI_setting_anchorPosition_tankMarker': 'Tankjelző',
+                     'UI_setting_anchorPosition_text': 'Horgonyhelyzet',
+                     'UI_setting_anchorPosition_tooltip': 'Meghatározza, hogy a jelző hol helyezkedjen el a '
+                                                          'járműhöz képest',
+                     'UI_setting_anchorVerticalOffset_text': 'Függőleges eltolás',
+                     'UI_setting_anchorVerticalOffset_tooltip': 'Beállítja a jelölő függőleges helyzetét',
+                     'UI_setting_decimalPrecision_text': 'Tizedes pontosság',
+                     'UI_setting_decimalPrecision_tooltip': 'Meghatározza, hogy hány tizedesjegy jelenjen '
+                                                            'meg a távolságban',
+                     'UI_setting_displayMode_always': 'Mindig',
+                     'UI_setting_displayMode_onAltPressed': 'Ha megnyomja az Alt gombot',
+                     'UI_setting_displayMode_text': 'Kijelző mód',
+                     'UI_setting_displayMode_tooltip': 'Meghatározza, hogy mikor jelenjen meg a '
+                                                       'távolságjelző',
+                     'UI_setting_drawTextShadow_text': 'Szöveg árnyék',
+                     'UI_setting_drawTextShadow_tooltip': 'Árnyékot ad a szöveghez a láthatóság javítása '
+                                                          'érdekében',
+                     'UI_setting_lockPositionOffsets_text': 'Zárolási pozíció eltolások',
+                     'UI_setting_lockPositionOffsets_tooltip': 'Megakadályozza a jelölők pozícióinak '
+                                                               'megváltoztatását játék közben',
+                     'UI_setting_markerTarget_allyAndEnemy': 'Szövetségesek és ellenségek',
+                     'UI_setting_markerTarget_onlyEnemy': 'Csak ellenségek',
+                     'UI_setting_markerTarget_text': 'Céljelzők',
+                     'UI_setting_markerTarget_tooltip': 'Meghatározza, hogy mely járművek kapják meg a '
+                                                        'távolságjelzőt',
+                     'UI_setting_textAlpha_text': 'Szöveg átlátszósága',
+                     'UI_setting_textAlpha_tooltip': 'Beállítja a jelölő szövegének átlátszóságát',
+                     'UI_setting_textColor_text': 'Szöveg színe',
+                     'UI_setting_textColor_tooltip': 'Beállítja a jelölő szöveg színét',
+                     'UI_setting_textSize_text': 'Szöveg mérete',
+                     'UI_setting_textSize_tooltip': 'Beállítja a jelölő betűméretét',
+                     'modDisplayName': 'Távolságjelző'},
+ 'driftkings': {'UI_description': 'Driftkings profilok',
+                'UI_profile_active': 'Aktív profil: {0}',
+                'UI_profile_copy': 'Készítsen másolatot az aktív profilról (opcionális)',
+                'UI_profile_restart': 'Indítsa újra a játékot egy másik profil alkalmazásához.',
+                'UI_profile_select': 'Profil a következő játékkezdéshez'},
+ 'flight_timer': {'UI_description': 'FlightTimer',
+                  'UI_setting_spgOnly_text': 'Csak az SPG-hez?',
+                  'UI_setting_spgOnly_tooltip': 'Ha be van jelölve, akkor az időzítő csak SPG esetén lesz '
+                                                'látható.',
+                  'UI_setting_template_text': 'Sablon',
+                  'UI_setting_template_tooltip': "Makrók%(flightTime).1fs', %(distance)dm",
+                  'UI_setting_x_text': 'X pozíció',
+                  'UI_setting_x_tooltip': '',
+                  'UI_setting_y_text': 'Y pozíció',
+                  'UI_setting_y_tooltip': ''},
+ 'hangar_options': {'UI_clock_analog': 'Analóg',
+                    'UI_clock_digital': 'Digitális',
+                    'UI_clock_flip': 'Lapozós',
+                    'UI_clock_minimal': 'Minimalista',
+                    'UI_clock_panel': 'Panel',
+                    'UI_description': 'HangarOptions',
+                    'UI_setting_allowChannelButtonBlinking_text': 'Engedélyezze a Csatorna gomb villogását',
+                    'UI_setting_allowChannelButtonBlinking_tooltip': 'Engedélyezze a messenger bar csatorna '
+                                                                     '(klán vagy privát chat) gomb '
+                                                                     'villogását.',
+                    'UI_setting_allowExchangeXPInTechTree_text': 'XP Exchange a Tech Tree-ben',
+                    'UI_setting_allowExchangeXPInTechTree_tooltip': 'Az XP engedélyezése az aranycseréhez a '
+                                                                    'technológiai fában',
+                    'UI_setting_autoLogin_text': 'Automatikus bejelentkezés',
+                    'UI_setting_autoLogin_tooltip': 'Automatikus bejelentkezés a játékba',
+                    'UI_setting_blockVehicleIfLowAmmo_text': 'Blokkolja a csatát alacsony lőszeren',
+                    'UI_setting_blockVehicleIfLowAmmo_tooltip': 'Akadályozza meg a csatába lépést, ha a '
+                                                                'kiválasztott járműnek kevés a lőszere.',
+                    'UI_setting_clock24Hour_text': '24 órás formátum',
+                    'UI_setting_clockScale_text': 'Óra mérete (%)',
+                    'UI_setting_clockSeconds_text': 'Másodpercek megjelenítése',
+                    'UI_setting_clockStyle_text': 'Óra stílusa',
+                    'UI_setting_clockX_text': 'Óra: vízszintes helyzet',
+                    'UI_setting_clockY_text': 'Óra: függőleges helyzet',
+                    'UI_setting_clock_text': 'Óra kijelző',
+                    'UI_setting_clock_tooltip': 'Gameface óra megjelenítése a garázsban',
+                    'UI_setting_customClockFormat_text': 'Egyedi óraformátum',
+                    'UI_setting_customClockFormat_tooltip': 'Használjon egyedi színt és formátumot az óra '
+                                                            'kijelzéséhez',
+                    'UI_setting_customClockText_text': 'Óraformátum (újraindítás szükséges)',
+                    'UI_setting_fieldMail_text': 'Játékon belüli levelezés',
+                    'UI_setting_fieldMail_tooltip': 'A Field Mail megjelenítése/elrejtése.',
+                    'UI_setting_hideBtnCounters_text': 'Eszköztippek letiltása',
+                    'UI_setting_hideBtnCounters_tooltip': '<img '
+                                                          "src='img://gui/maps/uiKit/dialogs/icons/alert.png' "
+                                                          "width='16' height='16'><font color='#FF0000'>Az "
+                                                          'engedélyezéshez/letiltáshoz újra kell indítani a '
+                                                          'játékot.</font><img '
+                                                          "src='img://gui/maps/uiKit/dialogs/icons/alert.png' "
+                                                          "width='16' height='16'>",
+                    'UI_setting_lootBoxesWidget_text': 'Loot box kijelző',
+                    'UI_setting_lootBoxesWidget_tooltip': 'Lootbox widget megjelenítése/elrejtése a '
+                                                          'hangárban',
+                    'UI_setting_lowAmmoPercentage_text': 'Alacsony lőszerszázalék',
+                    'UI_setting_lowAmmoPercentage_tooltip': 'A lőszer küszöbértéke a jármű készenlétének '
+                                                            'vagy alacsony lőszerének megjelölésére szolgál.',
+                    'UI_setting_premiumTime_text': 'Prémium fiók lejáratának megjelenítése',
+                    'UI_setting_showAchievementPopups_text': 'Teljesítés előugró ablakok',
+                    'UI_setting_showAchievementPopups_tooltip': 'Megjelenítési előugró ablakok '
+                                                                'megjelenítése/elrejtése.',
+                    'UI_setting_showAchievementRewardWindow_text': 'Eredmény-jutalomablak',
+                    'UI_setting_showAchievementRewardWindow_tooltip': 'Teljes képernyős jutalomablak '
+                                                                      'megjelenítése/elrejtése.',
+                    'UI_setting_showBattleCount_text': 'Csataszámláló',
+                    'UI_setting_showBattleCount_tooltip': 'A csataszámlálás kijelzőjének '
+                                                          'megjelenítése/elrejtése',
+                    'UI_setting_showBattlePassWidget_text': 'Battle pass kijelző',
+                    'UI_setting_showBattlePassWidget_tooltip': 'Battle Pass widget megjelenítése/elrejtése a '
+                                                               'hangárban.',
+                    'UI_setting_showButtonCounters_text': 'Gombos számlálók',
+                    'UI_setting_showButtonCounters_tooltip': 'Értesítésszámlálók megjelenítése/elrejtése a '
+                                                             'gombokon',
+                    'UI_setting_showButton_text': 'Statisztika gomb',
+                    'UI_setting_showButton_tooltip': 'A munkamenet statisztika gomb megjelenítése/elrejtése',
+                    'UI_setting_showBuyPremiumButton_text': 'Prémium fiók gomb megjelenítése',
+                    'UI_setting_showDailyQuestWidget_text': 'Napi küldetések',
+                    'UI_setting_showDailyQuestWidget_tooltip': 'Napi küldetés widget megjelenítése/elrejtése '
+                                                               'a hangárban',
+                    'UI_setting_showEventBanner_text': 'Esemény bannerek',
+                    'UI_setting_showEventBanner_tooltip': 'Esemény bannerek megjelenítése/elrejtése a '
+                                                          'hangárban',
+                    'UI_setting_showEventTournamentWidget_text': 'Versenykijelző',
+                    'UI_setting_showEventTournamentWidget_tooltip': 'Verseny banner widget '
+                                                                    'megjelenítése/elrejtése a hangárban.',
+                    'UI_setting_showGeneralChatButton_text': 'Általános csevegés',
+                    'UI_setting_showGeneralChatButton_tooltip': 'Az Általános csevegés gomb '
+                                                                'megjelenítése/elrejtése',
+                    'UI_setting_showHangarPrestigeWidget_text': 'Prestige display a garázsban',
+                    'UI_setting_showHangarPrestigeWidget_tooltip': 'Elit szintű widget '
+                                                                   'megjelenítése/elrejtése a hangárban',
+                    'UI_setting_showPopUpMessages_text': 'Felugró értesítések',
+                    'UI_setting_showPopUpMessages_tooltip': 'Előugró értesítési üzenetek '
+                                                            'megjelenítése/elrejtése',
+                    'UI_setting_showPremiumShopButton_text': 'Jelenítse meg a prémium boltot',
+                    'UI_setting_showProfilePrestigeWidget_text': 'Profil Prestige Display',
+                    'UI_setting_showProfilePrestigeWidget_tooltip': 'Az elit szintű widget '
+                                                                    'megjelenítése/elrejtése a profilban',
+                    'UI_setting_showProgressiveDecalsWindow_text': 'Progresszív matricák',
+                    'UI_setting_showProgressiveDecalsWindow_tooltip': 'A progresszív matricával kapcsolatos '
+                                                                      'értesítések megjelenítése/elrejtése',
+                    'UI_setting_showPromoPremVehicle_text': 'Prémium jármű előnézet',
+                    'UI_setting_showPromoPremVehicle_tooltip': 'Prémium jármű előnézetek '
+                                                               'megjelenítése/elrejtése a hangárban',
+                    'UI_setting_showRankedBattleResults_text': 'Rangsorolt csataeredmények',
+                    'UI_setting_showRankedBattleResults_tooltip': 'A rangsorolt \u200b\u200bcsataeredmények '
+                                                                  'ablakának megjelenítése/elrejtése',
+                    'UI_setting_showReferralButton_text': 'Ajánlóprogram megjelenítése',
+                    'UI_setting_showUnreadCounter_text': 'Értesítési számláló',
+                    'UI_setting_showUnreadCounter_tooltip': 'Olvasatlan értesítésszámlálók '
+                                                            'megjelenítése/elrejtése',
+                    'UI_setting_showWotPlusButton_text': 'A WoT Plus gomb megjelenítése',
+                    'UI_setting_showXpToUnlockVeh_text': 'Jármű XP követelmények',
+                    'UI_setting_showXpToUnlockVeh_tooltip': 'A járművek feloldásához szükséges XP '
+                                                            'megjelenítése'},
+ 'info_panel': {'UI_delay_format': ' mp.',
+                'UI_description': 'InfoPanel',
+                'UI_setting_aliveOnly_text': 'Csak élve',
+                'UI_setting_aliveOnly_tooltip': 'Csak élő játékosok számára mutasd.',
+                'UI_setting_altKey_text': 'Alt. Kulcs',
+                'UI_setting_altKey_tooltip': 'Kulcs a saját jármű információs kijelzőjéhez.',
+                'UI_setting_backgroundAlpha_text': 'Háttér átlátszatlansága',
+                'UI_setting_backgroundAlpha_tooltip': 'A háttérpanel átlátszatlansága (0-1)',
+                'UI_setting_backgroundEnabled_text': 'Háttér engedélyezése',
+                'UI_setting_backgroundEnabled_tooltip': 'Mutasson hátteret a szöveg mögött',
+                'UI_setting_delay_text': 'Késleltetés',
+                'UI_setting_delay_tooltip': 'Panel késleltetésének elrejtése (másodpercben)',
+                'UI_setting_showFor_text': 'Megjelenítés',
+                'UI_setting_showFor_tooltip': "• <b>Szövetséges</b> - Csak mutasd meg az 'ALLY' játékosoknak "
+                                              'tankokat.\n'
+                                              "• <b>Ellenség</b> - Csak mutasd meg az 'ENEMY' játékosoknak "
+                                              'tankokat.\n'
+                                              "• <b>Mind</b> - Mutasd meg az 'ÖSSZES' játékos tankját.",
+                'UI_setting_templatePreset_text': 'Előre beállított sablon',
+                'UI_setting_templatePreset_tooltip': 'Válasszon egy előre meghatározott sablont az '
+                                                     'információs megjelenítéshez',
+                'UI_setting_textLock_text': 'Szöveg egérhúzásának letiltása',
+                'UI_setting_textLock_tooltip': 'Ez a beállítás szabályozza, hogy mozgathatja-e a szöveges '
+                                               'ablakot egérrel vagy sem.',
+                'UI_showFor_all': 'Mind',
+                'UI_showFor_ally': 'Szövetséges',
+                'UI_showFor_enemy': 'Ellenség',
+                'UI_templatePreset_default': 'Alapértelmezett',
+                'UI_templatePreset_detailed': 'Részletes',
+                'UI_templatePreset_driftkings': 'Driftkings',
+                'UI_templatePreset_full': 'Tele',
+                'UI_templatePreset_kmp': 'KMP',
+                'UI_templatePreset_minimal': 'Minimális',
+                'UI_templatePreset_ndo': 'NDO',
+                'armor_piercing': 'AP',
+                'armor_piercing_cr': 'APCR',
+                'armor_piercing_he': 'HESH',
+                'high_explosive': 'HE',
+                'hollow_charge': 'HEAT'},
+ 'logs_swapper': {'UI_description': 'LogsSwapper',
+                  'UI_setting_logSwapper_text': 'Fordított napló engedélyezése.',
+                  'UI_setting_logSwapper_tooltip': 'Megfordítja a sebzésnapló helyzetét a harci felületen.',
+                  'UI_setting_wgLogHideAssist_text': 'A Wargaming támogatási napló elrejtése',
+                  'UI_setting_wgLogHideAssist_tooltip': 'Elrejti a sebzést segítő üzeneteket a szabványos WG '
+                                                        'csatanaplóban.',
+                  'UI_setting_wgLogHideBlock_text': 'A Wargaming blokkolt sebzésnaplójának elrejtése',
+                  'UI_setting_wgLogHideBlock_tooltip': 'Elrejti a blokkolt sebzésüzeneteket a szabványos WG '
+                                                       'csatanaplóban.',
+                  'UI_setting_wgLogHideCritics_text': 'WG Log Kritikusok elrejtése',
+                  'UI_setting_wgLogHideCritics_tooltip': 'Elrejti a kritikus találatokat a szabványos WG '
+                                                         'csatanaplóban.'},
+ 'main_gun': {'UI_description': 'MainGun',
+              'UI_setting_backGroundEnabled_text': 'Háttér',
+              'UI_setting_backGroundEnabled_tooltip': '',
+              'UI_setting_textLock_text': 'TextLock',
+              'UI_setting_textLock_tooltip': ''},
+ 'marks_on_gun_battle': {'NaN': '[<b>NaN</b>]',
+                         'UI_HangarStatsEnd': '{c_damageToMark65}, {c_damageToMark85}\n'
+                                              '{c_damageToMark95}, {c_damageToMark100}',
+                         'UI_HangarStatsStart': '<b>{currentPercent}<font size="14">[{currentDamage}]</font> '
+                                                '</b>',
+                         'UI_description': 'MarksOnGunBattle',
+                         'UI_marks_assist': 'Assist',
+                         'UI_marks_combined': 'Combined',
+                         'UI_marks_compact': 'Compact',
+                         'UI_marks_current': 'Jelenlegi KKM',
+                         'UI_marks_damage': 'Damage',
+                         'UI_marks_detailed': 'Detailed',
+                         'UI_marks_legacy': 'Legacy (12 előre beállított / egyéni formátum)',
+                         'UI_marks_normal': 'Normal',
+                         'UI_menu_UIConfig': 'Konfig',
+                         'UI_menu_UIMyp': '<font color="#D042F3">@Myp</font> választás [<font '
+                                          'color="#D042F3">twitch.tv/myp_</font>]',
+                         'UI_menu_UIReplay': 'a Replays számára',
+                         'UI_menu_UIReplayColor': 'Színezett visszajátszásokhoz',
+                         'UI_menu_UIReplayColorDamage': 'Sebzett visszajátszásokhoz színezett',
+                         'UI_menu_UIReplayDamage': 'sebzéses visszajátszásokhoz',
+                         'UI_menu_UIcircon': '<font color="#02C9B3">@Circon</font> választás [<font '
+                                             'color="#02C9B3">twitch.tv/circon</font>]',
+                         'UI_menu_UIkorbenDallasNoMercy': '<font color="#e3256b">@KorbenDallasNoMercy</font> '
+                                                          'választás [<font '
+                                                          'color="#e3256b">youtube.com/c/KorbenDallasNoMercy</font>]',
+                         'UI_menu_UIoldskool': '<font color="#FFD700">@Oldskool</font> választás [<font '
+                                               'color="#FFD700">twitch.tv/oldskool</font>]',
+                         'UI_menu_UIskill4ltu': '<font color="#60FF00">@skill</font> választás [<font '
+                                                'color="#60FF00">twitch.tv/skill4ltu</font>]',
+                         'UI_menu_UIspoter': '<font color="#6595EE">@spoter</font> választás [<font '
+                                             'color="#6595EE">github.com/spoter</font>]',
+                         'UI_menu_UIspoterNew': 'új <font color="#6595EE">@spoter</font> választás [<font '
+                                                'color="#6595EE">github.com/spoter</font>]',
+                         'UI_message': 'MoE változás vizuális %s',
+                         'UI_setting_UI_text': 'UI a csatában',
+                         'UI_setting_UI_tooltip': 'Kibővített felhasználói felület a csatában:\n'
+                                                  '<img src="img://objects/ui_extended.png"></img>\n'
+                                                  'Egyszerű:\n'
+                                                  '<img src="img://objects/ui_simple.png"></img>\n'
+                                                  'Konfig:\n'
+                                                  '/mods/configs/Driftkings/MarksOnGunExtended/MarksOnGunExtended.json\n',
+                         'UI_setting_background_text': 'Csata: a háttér megjelenítése',
+                         'UI_setting_background_tooltip': '',
+                         'UI_setting_buttonReset_text': 'Gomb: Beállítások visszaállítása',
+                         'UI_setting_buttonReset_tooltip': '',
+                         'UI_setting_buttonShow_text': 'Gomb: Stílus módosítása',
+                         'UI_setting_buttonShow_tooltip': '',
+                         'UI_setting_buttonSizeDown_text': 'Gomb: Méret -10%',
+                         'UI_setting_buttonSizeDown_tooltip': '',
+                         'UI_setting_buttonSizeUp_text': 'Gomb: Méret +10%',
+                         'UI_setting_buttonSizeUp_tooltip': '',
+                         'UI_setting_colorRating_text': 'Színtáblázat',
+                         'UI_setting_colorRating_tooltip': 'Színskála a kiválóságjelekhez.',
+                         'UI_setting_displayMode_text': 'Presentation',
+                         'UI_setting_showDamage_text': 'Mutasd a sérülést',
+                         'UI_setting_showDelta_text': 'Becsült delta megjelenítése',
+                         'UI_setting_showInBattleHalfPercents_text': 'Csata: mutasson sebzést +0,5%-ig',
+                         'UI_setting_showInBattleHalfPercents_tooltip': '',
+                         'UI_setting_showInBattle_text': 'Battle: Hello üzenet',
+                         'UI_setting_showInBattle_tooltip': '',
+                         'UI_setting_showInHangar_text': 'Hangár: Mutasd a MoE mod',
+                         'UI_setting_showInHangar_tooltip': '',
+                         'UI_setting_showInReplay_text': 'Visszajátszás: engedélyezve',
+                         'UI_setting_showInReplay_tooltip': 'Nem jó, de a tesztekhez hasznos',
+                         'UI_setting_showInStatistic_text': 'Statisztika: engedélyezve',
+                         'UI_setting_showInStatistic_tooltip': '',
+                         'UI_setting_showMarks_text': 'Jelek megjelenítése',
+                         'UI_setting_showProgress_text': 'Előrehaladás megjelenítése',
+                         'UI_setting_showTargets_text': 'Célok megjelenítése',
+                         'UI_setting_techTreeMarkOfGunPercentSize_value': '',
+                         'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} aktuális '
+                                        'mozgóátlag sérülés</font>\n'
+                                        '<font color="#FFFFFF" size="12">{currentDamage} jelenlegi '
+                                        'összesített kár</font>\n'
+                                        'To <font color="#FFFFFF" size="12">{nextPercent}% </font>   szükség '
+                                        '<font color="#FFFFFF" size="12">{needDamage}</font> mozgóátlagos '
+                                        'sebzés\n'
+                                        'Ez a statisztika a jármű utolsó csatájához érhető el\n'
+                                        'To <font color="#FFFFFF" size="12">20% </font>   szükség <font '
+                                        'color="{c20}" size="12">~{_20}</font> mozgóátlagos sebzés\n'
+                                        'To <font color="#FFFFFF" size="12">40% </font>   szükség <font '
+                                        'color="{c40}" size="12">~{_40}</font> mozgóátlagos sebzés\n'
+                                        'To <font color="#FFFFFF" size="12">55% </font>   szükség <font '
+                                        'color="{c55}" size="12">~{_55}</font> mozgóátlagos sebzés\n'
+                                        'To <font color="#FFFFFF" size="12">65% </font>   szükség <font '
+                                        'color="{c65}" size="12">~{_65}</font> mozgóátlagos sebzés\n'
+                                        'To <font color="#FFFFFF" size="12">85% </font>   szükség <font '
+                                        'color="{c85}" size="12">~{_85}</font> mozgóátlagos sebzés\n'
+                                        'To <font color="#FFFFFF" size="12">95% </font>   szükség <font '
+                                        'color="{c95}" size="12">~{_95}</font> mozgóátlagos sebzés\n'
+                                        'To <font color="#FFFFFF" size="12">100% </font>  szükség <font '
+                                        'color="{c100}" size="12">~{_100}</font> mozgóátlagos sebzés',
+                         'battleMessageSizeDown': 'MoE mod: Méret <b>-10%</b>',
+                         'battleMessageSizeLimitMax': 'MoE mod: Elérte <b>maximum[1000%]</b>',
+                         'battleMessageSizeLimitMin': 'MoE mod: Elérte <b>minimum[10%]</b>',
+                         'battleMessageSizeReset': 'MoE mod: Beállítások visszaállítása</b>',
+                         'battleMessageSizeUp': 'MoE mod: Méret <b>+10%</b>'},
+ 'marks_on_gun_hangar': {'UI_description': 'MarksOnGunHangar',
+                         'UI_panel_achieved': 'Megvalósult',
+                         'UI_panel_additionalGoal': 'További cél',
+                         'UI_panel_automatic': 'Automatikus',
+                         'UI_panel_average': 'Kombinált EMA',
+                         'UI_panel_battles': 'csaták',
+                         'UI_panel_chooseVehicle': 'Válasszon egy tankot',
+                         'UI_panel_drag': 'HÚZÁS',
+                         'UI_panel_estimate': 'Célbecslés',
+                         'UI_panel_estimateNote': 'Csak becslés; nem a következő csatában szükséges sebzés.',
+                         'UI_panel_goal1': '1. pont (65%)',
+                         'UI_panel_goal2': '2. pont (85%)',
+                         'UI_panel_goal3': '3. pont (95%)',
+                         'UI_panel_header': 'KIVÁLÓSÁGI JELEK',
+                         'UI_panel_historyWaiting': 'Történelem: várja a következő csatát',
+                         'UI_panel_locked': 'ZÁRVA',
+                         'UI_panel_mark': 'Mark',
+                         'UI_panel_mastery0': 'Nincs mesterség',
+                         'UI_panel_mastery1': '3. osztály',
+                         'UI_panel_mastery2': '2. osztály',
+                         'UI_panel_mastery3': '1. osztály',
+                         'UI_panel_mastery4': 'Ász Tanker',
+                         'UI_panel_noDossier': 'A jármű dokumentációja nem elérhető.',
+                         'UI_panel_noStats': 'Nincs betöltött statisztika',
+                         'UI_panel_observedBattles': 'csatákat figyeltek meg',
+                         'UI_panel_remaining': 'pp maradt',
+                         'UI_panel_selectVehicle': 'Válasszon egy járművet a hangárban.',
+                         'UI_panel_thirdAchieved': '3. ÉRTÉKELÉS',
+                         'UI_panel_tierLimit': 'V. szinttől elérhető védjegyek',
+                         'UI_panel_trend': 'Megfigyelt tendencia',
+                         'UI_panel_winRate': 'NYEREMÉNY',
+                         'UI_setting_colorRating_NoobMeter': 'NoobMeter',
+                         'UI_setting_colorRating_WotLabs': 'WotLabs',
+                         'UI_setting_colorRating_XVM': 'XVM',
+                         'UI_setting_colorRating_text': 'Válassza a Színbesorolás lehetőséget',
+                         'UI_setting_colorRating_tooltip': 'Válassza ki a MoE, WN8 és a winrate színsémáját',
+                         'UI_setting_compactMode_text': 'Kompakt panel',
+                         'UI_setting_compactMode_tooltip': 'Másodlagos járműstatisztikák elrejtése.',
+                         'UI_setting_goalSelection_text': 'Jelölje meg a célt',
+                         'UI_setting_goalSelection_tooltip': 'Az Automatikus kiválasztja a következő meg nem '
+                                                             'érdemelt pontot. A sebzés arányos becslés, nem '
+                                                             'pedig a szerver küszöbértéke vagy a következő '
+                                                             'csatára vonatkozó előrejelzés.',
+                         'UI_setting_historyBattles_text': 'Legutóbbi csaták a történelemben',
+                         'UI_setting_historyBattles_tooltip': 'A frissítések több csatát csoportosíthatnak. '
+                                                              'Az előzmények a verzió telepítésével '
+                                                              'kezdődnek.',
+                         'UI_setting_positionX_text': 'Vízszintes helyzet (X)',
+                         'UI_setting_positionX_tooltip': 'Kisebb: bal. Nagyobb: jobb.',
+                         'UI_setting_positionY_text': 'Függőleges helyzet (Y)',
+                         'UI_setting_positionY_tooltip': 'Kisebb: fel. Nagyobb: lent.',
+                         'UI_setting_showInHangar_text': 'Hangár: engedélyezve',
+                         'UI_setting_showInHangar_tooltip': '',
+                         'UI_setting_showInStatistic_text': 'Eszköztipp: engedélyezve',
+                         'UI_setting_showInStatistic_tooltip': '',
+                         'UI_setting_showTooltipTargets_text': 'Eszköztipp: célszintek megjelenítése',
+                         'UI_setting_showTooltipTargets_tooltip': '',
+                         'UI_setting_textLock_text': 'Hangár: zárpanel helyzete',
+                         'UI_setting_textLock_tooltip': '',
+                         'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} aktuális '
+                                        'mozgóátlag sérülés</font>\n'
+                                        '<font color="#FFFFFF" size="12">{currentDamage} jelenlegi '
+                                        'összesített kár</font>\n'
+                                        'To <font color="#FFFFFF" size="12">{nextPercent}% </font> szükség '
+                                        '<font color="#FFFFFF" size="12">{needDamage}</font> mozgóátlagos '
+                                        'sebzés\n'
+                                        '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
+                                        'color="#FFFFFF" size="12">WN8: {wn8}</font>   <font color="#FFFFFF" '
+                                        'size="12">WR: {winRate}</font>',
+                         'UI_tooltipsFull': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} '
+                                            'aktuális mozgóátlag sérülés</font>\n'
+                                            '<font color="#FFFFFF" size="12">{currentDamage} jelenlegi '
+                                            'összesített kár</font>\n'
+                                            'To <font color="#FFFFFF" size="12">{nextPercent}% </font> '
+                                            'szükség <font color="#FFFFFF" size="12">{needDamage}</font> '
+                                            'mozgóátlagos sebzés\n'
+                                            '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
+                                            'color="#FFFFFF" size="12">WN8: {wn8}</font>   <font '
+                                            'color="#FFFFFF" size="12">WR: {winRate}</font>\n'
+                                            'Ez a statisztika a jármű legutóbbi csatájából áll '
+                                            'rendelkezésre\n'
+                                            'To <font color="#FFFFFF" size="12">20% </font> szükség <font '
+                                            'color="#FF6347" size="12">~{_20}</font>\n'
+                                            'To <font color="#FFFFFF" size="12">40% </font> szükség <font '
+                                            'color="#FE7903" size="12">~{_40}</font>\n'
+                                            'To <font color="#FFFFFF" size="12">55% </font> szükség <font '
+                                            'color="#F8F400" size="12">~{_55}</font>\n'
+                                            'To <font color="#FFFFFF" size="12">65% </font> szükség <font '
+                                            'color="#60FF00" size="12">~{_65}</font>\n'
+                                            'To <font color="#FFFFFF" size="12">85% </font> szükség <font '
+                                            'color="#02C9B3" size="12">~{_85}</font>\n'
+                                            'To <font color="#FFFFFF" size="12">95% </font> szükség <font '
+                                            'color="#D042F3" size="12">~{_95}</font>\n'
+                                            'To <font color="#FFFFFF" size="12">100% </font> szükség <font '
+                                            'color="#D042F3" size="12">~{_100}</font>'},
+ 'marks_on_gun_tech_tree': {'UI_description': 'MarksOnGunTechTree (Gameface)',
+                            'UI_setting_badgeOffsetX_text': 'X pozíció (bal / jobb)',
+                            'UI_setting_badgeOffsetX_tooltip': 'Negatív: bal. Pozitívum: helyes.',
+                            'UI_setting_badgeOffsetY_text': 'Y pozíció (fel / le)',
+                            'UI_setting_badgeOffsetY_tooltip': 'Negatív: fel. Pozitívum: lefelé.',
+                            'UI_setting_colorRating_text': 'Színtáblázat',
+                            'UI_setting_colorRating_tooltip': 'Színskála a kiválóságjelekhez.',
+                            'UI_setting_showInTechTreeMarkOfGunPercent_text': 'TechTree: mutasd a MoE %',
+                            'UI_setting_showInTechTreeMarkOfGunPercent_tooltip': '',
+                            'UI_setting_showInTechTreeMarkOfGunTankNameColored_text': 'TechTree: a MoE '
+                                                                                      'kiszínezi a jármű '
+                                                                                      'nevét',
+                            'UI_setting_showInTechTreeMarkOfGunTankNameColored_tooltip': '',
+                            'UI_setting_showInTechTreeMastery_text': 'TechTree: Show Mastery',
+                            'UI_setting_showInTechTreeMastery_tooltip': '',
+                            'UI_setting_showInTechTree_text': 'TechTree: engedélyezve',
+                            'UI_setting_showInTechTree_tooltip': ''},
+ 'minimap_plugins': {'UI_description': 'MinimapPlugins',
+                     'UI_field_alpha': 'Opacity',
+                     'UI_field_mode': 'Visibility',
+                     'UI_minimapAim_0': 'Eredeti sárga',
+                     'UI_minimapAim_1': 'Kék kör',
+                     'UI_minimapAim_2': 'Piros kör',
+                     'UI_minimapAim_3': 'Zöld',
+                     'UI_minimapAim_4': 'Lila hatszög',
+                     'UI_minimapAim_5': 'Fekete',
+                     'UI_minimapAim_6': 'Türkiz',
+                     'UI_mode_always': 'Always',
+                     'UI_mode_bar': 'Bar',
+                     'UI_mode_center': 'Center',
+                     'UI_mode_client': 'Ügyfél beállítása',
+                     'UI_mode_key': 'Miközben lenyomva tartja a minimap gombot',
+                     'UI_mode_left': 'Left',
+                     'UI_mode_never': 'Never',
+                     'UI_mode_off': 'Hide',
+                     'UI_mode_on': 'Show',
+                     'UI_mode_percent': 'Percentage',
+                     'UI_mode_right': 'Right',
+                     'UI_mode_value': 'Value',
+                     'UI_setting_artilleryAim_alpha_text': 'Tüzérségi cél átlátszatlansága (%)',
+                     'UI_setting_artilleryAim_enabled_text': 'Tüzérségi cél a minitérképen',
+                     'UI_setting_artilleryAim_scale_text': 'Tüzérségi célskála (%)',
+                     'UI_setting_artilleryAim_src_text': 'Artillery aim PNG image',
+                     'UI_setting_button_text': 'Zoom gomb',
+                     'UI_setting_button_tooltip': 'Gyorsbillentyű a nagyításhoz.',
+                     'UI_setting_changeColorCircles_text': 'Színes körök megváltoztatása',
+                     'UI_setting_changeColorCircles_tooltip': 'Ha engedélyezve van, megváltoztathatja a '
+                                                              'körök színét a minitérképen.',
+                     'UI_setting_circles_draw_text': 'Rajzolj tartományt',
+                     'UI_setting_circles_maxView_text': 'Maximális látótávolság',
+                     'UI_setting_circles_proximity_text': 'Közelségérzékelés',
+                     'UI_setting_circles_view_text': 'Jármű látótávolság',
+                     'UI_setting_colorDrawCircleCheck_text': 'Rajzolj tartományi kört',
+                     'UI_setting_colorDrawCircle_text': 'Alapértelmezett: <font '
+                                                        "color='#%(colorDrawCircle)s'></font>",
+                     'UI_setting_colorDrawCircle_tooltip': '',
+                     'UI_setting_colorMaxViewCircleCheck_text': 'Max. Tartománykör megtekintése',
+                     'UI_setting_colorMaxViewCircle_text': 'Alapértelmezett: <font '
+                                                           "color='#%(colorMaxViewCircle)s'></font>",
+                     'UI_setting_colorMaxViewCircle_tooltip': '',
+                     'UI_setting_colorMinSpottingCircleCheck_text': 'Min. Folyamatos kör',
+                     'UI_setting_colorMinSpottingCircle_text': 'Alapértelmezett: <font '
+                                                               "color='#%(colorMinSpottingCircle)s'></font>",
+                     'UI_setting_colorMinSpottingCircle_tooltip': '',
+                     'UI_setting_colorViewCircleCheck_text': 'Tartománykör megtekintése',
+                     'UI_setting_colorViewCircle_text': 'Alapértelmezett: <font '
+                                                        "color='#%(colorViewCircle)s'></font>",
+                     'UI_setting_colorViewCircle_tooltip': '',
+                     'UI_setting_extraCircles_text': 'Extra körök (JSON, legfeljebb 8)',
+                     'UI_setting_health_fontSize_text': 'HP betűméret',
+                     'UI_setting_health_height_text': 'HP rúd magasság',
+                     'UI_setting_health_mode_text': 'HP kijelző',
+                     'UI_setting_health_visibility_text': 'HP láthatóság',
+                     'UI_setting_health_width_text': 'HP rúdszélesség',
+                     'UI_setting_health_x_text': 'HP vízszintes eltolás',
+                     'UI_setting_health_y_text': 'HP függőleges eltolás',
+                     'UI_setting_icons_alpha_text': 'Jármű ikon átlátszatlansága',
+                     'UI_setting_icons_scale_text': 'Jármű ikon skála',
+                     'UI_setting_icons_selfAlpha_text': 'Saját nyíl átlátszatlansága',
+                     'UI_setting_icons_selfColor_text': 'Saját nyíl szín',
+                     'UI_setting_icons_selfScale_text': 'Saját nyíl skála',
+                     'UI_setting_labels_align_text': 'Címkeigazítás',
+                     'UI_setting_labels_allyColor_text': 'Szövetséges címke színe',
+                     'UI_setting_labels_ally_text': 'Ally formátum (üres: normál használat)',
+                     'UI_setting_labels_alpha_text': 'Címke átlátszatlansága',
+                     'UI_setting_labels_alternativeAlly_text': 'Alternatív szövetséges formátum',
+                     'UI_setting_labels_alternativeEnemy_text': 'Alternatív ellenséges formátum',
+                     'UI_setting_labels_alternativeSquad_text': 'Alternatív szakasz formátum',
+                     'UI_setting_labels_alternative_text': 'Alternatív címke',
+                     'UI_setting_labels_avoidOverlap_text': 'Csökkentse az átfedő neveket',
+                     'UI_setting_labels_compactLength_text': 'Rövidített névhossz',
+                     'UI_setting_labels_customColors_text': 'Egyedi címke színek',
+                     'UI_setting_labels_deadColor_text': 'Megsemmisült címke színe',
+                     'UI_setting_labels_dead_text': 'Megsemmisült címke',
+                     'UI_setting_labels_enabled_text': 'Egyedi címkék',
+                     'UI_setting_labels_enemyColor_text': 'Ellenséges címke színe',
+                     'UI_setting_labels_enemy_text': 'Enemy formátum (üres: normál használat)',
+                     'UI_setting_labels_fontSize_text': 'Címke betűmérete',
+                     'UI_setting_labels_lost_text': 'Utolsó ismert pozíciócímke',
+                     'UI_setting_labels_normal_text': 'Normál címke',
+                     'UI_setting_labels_shadow_text': 'Címke árnyéka',
+                     'UI_setting_labels_squadColor_text': 'Platon címke színe',
+                     'UI_setting_labels_squad_text': 'Platoon formátum (üres: normál használat)',
+                     'UI_setting_labels_x_text': 'Címke vízszintes eltolás',
+                     'UI_setting_labels_y_text': 'Címke függőleges eltolása',
+                     'UI_setting_lastPositionDuration_text': 'Utolsó pozíció időtartama',
+                     'UI_setting_lastPositionDuration_tooltip': 'Mennyi ideig jelennek meg az utolsó ismert '
+                                                                'pozíciók (másodpercben)',
+                     'UI_setting_lines_alpha_text': 'Vonal átlátszatlansága',
+                     'UI_setting_lines_customStyle_text': 'Egyedi vonalszínek',
+                     'UI_setting_lines_dash_text': 'kötőjel hossza (0: folyamatos)',
+                     'UI_setting_lines_directionColor_text': 'Irányvonal színe',
+                     'UI_setting_lines_direction_text': 'Kamera irányvonal',
+                     'UI_setting_lines_gap_text': 'Szaggatott távolság',
+                     'UI_setting_lines_geometry_text': 'Egyéni vonalgeometria (egyéni stílust igényel)',
+                     'UI_setting_lines_length_text': 'Vonalhossz (minimap egység)',
+                     'UI_setting_lines_sectorColor_text': 'Szektor vonal színe',
+                     'UI_setting_lines_sector_text': 'Fegyver áthaladó szektor',
+                     'UI_setting_lines_thickness_text': 'A löket vastagsága',
+                     'UI_setting_lostMarker_fade_text': 'Az utolsó ismert jelzők elhalványítása',
+                     'UI_setting_lostMarker_minimumAlpha_text': 'Minimális utolsó ismert átlátszatlanság',
+                     'UI_setting_lostMarker_showSeconds_text': 'Másodpercek az utolsó észlelés óta',
+                     'UI_setting_mapSize_color_text': 'Térkép méretek színe',
+                     'UI_setting_mapSize_enabled_text': 'Térkép méreteinek megjelenítése',
+                     'UI_setting_mapSize_fontSize_text': 'A térkép méretei, betűméret',
+                     'UI_setting_mapSize_format_text': 'Térkép méret formátum',
+                     'UI_setting_mapSize_x_text': 'A térkép méretei vízszintes eltolás',
+                     'UI_setting_mapSize_y_text': 'A térkép méretei függőleges eltolás',
+                     'UI_setting_permanentMinimapDeath_text': 'Permanens Minimap Death',
+                     'UI_setting_permanentMinimapDeath_tooltip': 'Mindig mutasd meg a megsemmisültet a '
+                                                                 'térképen',
+                     'UI_setting_presentation_alternativeAlpha_text': 'Alternatív térkép átlátszóság',
+                     'UI_setting_presentation_alternativeEnabled_text': 'Alternatív prezentáció '
+                                                                        'engedélyezése',
+                     'UI_setting_presentation_backgroundAlpha_text': 'Térkép háttér átlátszatlansága',
+                     'UI_setting_presentation_center_text': 'Középre alternatív térkép',
+                     'UI_setting_presentation_normalAlpha_text': 'Normál térkép átlátszóság',
+                     'UI_setting_presentation_sizeIndex_text': 'Alternatív térképméret (0-5)',
+                     'UI_setting_presentation_zoom_text': 'Alternatív térkép nagyítása',
+                     'UI_setting_showLastPositions_text': 'Utolsó ismert pozíciók megjelenítése',
+                     'UI_setting_showLastPositions_tooltip': 'Az ellenséges járművek utolsó ismert '
+                                                             'pozícióinak megjelenítése',
+                     'UI_setting_showNames_text': 'Nevek megjelenítése',
+                     'UI_setting_showNames_tooltip': 'Jelenítse meg a megsemmisült tankok nevét',
+                     'UI_setting_showVehicleTypes_text': 'Járműtípusok megjelenítése',
+                     'UI_setting_showVehicleTypes_tooltip': 'A járműtípus ikonok megjelenítése a '
+                                                            'minitérképen',
+                     'UI_setting_viewRadius_text': 'Valódi kilátás',
+                     'UI_setting_viewRadius_tooltip': 'Távolítsa el a 445m látókör korlátozását',
+                     'UI_setting_yaw_text': 'Lebegési szögek megjelenítése',
+                     'UI_setting_yaw_tooltip': 'Mutassa meg a lebegési szögeket minden járművön, ahol vannak',
+                     'UI_setting_zoomFactorMax_text': 'Maximális nagyítási tényező',
+                     'UI_setting_zoomFactorMax_tooltip': 'A minitérkép maximális nagyítási szintje (1,0-3,0)',
+                     'UI_setting_zoomFactor_text': 'Zoom skála'},
+ 'own_health': {'UI_description': 'OwnHealth',
+                'UI_setting_x_text': 'X pozíció',
+                'UI_setting_x_tooltip': '',
+                'UI_setting_y_text': 'Y pozíció',
+                'UI_setting_y_tooltip': ''},
+ 'player_panel_pro': {'UI_description': 'PlayerPanelPro',
+                      'UI_panel_alpha': 'Panelháttér fedettsége',
+                      'UI_panel_altMode': 'Panelmód az ALT nyomva tartásakor',
+                      'UI_panel_bindToIcon': 'Rögzítés a járműikonhoz',
+                      'UI_panel_clientDefault': 'Játékbeállítás',
+                      'UI_panel_color': 'Color',
+                      'UI_panel_colors': 'Színskála',
+                      'UI_panel_diagnostics': 'Teljesítménydiagnosztika a naplóban',
+                      'UI_panel_enabled': 'Enabled',
+                      'UI_panel_fixedColor': 'Használjon rögzített színt',
+                      'UI_panel_frags': 'Megsemmisült járművek',
+                      'UI_panel_full': 'Teljes panel',
+                      'UI_panel_general': 'General',
+                      'UI_panel_hideIfDead': 'Elrejteni, ha megsemmisült',
+                      'UI_panel_hpKey': 'Életerő megjelenítésének billentyűje',
+                      'UI_panel_hpVisibility': 'Életerő láthatósága',
+                      'UI_panel_hp_always': 'Mindig látható',
+                      'UI_panel_hp_hold': 'A billentyű nyomva tartásakor',
+                      'UI_panel_hp_never': 'Soha nem látható',
+                      'UI_panel_iconAlpha': 'Járműikon fedettsége',
+                      'UI_panel_large': 'Nagy panel',
+                      'UI_panel_layer': 'Réteg',
+                      'UI_panel_loading': 'Harci betöltés',
+                      'UI_panel_loadingTips': 'Feltöltés tippekkel',
+                      'UI_panel_long': 'Hosszú panel',
+                      'UI_panel_medium': 'Közepes panel',
+                      'UI_panel_medium2': 'Közepes panel (járművek)',
+                      'UI_panel_nick': 'Nickname',
+                      'UI_panel_none': 'Rejtett panel',
+                      'UI_panel_panel': 'Játékosok panel',
+                      'UI_panel_rating': 'Értékelés makró r',
+                      'UI_panel_removeHealthPoints': 'A játék HP-sávjainak elrejtése',
+                      'UI_panel_removePlayerStatusIcon': 'A játékos állapotikonjainak elrejtése',
+                      'UI_panel_removePrestigeLevel': 'Elit szintek elrejtése',
+                      'UI_panel_removeRankBadgeIcon': 'Jelvények elrejtése',
+                      'UI_panel_removeSelectedBackground': 'Kijelölt játékos hátterének elrejtése',
+                      'UI_panel_removeSpottedIndicator': 'A játék felderítésjelzőjének cseréje',
+                      'UI_panel_removeSquadIcon': 'A szakasz ikonjainak elrejtése',
+                      'UI_panel_removeTesterIcon': 'Tesztelőikonok elrejtése',
+                      'UI_panel_removeVehicleLevel': 'Járműszintek elrejtése',
+                      'UI_panel_removeVehicleTypeIcon': 'Járműtípus ikonok elrejtése',
+                      'UI_panel_short': 'Rövid panel',
+                      'UI_panel_squadIconOffsetXLeft': 'Bal szakasz ikon: X eltolás',
+                      'UI_panel_squadIconOffsetXRight': 'Jobb szakasz ikon: X eltolás',
+                      'UI_panel_startMode': 'Kezdeti panelmód',
+                      'UI_panel_statistics': 'Játékos statisztikák',
+                      'UI_panel_tab': 'TAB statisztikák',
+                      'UI_panel_text': 'Szöveg / makrók',
+                      'UI_panel_unavailable': 'Nem elérhető statisztikák megjelenítése',
+                      'UI_panel_vehicle': 'Vehicle',
+                      'UI_panel_vehicleIconAlpha': 'Jármű ikon átlátszatlansága',
+                      'UI_panel_vehicleIconOffsetXLeft': 'Bal oldali jármű ikon: X eltolás',
+                      'UI_panel_vehicleIconOffsetXRight': 'Jobb jármű ikon: X eltolás',
+                      'UI_setting_dead_text': 'Halott',
+                      'UI_setting_dead_tooltip': '',
+                      'UI_setting_help_text': 'Segítség:',
+                      'UI_setting_help_tooltip': 'PlayerPanelPro: general.json, playersPanel.json, '
+                                                 'battleLoading.json, statisticForm.json és '
+                                                 'panelShort/Medium/Long/Full.json.',
+                      'UI_setting_hpEnabled_text': 'Életerő megjelenítése',
+                      'UI_setting_hpEnabled_tooltip': 'Életerő megjelenítése.',
+                      'UI_setting_lost_text': 'Elveszett',
+                      'UI_setting_lost_tooltip': '',
+                      'UI_setting_mode_always': 'Mindig',
+                      'UI_setting_mode_holding': 'Holding',
+                      'UI_setting_mode_text': 'Válassza ki a kívánt lehetőséget',
+                      'UI_setting_mode_toggle': 'Váltás',
+                      'UI_setting_mode_tooltip': ' • <b>Mindig</b> - A HP markerek mindig megjelennek.\n'
+                                                 ' • <b>Váltás</b> - A HP markerek be-/kikapcsolódnak a '
+                                                 'váltógomb megnyomásával.\n'
+                                                 ' • <b>Holding</b> - A HP markerek csak akkor jelennek meg '
+                                                 '<b>miközben</b> a váltógomb megnyomva.',
+                      'UI_setting_neverSeen_text': 'Soha nem látott',
+                      'UI_setting_neverSeen_tooltip': '',
+                      'UI_setting_spottedEnabled_text': 'Felderítési állapot megjelenítése',
+                      'UI_setting_spottedEnabled_tooltip': 'Felderítési állapot megjelenítése.',
+                      'UI_setting_spotted_text': 'Foltos',
+                      'UI_setting_spotted_tooltip': '',
+                      'UI_setting_toggleKey_text': 'Váltó gyorsbillentyű',
+                      'UI_setting_toggleKey_tooltip': 'Ennek a gombnak a csata közbeni megnyomása '
+                                                      'átkapcsolja a HP markerek megjelenítését.'},
+ 'repair_extended': {'UI_description': 'RepairExtended',
+                     'UI_setting_autoRepair_text': 'Automatikus használat',
+                     'UI_setting_autoRepair_tooltip': '',
+                     'UI_setting_buttonChassis_text': 'Gomb: Állítsa vissza a házat',
+                     'UI_setting_buttonChassis_tooltip': '',
+                     'UI_setting_buttonRepair_text': 'Gomb: Intelligens javítás',
+                     'UI_setting_buttonRepair_tooltip': '',
+                     'UI_setting_extinguishFire_text': 'Oltsa el a tüzet',
+                     'UI_setting_extinguishFire_tooltip': '',
+                     'UI_setting_healCrew_text': 'Heal legénység',
+                     'UI_setting_healCrew_tooltip': '',
+                     'UI_setting_removeStun_text': 'Távolítsa el a kábítást',
+                     'UI_setting_removeStun_tooltip': '',
+                     'UI_setting_repairDevices_text': 'Eszközök javítása',
+                     'UI_setting_repairDevices_tooltip': '',
+                     'UI_setting_restoreChassis_text': 'Állítsa vissza a házat',
+                     'UI_setting_restoreChassis_tooltip': '',
+                     'UI_setting_timerMax_format': ' mp.',
+                     'UI_setting_timerMax_text': 'Maximális késleltetési automatikus használat',
+                     'UI_setting_timerMin_format': ' mp.',
+                     'UI_setting_timerMin_text': 'Minimális késleltetési automatikus használat',
+                     'UI_setting_useGoldKits_text': 'Használjon aranykészleteket',
+                     'UI_setting_useGoldKits_tooltip': ''},
+ 'safe_shot': {'UI_battle_activateMessage': 'SafeShot: aktiválva!',
+               'UI_description': 'SafeShot',
+               'UI_setting_activateMessage_text': 'Aktiválja az Üzenetet',
+               'UI_setting_activateMessage_tooltip': 'Értesítési üzenet megjelenítése csatába lépéskor',
+               'UI_setting_chatMessages_text': 'Üzenet formázása',
+               'UI_setting_chatMessages_tooltip': 'Egyéni üzenetformátum a csapatlövések blokkolásakor. '
+                                                  'Használja {name} és {vehicle} helyőrzőként',
+               'UI_setting_deadShotBlockTimeOut_text': 'A megsemmisült járművekre leadott lövések '
+                                                       'blokkolásának határideje',
+               'UI_setting_deadShotBlockTimeOut_tooltip': 'A lövések blokkolásának ideje másodpercben a '
+                                                          'jármű megsemmisülése után',
+               'UI_setting_deadShotBlock_text': 'Blokkolja a lövéseket a megsemmisült járművekre',
+               'UI_setting_deadShotBlock_tooltip': 'Megakadályozza a lövöldözést a már megsemmisült '
+                                                   'járművekre',
+               'UI_setting_disableKey_text': 'Kulcs letiltása',
+               'UI_setting_disableKey_tooltip': 'Gyorsbillentyű a mod ideiglenes '
+                                                'engedélyezéséhez/letiltásához',
+               'UI_setting_teamKillerShotUnblock_text': 'Team Killer Shot blokkolás feloldása',
+               'UI_setting_teamKillerShotUnblock_tooltip': 'Lehetővé teszi a csapatgyilkosokra való '
+                                                           'lövöldözést',
+               'UI_setting_teamShotBlock_text': 'Blokkolja a szövetséges járművekre irányuló lövéseket',
+               'UI_setting_teamShotBlock_tooltip': 'Megakadályozza a csapattársakra való lövöldözést',
+               'UI_setting_triggerMessage_text': 'Üzenet letiltása',
+               'UI_setting_triggerMessage_tooltip': 'Értesítési üzenetek megjelenítése/elrejtése, ha a '
+                                                    'felvételek blokkolva vannak',
+               'UI_setting_wasteShotBlock_text': 'Hulladék Shot Block',
+               'UI_setting_wasteShotBlock_tooltip': 'Megakadályozza a lövést, ha nincs kiválasztva cél',
+               'UI_triggerText_disabled': 'SafeShot: Letiltva!',
+               'UI_triggerText_enabled': 'SafeShot: Engedélyezve!'},
+ 'server_turret_extended': {'UI_battle_OFF': 'KI',
+                            'UI_battle_ON': 'BE',
+                            'UI_battle_activateMessage': "'Server Turret Extended': Aktiválva",
+                            'UI_description': 'ServerTurretExtended',
+                            'UI_setting_activateMessage_text': 'Aktiválási üzenet megjelenítése',
+                            'UI_setting_activateMessage_tooltip': 'Aktiválási üzenet megjelenítése csatában',
+                            'UI_setting_autoActivateWheelMode_text': 'Kerekek: Automatikus sebesség mód',
+                            'UI_setting_autoActivateWheelMode_tooltip': 'Automatikusan bekapcsolja a '
+                                                                        'sebességet vagy a manőverezési '
+                                                                        'módot',
+                            'UI_setting_buttonAutoMode_text': 'Gomb: Kerekek automatikus sebessége',
+                            'UI_setting_buttonAutoMode_tooltip': '',
+                            'UI_setting_buttonMaxMode_text': 'Gomb: A kerekek tartják a maximális sebességet',
+                            'UI_setting_buttonMaxMode_tooltip': '',
+                            'UI_setting_fixAccuracyInMove_text': 'Pontosság javítása',
+                            'UI_setting_fixAccuracyInMove_tooltip': 'Amikor tankot mozgatsz, majd megállsz, '
+                                                                    'fix pontossággal használod a célzás '
+                                                                    'elvesztését',
+                            'UI_setting_fixWheelCruiseControl_text': 'Javítsa meg a sebességtartó '
+                                                                     'automatikát a kerekeken',
+                            'UI_setting_fixWheelCruiseControl_tooltip': 'Ha aktiválja a Kerekes üzemmódot a '
+                                                                        'sebességtartó automatikával, a '
+                                                                        'jármű leállt, ez a beállítás '
+                                                                        'letiltja ezt',
+                            'UI_setting_maxWheelMode_text': 'Kerekek: Tartsa a maximális sebességet',
+                            'UI_setting_maxWheelMode_tooltip': 'A maximális sebesség elérésekor nem tiltja '
+                                                               'le a sebesség üzemmódot manőverezés közben',
+                            'UI_setting_serverTurret_text': 'Szervertorony',
+                            'UI_setting_serverTurret_tooltip': 'A torony áthelyezése a szerver cél '
+                                                               'koordinátáira (engedélyezni kell a Server '
+                                                               'Sight-ot a játék beállításaiban)'},
+ 'sixth_sense': {'UI_description': 'SixthSense',
+                 'UI_setting_defaultIconName_text': 'Alapértelmezett ikonnév',
+                 'UI_setting_defaultIconName_tooltip': 'Válasszon ki egy beágyazott képet.',
+                 'UI_setting_defaultIcon_text': 'Alapértelmezett ikon',
+                 'UI_setting_defaultIcon_tooltip': 'Használjon beágyazott képet.',
+                 'UI_setting_delay_text': 'Késleltetés',
+                 'UI_setting_delay_tooltip': 'A szöveges üzenet ennyi másodpercig a képernyőn marad, mielőtt '
+                                             'elhalványulna.',
+                 'UI_setting_helpMessage_text': 'Segítő üzenet',
+                 'UI_setting_helpMessage_tooltip': 'Automatikusan küldjön csevegésre (Segítség) üzenetet.',
+                 'UI_setting_iconSize_text': 'Képméret',
+                 'UI_setting_iconSize_tooltip': 'Képpontban (max. 180)',
+                 'UI_setting_infoSpottedMessage_text': 'Kiszúrt üzenetek:',
+                 'UI_setting_lampShowTime_text': 'Lámpabeállítási idő',
+                 'UI_setting_lampShowTime_tooltip': '<b>Mennyi ideig marad látható a cél?</b><br>Miután '
+                                                    'észrevették, a tartály látható marad közvetlen rálátás '
+                                                    'nélkül is. Normál — ~10 másodperc, 7 és 13 között '
+                                                    'változhat a személyzettől, " "felszereléstől és '
+                                                    'utasításoktól függően.',
+                 'UI_setting_playTickSound_text': 'Játssz Tick Sound-ot',
+                 'UI_setting_playTickSound_tooltip': 'Játssz kullancs hangot.',
+                 'UI_setting_showTimerGraphicsColor_text': 'Grafika színe.',
+                 'UI_setting_showTimerGraphicsColor_tooltip': 'A grafikus kör színe.',
+                 'UI_setting_showTimerGraphicsRadius_text': 'A grafikus kör sugara.',
+                 'UI_setting_showTimerGraphicsRadius_tooltip': 'Az időzítő kör mérete pixelben.',
+                 'UI_setting_showTimerGraphics_text': 'Időzítő grafika megjelenítése.',
+                 'UI_setting_showTimerGraphics_tooltip': 'Grafikus időzítő kör megjelenítése.',
+                 'UI_setting_showTimer_text': 'Időzítő megjelenítése',
+                 'UI_setting_showTimer_tooltip': 'Visszaszámláló megjelenítése, ha észreveszi.',
+                 'UI_setting_sixthSenseSound_text': 'Érzékelési hang',
+                 'UI_setting_spottedMessage_text': 'Foltos',
+                 'UI_setting_spottedMessage_tooltip': 'Foltos szöveg engedélyezése a csatában.',
+                 'UI_setting_spottedText_text': 'Szövegformátum',
+                 'UI_setting_spottedText_tooltip': 'Használjon makrókat az üzenet szerkesztéséhez\n'
+                                                   "(makró:'%(pos)s').",
+                 'UI_setting_timerSettings_text': 'Időzítő beállításai:',
+                 'UI_setting_userIcon_text': 'Egyedi kép elérési útja',
+                 'UI_setting_userIcon_tooltip': 'Akkor használatos, ha a beágyazott kép le van tiltva. PNG '
+                                                'vagy JPEG a mods/configs/. fájlban',
+                 'UI_setting_userSound_text': 'Felhasználói hang',
+                 'UI_setting_userSound_tooltip': 'Egyéni hang engedélyezése észleléskor.',
+                 'UI_sound_SixthSense_01': 'Electro',
+                 'UI_sound_SixthSense_02': 'Buzz',
+                 'UI_sound_SixthSense_03': 'Buzz időzítő',
+                 'UI_sound_SixthSense_04': 'Car',
+                 'UI_sound_SixthSense_05': 'Hosszú (hangos)',
+                 'UI_sound_SixthSense_06': 'Hosszú (csendes)',
+                 'UI_sound_SixthSense_07': 'Sauron',
+                 'UI_sound_SixthSense_08': 'Super Mario',
+                 'UI_sound_SixthSense_09': 'Trap',
+                 'UI_sound_SixthSense_10': 'X-Files'},
+ 'spotted_extended_light': {'UI_description': 'SpottedExtendedLight',
+                            'UI_macros_help': 'Használja ezeket a makrókat az üzenetformátumokban az '
+                                              'értesítések testreszabásához:\n'
+                                              '• {icons} - Megjeleníti a jármű ikonjait\n'
+                                              '• {names} - Megmutatja a játékosok nevét\n'
+                                              '• {vehicles} - Megmutatja a járművek nevét\n'
+                                              '• {icons_names} - Ikonokat jelenít meg játékosnevekkel\n'
+                                              '• {icons_vehicles} - Ikonokat jelenít meg járműnevekkel\n'
+                                              '• {full} - Teljes információt jelenít meg\n'
+                                              '• {damage} - Mutatja a kár összegét (csak segítő üzeneteknél)',
+                            'UI_macros_help_title': 'Makró használati útmutató',
+                            'UI_setting_AssistRadio_default': 'Alapértelmezett: {icons}{vehicles}{damage}',
+                            'UI_setting_AssistRadio_description': 'A rádiórásegítő károsodása esetén '
+                                                                  'megjelenő üzenet formátuma',
+                            'UI_setting_AssistRadio_text': 'Rádiós asszisztens:',
+                            'UI_setting_AssistRadio_tooltip': 'Szabja személyre a rádiós asszisztens '
+                                                              'sérülése esetén megjelenő üzenetet',
+                            'UI_setting_AssistStun_default': 'Alapértelmezett: {icons}{vehicles}{damage}',
+                            'UI_setting_AssistStun_description': 'A kábítást segítő károkról megjelenített '
+                                                                 'üzenet formátuma',
+                            'UI_setting_AssistStun_text': 'Kábító segítség:',
+                            'UI_setting_AssistStun_tooltip': 'Szabja testre a kábítást segítő sérülés esetén '
+                                                             'megjelenő üzenetet',
+                            'UI_setting_AssistTrack_default': 'Alapértelmezett: {icons}{vehicles}{damage}',
+                            'UI_setting_AssistTrack_description': 'Az üzenet formátuma a nyomkövető '
+                                                                  'károsodás esetén',
+                            'UI_setting_AssistTrack_text': 'Pályasegítő:',
+                            'UI_setting_AssistTrack_tooltip': 'Szabja testre a nyomkövetési sérülés esetén '
+                                                              'megjelenő üzenetet',
+                            'UI_setting_Spotted_default': 'Alapértelmezett: {icons}{vehicles}',
+                            'UI_setting_Spotted_description': 'Az ellenség észlelésekor megjelenő üzenet '
+                                                              'formátuma',
+                            'UI_setting_Spotted_text': 'Foltos:',
+                            'UI_setting_Spotted_tooltip': 'Testreszabhatja az ellenséges jármű észlelésekor '
+                                                          'megjelenő üzenetet',
+                            'UI_setting_iconSizeX_default': 'Alapértelmezett: 47 px',
+                            'UI_setting_iconSizeX_text': 'Ikon szélessége',
+                            'UI_setting_iconSizeX_tooltip': 'A jármű ikonok szélessége az értesítésekben',
+                            'UI_setting_iconSizeX_value': ' px',
+                            'UI_setting_iconSizeY_default': 'Alapértelmezett: 16 képpont',
+                            'UI_setting_iconSizeY_text': 'Ikon magassága',
+                            'UI_setting_iconSizeY_tooltip': 'A jármű ikonok magassága az értesítésekben',
+                            'UI_setting_iconSizeY_value': ' px',
+                            'UI_setting_macrosList': 'Elérhető makrók: {icons} - jármű ikonok, {names} - '
+                                                     'játékos nevek, {vehicles} - járművek nevei, '
+                                                     '{icons_names} - ikonok nevekkel, {icons_vehicles} - '
+                                                     'ikonok járműnevekkel, {full} - teljes körű '
+                                                     'tájékoztatás, {damage} - kár összege',
+                            'UI_setting_messageColorAssistRadioCheck_text': 'Rádiósegéd üzenet színe',
+                            'UI_setting_messageColorAssistRadio_text': 'Jelenlegi: <font '
+                                                                       "color='#%(messageColorAssistRadio)s'>■■■■</font>",
+                            'UI_setting_messageColorAssistRadio_tooltip': 'A „Radio Hit Assist” értesítési '
+                                                                          'szöveghez használt szín',
+                            'UI_setting_messageColorAssistStunCheck_text': 'A kábítást segítő üzenet színe',
+                            'UI_setting_messageColorAssistStun_text': 'Jelenlegi: <font '
+                                                                      "color='#%(messageColorAssistStun)s'>■■■■</font>",
+                            'UI_setting_messageColorAssistStun_tooltip': 'A „Stun Hit Assist” értesítési '
+                                                                         'szöveghez használt szín',
+                            'UI_setting_messageColorAssistTrackCheck_text': 'Nyomkövetési segédüzenet színe',
+                            'UI_setting_messageColorAssistTrack_text': 'Jelenlegi: <font '
+                                                                       "color='#%(messageColorAssistTrack)s'>■■■■</font>",
+                            'UI_setting_messageColorAssistTrack_tooltip': 'A „Track Hit Assist” értesítési '
+                                                                          'szöveghez használt szín',
+                            'UI_setting_messageColorSpottedCheck_text': 'Foltos üzenet színe',
+                            'UI_setting_messageColorSpotted_text': 'Jelenlegi: <font '
+                                                                   "color='#%(messageColorSpotted)s'>■■■■</font>",
+                            'UI_setting_messageColorSpotted_tooltip': 'A „Pettyes” értesítési szöveg színe',
+                            'UI_setting_soundAssist_default': 'Alapértelmezés: gun_intuition',
+                            'UI_setting_soundAssist_text': 'Segéd értesítési hang',
+                            'UI_setting_soundAssist_tooltip': 'Hang lejátszása, amikor asszisztens sérülést '
+                                                              'szenved (rádió, műsorszám vagy kábítás)',
+                            'UI_setting_soundSpotted_default': 'Alapértelmezés: enemy_sighted_for_team',
+                            'UI_setting_soundSpotted_text': 'Foltos értesítési hang',
+                            'UI_setting_soundSpotted_tooltip': 'Hang hallható, amikor ellenséges járművet '
+                                                               'észlel',
+                            'UI_setting_sound_default': 'Alapértelmezett: Engedélyezve',
+                            'UI_setting_sound_text': 'Engedélyezze a harci hangokat',
+                            'UI_setting_sound_tooltip': 'Kapcsolja be a hangos értesítéseket a kiszúrt '
+                                                        'ellenségekről, és segítse a sebzést'},
+ 'zoom_extended': {'UI_description': 'ZoomExtended',
+                   'UI_setting_disableCamAfterShotLatency_text': 'A Cam After Shot késleltetés letiltása',
+                   'UI_setting_disableCamAfterShotLatency_tooltip': 'A kamera automatikus kikapcsolásának '
+                                                                    'késleltetése.',
+                   'UI_setting_disableCamAfterShotSkipClip_text': 'A Cam After Shot Skip Clip letiltása',
+                   'UI_setting_disableCamAfterShotSkipClip_tooltip': 'Ne lépjen ki, ha a tárbetöltő '
+                                                                     'rendszer.',
+                   'UI_setting_disableCamAfterShot_text': 'A Cam After Shot kikapcsolása',
+                   'UI_setting_disableCamAfterShot_tooltip': 'A lövés után kapcsolja ki a mesterlövész '
+                                                             'módot.',
+                   'UI_setting_noBinoculars_text': 'Távcső letiltása.',
+                   'UI_setting_noBinoculars_tooltip': 'Távolítsa el az áramszünetet mesterlövész módban.',
+                   'UI_setting_noFlashBang_text': 'A Red Flash letiltása.',
+                   'UI_setting_noFlashBang_tooltip': 'Sérüléskor távolítsa el a piros vakut.',
+                   'UI_setting_noShockWave_text': 'Robbanás lökéshullám',
+                   'UI_setting_noShockWave_tooltip': 'Távolítsa el a kamera remegését, amikor a tank elüti.',
+                   'UI_setting_noSniperDynamic_text': 'Dinamikus mesterlövész kamera',
+                   'UI_setting_noSniperDynamic_tooltip': 'A dinamikus kamera letiltása mesterlövész módban.'}}
 
 PANEL = {'actionFailed': 'Az akció meghiúsult. Lásd: game.log.',
  'all': 'Összes',

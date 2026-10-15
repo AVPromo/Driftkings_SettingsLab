@@ -8,7 +8,7 @@ from Driftkings.core.callbacks import callback
 from Driftkings.core.hooks import override
 from Driftkings.core.keyboard import keyboard
 from Driftkings.settings.service import settings_service
-from Driftkings.settings.templates.battle.safe_shot import SafeShotSettings as Settings
+from Driftkings.settings.definitions.battle.safe_shot import SafeShotSettings as Settings
 
 
 class SafeShotController(object):

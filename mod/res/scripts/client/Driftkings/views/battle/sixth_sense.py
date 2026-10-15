@@ -27,7 +27,7 @@ def _component():
 
 class SixthSense(SixthSenseMeta):
     def __init__(self):
-        super(SixthSense, self).__init__(SIXTH_SENSE.ID)
+        super(SixthSense, self).__init__(SIXTH_SENSE.NAME)
         self.radio_installed = False
         self.iconReady = False
         self.__sounds = dict()

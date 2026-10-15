@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Core-owned settings interface; feature templates and file formats stay stable."""
+"""Core-owned settings interface; section metadata and file formats stay stable."""
 from Driftkings.settings.loader import settings_loader
 from Driftkings.settings.settings_data import user_settings
 
@@ -18,11 +18,11 @@ class SettingsService(object):
         from helpers import getClientLanguage, getClientVersion
         self.registry.register(ProfileSettings(settings_loader, getClientLanguage()))
         from Driftkings.settings.panel import settings
-        from Driftkings.settings.panel.compatibility import TemplateAdapter
+        from Driftkings.settings.panel.sections import SectionPanelBinding
         from Driftkings.views.hangar.settings_window import controller
         settings.client_version = getClientVersion()
         settings.start(str(getClientLanguage()))
-        controller.adapter = TemplateAdapter(settings, self.registry)
+        controller.adapter = SectionPanelBinding(settings, self.registry)
         controller.start(settings)
         self.controller = controller
         try:

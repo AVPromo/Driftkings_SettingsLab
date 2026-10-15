@@ -20,7 +20,7 @@ from Driftkings.common import logException
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service
-from Driftkings.settings.templates.lobby.crew import CrewSettingsSettings as ConfigInterface
+from Driftkings.settings.definitions.lobby.crew import CrewSettingsSettings as Settings
 
 
 def getCachePath():
@@ -91,7 +91,7 @@ def clearIgnoredVehicles():
 
 
 ignored_vehicles = openIgnoredVehicles()
-config = ConfigInterface()
+config = Settings()
 
 
 class Crew(object):

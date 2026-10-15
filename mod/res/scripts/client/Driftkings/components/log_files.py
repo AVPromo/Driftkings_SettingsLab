@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from functools import partial
 
 from gui.Scaleform.daapi.view.battle.shared.damage_log_panel import _LogViewComponent, DamageLogPanel
@@ -7,9 +7,9 @@ from gui.battle_control.battle_constants import PERSONAL_EFFICIENCY_TYPE
 from Driftkings._constants import GLOBAL, LOGS_SWAPPER
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service
-from Driftkings.settings.templates.components.log_files import LogsSwapperSettings as ConfigInterface
+from Driftkings.settings.definitions.components.log_files import LogsSwapperSettings as Settings
 
-config = ConfigInterface()
+config = Settings()
 
 
 class WGLogs(object):

@@ -16,8 +16,8 @@ MODULES = {
     'OpenWGGameface': ('openwg_gameface',),
 }
 FEATURES = {
-    'PlayerPanelPro': ('XVM'),
-    'MinimapPlugins': ('XVM', 'BattleObserver')
+    'player_panel_pro': ('XVM'),
+    'minimap_plugins': ('XVM', 'BattleObserver')
 }
 
 
@@ -63,8 +63,8 @@ class CompatibilityManager(object):
 
     def _xvm_active(self, feature):
         module_name, path = {
-            'PlayerPanelPro': ('xvm_battle', 'playersPanel.enabled'),
-            'MinimapPlugins': ('xvm_battle_minimap', 'minimap.enabled'),
+            'player_panel_pro': ('xvm_battle', 'playersPanel.enabled'),
+            'minimap_plugins': ('xvm_battle_minimap', 'minimap.enabled'),
         }.get(feature, (None, None))
         if module_name is None:
             return None

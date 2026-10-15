@@ -18,7 +18,7 @@ def _component():
 
 class MinimapCentredView(MinimapMeta):
     def __init__(self):
-        super(MinimapCentredView, self).__init__(_component().config.ID)
+        super(MinimapCentredView, self).__init__(_component().config.NAME)
         self._releaseCallback = None
 
 

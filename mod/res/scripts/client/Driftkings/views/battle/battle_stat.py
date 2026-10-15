@@ -15,8 +15,8 @@ def _component():
 
 
 class Flash(CachedBattleLabel):
-    def __init__(self, ID, params):
-        super(Flash, self).__init__(ID, _component, BATTLE_STAT.TEXT_POSITION, BATTLE_STAT)
+    def __init__(self, section, params):
+        super(Flash, self).__init__(section, _component, BATTLE_STAT.TEXT_POSITION, BATTLE_STAT)
         self.font = params['font']
         self.size = params['size']
         self.color = params['color']
@@ -39,15 +39,15 @@ class Flash(CachedBattleLabel):
 
     def HtmlText(self, text=''):
         if not self._destroyed and text != self._lastText:
-            if overlays.update(self.ID, {'text': text}):
+            if overlays.update(self.section, {'text': text}):
                 self._lastText = text
 
     def setVisible(self, status):
         status = bool(status)
         if not self._destroyed and status != self._lastVisible:
-            if overlays.update(self.ID, {'visible': status}):
+            if overlays.update(self.section, {'visible': status}):
                 self._lastVisible = status
 
 
 def _startFlash():
-    _component().g_flash = Flash(_component().config.ID, settings_service.getComponentDict(_component().config)[BATTLE_STAT.TEXT_FORMAT])
+    _component().g_flash = Flash(_component().config.NAME, settings_service.getComponentDict(_component().config)[BATTLE_STAT.TEXT_FORMAT])

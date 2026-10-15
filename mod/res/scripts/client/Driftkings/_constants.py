@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Stable settings keys and UI aliases; no game imports.
-ID preserves registry/i18n keys; NAME identifies the JSON section.
+NAME is the single configuration key for registry, defaults and translations.
 """
 from collections import namedtuple
 
@@ -66,14 +66,12 @@ class GLOBAL(object):
 
 
 class AIMING_ANGLES(object):
-    ID = 'AimingAngles'
     NAME = 'aiming_angles'
     VERTICAL = 'vertical'
     HORIZONTAL = 'horizontal'
 
 
 class ARCADE_ZOOM(object):
-    ID = 'ArcadeZoom'
     NAME = 'arcade_zoom'
     MAX = 'max'
     MIN = 'min'
@@ -82,7 +80,6 @@ class ARCADE_ZOOM(object):
 
 
 class ARMOR_CALCULATOR(object):
-    ID = 'ArmorCalculator'
     NAME = 'armor_calculator'
     DISPLAY_ON_ALLIES = 'displayOnAllies'
     MESSAGES = 'messages'
@@ -91,7 +88,6 @@ class ARMOR_CALCULATOR(object):
 
 
 class ARTY_SPLASH(object):
-    ID = 'ArtySplash'
     NAME = 'arty_splash'
     BUTTON_SHOW_DOT = 'buttonShowDot'
     BUTTON_SHOW_SPLASH = 'buttonShowSplash'
@@ -105,7 +101,6 @@ class ARTY_SPLASH(object):
 
 
 class AUTO_AIM_OPTIMIZE(object):
-    ID = 'AutoAimOptimize'
     NAME = 'auto_aim_optimize'
     ANGLE = 'angle'
     CATCH_HIDDEN_TARGET = 'catchHiddenTarget'
@@ -113,7 +108,6 @@ class AUTO_AIM_OPTIMIZE(object):
 
 
 class BATTLE_EFFICIENCY(object):
-    ID = 'BattleEfficiency'
     NAME = 'battle_efficiency'
     COLOR_RATTING = 'colorRatting'
     FORMAT = 'format'
@@ -126,7 +120,6 @@ class BATTLE_EFFICIENCY(object):
 
 
 class BATTLE_OPTIONS(object):
-    ID = 'BattleOptions'
     NAME = 'battle_options'
     CLIP_LOAD = 'clipLoad'
     DIRECTIVES_ONLY_FROM_STORAGE = 'directivesOnlyFromStorage'
@@ -151,7 +144,6 @@ class BATTLE_OPTIONS(object):
 
 
 class BATTLE_STAT(object):
-    ID = 'BattleStat'
     NAME = 'battle_stat'
     COLOR_RATING = 'colorRating'
     FORMAT = 'format'
@@ -162,7 +154,6 @@ class BATTLE_STAT(object):
 
 
 class DISPERSION_CIRCLE(object):
-    ID = 'DispersionCircle'
     NAME = 'dispersion_circle'
     SHOW_CLIENT_AND_SERVER_RETICLE = 'showClientAndServerReticle'
     GUN_MARKER_MINIMUM_SIZE = 'gunMarkerMinimumSize'
@@ -176,7 +167,6 @@ class DISPERSION_CIRCLE(object):
 
 
 class DISPERSION_TIMER(object):
-    ID = 'DispersionTimer'
     NAME = 'dispersion_timer'
     RED = 'red'
     ORANGE = 'orange'
@@ -188,7 +178,6 @@ class DISPERSION_TIMER(object):
 
 
 class DISTANCE_MARKER(object):
-    ID = 'DistanceMarker'
     NAME = 'distance_marker'
     DISPLAY_MODE = 'displayMode'
     MARKER_TARGET = 'markerTarget'
@@ -204,14 +193,12 @@ class DISTANCE_MARKER(object):
 
 
 class FLIGHT_TIMER(object):
-    ID = 'FlightTimer'
     NAME = 'flight_timer'
     SPG_ONLY = 'spgOnly'
     TEMPLATE = 'template'
 
 
 class INFO_PANEL(object):
-    ID = 'InfoPanel'
     NAME = 'info_panel'
     ALIVE_ONLY = 'aliveOnly'
     ALT_KEY = 'altKey'
@@ -229,7 +216,6 @@ class INFO_PANEL(object):
 
 
 class MAIN_GUN(object):
-    ID = 'MainGun'
     NAME = 'main_gun'
     BACK_GROUND_ENABLED = 'backGroundEnabled'
     TEXT_LOCK = 'textLock'
@@ -241,7 +227,6 @@ class MAIN_GUN(object):
 
 
 class MARKS_ON_GUN_BATTLE(object):
-    ID = 'MarksOnGunBattle'
     NAME = 'marks_on_gun_battle'
     COLOR_RATING = 'colorRating'
     BUTTON_SHOW = 'buttonShow'
@@ -296,7 +281,6 @@ class MARKS_ON_GUN_BATTLE(object):
 
 
 class MINIMAP_PLUGINS(object):
-    ID = 'MinimapPlugins'
     NAME = 'minimap_plugins'
     MINIMAP_SCHEMA = 'minimapSchema'
     PERMANENT_MINIMAP_DEATH = 'permanentMinimapDeath'
@@ -327,14 +311,12 @@ class MINIMAP_PLUGINS(object):
 
 
 class OWN_HEALTH(object):
-    ID = 'OwnHealth'
     NAME = 'own_health'
     AVG_COLOR = 'avgColor'
     COLORS = 'colors'
 
 
 class PLAYER_PANEL_PRO(object):
-    ID = 'PlayerPanelPro'
     NAME = 'player_panel_pro'
     STATS_ENABLED = 'statsEnabled'
     COLOR_SCALE = 'colorScale'
@@ -353,7 +335,6 @@ class PLAYER_PANEL_PRO(object):
 
 
 class REPAIR_EXTENDED(object):
-    ID = 'RepairExtended'
     NAME = 'repair_extended'
     BUTTON_CHASSIS = 'buttonChassis'
     BUTTON_REPAIR = 'buttonRepair'
@@ -370,7 +351,6 @@ class REPAIR_EXTENDED(object):
 
 
 class SAFE_SHOT(object):
-    ID = 'SafeShot'
     NAME = 'safe_shot'
     WASTE_SHOT_BLOCK = 'wasteShotBlock'
     TEAM_SHOT_BLOCK = 'teamShotBlock'
@@ -385,7 +365,6 @@ class SAFE_SHOT(object):
 
 
 class SERVER_TURRET_EXTENDED(object):
-    ID = 'ServerTurretExtended'
     NAME = 'server_turret_extended'
     ACTIVATE_MESSAGE = 'activateMessage'
     FIX_ACCURACY_IN_MOVE = 'fixAccuracyInMove'
@@ -398,7 +377,6 @@ class SERVER_TURRET_EXTENDED(object):
 
 
 class SIXTH_SENSE(object):
-    ID = 'SixthSense'
     NAME = 'sixth_sense'
     DEFAULT_ICON = 'defaultIcon'
     USER_ICON = 'userIcon'
@@ -419,7 +397,6 @@ class SIXTH_SENSE(object):
 
 
 class SPOTTED_EXTENDED_LIGHT(object):
-    ID = 'SpottedExtendedLight'
     NAME = 'spotted_extended_light'
     SOUND = 'sound'
     ICON_SIZE_X = 'iconSizeX'
@@ -437,7 +414,6 @@ class SPOTTED_EXTENDED_LIGHT(object):
 
 
 class ZOOM_EXTENDED(object):
-    ID = 'ZoomExtended'
     NAME = 'zoom_extended'
     NO_BINOCULARS = 'noBinoculars'
     NO_FLASH_BANG = 'noFlashBang'
@@ -451,17 +427,14 @@ class ZOOM_EXTENDED(object):
 
 
 class ACCOUNT_MANAGER(object):
-    ID = 'AccountManager'
     NAME = 'account_manager'
 
 
 class AUTO_CLAIM_CLAN(object):
-    ID = 'AutoClaimClan'
     NAME = 'auto_claim_clan'
 
 
 class CAROUSEL_STATS(object):
-    ID = 'CarouselStats'
     NAME = 'carousel_stats'
     SORTING_CRITERIA = 'sortingCriteria'
     NATIONS_ORDER = 'nationsOrder'
@@ -472,7 +445,6 @@ class CAROUSEL_STATS(object):
 
 
 class CREW_SETTINGS(object):
-    ID = 'CrewSettings'
     NAME = 'crew_settings'
     CREW_AUTO_RETURN = 'crewAutoReturn'
     CREW_RETURN_BY_DEFAULT = 'crewReturnByDefault'
@@ -482,7 +454,6 @@ class CREW_SETTINGS(object):
 
 
 class HANGAR_OPTIONS(object):
-    ID = 'HangarOptions'
     NAME = 'hangar_options'
     AUTO_LOGIN = 'autoLogin'
     SHOW_XP_TO_UNLOCK_VEH = 'showXpToUnlockVeh'
@@ -524,7 +495,6 @@ class HANGAR_OPTIONS(object):
 
 
 class MARKS_ON_GUN_HANGAR(object):
-    ID = 'MarksOnGunHangar'
     NAME = 'marks_on_gun_hangar'
     SHOW_IN_HANGAR = 'showInHangar'
     SHOW_IN_STATISTIC = 'showInStatistic'
@@ -540,7 +510,6 @@ class MARKS_ON_GUN_HANGAR(object):
 
 
 class MARKS_ON_GUN_TECH_TREE(object):
-    ID = 'MarksOnGunTechTree'
     NAME = 'marks_on_gun_tech_tree'
     COLOR_RATING = 'colorRating'
     SHOW_IN_TECH_TREE = 'showInTechTree'
@@ -553,7 +522,6 @@ class MARKS_ON_GUN_TECH_TREE(object):
 
 
 class BANKS_LOADER(object):
-    ID = 'BanksLoader'
     NAME = 'banks_loader'
     DEFAULT_POOL = 'defaultPool'
     LOW_ENGINE_POOL = 'lowEnginePool'
@@ -565,7 +533,6 @@ class BANKS_LOADER(object):
 
 
 class LOGS_SWAPPER(object):
-    ID = 'LogsSwapper'
     NAME = 'logs_swapper'
     LOG_SWAPPER = 'logSwapper'
     WG_LOG_HIDE_CRITICS = 'wgLogHideCritics'
@@ -609,12 +576,12 @@ CONFIG_SECTIONS = (
     BANKS_LOADER,
     LOGS_SWAPPER,
 )
-CONFIG_BY_ID = dict((section.ID, section) for section in CONFIG_SECTIONS)
+CONFIG_BY_NAME = dict((section.NAME, section) for section in CONFIG_SECTIONS)
 
 
 # Parent switch -> controls available only while it is enabled.
 HANDLER_VALUES = {
-    SIXTH_SENSE.ID: {
+    SIXTH_SENSE.NAME: {
         SIXTH_SENSE.DEFAULT_ICON: {SIXTH_SENSE.DEFAULT_ICON_NAME: (True,), SIXTH_SENSE.USER_ICON: (False,)},
         SIXTH_SENSE.USER_SOUND: (SIXTH_SENSE.SIXTH_SENSE_SOUND,),
         SIXTH_SENSE.PLAY_TICK_SOUND: {SIXTH_SENSE.SIXTH_SENSE_SOUND: (False,)},
@@ -622,19 +589,19 @@ HANDLER_VALUES = {
                                         SIXTH_SENSE.SHOW_TIMER_GRAPHICS_RADIUS),
         SIXTH_SENSE.SPOTTED_MESSAGE: (SIXTH_SENSE.SPOTTED_TEXT,),
     },
-    SAFE_SHOT.ID: {
+    SAFE_SHOT.NAME: {
         SAFE_SHOT.DEAD_SHOT_BLOCK: (SAFE_SHOT.DEAD_SHOT_BLOCK_TIME_OUT,),
         SAFE_SHOT.TEAM_SHOT_BLOCK: (SAFE_SHOT.TEAM_KILLER_SHOT_UNBLOCK,)},
-    INFO_PANEL.ID: {INFO_PANEL.BACKGROUND_ENABLED: (INFO_PANEL.BACKGROUND_ALPHA,)},
-    REPAIR_EXTENDED.ID: {REPAIR_EXTENDED.AUTO_REPAIR: (REPAIR_EXTENDED.TIMER_MIN, REPAIR_EXTENDED.TIMER_MAX)},
-    CREW_SETTINGS.ID: {CREW_SETTINGS.CREW_AUTO_RETURN: (
+    INFO_PANEL.NAME: {INFO_PANEL.BACKGROUND_ENABLED: (INFO_PANEL.BACKGROUND_ALPHA,)},
+    REPAIR_EXTENDED.NAME: {REPAIR_EXTENDED.AUTO_REPAIR: (REPAIR_EXTENDED.TIMER_MIN, REPAIR_EXTENDED.TIMER_MAX)},
+    CREW_SETTINGS.NAME: {CREW_SETTINGS.CREW_AUTO_RETURN: (
         CREW_SETTINGS.CREW_RETURN_BY_DEFAULT, CREW_SETTINGS.AUTO_RETURN_DELAY,
         CREW_SETTINGS.EXCLUDE_PREMIUM_VEHICLES)},
-    HANGAR_OPTIONS.ID: {
+    HANGAR_OPTIONS.NAME: {
         HANGAR_OPTIONS.CLOCK: (HANGAR_OPTIONS.CLOCK_X, HANGAR_OPTIONS.CLOCK_Y,
                               HANGAR_OPTIONS.CLOCK_SCALE, HANGAR_OPTIONS.CUSTOM_CLOCK_TEXT),
         HANGAR_OPTIONS.BLOCK_VEHICLE_IF_LOW_AMMO: (HANGAR_OPTIONS.LOW_AMMO_PERCENTAGE,)},
-    MINIMAP_PLUGINS.ID: {
+    MINIMAP_PLUGINS.NAME: {
         MINIMAP_PLUGINS.SHOW_LAST_POSITIONS: (MINIMAP_PLUGINS.LAST_POSITION_DURATION,
             MINIMAP_PLUGINS.LOST_MARKER + '.showSeconds', MINIMAP_PLUGINS.LOST_MARKER + '.fade',
             MINIMAP_PLUGINS.LOST_MARKER + '.minimumAlpha'),
@@ -660,23 +627,23 @@ HANDLER_VALUES = {
         MINIMAP_PLUGINS.HEALTH + '.mode': {
             MINIMAP_PLUGINS.HEALTH + '.width': ('bar',), MINIMAP_PLUGINS.HEALTH + '.height': ('bar',),
             MINIMAP_PLUGINS.HEALTH + '.fontSize': ('value', 'percent')}},
-    PLAYER_PANEL_PRO.ID: {
+    PLAYER_PANEL_PRO.NAME: {
         PLAYER_PANEL_PRO.STATS_ENABLED: (PLAYER_PANEL_PRO.RATING, PLAYER_PANEL_PRO.COLOR_SCALE),
         PLAYER_PANEL_PRO.HP_VISIBILITY: {PLAYER_PANEL_PRO.HP_KEY: ('hold',)}},
-    SERVER_TURRET_EXTENDED.ID: {SERVER_TURRET_EXTENDED.FIX_WHEEL_CRUISE_CONTROL: (
+    SERVER_TURRET_EXTENDED.NAME: {SERVER_TURRET_EXTENDED.FIX_WHEEL_CRUISE_CONTROL: (
         SERVER_TURRET_EXTENDED.BUTTON_AUTO_MODE, SERVER_TURRET_EXTENDED.BUTTON_MAX_MODE,
         SERVER_TURRET_EXTENDED.MAX_WHEEL_MODE, SERVER_TURRET_EXTENDED.AUTO_ACTIVATE_WHEEL_MODE)},
-    DISPERSION_CIRCLE.ID: {DISPERSION_CIRCLE.SHOW_CLIENT_AND_SERVER_RETICLE_BETA: (
+    DISPERSION_CIRCLE.NAME: {DISPERSION_CIRCLE.SHOW_CLIENT_AND_SERVER_RETICLE_BETA: (
         DISPERSION_CIRCLE.SERVER_RETICLE_AIMING_CIRCLE_SHAPE, DISPERSION_CIRCLE.SERVER_RETICLE_AIMING_CIRCLE_OPACITY,
         DISPERSION_CIRCLE.SERVER_RETICLE_GUN_MARKER_SHAPE, DISPERSION_CIRCLE.SERVER_RETICLE_GUN_MARKER_OPACITY)},
-    MARKS_ON_GUN_TECH_TREE.ID: {MARKS_ON_GUN_TECH_TREE.SHOW_IN_TECH_TREE: (
+    MARKS_ON_GUN_TECH_TREE.NAME: {MARKS_ON_GUN_TECH_TREE.SHOW_IN_TECH_TREE: (
         MARKS_ON_GUN_TECH_TREE.SHOW_IN_TECH_TREE_MARK_OF_GUN_PERCENT,
         MARKS_ON_GUN_TECH_TREE.SHOW_IN_TECH_TREE_MASTERY,
         MARKS_ON_GUN_TECH_TREE.SHOW_IN_TECH_TREE_MARK_OF_GUN_TANK_NAME_COLORED,
         MARKS_ON_GUN_TECH_TREE.BADGE_OFFSET_X, MARKS_ON_GUN_TECH_TREE.BADGE_OFFSET_Y)},
-    ZOOM_EXTENDED.ID: {ZOOM_EXTENDED.DISABLE_CAM_AFTER_SHOT: (
+    ZOOM_EXTENDED.NAME: {ZOOM_EXTENDED.DISABLE_CAM_AFTER_SHOT: (
         ZOOM_EXTENDED.DISABLE_CAM_AFTER_SHOT_LATENCY, ZOOM_EXTENDED.DISABLE_CAM_AFTER_SHOT_SKIP_CLIP)},
-    BATTLE_EFFICIENCY.ID: {BATTLE_EFFICIENCY.BATTLE_RESULTS_WINDOW: (BATTLE_EFFICIENCY.BATTLE_RESULTS_FORMAT,)},
+    BATTLE_EFFICIENCY.NAME: {BATTLE_EFFICIENCY.BATTLE_RESULTS_WINDOW: (BATTLE_EFFICIENCY.BATTLE_RESULTS_FORMAT,)},
 }
 
 

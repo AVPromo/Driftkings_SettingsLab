@@ -84,7 +84,7 @@ def new_setDataS(func, self, data):
         msg = replaceMacros(settings_service.getComponentDict(_component().config)[BATTLE_EFFICIENCY.BATTLE_RESULTS_FORMAT], macro_data)
         data['common']['arenaStr'] = msg
     except Exception as err:
-        logError(_component().config.ID, 'Battle results parsing error: {}', err)
+        logError(_component().config.NAME, 'Battle results parsing error: {}', err)
         # Preserve the original result window if the legacy data layout changed.
         _component().LOG.exception('Legacy battle results integration failed')
     return func(self, data)

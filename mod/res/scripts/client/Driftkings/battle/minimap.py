@@ -20,7 +20,7 @@ from Driftkings.core.hooks import override
 from Driftkings.core.keyboard import keyboard
 from Driftkings.settings.service import settings_service
 from Driftkings.ui import g_events
-from Driftkings.settings.templates.battle.minimap import MinimapPluginsSettings as Settings
+from Driftkings.settings.definitions.battle.minimap import MinimapPluginsSettings as Settings
 
 PERSONAL = weakref.WeakSet()
 VEHICLES = weakref.WeakSet()
@@ -452,7 +452,7 @@ def new_setupPlugins(func, self, arenaVisitor):
                 elif isinstance(native, type) and issubclass(native, base) and not issubclass(native, custom):
                     args[key] = type('Driftkings' + native.__name__, (custom, native), {})
     except Exception as err:
-        logError(config.ID, repr(err))
+        logError(config.NAME, repr(err))
     finally:
         return args
 

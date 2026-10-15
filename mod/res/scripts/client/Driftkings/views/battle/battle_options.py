@@ -25,7 +25,7 @@ class BattleClock(object):
         self.active = False
 
     def createUI(self):
-        overlays.create(_component().config.ID, ElementType.LABEL, {'x': 200, 'y': 1, 'alignX': Align.LEFT, 'alignY': Align.TOP, 'text': '', 'border': False, 'limit': False})
+        overlays.create(_component().config.NAME, ElementType.LABEL, {'x': 200, 'y': 1, 'alignX': Align.LEFT, 'alignY': Align.TOP, 'text': '', 'border': False, 'limit': False})
 
     def start(self):
         if self.active:
@@ -56,8 +56,8 @@ class BattleClock(object):
         time = strftime(settings_service.getComponentDict(_component().config)[BATTLE_OPTIONS.FORMAT])
         if self.coding is not None:
             time = time.decode(self.coding)
-        overlays.update(_component().config.ID, {'text': time})
+        overlays.update(_component().config.NAME, {'text': time})
 
 
 def destroy_clock():
-    overlays.remove(_component().config.ID)
+    overlays.remove(_component().config.NAME)

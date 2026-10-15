@@ -18,7 +18,7 @@ from skeletons.gui.web import IWebController
 from Driftkings._constants import AUTO_CLAIM_CLAN, GLOBAL
 from Driftkings.common import logWarning
 from Driftkings.settings.service import settings_service
-from Driftkings.settings.templates.lobby.auto_claim_clan import AutoClaimClanSettings as Settings
+from Driftkings.settings.definitions.lobby.auto_claim_clan import AutoClaimClanSettings as Settings
 
 REWARD_STATUS_OK = (QuestStatus.REWARD_AVAILABLE, QuestStatus.REWARD_PENDING)
 SKIP_LEVELS = (5, 10, 15, 20)
@@ -88,7 +88,7 @@ class AutoClaimClanReward(object):
             response = yield self.__webController.sendRequest(ctx=ClaimRewardsCtx())
             if not response.isSuccess():
                 SystemMessages.pushMessage('Battle Observer: Auto Claim Clan Reward - ' + backport.text(R.strings.clan_supply.messages.claimRewards.error()), type=SystemMessages.SM_TYPE.Error)
-                logWarning(self.config.ID, 'Failed to claim rewards. Code: {}', response.getCode())
+                logWarning(self.config.NAME, 'Failed to claim rewards. Code: {}', response.getCode())
         finally:
             self.__claim_started = False
 
@@ -96,8 +96,8 @@ class AutoClaimClanReward(object):
     def __claimProgression(self, stageID, price):
         response = yield self.__webController.sendRequest(ctx=PurchaseProgressionStageCtx(stageID, price))
         if not response.isSuccess():
-            SystemMessages.pushMessage(self.config.ID + 'Auto Claim Clan Reward - Failed to claim Progression.', type=SystemMessages.SM_TYPE.Error)
-            logWarning(self.config.ID, 'Failed to claim Progression. Code: {}', response.getCode())
+            SystemMessages.pushMessage(self.config.NAME + 'Auto Claim Clan Reward - Failed to claim Progression.', type=SystemMessages.SM_TYPE.Error)
+            logWarning(self.config.NAME, 'Failed to claim Progression. Code: {}', response.getCode())
 
     def parseQuests(self, data):
         if data is not None and not self.__claim_started and any(q.status in REWARD_STATUS_OK for q in data.quests):

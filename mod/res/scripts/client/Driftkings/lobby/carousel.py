@@ -147,7 +147,7 @@ def render_macro(template, values):
     return layout.render(template, values, color, icon)
 
 
-from Driftkings.settings.templates.lobby.carousel import CarouselStatsSettings as Settings
+from Driftkings.settings.definitions.lobby.carousel import CarouselStatsSettings as Settings
 
 
 config = Settings()

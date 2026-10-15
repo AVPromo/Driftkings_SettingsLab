@@ -23,7 +23,7 @@ from Driftkings._constants import DISPERSION_CIRCLE, GLOBAL
 from Driftkings.common import logWarning, getPlayer
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service, affects
-from Driftkings.settings.templates.battle.dispersion_circle import DispersionCircleSettings as Settings
+from Driftkings.settings.definitions.battle.dispersion_circle import DispersionCircleSettings as Settings
 
 CUSTOM_ARCADE_GUN_MARKER_NAME = GUN_MARKER_VIEW_CONSTANTS.ARCADE_GUN_MARKER_NAME + '-SERVER'
 CUSTOM_SNIPER_GUN_MARKER_NAME = GUN_MARKER_VIEW_CONSTANTS.SNIPER_GUN_MARKER_NAME + '-SERVER'
@@ -157,7 +157,7 @@ class CustomCrosshairContainer(CrosshairPanelContainer):
 
     def createGunMarkers(self, markersInfo, vehicleInfo):
         if self._CrosshairPanelContainer__gunMarkers is not None:
-            logWarning(config.ID, 'Set of gun markers is already created.')
+            logWarning(config.NAME, 'Set of gun markers is already created.')
             return
         else:
             self._CrosshairPanelContainer__setGunMarkers(self.createMarkers(markersInfo, vehicleInfo, self.enableSpgStrategicReticle))
@@ -165,7 +165,7 @@ class CustomCrosshairContainer(CrosshairPanelContainer):
 
     def invalidateGunMarkers(self, markersInfo, vehicleInfo):
         if self._CrosshairPanelContainer__gunMarkers is None:
-            logWarning(config.ID, 'Set of gun markers is not created')
+            logWarning(config.NAME, 'Set of gun markers is not created')
             return
         else:
             newSet = self.overrideMarkers(self._CrosshairPanelContainer__gunMarkers, markersInfo, vehicleInfo, self.enableSpgStrategicReticle)

@@ -15,8 +15,8 @@ def _component():
 
 
 class Flash(CachedBattleLabel):
-    def __init__(self, ID):
-        super(Flash, self).__init__(ID, _component, BATTLE_EFFICIENCY.POSITION, BATTLE_EFFICIENCY)
+    def __init__(self, section):
+        super(Flash, self).__init__(section, _component, BATTLE_EFFICIENCY.POSITION, BATTLE_EFFICIENCY)
         self.setVisible(False)
 
     def onSettingsChanged(self, component, changes):
@@ -26,12 +26,12 @@ class Flash(CachedBattleLabel):
             self.onApplySettings()
         if affects(changes, BATTLE_EFFICIENCY.TEXT_SHADOW):
             shadow = settings_service.getComponentDict(_component().config)[BATTLE_EFFICIENCY.TEXT_SHADOW]
-            overlays.update(self.ID, {'shadow': shadow})
+            overlays.update(self.section, {'shadow': shadow})
 
     def setVisible(self, visible):
         visible = bool(visible)
         if not self._destroyed and visible != self._lastVisible:
-            if overlays.update(self.ID, {'visible': visible}):
+            if overlays.update(self.section, {'visible': visible}):
                 self._lastVisible = visible
 
     def addText(self, text):
@@ -41,9 +41,9 @@ class Flash(CachedBattleLabel):
         formatted_text = '<font size=\'%s\' face=\'%s\' color=\'%s\'><p align=\'%s\'>%s</p></font>' % (
             text_style['size'], text_style['font'], text_style['color'], text_style['align'], text)
         if formatted_text != self._lastText:
-            if overlays.update(self.ID, {'text': formatted_text}):
+            if overlays.update(self.section, {'text': formatted_text}):
                 self._lastText = formatted_text
 
 
 def _startFlash():
-    _component().g_flash = Flash(_component().config.ID)
+    _component().g_flash = Flash(_component().config.NAME)

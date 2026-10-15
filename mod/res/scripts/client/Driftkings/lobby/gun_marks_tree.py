@@ -11,7 +11,7 @@ from gui.shared.personality import ServicesLocator
 
 from Driftkings._constants import GLOBAL
 from Driftkings.common import getStatisticColor
-from Driftkings.settings.templates.lobby.gun_marks_tree import MarksOnGunTechTreeSettings as ConfigInterface
+from Driftkings.settings.definitions.lobby.gun_marks_tree import MarksOnGunTechTreeSettings as Settings
 from Driftkings.views.hangar.gun_marks_tree import install
 
 LOG = logging.getLogger('Driftkings.MarksOnGunTechTree')
@@ -52,7 +52,7 @@ class TechTreeController(object):
 
 
 
-config = ConfigInterface()
+config = Settings()
 controller = TechTreeController()
 
 

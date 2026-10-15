@@ -13,11 +13,11 @@ from Driftkings.common import getPlayer
 from Driftkings.core.battle_events import battleEvents
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service, affects
-from Driftkings.settings.templates.battle.main_gun import MainGunSettings as ConfigInterface
+from Driftkings.settings.definitions.battle.main_gun import MainGunSettings as Settings
 from Driftkings.views.battle.main_gun import _startFlash
 
 # g_flash = None
-config = ConfigInterface()
+config = Settings()
 
 
 class MainGun(object):

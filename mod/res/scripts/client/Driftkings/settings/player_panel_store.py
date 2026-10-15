@@ -18,7 +18,7 @@ except NameError:
     string_types = (str,)
 
 def defaults():
-    return component_defaults('PlayerPanelPro')
+    return component_defaults('player_panel_pro')
 
 def loading_settings(settings):
     return dict((key,value) for key,value in settings.items() if key!='tips')

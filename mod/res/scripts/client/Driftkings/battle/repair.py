@@ -17,7 +17,7 @@ from Driftkings.common import checkKeys, getPlayer
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.core.keyboard import keyboard
 from Driftkings.settings.service import settings_service
-from Driftkings.settings.templates.battle.repair import RepairExtendedSettings as ConfigInterface
+from Driftkings.settings.definitions.battle.repair import RepairExtendedSettings as Settings
 
 try:
     string_types = (basestring,)
@@ -25,7 +25,7 @@ except NameError:
     string_types = (str,)
 
 
-config = ConfigInterface()
+config = Settings()
 
 
 class Repair(object):

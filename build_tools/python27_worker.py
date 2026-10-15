@@ -69,6 +69,13 @@ def process(job_path):
             raise ValueError('Packaged version/calculator contract failed')
         result = dict(python=sys.version, verified=count, version=Driftkings.VERSION,
                       components=len(COMPONENTS), updaterManifest='valid')
+        settings_package = types.ModuleType('Driftkings.settings')
+        settings_package.__path__ = [origin + '/Driftkings/settings']
+        sys.modules[settings_package.__name__] = settings_package
+        from Driftkings.settings.default_values import DEFAULTS, SELECTOR
+        if DEFAULTS != job['defaults'] or SELECTOR != job['selector']:
+            raise ValueError('Packaged Python defaults differ from the canonical JSON')
+        result['defaults'] = dict(status='passed', components=len(DEFAULTS), source='canonical-json')
         probe_path = os.path.join(os.path.dirname(__file__), 'common_startup_probe_py27.py')
         if os.path.isfile(probe_path):
             probe = imp.load_source('_dk_common_startup_probe', probe_path)

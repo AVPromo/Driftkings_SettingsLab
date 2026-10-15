@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import logging
 import math
 import weakref
@@ -16,7 +16,7 @@ from Driftkings._constants import BATTLE_EFFICIENCY, GLOBAL
 from Driftkings.common import getPlayer, getStatisticColor, replaceMacros
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service, affects
-from Driftkings.settings.templates.components.battle_efficiency import BattleEfficiencySettings as ConfigInterface
+from Driftkings.settings.definitions.components.battle_efficiency import BattleEfficiencySettings as Settings
 from Driftkings.stats import getVehicleInfoData, calculateXvmScale, calculateXTE
 from Driftkings.views.battle.battle_efficiency import _startFlash
 from Driftkings.views.hangar.battle_efficiency import install_results_gameface
@@ -38,7 +38,7 @@ data_ids = DataIDs(3, 11, 12, 14, 17)
 
 
 g_flash = None
-config = ConfigInterface()
+config = Settings()
 
 
 def getDataIds(offset):

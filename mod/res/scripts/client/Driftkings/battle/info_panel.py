@@ -13,7 +13,7 @@ from Driftkings.core.battle_events import battleEvents
 from Driftkings.core.hooks import override
 from Driftkings.common import callback, cancelCallback
 from Driftkings.settings.service import settings_service, affects
-from Driftkings.settings.templates.battle.info_panel import InfoPanelSettings as ConfigInterface
+from Driftkings.settings.definitions.battle.info_panel import InfoPanelSettings as Settings
 from Driftkings.views.battle.info_panel import Flash
 
 COMPARE_MACROS = ['compareDelim', 'compareColor']
@@ -48,7 +48,7 @@ PRESET_TEMPLATES = {
     'driftkings': _card([_FIREPOWER, _GUN, _MOBILITY, _ARMOR, _SHELL], '#D6BE91')
 }
 TEMPLATE_INDEX_TO_KEY = {0: 'default', 1: 'minimal', 2: 'detailed', 3: 'full', 4: 'kmp', 5: 'ndo', 6: 'driftkings'}
-config = ConfigInterface()
+config = Settings()
 g_flash = Flash()
 
 

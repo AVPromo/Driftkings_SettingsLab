@@ -5,8 +5,8 @@ from Driftkings.settings.service import settings_service
 
 
 class BattleLabel(object):
-    def __init__(self, ID, component, position_key):
-        self.ID = ID
+    def __init__(self, section, component, position_key):
+        self.section = section
         self._component = component
         self._positionKey = position_key
         self.setup()
@@ -17,33 +17,33 @@ class BattleLabel(object):
         return dict(data[self._positionKey], drag=not data['textLock'], border=not data['textLock'])
 
     def setup(self):
-        overlays.create(self.ID, ElementType.LABEL, dict(self._layout(), limit=True))
+        overlays.create(self.section, ElementType.LABEL, dict(self._layout(), limit=True))
         self.createBox()
 
     def onApplySettings(self):
-        overlays.update(self.ID, self._layout())
+        overlays.update(self.section, self._layout())
 
     def createBox(self):
         shadow = settings_service.getComponentDict(self._component().config)['textShadow']
         if shadow['enabled']:
-            overlays.update(self.ID, {'shadow': shadow})
+            overlays.update(self.section, {'shadow': shadow})
 
     def destroy(self):
         overlays.updated -= self._updatePosition
-        overlays.remove(self.ID)
+        overlays.remove(self.section)
 
     def _updatePosition(self, alias, data):
-        if alias == self.ID:
+        if alias == self.section:
             settings_service.apply(self._component().config, {self._positionKey: data})
 
 
 class CachedBattleLabel(BattleLabel):
     """Borderless label with cached content and a settings subscription."""
-    def __init__(self, ID, component, position_key, settings_component):
+    def __init__(self, section, component, position_key, settings_component):
         self._lastText = None
         self._lastVisible = None
         self._destroyed = False
-        super(CachedBattleLabel, self).__init__(ID, component, position_key)
+        super(CachedBattleLabel, self).__init__(section, component, position_key)
         settings_service.onModSettingsChanged.connect(self.onSettingsChanged, settings_component)
 
     def _layout(self):

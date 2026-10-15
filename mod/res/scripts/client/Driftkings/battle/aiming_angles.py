@@ -18,7 +18,7 @@ from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from Driftkings.common import getPlayer
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.core.hooks import override
-from Driftkings.settings.templates.battle.aiming_angles import AimingAnglesSettings as Settings
+from Driftkings.settings.definitions.battle.aiming_angles import AimingAnglesSettings as Settings
 from Driftkings.views.battle.aiming_angles import AimingAnglesView
 
 ARCADE_MODE = 'arc'

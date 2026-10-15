@@ -23,6 +23,7 @@ from build_tools.package_tools import MAGIC, metadata, sha, validate_swf, verify
 from build_tools.toolchain import discover, require_tools
 from build_tools.protection import obfuscator
 from build_tools.validate_build_data import apply_patch_set, build_plan, input_path, read_json, require
+from build_tools.generate_defaults import TARGET as DEFAULT_VALUES, render as render_defaults, assemble as assemble_defaults
 
 
 def version_contract(root=ROOT):
@@ -249,7 +250,7 @@ def build(args):
     version, channel, source_version = select_version(root, release, args.version, args.channel)
     if args.game_root:
         config['game']['root'] = str(Path(args.game_root).resolve())
-    plan = build_plan(root, check_component_list=False, game_root=config['game']['root'])
+    plan = build_plan(root, check_component_list=False, game_root=config['game']['root'], check_defaults=False)
     tools = discover(root, vars(args))
     policy = read_json(root / 'build_data/obfuscation.json')
     protection = bool(args.protect or (args.mode == 'release' and policy['enabled'] and not args.no_obfuscation))
@@ -286,6 +287,8 @@ def build(args):
         component_target = python_spec['archive_root'] + '/' + str(Path(python_spec['component_list']).with_suffix('.pyc')).replace('\\', '/')
         overrides = {runtime_target: override_version((root / release['version_source']).read_text(encoding='utf-8'), version),
                      component_target: '# Generated from enabled build manifests.\nCOMPONENTS = %r\n' % (tuple(components),)}
+        defaults_relative = Path(DEFAULT_VALUES).relative_to(python_spec['source_root']).with_suffix('.pyc').as_posix()
+        overrides[python_spec['archive_root'] + '/' + defaults_relative] = render_defaults(root)
         epoch = int(os.environ.get('SOURCE_DATE_EPOCH', report['git']['epoch']))
         require(0 <= epoch <= 0xffffffff, 'SOURCE_DATE_EPOCH outside Python 2.7 header range')
         compiled = run / 'compiled'
@@ -315,7 +318,8 @@ def build(args):
                                 download='https://github.com/%s/releases/download/v%s/Driftkings.wotmod' % (release['repository'], version), changelog=changelog)
         write_json(candidate / 'release.json', release_manifest)
         report['verification'] = run_worker(tools, run, dict(action='verify', package=str(package), manifest=str(candidate / 'release.json'),
-                                                           version=version, channel=channel, game_version=config['game']['version'], components=components), 'verify')
+                                                           version=version, channel=channel, game_version=config['game']['version'], components=components,
+                                                           defaults=assemble_defaults(root)[0], selector=assemble_defaults(root)[1]), 'verify')
         defaults = {item['target']: (root / item['source']).read_bytes() for item in plan['defaults']}
         zip_entries(candidate / 'Driftkings-defaults.zip', defaults, zipfile.ZIP_DEFLATED)
         distribution = {'mods/' + config['game']['version'] + '/Driftkings.wotmod': package.read_bytes(),

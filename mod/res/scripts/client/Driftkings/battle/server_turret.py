@@ -15,7 +15,7 @@ from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.core.hooks import override
 from Driftkings.core.keyboard import keyboard
 from Driftkings.settings.service import settings_service
-from Driftkings.settings.templates.battle.server_turret import ServerTurretExtendedSettings as ConfigInterface
+from Driftkings.settings.definitions.battle.server_turret import ServerTurretExtendedSettings as Settings
 
 
 class MovementControl(object):
@@ -134,7 +134,7 @@ class Support(object):
             callback(5.0, self.message)
 
 
-config = ConfigInterface()
+config = Settings()
 movement_control = MovementControl()
 support = Support()
 

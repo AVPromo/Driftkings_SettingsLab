@@ -6,11 +6,11 @@ from Driftkings._constants import GLOBAL
 from Driftkings.common import logError
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service
-from Driftkings.settings.templates.battle.distance_marker import DistanceMarkerSettings as ConfigInterface
+from Driftkings.settings.definitions.battle.distance_marker import DistanceMarkerSettings as Settings
 from Driftkings.views.battle.distance_marker import DistanceMarkerController, DistanceMarkerView, ALIAS
 
 g_distanceMarker = None
-config = ConfigInterface()
+config = Settings()
 
 
 @override(AvatarInputHandler, 'handleMouseEvent')
@@ -29,7 +29,7 @@ def start(func, self):
         if g_distanceMarker is None and settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
             g_distanceMarker = DistanceMarkerController(self._clazz)
     except Exception as e:
-        logError(config.ID, 'Failed to create distance marker app: {}', e, exc_info=True)
+        logError(config.NAME, 'Failed to create distance marker app: {}', e, exc_info=True)
 
 
 @override(VehicleMarkerPlugin, 'stop')
@@ -41,7 +41,7 @@ def stop(func, self):
             g_distanceMarker.close()
             g_distanceMarker = None
     except Exception as e:
-        logError(config.ID, 'Failed to close distance marker app: {}', e, exc_info=True)
+        logError(config.NAME, 'Failed to close distance marker app: {}', e, exc_info=True)
 
 
 def fini():

@@ -21,7 +21,7 @@ from Driftkings.common.utils.filesystem import atomicWrite, recoverFile
 from Driftkings.core.accounts import AccountService, AccountError
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.core.hooks import override
-from Driftkings.settings.templates.components.account_manager import AccountManagerSettings as ConfigsInterface
+from Driftkings.settings.definitions.components.account_manager import AccountManagerSettings as ConfigsInterface
 
 LOG = logging.getLogger('Driftkings.AccountManager')
 config = ConfigsInterface()

@@ -17,7 +17,7 @@ class ArmorCalculator(ArmorCalculatorMeta):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
     def __init__(self):
-        super(ArmorCalculator, self).__init__(ARMOR_CALCULATOR.ID)
+        super(ArmorCalculator, self).__init__(ARMOR_CALCULATOR.NAME)
         self.calcMacro = defaultdict(lambda: 'macros not found')
 
     def _populate(self):
@@ -43,7 +43,7 @@ class ArmorCalculator(ArmorCalculatorMeta):
         super(ArmorCalculator, self)._dispose()
 
     def onMarkerColorChanged(self, color):
-        self.calcMacro['color'] = settings_service.getConfig(self.ID).i18n['UI_colors'].get(color, '#FFD700')
+        self.calcMacro['color'] = settings_service.getConfig(self.section).i18n['UI_colors'].get(color, '#FFD700')
         self.calcMacro['message'] = self.getSettings()[ARMOR_CALCULATOR.MESSAGES].get(color, '')
 
     def onCameraChanged(self, ctrlMode, *_, **__):
@@ -56,7 +56,7 @@ class ArmorCalculator(ArmorCalculatorMeta):
         if data is None:
             return self.as_armorCalculatorS('')
         armor, piercingPower, caliber, ricochet, noDamage = data
-        labels = settings_service.getConfig(self.ID).i18n
+        labels = settings_service.getConfig(self.section).i18n
         self.calcMacro['ricochet'] = labels['UI_ricochet'] if ricochet else ''
         self.calcMacro['noDamage'] = labels['UI_noDamage'] if noDamage else ''
         self.calcMacro['countedArmor'] = armor

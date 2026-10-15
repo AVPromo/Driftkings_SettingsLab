@@ -168,7 +168,7 @@ class DistanceMarkerController(object):
             self._currentFrameData['observedVehicles'] = self._emptyList
             return self._requestFrameData()
         except Exception as e:
-            logWarning(_component().config.ID, 'Occurred on requesting frame data by DistanceMarkerController, safely skipping frame rendering: {}', e, exc_info=True)
+            logWarning(_component().config.NAME, 'Occurred on requesting frame data by DistanceMarkerController, safely skipping frame rendering: {}', e, exc_info=True)
             self._currentFrameData['observedVehicles'] = self._emptyList
             return self._currentFrameData
 
@@ -244,7 +244,7 @@ class DistanceMarkerController(object):
             self._tempMatrix.set(vehicleMarkerMatrixProvider)
             return self._tempMatrix.translation
         except Exception as e:
-            logWarning(_component().config.ID, 'Error in _vehicleMarkerPositionProvider: {}'.format(e))
+            logWarning(_component().config.NAME, 'Error in _vehicleMarkerPositionProvider: {}'.format(e))
             return self._vehicleCenterPositionProvider(vehicle)
 
     def _vehicleCenterPositionProvider(self, vehicle):

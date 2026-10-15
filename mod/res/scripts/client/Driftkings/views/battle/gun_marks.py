@@ -68,7 +68,7 @@ class Flash(object):
 
     # noinspection PyTypeChecker
     def __updatePosition(self, alias, props):
-        if str(alias) != str(_component().config.ID):
+        if str(alias) != str(_component().config.NAME):
             return
         panel = settings_service.getSetting(_component().config, MARKS_ON_GUN_BATTLE.PANEL)
         changes = dict((key, props[key]) for key in ('x', 'y') if props.get(key) is not None)
@@ -78,7 +78,7 @@ class Flash(object):
         self.setupSize()
 
     def setup(self):
-        self.name = {ElementType.LABEL: '%s' % _component().config.ID}
+        self.name = {ElementType.LABEL: '%s' % _component().config.NAME}
         self.data = {
             ElementType.LABEL: {
                 'index': 10000,

@@ -13,7 +13,7 @@ from Driftkings.core.battle_events import battleEvents
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.core.overlay import Align, ElementType, overlays
 from Driftkings.settings.service import settings_service
-from Driftkings.settings.templates.battle.auto_aim import AutoAimOptimizeSettings as Settings
+from Driftkings.settings.definitions.battle.auto_aim import AutoAimOptimizeSettings as Settings
 
 LOG = logging.getLogger('Driftkings.AutoAimOptimize')
 BOX_COLOR = '#F98600'
@@ -104,8 +104,8 @@ class AutoAimController(object):
                 self.pending = callback(UPDATE_INTERVAL, self.tick)
 
     def hideBox(self):
-        if self.created or self.config.ID in overlays.elements:
-            overlays.remove(self.config.ID)
+        if self.created or self.config.NAME in overlays.elements:
+            overlays.remove(self.config.NAME)
             self.created = False
 
     def targetBounds(self, player):
@@ -155,22 +155,22 @@ class AutoAimController(object):
             return
         x, y, width, height = bounds
         if not self.created:
-            overlays.create(self.config.ID, ElementType.PANEL, {
+            overlays.create(self.config.NAME, ElementType.PANEL, {
                 GLOBAL.ALIGN_X: Align.LEFT, GLOBAL.ALIGN_Y: Align.TOP, GLOBAL.LIMIT: False,
                 GLOBAL.WIDTH: GLOBAL.ZERO, GLOBAL.HEIGHT: GLOBAL.ZERO, GLOBAL.ALPHA: GLOBAL.ONE, GLOBAL.DRAG: False})
             for name in (GLOBAL.TOP, GLOBAL.BOTTOM, GLOBAL.LEFT, GLOBAL.RIGHT):
-                overlays.create(self.config.ID + '.' + name, ElementType.PANEL, {
+                overlays.create(self.config.NAME + '.' + name, ElementType.PANEL, {
                     GLOBAL.ALIGN_X: Align.LEFT, GLOBAL.ALIGN_Y: Align.TOP, GLOBAL.LIMIT: False,
                     GLOBAL.ALPHA: GLOBAL.ONE, GLOBAL.DRAG: False,
                     'customBackground': {'fill': True, GLOBAL.COLOR: BOX_COLOR, GLOBAL.ALPHA: GLOBAL.ONE}})
             self.created = True
-        overlays.update(self.config.ID, {GLOBAL.X: x, 'y': y})
+        overlays.update(self.config.NAME, {GLOBAL.X: x, 'y': y})
         for name, props in (
                 (GLOBAL.TOP, {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: GLOBAL.ZERO, GLOBAL.WIDTH: width, GLOBAL.HEIGHT: BOX_THICKNESS}),
                 (GLOBAL.BOTTOM, {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: height - BOX_THICKNESS, GLOBAL.WIDTH: width, GLOBAL.HEIGHT: BOX_THICKNESS}),
                 (GLOBAL.LEFT, {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: GLOBAL.ZERO, GLOBAL.WIDTH: BOX_THICKNESS, GLOBAL.HEIGHT: height}),
                 (GLOBAL.RIGHT, {GLOBAL.X: width - BOX_THICKNESS, GLOBAL.Y: GLOBAL.ZERO, GLOBAL.WIDTH: BOX_THICKNESS, GLOBAL.HEIGHT: height})):
-            overlays.update(self.config.ID + '.' + name, props)
+            overlays.update(self.config.NAME + '.' + name, props)
 
 
 _config = Settings()

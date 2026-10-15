@@ -1,0 +1,43 @@
+# -*- coding: utf-8 -*-
+from Driftkings._constants import MARKS_ON_GUN_BATTLE
+from Driftkings.common import color_tables
+from Driftkings.settings.controls_schema import control, hotkey, options
+from Driftkings.settings.definitions.base import SectionDefinition
+
+
+class MarksOnGunBattleSettings(SectionDefinition):
+    NAME = MARKS_ON_GUN_BATTLE.NAME
+
+    TRANSLATED_TITLE = False
+
+    def normalize_changes(self, values, changes):
+        panel = values.get(MARKS_ON_GUN_BATTLE.PANEL)
+        if panel is not None:
+            panel.pop('text', None)
+            for key in ('x', 'y', 'alpha', 'height', 'width'):
+                if key in panel:
+                    panel[key] = float(panel[key])
+        return values
+
+    def getControlColumns(self):
+        UIKey = 'UI_menu_'
+        UIList = ('UIConfig', 'UIskill4ltu', 'UIMyp', 'UIspoter', 'UIcircon', 'UIReplay', 'UIReplayDamage', 'UIReplayColor', 'UIReplayColorDamage', 'UIoldskool', 'UIspoterNew', 'UIkorbenDallasNoMercy')
+        return (
+            [
+                options(MARKS_ON_GUN_BATTLE.COLOR_RATING, [table['ScaleColor'] for table in color_tables]),
+                options('displayMode', [self.i18n['UI_marks_' + mode] for mode in ('legacy', 'compact', 'normal', 'detailed')]),
+                control('showMarks'), control('showDelta'), control('showDamage'),
+                control('showProgress'), control('showTargets'),
+                control(MARKS_ON_GUN_BATTLE.SHOW_IN_STATISTIC),
+                control(MARKS_ON_GUN_BATTLE.SHOW_IN_REPLAY),
+                control(MARKS_ON_GUN_BATTLE.SHOW_IN_BATTLE),
+                control(MARKS_ON_GUN_BATTLE.BACKGROUND),
+                options(MARKS_ON_GUN_BATTLE.UI, [self.i18n[UIKey + x] for x in UIList]),
+            ],
+            [
+                hotkey(MARKS_ON_GUN_BATTLE.BUTTON_SHOW),
+                hotkey(MARKS_ON_GUN_BATTLE.BUTTON_RESET),
+                hotkey(MARKS_ON_GUN_BATTLE.BUTTON_SIZE_UP),
+                hotkey(MARKS_ON_GUN_BATTLE.BUTTON_SIZE_DOWN)
+            ]
+        )

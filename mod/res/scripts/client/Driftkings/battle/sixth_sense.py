@@ -11,11 +11,11 @@ from Driftkings.common import getPlayer, square_position, sendChatMessage
 from Driftkings.core.callbacks import callback
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service
-from Driftkings.settings.templates.battle.sixth_sense import SixthSenseSettings as ConfigInterface
+from Driftkings.settings.definitions.battle.sixth_sense import SixthSenseSettings as Settings
 from Driftkings.views.battle.sixth_sense import SixthSense
 
 AS_BATTLE = BATTLE_ALIASES.SIXTH_SENSE
-config = ConfigInterface()
+config = Settings()
 
 
 class MessagesSpotted(object):

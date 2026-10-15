@@ -49,7 +49,7 @@ XVM_SCALE_TO_SUP_CACHE = [str(i) for i in xrange(1, 100)]
 class ScaleValues(object):
 
     def __init__(self):
-        self.ID = 'Stats'
+        self.NAME = 'stats'
         self.modsGroup = 'Driftkings'
         self.vehicleInfoData = None
         self.wn8_data = {}

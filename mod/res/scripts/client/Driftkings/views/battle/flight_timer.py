@@ -14,7 +14,7 @@ from Driftkings.meta.battle.flight_timer import FlightTimeMeta
 class FlightTime(FlightTimeMeta):
 
     def __init__(self):
-        super(FlightTime, self).__init__(FLIGHT_TIMER.ID)
+        super(FlightTime, self).__init__(FLIGHT_TIMER.NAME)
         self.macrosDict = defaultdict(lambda: 'Macros not found', flightTime=0, distance=0)
 
     def isFlightTimeEnabled(self):

@@ -1,5 +1,7 @@
 # Driftkings SettingsLab
 
+Current priorities and next steps: [Plano de trabalho](PLANO_TRABALHO.md).
+
 Python client modules, battle overlays, hangar interfaces and an owned settings manager for Wargaming World of Tanks. Distribution uses `.wotmod` for EU/NA/ASIA; Mir Tankov/RU and `.mtmod` are outside scope. Target scope is not Wargaming certification or proof of testing on every realm.
 
 ## Target and status
@@ -47,11 +49,11 @@ The latest validated unified output is `build/unified/Driftkings.wotmod`. The co
 
 Selected 2.4.1 UI dependencies are ModsListAPI 1.8.0 and OpenWG Gameface 1.2.2 in `res/wotmods/`, pinned by SHA-256 in `build_data/build_config.json`. Defaults in `res/configs/Driftkings` now come from the NA installation's default profile and are installed separately from the WOTMOD, preserving existing user settings. Deployment requires separate authorization.
 
-Distribution defaults live in [res/configs/Driftkings](res/configs/Driftkings); Python fallback defaults remain in [settings/settings_data.py](mod/res/scripts/client/Driftkings/settings/settings_data.py). Menus live in [settings/templates/](mod/res/scripts/client/Driftkings/settings/templates). Profiles, formats, persistence and i18n remain supported.
+Distribution defaults live in [res/configs/Driftkings](res/configs/Driftkings). Python fallbacks in `settings/default_values.py` are generated from those JSON files; `settings/settings_data.py` retains settings metadata and accessors. Regenerate after intentional edits with `python build_tools/generate_defaults.py --write --refresh-snapshot`. The compiler regenerates the packaged fallback directly from JSON. Section declarations live in [settings/definitions/](mod/res/scripts/client/Driftkings/settings/definitions). Profiles, formats, persistence and i18n remain supported.
 
 ## Architecture, UI and updater
 
-The four canonical config classes belong to `Driftkings.settings.config_interfaces`; legacy facades preserve same-object compatibility. Presenter, EditSession, Registry, SettingsService and TemplateAdapter retain their existing owners.
+`settings.service.SettingsService` owns section initialization, JSON persistence and change notifications. `settings/definitions` declares controls and feature normalization; `controls_schema.py` resolves declarative metadata, and `panel/sections.py` binds it to the owned Gameface panel. ConfigInterface, ConfigNoInterface, TemplateBuilder and the old template adapter have been removed. Existing JSON formats and persisted panel identities remain compatible. Explicit Core startup and consolidation of lifecycle hooks are the next phase.
 
 Settings/hangar use Gameface. Battle retains the owned Scaleform/DAAPI library and Python/AS3 contracts. OpenWG owns global injection/resource registration; Driftkings owns feature lifecycle. See [UI bridge](docs/UI_BRIDGE.md) and [4B.8 closure](docs/architecture/PHASE4B8_FINAL_ARCHITECTURE.md).
 

@@ -74,7 +74,7 @@ class Flash(object):
             overlays.update(self.name[name], data)
 
     def __updatePosition(self, alias, props):
-        if not self.active or str(alias) != str(_component().config.ID):
+        if not self.active or str(alias) != str(_component().config.NAME):
             return
         position = dict(settings_service.getComponentDict(_component().config)[INFO_PANEL.TEXT_POSITION])
         changed = False
@@ -87,7 +87,7 @@ class Flash(object):
             settings_service.apply(_component().config, {INFO_PANEL.TEXT_POSITION: position})
 
     def setup(self):
-        self.name = {ElementType.LABEL: '%s' % _component().config.ID}
+        self.name = {ElementType.LABEL: '%s' % _component().config.NAME}
         self.data = {
             ElementType.LABEL: {
                 'x': 0,

@@ -12,7 +12,7 @@ from Driftkings.common import checkKeys, getPlayer, sendPanelMessage, logExcepti
 from Driftkings.core.hooks import override
 from Driftkings.core.keyboard import keyboard
 from Driftkings.settings.service import settings_service
-from Driftkings.settings.templates.battle.arty_splash import ArtySplashSettings as Settings
+from Driftkings.settings.definitions.battle.arty_splash import ArtySplashSettings as Settings
 from Driftkings.ui.common.markers import StaticWorldObjectMarker3D
 
 

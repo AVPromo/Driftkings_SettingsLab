@@ -8,6 +8,8 @@ import shutil
 import tempfile
 
 from Driftkings.settings.settings_data import SettingsData, user_settings, part_name
+from Driftkings.settings.default_values import SELECTOR
+from Driftkings.settings.sections import previous_name
 from Driftkings.settings.store import SettingsStore, merge, recover_file, read_object
 
 try:
@@ -65,7 +67,9 @@ class SettingsLoader(object):
         path = os.path.join(self.root, 'load.json')
         recover_file(path)
         if not os.path.isfile(path):
-            return 'default'
+            name = SELECTOR['loadConfig']
+            self.directory(name)
+            return name
         name = read_object(path).get('loadConfig')
         self.directory(name)
         return name
@@ -133,10 +137,11 @@ class SettingsLoader(object):
         return os.path.join(self.directory(self.active), part_name(component) + '.json')
 
     def load(self, component, defaults, legacy=None):
+        component = part_name(component)
         if component not in self.defaults:
             self.defaults[component] = copy.deepcopy(defaults)
         defaults = self.defaults[component]
-        if component == 'MinimapPlugins':
+        if component == 'minimap_plugins':
             from Driftkings.settings.minimap_store import MinimapStore
             directory = os.path.join(self.directory(self.active), part_name(component))
             if os.path.isdir(directory):
@@ -151,14 +156,15 @@ class SettingsLoader(object):
             values = {}
             if self.active == 'default':
                 central = SettingsStore(os.path.join(self.root, 'Driftkings.json')).read()['components']
-                values = central.get(component)
+                values = central.get(component, central.get(previous_name(component)))
                 if values is None:
                     values = legacy() if legacy else {}
             validate_types(defaults, values, component)
             values = merge(defaults, values)
             SettingsStore(path).write(values)
         validate_types(defaults, values, component)
-        if component == 'MinimapPlugins':
+        if component == 'minimap_plugins':
+            from Driftkings.settings.minimap_store import MinimapStore
             # Keep the previous single file untouched as a migration backup.
             initial = merge(defaults, values)
             if not initial.get('minimapSchema'):
@@ -169,7 +175,8 @@ class SettingsLoader(object):
         return merge(defaults, values)
 
     def save(self, component, values):
-        if component == 'MinimapPlugins':
+        component = part_name(component)
+        if component == 'minimap_plugins':
             from Driftkings.settings.minimap_store import MinimapStore
             directory = os.path.join(self.directory(self.active), part_name(component))
             validate_types(self.defaults.get(component, {}), values, component)
@@ -183,9 +190,10 @@ class SettingsLoader(object):
         return copy.deepcopy(candidate)
 
     def split_store(self, component, factory, files, legacy_directory):
+        component = part_name(component)
         target = os.path.join(self.directory(self.active), part_name(component))
         def create(directory, migrating=False):
-            if component == 'PlayerPanelPro':
+            if component == 'player_panel_pro':
                 return factory(directory, legacy_root=self.root if migrating and self.active == 'default' else False)
             return factory(directory)
         if os.path.isdir(target):
@@ -196,8 +204,8 @@ class SettingsLoader(object):
         staging = tempfile.mkdtemp(prefix='.settings-', dir=profile)
         try:
             if self.active == 'default':
-                migration_files = tuple(files) + (('.transaction.json',) if component == 'PlayerPanelPro' else ())
-                if component == 'PlayerPanelPro':
+                migration_files = tuple(files) + (('.transaction.json',) if component == 'player_panel_pro' else ())
+                if component == 'player_panel_pro':
                     from Driftkings.settings.player_panel_store import LEGACY_FILES
                     migration_files += LEGACY_FILES
                 for name in migration_files:

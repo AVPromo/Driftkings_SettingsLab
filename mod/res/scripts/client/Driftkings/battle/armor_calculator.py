@@ -14,11 +14,11 @@ from Driftkings.common import getPlayer, logDebug
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service
 from Driftkings.ui import g_events
-from Driftkings.settings.templates.battle.armor_calculator import ArmorCalculatorSettings as ConfigInterface
+from Driftkings.settings.definitions.battle.armor_calculator import ArmorCalculatorSettings as Settings
 from Driftkings.views.battle.armor_calculator import ArmorCalculator
 
 AS_BATTLE = BATTLE_ALIASES.ARMOR_CALCULATOR
-config = ConfigInterface()
+config = Settings()
 _isInitialized = False
 
 
@@ -248,7 +248,7 @@ class Randomizer(object):
                 if skill_name == cls.GUNNER_ARMORER:
                     randomization_max -= percent
         _ShotResult.RANDOMIZATION = MinMax(round(randomization_min, 4), round(randomization_max, 4))
-        logDebug(config.ID, True, cls.RND_MIN_MAX_DEBUG, _ShotResult.RANDOMIZATION, vehicle.userName)
+        logDebug(config.NAME, True, cls.RND_MIN_MAX_DEBUG, _ShotResult.RANDOMIZATION, vehicle.userName)
 
 
 def init():

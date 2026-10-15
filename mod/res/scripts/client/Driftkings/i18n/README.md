@@ -5,6 +5,12 @@ panel translations in `PANEL`. The panel loader is `i18n/panel.py`; there are no
 translation catalogs under `settings/panel`. Existing user overrides in
 `<settings root>/locales/<code>.json` continue to work.
 
+`TEXT` section keys use the same canonical names as settings, such as
+`arcade_zoom`, `sixth_sense` and `driftkings`. Older custom JSON catalogs using
+`ArcadeZoom`, `SixthSense` or `Driftkings` are normalized in memory. If both names
+exist, the canonical section takes precedence. The user's override file is not
+rewritten during loading.
+
 The shared registry is `Driftkings/locale_support.py`. Both the panel and component
 catalogs use its normalization. `build_data/locales.json` records the regional
 language lists, source URLs, verification date and translation coverage.

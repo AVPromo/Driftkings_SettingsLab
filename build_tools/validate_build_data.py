@@ -9,8 +9,10 @@ import zipfile
 
 try:
     from .validate_locales import validate_catalogs
+    from .generate_defaults import check_generated as check_default_values
 except ImportError:
     from validate_locales import validate_catalogs
+    from generate_defaults import check_generated as check_default_values
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_KEYS = {'schema_version', 'id', 'kind', 'enabled', 'entrypoint', 'config_files', 'assets'}
@@ -87,7 +89,7 @@ def apply_patch_set(raw, patch):
     return result
 
 
-def build_plan(root=ROOT, check_generated=False, check_game=False, check_component_list=True, game_root=None):
+def build_plan(root=ROOT, check_generated=False, check_game=False, check_component_list=True, game_root=None, check_defaults=True):
     root = Path(root).resolve()
     config = read_json(root / 'build_data/build_config.json')
     require(config['schema_version'] == 1, 'Unsupported build schema')
@@ -219,6 +221,8 @@ def build_plan(root=ROOT, check_generated=False, check_game=False, check_compone
                                                        for target in node.targets) for node in catalog_source.body),
                 'Missing panel translations in locale: %s' % language)
     validate_catalogs(root)
+    if check_defaults:
+        check_default_values(root)
     obfuscation = read_json(root / 'build_data/obfuscation.json')
     require(obfuscation['schema_version'] == 1 and obfuscation['path_root'] == config['python']['archive_root'],
             'Obfuscation path root mismatch')

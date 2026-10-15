@@ -8,7 +8,7 @@ from Driftkings._constants import GLOBAL, SPOTTED_EXTENDED_LIGHT
 from Driftkings.common import sendPanelMessage, getPlayer
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service
-from Driftkings.settings.templates.battle.spotted_light import SpottedExtendedLightSettings as Settings
+from Driftkings.settings.definitions.battle.spotted_light import SpottedExtendedLightSettings as Settings
 
 SOUND_LIST = (SPOTTED_EXTENDED_LIGHT.SOUND_SPOTTED, SPOTTED_EXTENDED_LIGHT.SOUND_ASSIST)
 GENERATOR = {

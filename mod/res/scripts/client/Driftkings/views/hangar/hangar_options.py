@@ -67,7 +67,7 @@ class ClockController(HangarController):
             try:
                 child.refresh()
             except Exception:
-                logError(_component().config.ID, 'Could not refresh Gameface clock view')
+                logError(_component().config.NAME, 'Could not refresh Gameface clock view')
 
 
 def install_clock_gameface():
@@ -123,7 +123,7 @@ def install_clock_gameface():
                 payload['config']['hidePrestige'] = bool(data[GLOBAL.ENABLED] and not data[HANGAR_OPTIONS.SHOW_HANGAR_PRESTIGE_WIDGET])
                 publish_card(self, payload)
             except Exception:
-                logError(_component().config.ID, 'Could not update Gameface clock')
+                logError(_component().config.NAME, 'Could not update Gameface clock')
                 publish_card(self, {'config': {'visible': False}})
 
     @override(RandomHangar, '_getChildComponents')
@@ -132,11 +132,11 @@ def install_clock_gameface():
         try:
             resource_id = resolve_resource(_component().RESOURCE)
             if resource_id == INVALID_RES_ID:
-                logError(_component().config.ID, 'Missing Gameface clock resource: ' + _component().RESOURCE)
+                logError(_component().config.NAME, 'Missing Gameface clock resource: ' + _component().RESOURCE)
             else:
                 children[resource_id] = lambda: ClockView(parent, resource_id)
         except Exception:
-            logError(_component().config.ID, 'Could not attach Gameface clock')
+            logError(_component().config.NAME, 'Could not attach Gameface clock')
         return children
 
     @override(RandomHangar, '_onShown')

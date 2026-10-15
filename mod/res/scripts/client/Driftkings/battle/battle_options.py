@@ -35,10 +35,10 @@ from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service
 from Driftkings.ui import g_events
 from Driftkings.views.battle.battle_options import BattleClock, destroy_clock
-from Driftkings.settings.templates.battle.battle_options import BattleOptionsSettings as ConfigInterface
+from Driftkings.settings.definitions.battle.battle_options import BattleOptionsSettings as Settings
 
 _cache = set()
-config = ConfigInterface()
+config = Settings()
 
 
 # Battle Clock
@@ -330,7 +330,7 @@ def onVehicleChanged(vehicle):
         value = battleBooster.inventoryCount > GLOBAL.ZERO
         if value != isAuto:
             changeValue(vehicle, value)
-            logInfo(config.ID, 'VehicleAutoBattleBoosterEquipProcessor: value={} vehicle={}, booster={}', value, vehicle.userName, battleBooster.userName)
+            logInfo(config.NAME, 'VehicleAutoBattleBoosterEquipProcessor: value={} vehicle={}, booster={}', value, vehicle.userName, battleBooster.userName)
 
 
 def __onGuiCacheSyncCompleted(_):

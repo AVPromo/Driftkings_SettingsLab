@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Template-backed settings registry, independent of ModSettingsAPI."""
+"""Section metadata and validation shared by the owned settings panel."""
 import copy
 import json
 import math
@@ -32,39 +32,33 @@ class SettingsRegistry(object):
         self.entries = {}
         self.isOpen = False
 
-    def register(self, config, fields=None):
-        blocks = list(config.blockIDs) if hasattr(config, 'blockIDs') else [None]
-        for block in blocks:
-            key = config.ID if block is None else config.ID + ':' + str(block)
-            data = config.getData(block) if block is not None else config.data
-            if block is None and hasattr(config, 'getSettingsDefaults'):
-                data = config.getSettingsDefaults()
-            self.entries[key] = (config, copy.deepcopy(fields), copy.deepcopy(data), block)
+    def register(self, config):
+        defaults = config.getSettingsDefaults() if hasattr(config, 'getSettingsDefaults') else config.data
+        self.entries[config.NAME] = (config, copy.deepcopy(defaults))
 
     def describe(self, modID):
-        config, fields, defaults, block = self.entries[modID]
-        values = config.getData(block) if block is not None else config.data
-        template = config.createTemplate(block) if block is not None else config.createTemplate() if fields is None else None
+        config, defaults = self.entries[modID]
+        values = config.data
+        from Driftkings.settings.controls_schema import resolve
         controls = []
-        if fields is not None:
-            for key, kind in fields.items():
-                control = {'varName': key, 'type': {'bool': 'CheckBox', 'mode': 'Dropdown', 'hotkey': 'HotKey'}[kind]}
-                if kind == 'mode': control['options'] = [{'label': str(i)} for i in range(3)]
-                controls.append(control)
-        elif template:
-            if 'enabled' in values:
-                controls.append({'type': 'CheckBox', 'varName': 'enabled', 'text': config.i18n.get('UI_native_enabled', 'Enable mod')})
-            for column, name in enumerate(('column1', 'column2')):
-                for item in template.get(name, []):
-                    control = copy.deepcopy(item)
-                    control['column'] = column
-                    controls.append(control)
-        else:
-            # Mods without an old menu expose their simple top-level options.
+        if getattr(config, 'AUTOMATIC_CONTROLS', False):
             for key in sorted(values):
                 value = values[key]
                 kind = 'CheckBox' if type(value) is bool else 'Slider' if type(value) in (int, float) else 'TextInput' if isinstance(value, string_types) else None
-                if kind: controls.append({'type': kind, 'varName': key, 'text': config.i18n.get('UI_setting_' + key + '_text', key)})
+                if kind:
+                    controls.append({'type': kind, 'varName': key, 'text': config.i18n.get('UI_setting_' + key + '_text', key)})
+        else:
+            if 'enabled' in values:
+                controls.append({'type': 'CheckBox', 'varName': 'enabled', 'text': config.i18n.get('UI_native_enabled', 'Enable mod')})
+            columns = config.getControlColumns()
+            if len(columns) != 2:
+                raise ValueError('Expected two settings columns: ' + config.NAME)
+            for column, declarations in enumerate(columns):
+                for item in declarations:
+                    control = resolve(item, config.i18n, values)
+                    control['column'] = column
+                    controls.append(control)
+        title = config.i18n['UI_description'] if getattr(config, 'TRANSLATED_TITLE', True) and not getattr(config, 'AUTOMATIC_CONTROLS', False) else config.NAME
         controls = copy.deepcopy(controls)
         active, defaultValues = {}, {}
         for control in controls:
@@ -91,7 +85,7 @@ class SettingsRegistry(object):
                 key = control['varName']
                 for source in (active, defaultValues):
                     source[key] = [list(group) if isinstance(group, (list, tuple)) else [group] for group in source[key]]
-        return {'id': modID, 'title': (template or {}).get('modDisplayName', modID), 'controls': controls,
+        return {'id': modID, 'title': title, 'controls': controls,
                 'values': active, 'defaults': defaultValues,
                 'labels': dict(config.i18n)}
 
@@ -99,7 +93,7 @@ class SettingsRegistry(object):
         return [{'id': key, 'title': key} for key in sorted(self.entries)]
 
     def apply(self, modID, values):
-        config, fields, defaults, block = self.entries[modID]
+        config, defaults = self.entries[modID]
         description = self.describe(modID)
         if set(values) != set(description['values']): raise ValueError('Incomplete settings')
         for control in description['controls']:
@@ -133,7 +127,7 @@ class SettingsRegistry(object):
                 LOG.warning('Rejected setting: mod=%s field=%s control=%s reason=%s',
                             modID, key, kind, error)
                 raise
-        current = config.getData(block) if block is not None else config.data
+        current = config.data
         settings = {}
         for control in description['controls']:
             key = control.get('varName')
@@ -148,16 +142,15 @@ class SettingsRegistry(object):
                 if path[0] not in settings: settings[path[0]] = copy.deepcopy(current[path[0]])
                 set_path(settings, path, value)
         from Driftkings.settings.service import settings_service
-        settings_service.apply(config, settings, block)
+        settings_service.apply(config, settings)
         return self.describe(modID)
 
     def button(self, modID, key, value):
-        config, fields, defaults, block = self.entries[modID]
+        config, defaults = self.entries[modID]
         controls = self.describe(modID)['controls']
         if not any(c.get('varName') == key and c.get('button') is not None for c in controls):
             raise ValueError('Unknown action')
-        if block is None: config.onButtonPress(key, value)
-        else: config.onButtonPress(key, value, blockID=block)
+        config.onButtonPress(key, value)
 
 
 registry = SettingsRegistry()

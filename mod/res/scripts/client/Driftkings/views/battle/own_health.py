@@ -16,7 +16,7 @@ from Driftkings.settings.service import settings_service
 
 class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
     def __init__(self):
-        super(OwnHealth, self).__init__(OWN_HEALTH.ID)
+        super(OwnHealth, self).__init__(OWN_HEALTH.NAME)
         self.is_alive_mode = True
         self.is_battle_period = False
         self.maxHealth = 0

@@ -9,12 +9,12 @@ from Driftkings.common import getPlayer, getEntity, replaceMacros, logError, get
 from Driftkings.core.battle_events import battleEvents
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service, affects
-from Driftkings.settings.templates.battle.battle_stat import BattleStatSettings as ConfigInterface
+from Driftkings.settings.definitions.battle.battle_stat import BattleStatSettings as Settings
 from Driftkings.ui import g_events
 from Driftkings.views.battle.battle_stat import _startFlash
 
 g_flash = None
-config = ConfigInterface()
+config = Settings()
 
 
 class TanksStatistic:
@@ -396,7 +396,7 @@ def new__prerequisites(func, self, typeDescriptor, vehicleID, *args, **kwargs):
             if g_tanksStatistic.addVehicleInfo(vehicleID, info):
                 g_mod.refresh()
         except Exception as error:
-            logError(config.ID, '{}', error)
+            logError(config.NAME, '{}', error)
     return result
 
 

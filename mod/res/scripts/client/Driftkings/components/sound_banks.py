@@ -20,7 +20,7 @@ from wg_async import wg_await, wg_async
 from Driftkings._constants import BANKS_LOADER
 from Driftkings.common import remDups, events, curCV
 from Driftkings.settings.service import settings_service
-from Driftkings.settings.templates.components.sound_banks import BanksLoaderSettings as Settings
+from Driftkings.settings.definitions.components.sound_banks import BanksLoaderSettings as Settings
 
 
 class AudioModsSection(object):
@@ -84,7 +84,7 @@ class BanksLoaderController(object):
         self._restartPending = True
         generation = self._generation
         try:
-            print(self.config.LOG, 'requesting client restart...')
+            print(self.config.NAME + ':', 'requesting client restart...')
             reasons = []
             if settings_service.getComponentDict(self.config)[BANKS_LOADER.DEBUG]:
                 for key in self.editedBanks:
@@ -106,15 +106,15 @@ class BanksLoaderController(object):
             if not self._runtimeActive or generation != self._generation:
                 return
             if result.result == DButtons.PURCHASE:
-                print(self.config.LOG, 'client restart confirmed.')
+                print(self.config.NAME + ':', 'client restart confirmed.')
                 BigWorld.savePreferences()
                 BigWorld.restartGame()
             elif result.result == DButtons.RESEARCH:
-                print(self.config.LOG, 'client shut down.')
+                print(self.config.NAME + ':', 'client shut down.')
                 BigWorld.savePreferences()
                 BigWorld.quit()
             elif result.result == DButtons.SUBMIT:
-                print(self.config.LOG, 'client restart declined.')
+                print(self.config.NAME + ':', 'client restart declined.')
                 self.was_declined = True
             return
         finally:
@@ -198,7 +198,7 @@ class BanksLoaderController(object):
         while True:
             orig_engine = ResMgr.openSection('engine_config.xml')
             if orig_engine is None:
-                print(self.config.LOG, 'ERROR: engine_config.xml not found')
+                print(self.config.NAME + ':', 'ERROR: engine_config.xml not found')
                 return
             path = curCV + '/' + 'engine_config.xml'
             if not os.path.isfile(path):
@@ -206,7 +206,7 @@ class BanksLoaderController(object):
             if orig_engine.has_key('BanksLoader_gameVersion') and orig_engine[
                 'BanksLoader_gameVersion'].asString == getClientVersion():
                 break
-            print(self.config.LOG, 'client version change detected')
+            print(self.config.NAME + ':', 'client version change detected')
             self.version_changed = True
             try:
                 os.remove(path)
@@ -250,11 +250,11 @@ class BanksLoaderController(object):
     def recollectExtensionBankFiles(self, extensionName, bankFiles):
         extensionPath = 'res/packages/%s.pkg' % extensionName
         if not os.path.exists(extensionPath):
-            print(self.config.LOG, 'found extension field in bank define but it is missing')
+            print(self.config.NAME + ':', 'found extension field in bank define but it is missing')
             return
         with zipfile.ZipFile(extensionPath) as extension:
             extensionBanks = {os.path.basename(name) for name in extension.namelist() if name.endswith(('.bnk', 'pck'))}
-            print(self.config.LOG, 'found extension banks', list(extensionBanks), 'for extension', extensionName)
+            print(self.config.NAME + ':', 'found extension banks', list(extensionBanks), 'for extension', extensionName)
             bankFiles['pkg'].update(extensionBanks)
             bankFiles['orig'] = bankFiles['res'] | bankFiles['pkg']
             bankFiles['all'] = bankFiles['orig'] | bankFiles['mods']
@@ -265,7 +265,7 @@ class BanksLoaderController(object):
             if name != struct['key'] or not all((sect.has_key(x) for x in struct['keys'])):
                 if is_orig:
                     self.editedBanks['remap'].add(key)
-                    print(self.config.LOG, 'cleaned wrong section for setting', key)
+                    print(self.config.NAME + ':', 'cleaned wrong section for setting', key)
                 continue
             data = {x: sect[x].asString for x in struct['keys']}
             if struct['data']:
@@ -335,7 +335,7 @@ class BanksLoaderController(object):
             bankName = path.replace('.xml', '.bnk')
             if section is None:
                 bankFiles['ignore'].add(bankName)
-                print(self.config.LOG, 'error while reading', path)
+                print(self.config.NAME + ':', 'error while reading', path)
                 continue
             sources.append(section)
             if section.has_key('engine_config_section'):
@@ -384,7 +384,7 @@ class BanksLoaderController(object):
             if value is not None and value.asInt != int(settings_service.getComponentDict(self.config)[mgrKey]):
                 self.editedBanks['memory'].append(mgrKey)
                 soundMgr.writeInt(mgrKey, settings_service.getComponentDict(self.config)[mgrKey])
-                print(self.config.LOG, 'changing value for memory setting:', mgrKey)
+                print(self.config.NAME + ':', 'changing value for memory setting:', mgrKey)
 
     def manageProfileMemorySettings(self, profile_type, profile):
         poolKeys = {
@@ -398,7 +398,7 @@ class BanksLoaderController(object):
                 if value is not None and value.asInt != int(settings_service.getComponentDict(self.config)[poolValue]):
                     self.editedBanks['memory'].append(poolValue)
                     profile[poolKey].writeInt(poolValue, settings_service.getComponentDict(self.config)[poolValue])
-                    print(self.config.LOG, 'changing value for', profile_type, 'memory setting:', poolValue)
+                    print(self.config.NAME + ':', 'changing value for', profile_type, 'memory setting:', poolValue)
         return
 
     def manageProfileBanks(self, profile_type, profile, bankFiles):
@@ -412,18 +412,18 @@ class BanksLoaderController(object):
                 bankName = bank['name'].asString
                 bankExtension = bank.readString('extension', '')
                 if bankExtension and bankName not in bankFiles['all']:
-                    print(self.config.LOG, 'found section for missing bank', bankName, 'with existing extension', bankExtension)
+                    print(self.config.NAME + ':', 'found section for missing bank', bankName, 'with existing extension', bankExtension)
                     self.recollectExtensionBankFiles(bankExtension, bankFiles)
                 if bankName not in bankFiles['all'] or bankName in bankFiles['audio_mods_allowed']:
-                    print(self.config.LOG, 'clearing', profile_type, 'section for missing bank', bankName)
+                    print(self.config.NAME + ':', 'clearing', profile_type, 'section for missing bank', bankName)
                     self.editedBanks['delete'].append(bankName)
                     section.deleteSection(bank)
                 if bankFiles['section'].get(bankName, name) != name:
-                    print(self.config.LOG, 'deleting', profile_type, 'section from', name, 'for bank', bankName)
+                    print(self.config.NAME + ':', 'deleting', profile_type, 'section from', name, 'for bank', bankName)
                     self.editedBanks['section'].append(bankName)
                     section.deleteSection(bank)
                 if bankName in bankFiles['mods'] and bankName in exist:
-                    print(self.config.LOG, 'clearing', profile_type, 'section duplicate for bank', bankName)
+                    print(self.config.NAME + ':', 'clearing', profile_type, 'section duplicate for bank', bankName)
                     self.editedBanks['delete'].append(bankName)
                     section.deleteSection(bank)
                 exist.add(bankName)
@@ -431,7 +431,7 @@ class BanksLoaderController(object):
         for bankName in sorted(bankFiles['mods']):
             if not any((bankName in bankFiles[x] for x in ('orig', 'ignore', 'audio_mods_allowed'))) and bankName not in exist:
                 sectName = bankFiles['section'].get(bankName, 'SFX_soundbanks_loadonce')
-                print(self.config.LOG, 'creating', profile_type, 'section in', sectName, 'for bank', bankName)
+                print(self.config.NAME + ':', 'creating', profile_type, 'section in', sectName, 'for bank', bankName)
                 if bankName in self.editedBanks['delete']:
                     self.editedBanks['delete'].remove(bankName)
                     self.editedBanks['move'].append(bankName)

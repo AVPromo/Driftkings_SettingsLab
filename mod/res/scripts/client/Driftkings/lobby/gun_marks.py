@@ -92,7 +92,7 @@ def trend(history, vehicle_id, last_battles=10):
             'points': [p['percent'] for p in selected]}
 
 
-from Driftkings.settings.templates.lobby.gun_marks import MarksOnGunHangarSettings as Settings
+from Driftkings.settings.definitions.lobby.gun_marks import MarksOnGunHangarSettings as Settings
 
 
 MARK_LEVELS = (0.0, 20.0, 40.0, 55.0, 65.0, 85.0, 95.0, 100.0)
@@ -414,7 +414,7 @@ class ProgressHistory(object):
         name = 'progress_%s' % int(account)
         if account != self.account:
             self.account = account
-            loaded = loadJson(config.ID, name, {'vehicles': {}}, self.cachePath)
+            loaded = loadJson(config.NAME, name, {'vehicles': {}}, self.cachePath)
             self.data = {'vehicles': {}}
             if isinstance(loaded, dict) and isinstance(loaded.get('vehicles'), dict):
                 for vehicle, points in loaded['vehicles'].items():
@@ -423,7 +423,7 @@ class ProgressHistory(object):
                             if isinstance(point, dict) and all(k in point for k in ('battles', 'percent', 'average')):
                                 record_snapshot(self.data, vehicle, point['battles'], point['percent'], point['average'])
         if record_snapshot(self.data, data['vehicleID'], data['randomBattles'], data['damageRating'], data['movingAvgDamage']):
-            loadJson(config.ID, name, self.data, self.cachePath, True, quiet=True)
+            loadJson(config.NAME, name, self.data, self.cachePath, True, quiet=True)
         return trend(self.data, data['vehicleID'], settings_service.getComponentDict(config)[MARKS_ON_GUN_HANGAR.HISTORY_BATTLES])
 
 

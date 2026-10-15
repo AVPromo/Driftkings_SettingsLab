@@ -171,15 +171,18 @@ class SettingsStore(object):
         return copy.deepcopy(values)
 
 
-def load_config(config):
+def load_config(config, loader=None, defaults=None):
+    from Driftkings.settings.sections import previous_name
     def legacy():
         from Driftkings.common.config.json_reader import JSONLoader
-        path = os.path.join(config.configPath, config.ID + '.json')
+        path = os.path.join(config.configPath, previous_name(config.NAME) + '.json')
         if not os.path.isfile(path):
             return {}
         text, _, success = JSONLoader.json_file_read(path, False)
         if not success:
             raise IOError('Could not read legacy settings: ' + path)
         return JSONLoader.json_loads(text)
-    from Driftkings.settings.loader import settings_loader
-    return settings_loader.load(config.ID, config.data, legacy)
+    if loader is None:
+        from Driftkings.settings.loader import settings_loader
+        loader = settings_loader
+    return loader.load(config.NAME, config.data if defaults is None else defaults, legacy)

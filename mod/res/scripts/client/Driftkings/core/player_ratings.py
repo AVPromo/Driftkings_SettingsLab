@@ -215,7 +215,7 @@ class Events(object):
     @staticmethod
     def request(region, request, **kwargs):
         if region not in Events.SUPPORTED_REGIONS:
-            logWarning(config.ID, 'Unsupported region for stats request: {}', region)
+            logWarning(config.NAME, 'Unsupported region for stats request: {}', region)
             return None
         kwargs['application_id'] = '14f9ad61272e03b7a446433e732d6b7f'
         api = 'api.worldoftanks.%s' % region
@@ -227,11 +227,11 @@ class Events(object):
                 signature = (region, request, error.get('code'), error.get('message'))
                 if signature not in Events._apiErrors:
                     Events._apiErrors.add(signature)
-                    logWarning(config.ID, 'Stats API rejected {}/{}: {} ({})', region, request, error.get('message'), error.get('code'))
+                    logWarning(config.NAME, 'Stats API rejected {}/{}: {} ({})', region, request, error.get('message'), error.get('code'))
                 return None
             return response.get('data')
         except Exception as error:
-            logWarning(config.ID, 'Stats request failed: {}', error)
+            logWarning(config.NAME, 'Stats request failed: {}', error)
             return None
 
     @staticmethod
@@ -381,13 +381,13 @@ class Statistics(object):
             self._localStats = {'info': info, 'tanks': tanks}
         except Exception as error:
             self._localStats = None
-            logWarning(config.ID, 'Local statistics unavailable, using API: {}', error)
+            logWarning(config.NAME, 'Local statistics unavailable, using API: {}', error)
 
     def loadPlayerStats(self, databaseIDs, generation, tankIDs=None):
         try:
             info, tanks = self.fetchPlayerStats(databaseIDs)
         except Exception as error:
-            logWarning(config.ID, 'Could not fetch player statistics: {}', error)
+            logWarning(config.NAME, 'Could not fetch player statistics: {}', error)
             info, tanks = {}, {}
         self._responses.put((generation, databaseIDs, info, tanks))
         for dbID, tankID in (tankIDs or {}).items():
@@ -556,7 +556,7 @@ class Statistics(object):
             try:
                 self.applyPlayerStats(info, tanks)
             except Exception as error:
-                logWarning(config.ID, 'Could not apply player statistics: {}', error)
+                logWarning(config.NAME, 'Could not apply player statistics: {}', error)
         if getattr(getPlayer(), 'arena', None) is not None:
             self._poll = callback(0.2, self.pollStats)
 

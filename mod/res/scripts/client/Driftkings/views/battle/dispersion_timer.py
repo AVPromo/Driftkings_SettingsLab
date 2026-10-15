@@ -18,7 +18,7 @@ class DispersionTimer(DispersionTimerMeta):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
     def __init__(self):
-        super(DispersionTimer, self).__init__(DISPERSION_TIMER.ID)
+        super(DispersionTimer, self).__init__(DISPERSION_TIMER.NAME)
         self.macro = defaultdict(lambda: 'macros not found', timer=0, percent=0)
         self.min_angle = 1.0
         self.isPostmortem = False
@@ -58,7 +58,7 @@ class DispersionTimer(DispersionTimerMeta):
             return self.as_updateTimerTextS('')
         if self.min_angle > aiming_angle:
             self.min_angle = aiming_angle
-            logDebug(self.ID, False, 'DispersionTimer - renew min dispersion angle {}', self.min_angle)
+            logDebug(self.section, False, 'DispersionTimer - renew min dispersion angle {}', self.min_angle)
 
         diff = self.min_angle / aiming_angle
         percent = int(ceil(diff * 100))

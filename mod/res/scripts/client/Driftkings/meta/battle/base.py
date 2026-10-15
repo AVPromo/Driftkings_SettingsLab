@@ -35,12 +35,12 @@ class BattleMeta(HudMeta):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
     settingsCore = dependency.descriptor(ISettingsCore)
 
-    def __init__(self, ID):
+    def __init__(self, section):
         super(BattleMeta, self).__init__()
-        self.ID = ID
+        self.section = section
 
     def getSettings(self):
-        return settings_service.getComponentDict(self.ID)
+        return settings_service.getComponentDict(self.section)
 
     @property
     def _arenaDP(self):
