@@ -1,68 +1,85 @@
-# Driftkings SettingsLab
+# Driftkings
 
-Current priorities and next steps: [Plano de trabalho](PLANO_TRABALHO.md).
+Modpack for Wargaming World of Tanks: battle overlays, hangar improvements and an integrated settings panel.
 
-Python client modules, battle overlays, hangar interfaces and an owned settings manager for Wargaming World of Tanks. Distribution uses `.wotmod` for EU/NA/ASIA; Mir Tankov/RU and `.mtmod` are outside scope. Target scope is not Wargaming certification or proof of testing on every realm.
+## Downloads
 
-## Target and status
+**[Download the beta](https://github.com/dkruben/Driftkings_SettingsLab/releases/tag/v0.1.2-beta.2)** · [All releases](https://github.com/dkruben/Driftkings_SettingsLab/releases)
 
-Source version: `0.1.2-beta.1`, from [runtime version](mod/res/scripts/client/Driftkings/__init__.py). [Build config](build_data/build_config.json) targets client `2.4.1.0` / EU dump `2.4.1.5488`. Native WG resources, updated Carousel integration and SWCs are included in the diagnostic build. **Real client and regional validation remain pending.** See the [2.4.1 migration report](docs/migration/2.4.1/FINAL_REPORT.md).
+Current version: **0.1.2-beta.2**, for **WoT 2.4.1.0**. First public beta; further refinements are planned.
 
-The historical 2.4.0.2 diagnostic package passed automated checks and client startup on 2026-10-14. **Full client functional validation remains pending.** It contained **33 components / 255 pycs / 421 entries**. Current local modifications are not certified by that historical package. See the [handover](docs/architecture/DRIFTKINGS_ARCHITECTURE_HANDOVER.md) for evidence, hashes and limits.
+## Battle interface and statistics
 
-AutoAimOptimize displays a box around the native autoaim target. Assisted acquisition, vehicle scanning and custom locking were removed; preserve this policy.
+- Player panels and battle-loading statistics.
+- Gun-mark progress, battle statistics and High Caliber progress.
+- Own-vehicle health, target information and distance markers.
+- Minimap options, spotted indicators and Sixth Sense customization.
 
-## Repository
+## Camera and aiming
 
-| Path | Role |
-| --- | --- |
-| [mod/res/scripts/client](mod/res/scripts/client) | Runtime Python; entrypoint `gui/mods/mod_Driftkings.py` |
-| [mod/res/gui](mod/res/gui) | Canonical Flash, Gameface and map assets |
-| [build_data](build_data/README.md) | Schema 1: targets, component definitions, defaults and package contracts |
-| [build_tools](build_tools/README.md) | Compiler, build-data validator and explicit release publication |
-| [flash_source](flash_source/README.md) | One active battle project, shared AS3 and external SWCs |
-| [installer/source](installer/source) | Native updater and WindowsFiles C# helper sources |
-| [res](res) | Config presets, external inputs, Wwise sources and historical resources |
-| [docs](docs/README.md) | Guides, contracts, history and maintenance plans |
-| `build/` | Current outputs, including `build/native/`; `installer/build/` retains historical evidence |
+- Zoom and aiming-angle options.
+- Dispersion circle, aiming timer and shell flight time.
+- Armor calculator, artillery splash and server-turret display.
+- Native autoaim target highlighting.
 
-## Development and commands
+## Hangar and utilities
 
-Development uses Python 3 and PowerShell on Windows; client sources retain Python 2.7 compatibility. Compilation uses SourceTree's embedded Python 2.7 host; focused probes also reference standalone Python 2.7. Flash requires Java, Flex, playerglobal and game SWCs. Native helpers require the Windows .NET compiler; protected builds additionally require PJOrion. Game/reference resources are external, read-only inputs.
+- Carousel statistics and gun-mark information.
+- Hangar presentation and crew options.
+- Clan reward collection and battle-efficiency information.
+- Integrated settings, profiles and beta/stable update channels.
 
-Read the [compiler guide](build_tools/README.md) and [build-data contract](build_data/README.md). From the repository root:
+Available behavior depends on configuration, vehicle and game mode.
+
+## Installation
+
+1. Close World of Tanks.
+2. Download `Driftkings-0.1.2-beta.2-WoT-2.4.1.0.zip` from the release assets.
+3. Extract its `mods` folder into the game installation, merging folders. It includes Driftkings and the required ModsListAPI and OpenWG Gameface packages under `mods/2.4.1.0/`.
+4. For a new installation, extract the separate `Driftkings-defaults.zip` into the game installation. Preserve existing `mods/configs/Driftkings` settings when updating.
+5. Start the game and open Driftkings settings through the mods list.
+
+The defaults are the author's selected mod configurations. Existing personal JSON files take precedence. The in-game updater preserves those configurations; missing settings use packaged defaults.
+
+## Compatibility and beta status
+
+Designed for Wargaming EU, NA and ASIA clients; Mir Tankov/RU is outside scope. This beta was checked locally on EU 2.4.1.0, including normal startup and a battle replay. Other realms and every feature have not been fully validated in-game. A complete update through the in-game updater remains to be validated.
+
+## Languages
+
+Settings translations: Czech, German, English, Spanish, French, Hungarian, Italian, Japanese, Korean, Polish, Portuguese, Russian, Thai, Turkish, Ukrainian, Vietnamese, Simplified Chinese and Traditional Chinese. Translation corrections are welcome.
+
+## Build from source
+
+This repository contains the compiler, runtime sources, defaults and required resource inputs. Generated packages, Python bytecode, caches and local tests are excluded from Git. Download compiled packages from Releases.
+
+On Windows, configure the tools described in the [compiler guide](build_tools/README.md): Python 3.10+, Python 2.7, Java/Flex, playerglobal and game SWCs, the .NET C# compiler and PJOrion for protected releases. Game and reference directories are external read-only inputs.
 
 ```powershell
+python build_tools/compiler.py --plan
 python build_tools/validate_build_data.py
-python build_tools/validate_build_data.py --check-game --write-plan build/build_plan.json
 .\debug.cmd
-.\release.cmd
+.\release.cmd --version 0.1.2-beta.2 --channel beta
 ```
 
-`debug.cmd` builds a diagnostic package; `release.cmd` applies the configured protection policy. Both compile Python 2.7, Flash and native helpers, generate resources, and verify the completed package. Neither installs into the game nor publishes to GitHub. Release outputs are separated by channel and mod version under `build/releases/`; debug outputs use `build/debug/`. Failed compilation preserves earlier completed outputs.
+The current build contract uses the NA installation as its resource source and an EU source reference. Local tool paths belong in ignored `build_data/toolchain.local.json`. Builds compile Python 2.7, Flash and native helpers, generate the carousel integration and verify the packages. Outputs go to `build/`; compilation does not install or publish them.
 
-The data contract selects the NA installation as the read-only game resource source and the EU dump as the read-only Python/AS3 reference. CI validates build data, configuration JSON, Python 2.7 syntax and JavaScript syntax. It does not provision a complete compiler toolchain or prove in-game behavior.
+| Directory | Contents |
+| --- | --- |
+| `mod/res` | Runtime Python, Gameface and packaged resource inputs |
+| `flash_source` | ActionScript sources and compilation libraries |
+| `installer/source` | Native helper sources |
+| `build_data` | Build contracts, components, targets and release metadata |
+| `build_tools` | Compiler, validators and release tooling |
+| `res` | Canonical defaults, dependencies and resource sources |
+| `docs` | Architecture, maintenance and historical evidence |
 
-## Package and settings
+See the [build contract](build_data/README.md), [documentation index](docs/README.md) and [work plan](PLANO_TRABALHO.md).
 
-The latest validated unified output is `build/unified/Driftkings.wotmod`. The compiler generates the battle SWF, native helpers and patched carousel Gameface bundle before packaging. All ten carousel PNGs belong inside the WOTMOD; runtime icon loading uses mounted resources through `ResMgr`. Versioned builds also contain `release.json`, a distribution ZIP, separate defaults, dependencies and checksums.
+## Support and credits
 
-Selected 2.4.1 UI dependencies are ModsListAPI 1.8.0 and OpenWG Gameface 1.2.2 in `res/wotmods/`, pinned by SHA-256 in `build_data/build_config.json`. Defaults in `res/configs/Driftkings` now come from the NA installation's default profile and are installed separately from the WOTMOD, preserving existing user settings. Deployment requires separate authorization.
+[Report an issue](https://github.com/dkruben/Driftkings_SettingsLab/issues) with the mod version, game version/realm, reproduction steps and relevant `game.log` excerpts. Remove personal information before sharing logs.
 
-Distribution defaults live in [res/configs/Driftkings](res/configs/Driftkings). Python fallbacks in `settings/default_values.py` are generated from those JSON files; `settings/settings_data.py` retains settings metadata and accessors. Regenerate after intentional edits with `python build_tools/generate_defaults.py --write --refresh-snapshot`. The compiler regenerates the packaged fallback directly from JSON. Section declarations live in [settings/definitions/](mod/res/scripts/client/Driftkings/settings/definitions). Profiles, formats, persistence and i18n remain supported.
+Dependencies: ModsListAPI by poliroid and OpenWG Gameface. The [Battle Observer project](https://github.com/Armagomen/battle_observer) informed the organization review and this README's presentation.
 
-## Architecture, UI and updater
-
-`settings.service.SettingsService` owns section initialization, JSON persistence and change notifications. `settings/definitions` declares controls and feature normalization; `controls_schema.py` resolves declarative metadata, and `panel/sections.py` binds it to the owned Gameface panel. ConfigInterface, ConfigNoInterface, TemplateBuilder and the old template adapter have been removed. Existing JSON formats and persisted panel identities remain compatible. Core startup now uses lazy service factories with explicit dependencies and partial-failure cleanup. Shared battle/login/hangar events replace duplicate observer hooks; subscriptions follow their component owner. `interface_catalog.py` now declares Flash/Gameface contracts and ordered resources, with generated AS3/JS catalogs verified by the build. The single battle SWF has separate battle and ratings factories. The next phase covers compatibility and game modes; in-game validation is deferred until the end of the reorganization.
-
-Settings/hangar use Gameface. Battle retains the owned Scaleform/DAAPI library and Python/AS3 contracts. OpenWG owns global injection/resource registration; Driftkings owns feature lifecycle. Current interface contracts and validation limits are recorded in the [reorganization plan](PLANO_TRABALHO.md).
-
-The updater and [native helper](docs/UPDATER_INSTALLER.md) retain verification, installation/rollback and restart contracts. WindowsFiles pre-validation hardening remains **OPEN HIGH**, separate work before stable. PJOrion keeps exactly three allowlisted bytecodes; a diagnostic build does not certify a protected release.
-
-BanksLoader now consolidates audio XML directly into the client version's loose overrides. It does not require `_aaa_BanksLoader_audioMods.wotmod` or create new `_BanksLoaded.wotmod` archives. See [audio configuration](docs/BANKS_LOADER.md); real client sound validation remains pending.
-
-## Licensing and support
-
-Read [English license](LICENSE_EN.md), [Portuguese license](LICENSE_PT.md), [XVM license](docs/XVM-CONFIG-LICENSE.txt) and [XVM notice](docs/XVM-CONFIG-NOTICE.md). Third-party SDK, SWC, sound and API redistribution rights require provenance review; repository presence does not establish permission.
-
-Report issues in [dkruben/Driftkings_SettingsLab](https://github.com/dkruben/Driftkings_SettingsLab/issues) with client/mod version, reproduction steps and relevant `game.log` excerpts. Start with the [documentation index](docs/README.md). Historical phase evidence retains its original paths.
+Read the [English license](LICENSE_EN.md), [Portuguese license](LICENSE_PT.md) and [third-party notices](docs/XVM-CONFIG-NOTICE.md). Included third-party materials retain their respective terms.

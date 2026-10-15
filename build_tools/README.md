@@ -66,7 +66,7 @@ Direct Python equivalents use `--mode debug` or `--mode release`. The `.cmd`
 wrappers accept the same remaining arguments and work from another directory.
 Set `DK_PYTHON3` to a Python 3 executable path if `python` is not appropriate.
 
-The canonical mod version is `Driftkings.VERSION`, currently `0.1.2-beta.1`.
+The canonical mod version is `Driftkings.VERSION`, currently `0.1.2-beta.2`.
 `--version` overrides only the build's staged runtime and release artifacts;
 it does not modify your sources or increment the project version automatically.
 Beta/RC versions use the beta channel; plain `X.Y.Z` versions use stable.

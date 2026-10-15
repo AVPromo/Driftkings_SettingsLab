@@ -85,3 +85,12 @@ flash_source/**/obj/
 # Local verification fixtures; excluded from source publication
 /build_tools/tests/
 /build_tools/common_startup_probe_py27.py
+
+# Local test suites and tool caches
+tests/
+test/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
