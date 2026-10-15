@@ -1199,6 +1199,7 @@ PANEL = {'actionFailed': 'アクションは失敗しました。 game.logを参
  'updates.lastCheck': '最終チェック',
  'updates.later': '後で',
  'updates.latest': '新しいバージョンが利用可能になりました',
+ 'updates.manual': '手動インストール',
  'updates.never': '一度もない',
  'updates.notChecked': '更新チェックはまだ実行されていません。',
  'updates.restartBlocked': '再起動はできません。クライアントの状態を確認し、保留中の編集があれば保存します。',

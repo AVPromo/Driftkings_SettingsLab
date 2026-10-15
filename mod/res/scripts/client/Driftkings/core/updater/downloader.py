@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Own staging only; complete size/hash/package validation before READY."""
 import hashlib
+import io
 import json
 import os
 import stat
@@ -59,6 +60,15 @@ def validate_package(path, version):
             raise TransferError('invalidPackage')
 
 
+def validate_download(path, manifest):
+    if manifest.inventory is None:
+        return validate_package(path, manifest.version.text)
+    manifest.inventory.verify_archive(path)
+    name = next(item['path'] for item in manifest.inventory.files if item['kind'] == 'code')
+    with zipfile.ZipFile(path) as archive:
+        validate_package(io.BytesIO(archive.read(name)), manifest.version.text)
+
+
 class StagingSink(object):
     def __init__(self, root, manifest):
         self.root = root
@@ -80,7 +90,7 @@ class StagingSink(object):
             root = safe_directory(self.root)
             self.directory = tempfile.mkdtemp(prefix='download-', dir=root)
             self.file = open(os.path.join(self.directory, 'Driftkings.wotmod.download'), 'wb')
-        if self.count + len(data) > self.manifest.size:
+        if self.count + len(data) > self.manifest.payload_size:
             raise TransferError('sizeMismatch')
         self.file.write(data)
         self.count += len(data)
@@ -88,14 +98,14 @@ class StagingSink(object):
     def finish(self):
         self.guard()
         self.verifying()
-        if self.file is None or self.count != self.manifest.size:
+        if self.file is None or self.count != self.manifest.payload_size:
             raise TransferError('sizeMismatch')
         self.file.flush()
         os.fsync(self.file.fileno())
         self.file.close()
         self.file = None
         partial = os.path.join(self.directory, 'Driftkings.wotmod.download')
-        if os.path.getsize(partial) != self.manifest.size:
+        if os.path.getsize(partial) != self.manifest.payload_size:
             raise TransferError('sizeMismatch')
         digest = hashlib.sha256()
         with open(partial, 'rb') as source:
@@ -105,10 +115,10 @@ class StagingSink(object):
                 if not chunk:
                     break
                 digest.update(chunk)
-        if digest.hexdigest() != self.manifest.sha256:
+        if digest.hexdigest() != self.manifest.payload_sha256:
             raise TransferError('hashMismatch')
         try:
-            validate_package(partial, self.manifest.version.text)
+            validate_download(partial, self.manifest)
         except TransferError:
             raise
         except Exception:
@@ -160,7 +170,7 @@ class Downloader(object):
             self.handle = None
             callback(path, error)
         try:
-            handle = self.transport.stream(manifest.download, self.sink, completed, self.timeout, manifest.size, progress)
+            handle = self.transport.stream(manifest.download, self.sink, completed, self.timeout, manifest.payload_size, progress)
             if self.busy:
                 self.handle = handle
         except Exception:

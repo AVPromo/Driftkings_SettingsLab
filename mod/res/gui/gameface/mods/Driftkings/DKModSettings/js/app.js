@@ -212,7 +212,9 @@
             ui.updateCheck.textContent = text['updates.check'];
             ui.updateDownload = footerButton(updates, function () { send('download_update'); });
             ui.updateDownload.className += ' dk-update-download';
-            ui.updateDownload.textContent = text['updates.install'];
+            ui.updateDownload.textContent = text['updates.download'];
+            ui.updateManual = footerButton(updates, function () { send('manual_update'); });
+            ui.updateManual.textContent = text['updates.manual'];
             ui.updateCancel = footerButton(updates, function () { send('cancel_update_download'); });
             ui.updateCancel.textContent = text['updates.cancelDownload'];
             ui.updateInstall = footerButton(updates, function () { send('schedule_update'); });
@@ -275,6 +277,7 @@
                 var downloadable = update.canDownload && update.compatible === true && ['AVAILABLE', 'ERROR'].indexOf(update.status) >= 0;
                 ui.updateDownload.style.display = downloadable ? '' : 'none';
                 ui.updateDownload.disabled = !downloadable;
+                ui.updateManual.disabled = ['INSTALLING', 'RESTART_REQUIRED'].indexOf(update.status) >= 0;
                 ui.updateCancel.style.display = update.canCancel ? '' : 'none';
                 ui.updateCancel.disabled = !update.canCancel;
                 var installable = update.canInstall && update.compatible === true && ['READY', 'ERROR'].indexOf(update.status) >= 0 && !update.cancellingInstall;

@@ -1304,6 +1304,7 @@ PANEL = {'actionFailed': 'Akce se nezdařila. Viz game.log.',
  'updates.lastCheck': 'Poslední kontrola',
  'updates.later': 'Později',
  'updates.latest': 'K dispozici nová verze',
+ 'updates.manual': 'Ruční instalace',
  'updates.never': 'Nikdy',
  'updates.notChecked': 'Dosud nebyla provedena žádná kontrola aktualizací.',
  'updates.restartBlocked': 'Restartování není k dispozici. Zkontrolujte stav klienta a uložte všechny '

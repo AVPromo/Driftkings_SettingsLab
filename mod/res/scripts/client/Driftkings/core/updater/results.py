@@ -80,6 +80,9 @@ class Results(object):
         folder = self._folder(ready)
         ticket = read_json(safe_path(os.path.join(folder, 'install.json')))
         manifest = Manifest(read_json(safe_path(os.path.join(folder, 'release.json'))))
+        if manifest.inventory is not None:
+            from Driftkings.core.updater.modpack_transaction import validate_ticket
+            return validate_ticket(ticket, manifest)
         if (not isinstance(ticket, dict) or set(ticket) != TICKET_KEYS or
                 type(ticket['schema']) not in INTEGER or ticket['schema'] != 1 or
                 normalize_game_version(ticket['gameVersion']) != ticket['gameVersion'] or
@@ -96,6 +99,9 @@ class Results(object):
         return ticket
 
     def _package_matches(self, ticket, old=False):
+        if ticket['schema'] == 2:
+            from Driftkings.core.updater.modpack_transaction import verify_result
+            return verify_result(self.root, ticket, self.loaded_version, old)
         path = os.path.join(self.root, 'mods', ticket['gameVersion'], 'Driftkings.wotmod')
         safe_path(path)
         size = ticket['installedSize'] if old else ticket['size']

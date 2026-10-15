@@ -1341,6 +1341,7 @@ PANEL = {'actionFailed': 'Az akció meghiúsult. Lásd: game.log.',
  'updates.lastCheck': 'Utolsó ellenőrzés',
  'updates.later': 'Később',
  'updates.latest': 'Új verzió elérhető',
+ 'updates.manual': 'Kézi telepítés',
  'updates.never': 'Soha',
  'updates.notChecked': 'A frissítés ellenőrzése még nem történt meg.',
  'updates.restartBlocked': 'Az újraindítás nem elérhető. Ellenőrizze az ügyfél állapotát, és mentse el a '

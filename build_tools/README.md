@@ -107,7 +107,7 @@ are under `build/debug/<channel>/<version>/`:
 | Artifact | Purpose |
 | --- | --- |
 | `Driftkings.wotmod` | Stored ZIP with Python 2.7 bytecodes, Flash, resources, native helpers and `meta.xml` |
-| `release.json` | Schema 1 metadata consumed by the existing updater |
+| `release.json` | Schema 2 updater metadata with the complete modpack inventory |
 | `modpack.json` | Full distribution inventory: version/channel/game, ZIP hash, code, dependencies and individual defaults |
 | `Driftkings-defaults.zip` | Your selected Driftkings defaults, separate from the WOTMOD |
 | `dependencies/*.wotmod` | The two pinned external UI dependencies |
@@ -117,8 +117,9 @@ are under `build/debug/<channel>/<version>/`:
 
 New installations may extract the separate defaults ZIP. Existing installations
 keep their `mods/configs/Driftkings` settings. The compiler does not change these
-settings. The current in-game updater updates the unified WOTMOD only; dependency
-and first-install-default distribution remain separate payloads.
+settings. The in-game updater downloads the complete distribution, verifies all
+members and applies code/dependencies together after WoT exits. Personal defaults
+remain a separate payload; the installer never overwrites live configurations.
 
 The compiler now generates `modpack.json` beside `release.json`. Both describe
 the same unified WOTMOD. The new inventory records the complete distribution ZIP,
@@ -134,9 +135,38 @@ observations. Removal and replacement require a previous inventory, an explicit
 ownership receipt and matching old bytes. Existing shared dependencies are never
 adopted automatically. A legacy unified package requires a separate identity check
 before migration. Configurations never become replacement/removal candidates.
-This planner does not mutate files or arm the native helper. Wiring the complete
-modpack into download, native transactions, rollback and startup receipts is the
-next part of phase 5; the current in-game updater still uses `release.json`.
+`release.json` schema 2 embeds the inventory and identifies the unified code
+asset. The runtime derives the full ZIP URL in that same release, uses its size
+for progress and validates the nested WOTMOD identity/version before READY.
+Schema 1 remains readable for existing cached single-package updates. Newly
+published releases must use schema 2 and match the standalone `modpack.json`.
+
+The native helper waits for the validated WoT parent to exit, rejects another
+running WoT process and checks every observed file again. It prepares temporary
+files, journals the transaction, commits dependencies before code and writes
+`cache/update/ownership.<game>.json` last. Each replacement/removal retains its
+verified old bytes in the owned download stage. A failed/interrupted transaction
+restores those bytes; unexpected targets/backups stop recovery without overwriting
+them. Configurations and unrelated files never enter the operation list. Shared
+dependencies are not adopted; conflicting shared files require manual installation.
+The panel provides an official releases link in all 18 locales.
+After manually installing a different version, a stale receipt no longer establishes
+ownership: the runtime verifies the current code identity and treats existing
+dependencies as shared when preparing the next update.
+
+On the next startup, success requires the loaded VERSION, every current package
+hash and the ownership receipt to match. Incomplete operations remain recoverable,
+including when the new code had already been loaded. Cached helpers must still
+match the locally packaged helper hash. Backups remain in the transaction cache
+for diagnosis; cleanup does not sweep other mods or old game-version directories.
+
+Beta/RC builds publish as GitHub prereleases and are offered only on the beta
+channel; stable builds use a release version and the stable channel. Promotion
+requires rebuilding with the final version, using the same reviewed source commit,
+then validating the resulting artifacts. Publication remains explicit, defaults to
+a draft and rejects dirty/stale source builds. Do not publish before the final
+in-game validation. Local transaction checks use temporary build directories and
+a test-only process guard; they do not close or change the installed game.
 
 Each invocation gets a fresh `build/runs/<id>/` directory containing logs,
 compiled code and generated resources. Failed compilation/verification does not

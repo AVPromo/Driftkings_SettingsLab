@@ -1342,6 +1342,7 @@ PANEL = {'actionFailed': 'Дія не вдалася. Див. game.log.',
  'updates.lastCheck': 'Остання перевірка',
  'updates.later': 'Пізніше',
  'updates.latest': 'Доступна нова версія',
+ 'updates.manual': 'Ручне встановлення',
  'updates.never': 'Ніколи',
  'updates.notChecked': 'Перевірка оновлень ще не виконана.',
  'updates.restartBlocked': 'Перезапуск недоступний. Перевірте стан клієнта та збережіть усі зміни, що '

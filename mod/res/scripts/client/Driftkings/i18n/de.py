@@ -1385,6 +1385,7 @@ PANEL = {'actionFailed': 'Die Aktion ist fehlgeschlagen. Siehe game.log.',
  'updates.lastCheck': 'Letzte Kontrolle',
  'updates.later': 'Später',
  'updates.latest': 'Neue Version verfügbar',
+ 'updates.manual': 'Manuelle Installation',
  'updates.never': 'Niemals',
  'updates.notChecked': 'Es wurde noch keine Update-Prüfung durchgeführt.',
  'updates.restartBlocked': 'Neustart ist nicht verfügbar. Überprüfen Sie den Clientstatus und speichern Sie '

@@ -41,4 +41,6 @@ def verify(folder, manifest, document):
     code = next(item for item in inventory.files if item['kind'] == 'code')
     if code['size'] != manifest['size'] or code['sha256'] != manifest['sha256']:
         raise ValueError('Legacy release and modpack code differ')
+    if manifest.get('schema') == 2 and manifest.get('modpack') != document:
+        raise ValueError('Release and standalone modpack inventory differ')
     return inventory

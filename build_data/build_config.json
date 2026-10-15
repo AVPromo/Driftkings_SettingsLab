@@ -97,6 +97,7 @@
     "updater_helper": {
       "kind": "csharp",
       "source": "installer/source/Installer.cs",
+      "additional_sources": ["installer/source/ModpackInstaller.cs"],
       "output": "build/native/updater/Driftkings.UpdateInstaller.exe",
       "metadata": "build/native/updater/helper.json",
       "references": [

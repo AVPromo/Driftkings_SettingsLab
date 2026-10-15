@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Portable modpack contract and read-only planning. No game imports or writes."""
 import hashlib
+import copy
 import io
 import os
 import re
@@ -79,6 +80,10 @@ class Inventory(object):
         require(kinds.count('code') == 1 and kinds.count('defaults') == 1 and kinds.count('instructions') == 1,
                 'Missing or duplicate required modpack members')
         require(sum(entry['size'] for entry in self.files + self.defaults) <= MAX_TOTAL, 'Modpack exceeds limit')
+        self._document = copy.deepcopy(document)
+
+    def document(self):
+        return copy.deepcopy(self._document)
 
     def _entries(self, entries, defaults):
         require(isinstance(entries, list) and 0 < len(entries) <= MAX_FILES, 'Invalid inventory entries')
@@ -148,8 +153,10 @@ class Inventory(object):
         require(isinstance(owned, (list, tuple, set, frozenset)) and set(owned).issubset(old), 'Invalid ownership receipt')
         old = dict((path, entry) for path, entry in old.items() if path in owned)
         current = dict((item['path'], item) for item in self.files if item['kind'] in ('code', 'dependency'))
+        candidates = set(old) | set(current)
+        require(len(set(path.lower() for path in candidates)) == len(candidates), 'Case collision between old and new inventory')
         actions = []
-        for path in sorted(set(old) | set(current)):
+        for path in sorted(candidates):
             require(path in observed, 'Missing disk observation: ' + path)
             actual, before, after = observed[path], old.get(path), current.get(path)
             if actual is not None:

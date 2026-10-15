@@ -143,6 +143,7 @@ def generate(root, config, plan, tools, run):
                        '/out:' + str(destination)]
             command += ['/reference:' + reference for reference in spec['references']]
             command.append(str(input_path(root, spec['source'])))
+            command += [str(input_path(root, source)) for source in spec.get('additional_sources', [])]
             run_tool(command, run / 'logs' / (name + '.log'))
             binary = destination.read_bytes()
             require(binary.startswith(b'MZ') and len(binary) <= 256 * 1024, 'Invalid native helper: ' + name)
@@ -329,7 +330,6 @@ def build(args):
         release_manifest = dict(schema=1, version=version, channel=channel, gameVersion=config['game']['version'],
                                 file='Driftkings.wotmod', size=package.stat().st_size, sha256=sha(package),
                                 download='https://github.com/%s/releases/download/v%s/Driftkings.wotmod' % (release['repository'], version), changelog=changelog)
-        write_json(candidate / 'release.json', release_manifest)
         defaults = {item['target']: (root / item['source']).read_bytes() for item in plan['defaults']}
         zip_entries(candidate / 'Driftkings-defaults.zip', defaults, zipfile.ZIP_DEFLATED)
         distribution = {'mods/' + config['game']['version'] + '/Driftkings.wotmod': package.read_bytes(),
@@ -349,6 +349,8 @@ def build(args):
         zip_entries(candidate / ('Driftkings-%s-WoT-%s.zip' % (version, config['game']['version'])), distribution, zipfile.ZIP_DEFLATED)
         modpack = create_modpack(candidate, version, channel, config['game']['version'], defaults)
         write_json(candidate / 'modpack.json', modpack)
+        release_manifest.update(schema=2, modpack=modpack)
+        write_json(candidate / 'release.json', release_manifest)
         report['verification'] = run_worker(tools, run, dict(action='verify', package=str(package), manifest=str(candidate / 'release.json'),
                                                            modpack=str(candidate / 'modpack.json'),
                                                            version=version, channel=channel, game_version=config['game']['version'], components=components,

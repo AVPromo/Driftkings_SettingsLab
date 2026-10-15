@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
-"""Bounded, strict schema 1 release metadata. No IO or installation."""
+"""Bounded release metadata: legacy package or complete modpack. No IO."""
 import json
 import re
 from Driftkings.core.updater.versioning import Version, TEXT, normalize_game_version, game_key
 from Driftkings.core.updater.endpoints import validate_https
+from Driftkings.core.updater.inventory import Inventory
 
 MAX_MANIFEST = 64 * 1024
 MAX_PACKAGE = 64 * 1024 * 1024
 REQUIRED = frozenset(('schema', 'version', 'channel', 'gameVersion', 'file', 'size', 'sha256', 'download'))
-OPTIONAL = frozenset(('minGameVersion', 'maxGameVersion', 'changelog'))
+OPTIONAL = frozenset(('minGameVersion', 'maxGameVersion', 'changelog', 'modpack'))
 try:
     INTEGER = (int, long)
 except NameError:
@@ -40,8 +41,11 @@ class Manifest(object):
         try:
             if len(json.dumps(document, ensure_ascii=False).encode('utf-8')) > MAX_MANIFEST:
                 raise ValueError('Manifest exceeds limit')
-            if type(document['schema']) not in INTEGER or document['schema'] != 1:
+            if type(document['schema']) not in INTEGER or document['schema'] not in (1, 2):
                 raise ValueError('Unknown manifest schema')
+            self.schema = document['schema']
+            if (self.schema == 2) != ('modpack' in document):
+                raise ValueError('Manifest schema requires a complete modpack')
             self.version = Version(document['version'])
             self.channel = document['channel']
             if self.channel not in ('stable', 'beta') or not self.version.allowed(self.channel):
@@ -72,6 +76,20 @@ class Manifest(object):
             self.size = document['size']
             self.sha256 = document['sha256'].lower()
             self.download = document['download']
+            self.inventory = None
+            self.payload_size, self.payload_sha256 = self.size, self.sha256
+            if self.schema == 2:
+                self.inventory = Inventory(document['modpack'], self.version.text, self.channel, self.game_version)
+                code = next(item for item in self.inventory.files if item['kind'] == 'code')
+                if code['size'] != self.size or code['sha256'] != self.sha256:
+                    raise ValueError('Modpack code differs from release package')
+                # Code and distribution must be assets of the same release.
+                if not self.download.endswith('/Driftkings.wotmod'):
+                    raise ValueError('Invalid package asset URL')
+                self.download = self.download.rsplit('/', 1)[0] + '/' + self.inventory.distribution['file']
+                validate_https(self.download)
+                self.payload_size = self.inventory.distribution['size']
+                self.payload_sha256 = self.inventory.distribution['sha256']
         except (TypeError, KeyError, OverflowError) as error:
             raise ValueError('Invalid manifest types')
 
@@ -81,7 +99,13 @@ class Manifest(object):
 
     def compatible(self, client_version):
         normalized = normalize_game_version(client_version)
+        if self.inventory is not None and normalized != self.game_version:
+            return False
         return normalized is not None and game_key(self.minimum) <= game_key(normalized) <= game_key(self.maximum)
 
     def document(self):
-        return dict(schema=1, version=self.version.text, channel=self.channel, gameVersion=self.game_version, minGameVersion=self.minimum, maxGameVersion=self.maximum, file='Driftkings.wotmod', size=self.size, sha256=self.sha256, download=self.download, changelog=list(self.changelog))
+        download = self.download if self.inventory is None else self.download.rsplit('/', 1)[0] + '/Driftkings.wotmod'
+        document = dict(schema=self.schema, version=self.version.text, channel=self.channel, gameVersion=self.game_version, minGameVersion=self.minimum, maxGameVersion=self.maximum, file='Driftkings.wotmod', size=self.size, sha256=self.sha256, download=download, changelog=list(self.changelog))
+        if self.inventory is not None:
+            document['modpack'] = self.inventory.document()
+        return document

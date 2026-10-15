@@ -27,6 +27,7 @@ def prepare(folder):
     channel = 'beta' if version.prerelease else 'stable'
     require(manifest['version'] == version.text and manifest['channel'] == channel and report['channel'] == channel,
             'Version/channel mismatch')
+    require(manifest.get('schema') == 2, 'New releases must use the complete modpack updater contract')
     require(manifest['download'] == 'https://github.com/%s/releases/download/v%s/Driftkings.wotmod' % (release['repository'], version.text),
             'Unexpected release download URL')
     for name, item in report['artifacts'].items():

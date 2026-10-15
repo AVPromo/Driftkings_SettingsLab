@@ -9,7 +9,7 @@ import zipfile
 import xml.etree.ElementTree as ET
 
 from Driftkings import VERSION
-from Driftkings.core.updater.downloader import safe_directory, validate_package
+from Driftkings.core.updater.downloader import safe_directory, validate_package, validate_download
 from Driftkings.core.updater.manifest import Manifest, MAX_MANIFEST, bounded_json
 from Driftkings.core.updater.versioning import Version, TEXT, normalize_game_version
 
@@ -108,12 +108,19 @@ class Installer(object):
             raise ValueError('Stage outside owned cache')
         safe_file(ready)
         manifest = Manifest(read_json(os.path.join(folder, 'release.json')))
-        if (not manifest.compatible(client_version) or not manifest.version.allowed(channel) or
-                manifest.version <= Version(installed)):
+        pending = os.path.join(folder, 'install.json')
+        recovery = None
+        if os.path.isfile(pending) and manifest.inventory is not None:
+            from Driftkings.core.updater.modpack_transaction import validate_ticket
+            recovery = validate_ticket(read_json(pending), manifest)
+        newer = manifest.version > Version(installed)
+        if recovery is not None:
+            newer = installed in (recovery['installedVersion'], recovery['version'])
+        if (not manifest.compatible(client_version) or not manifest.version.allowed(channel) or not newer):
             raise ValueError('Incompatible update or downgrade')
-        if os.path.getsize(ready) != manifest.size or digest(ready) != manifest.sha256:
+        if os.path.getsize(ready) != manifest.payload_size or digest(ready) != manifest.payload_sha256:
             raise ValueError('Stage size/hash mismatch')
-        validate_package(ready, manifest.version.text)
+        validate_download(ready, manifest)
         return manifest
 
     def resources(self):
@@ -140,6 +147,11 @@ class Installer(object):
                  os.path.join(self.root, 'mods', normalize_game_version(client_version), 'Driftkings.wotmod'),
                  os.path.join(folder, RESTART))
         try:
+            ticket = read_json(ticket_path)
+            if ticket['schema'] == 2:
+                from Driftkings.core.updater.modpack_transaction import RECEIPT
+                paths += tuple(os.path.join(self.root, *item['path'].split('/')) for item in ticket['operations'])
+                paths += (os.path.join(self.cache, RECEIPT % ticket['gameVersion']), os.path.join(folder, 'journal.json'))
             return dict(args=captured[0][0], options=captured[0][1], created=[] if resume else [ticket_path, helper], paths=paths, signature=file_signature(paths), ticket=read_json(ticket_path), helperInfo=bounded_json(resources[INFO_RESOURCE]))
         except Exception:
             if not resume:
@@ -194,7 +206,7 @@ class Installer(object):
                     continue
                 manifest = self.validate_stage(ready, client_version, channel, installed)
                 candidates.append((manifest.version, ready))
-            except (ValueError, IOError, OSError, zipfile.BadZipfile, ET.ParseError):
+            except (ValueError, TypeError, KeyError, UnicodeError, IOError, OSError, zipfile.BadZipfile, ET.ParseError):
                 continue
         return max(candidates, key=lambda item: item[0])[1] if candidates else None
 
@@ -225,6 +237,9 @@ class Installer(object):
             raise ValueError('Local installer resource mismatch')
         helper = os.path.join(folder, 'Driftkings.UpdateInstaller.exe')
         ticket = dict(schema=1, gameVersion=game_version, version=manifest.version.text, size=manifest.size, sha256=manifest.sha256, installedVersion=installed, installedSize=os.path.getsize(target), installedSha256=digest(target))
+        if manifest.inventory is not None:
+            from Driftkings.core.updater.modpack_transaction import prepare
+            ticket = prepare(self.root, manifest, installed, ticket['installedSize'], ticket['installedSha256'])
         helper_created = False
         ticket_created = False
         try:
@@ -271,8 +286,15 @@ class Installer(object):
         manifest = self.validate_stage(ready, client_version, channel, installed)
         folder = os.path.dirname(os.path.abspath(ready))
         ticket = read_json(os.path.join(folder, 'install.json'))
+        if manifest.inventory is not None:
+            from Driftkings.core.updater.modpack_transaction import validate_ticket
+            validate_ticket(ticket, manifest)
+            if installed not in (ticket['installedVersion'], ticket['version']):
+                raise ValueError('Recovery belongs to another loaded version')
+            # Legacy field checks below use the original installed identity.
+            installed = ticket['installedVersion']
         keys = ('schema', 'gameVersion', 'version', 'size', 'sha256', 'installedVersion', 'installedSize', 'installedSha256')
-        if (not isinstance(ticket, dict) or set(ticket) != set(keys) or type(ticket['schema']) is not int or ticket['schema'] != 1 or
+        if manifest.inventory is None and (not isinstance(ticket, dict) or set(ticket) != set(keys) or type(ticket['schema']) is not int or ticket['schema'] != 1 or
                 ticket['gameVersion'] != normalize_game_version(client_version) or
                 ticket['version'] != manifest.version.text or ticket['size'] != manifest.size or
                 ticket['sha256'] != manifest.sha256 or ticket['installedVersion'] != installed or

@@ -1319,6 +1319,7 @@ PANEL = {'actionFailed': 'Hành động này không thành công. Xem game.log.'
  'updates.lastCheck': 'Kiểm tra lần cuối',
  'updates.later': 'Sau đó',
  'updates.latest': 'Đã có phiên bản mới',
+ 'updates.manual': 'Cài đặt thủ công',
  'updates.never': 'Không bao giờ',
  'updates.notChecked': 'Chưa có kiểm tra cập nhật nào được thực hiện.',
  'updates.restartBlocked': 'Khởi động lại không có sẵn. Kiểm tra trạng thái máy khách và lưu mọi chỉnh sửa '

@@ -1396,6 +1396,7 @@ PANEL = {'actionFailed': "L'action a échoué. Voir game.log.",
  'updates.lastCheck': 'Dernière vérification',
  'updates.later': 'Plus tard',
  'updates.latest': 'Nouvelle version disponible',
+ 'updates.manual': 'Installation manuelle',
  'updates.never': 'Jamais',
  'updates.notChecked': "Aucune vérification de mise à jour n'a encore été effectuée.",
  'updates.restartBlocked': "Le redémarrage n'est pas disponible. Vérifiez l'état du client et enregistrez "

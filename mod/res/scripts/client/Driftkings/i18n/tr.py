@@ -1329,6 +1329,7 @@ PANEL = {'actionFailed': "Eylem başarısız oldu. game.log'ye bakın.",
  'updates.lastCheck': 'Son kontrol',
  'updates.later': 'Daha sonra',
  'updates.latest': 'Yeni sürüm mevcut',
+ 'updates.manual': 'Elle kurulum',
  'updates.never': 'Asla',
  'updates.notChecked': 'Henüz güncelleme kontrolü yapılmadı.',
  'updates.restartBlocked': 'Yeniden başlatma kullanılamıyor. İstemci durumunu kontrol edin ve bekleyen '

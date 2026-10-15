@@ -371,7 +371,7 @@ Estado: implementação concluída; validação no cliente fica para o fim, conf
 
 ### Fase 5 — Fechar instalação e atualização do modpack
 
-Estado: em curso, dividida em contrato/inventário (5.1) e transação completa (5.2).
+Estado: implementação local das etapas 5.1 e 5.2 concluída; validação no jogo fica para o fim.
 
 Etapa 5.1 implementada:
 
@@ -399,11 +399,45 @@ Etapa 5.1 implementada:
   a promoção concluiu num processo separado após revalidar fontes, artefactos
   e recursos gerados. A causa do bloqueio continua por identificar.
 
-Próxima etapa 5.2: ligar o inventário ao download e ao instalador nativo, estabelecer
-o recibo de propriedade efetivamente instalada, aplicar código/dependências numa
-transação recuperável após fechar o jogo e verificar todos os ficheiros no arranque.
-O planeador não instala ficheiros; a fase 5 ainda não cumpre o critério de aceitação
-até essa ligação e os cenários de falha/recuperação estarem validados.
+Etapa 5.2 implementada:
+
+- `release.json` schema 2 incorpora o inventário, mantendo o hash do WOTMOD e
+  acrescentando o contrato do ZIP completo. Download/progresso usam o tamanho
+  da distribuição; READY exige hashes, inventários e identidade do código válidos.
+  A leitura de schema 1 continua disponível para os caches anteriores.
+- Preparação de tickets inclui observações de disco, operações e propriedade.
+  Dependências iguais já existentes ficam partilhadas; ficheiros alterados sem
+  prova de propriedade bloqueiam a substituição. Configurações ficam excluídas.
+  Após instalação manual de outra versão, recibos antigos deixam de provar
+  propriedade; a migração valida o código atual e preserva dependências partilhadas.
+- `ModpackInstaller.cs` aplica dependências antes do código, guarda backups e
+  escreve o recibo `ownership.<game>.json` por último. Um journal durável distingue
+  aplicação pendente, commit e rollback. Falhas/interrupções restauram os bytes
+  anteriores; backups/targets ambíguos são preservados e a recuperação é recusada.
+- O helper distribuído mantém a espera pelo processo WoT validado, recusa outra
+  instância ativa e revalida ticket/ficheiros antes da mutação. Recuperação pode
+  ser preparada mesmo quando o código novo já foi carregado parcialmente.
+- No arranque seguinte, sucesso exige VERSION carregada, hashes de código e
+  dependências e recibo de propriedade coincidentes; não basta o estado instalado
+  no result.json. Ficheiros obsoletos que perderam propriedade ficam independentes.
+- Painel distingue download de instalação e inclui acesso à página oficial de
+  releases para instalação manual, traduzido nas 18 línguas.
+- Publicação exige schema 2 e inventário incorporado igual ao ficheiro separado.
+  Beta/RC são prereleases; stable exige versão final e nova build do commit revisto.
+  Preview não publica; publicação explícita usa draft por omissão e checkout limpo.
+- Passaram 118 verificações locais: 97 das etapas anteriores e 21 cenários de
+  integração Python 2.7/C#, incluindo sucesso, rollback, repetição, interrupção,
+  backup corrompido, ficheiros partilhados, remoções e verificação no arranque.
+  A cópia de teste do helper simula apenas a guarda do processo e restringe IO
+  a build; transações usam o código C# real em diretórios temporários.
+  O fecho/reabertura do cliente real continua reservado à validação final.
+  A guarda NoGame do binário de produção foi também exercitada apenas em leitura:
+  recusou a instalação enquanto o cliente real estava aberto.
+- Build protegida `0.1.2-beta.1+transaction` verificada: 252 módulos Python,
+  Flash, 171 recursos, 48 defaults e duas dependências. Schema 2 e inventário
+  foram carregados pelo Python 2.7 do pacote. Preview validou nove assets, sem
+  publicação. A promoção da pasta exigiu o mesmo processo separado da etapa 5.1,
+  com revalidação de fontes, artefactos e recursos gerados antes da promoção.
 
 - Expandir o manifesto de um .wotmod para inventário completo de componentes e dependências.
 - Ligar versão/canal/compatibilidade/hashes aos artefactos emitidos pelo compilador.
@@ -450,7 +484,7 @@ finais de novos módulos serão fixados ao migrar os seus consumidores.
 
 ### Regras de execução
 
-- Próximo trabalho: fase 5.2, transação de instalação e atualização do modpack. Por indicação do utilizador,
+- Próximo trabalho: fase 6, medição, otimização e estabilização. Por indicação do utilizador,
   a validação em jogo será realizada apenas no fim da reorganização.
 - Migrar por conjuntos funcionais verificáveis; remover a camada obsoleta quando os seus
   consumidores estiverem migrados, sem manter uma segunda arquitetura permanente.

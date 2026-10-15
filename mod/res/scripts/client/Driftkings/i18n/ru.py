@@ -1346,6 +1346,7 @@ PANEL = {'actionFailed': 'Акция провалилась. См. game.log.',
  'updates.lastCheck': 'Последняя проверка',
  'updates.later': 'Позже',
  'updates.latest': 'Доступна новая версия',
+ 'updates.manual': 'Ручная установка',
  'updates.never': 'Никогда',
  'updates.notChecked': 'Проверка обновлений еще не проводилась.',
  'updates.restartBlocked': 'Перезапуск недоступен. Проверьте состояние клиента и сохраните все ожидающие '

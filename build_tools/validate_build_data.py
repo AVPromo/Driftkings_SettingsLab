@@ -278,6 +278,9 @@ def build_plan(root=ROOT, check_generated=False, check_game=False, check_compone
                 apply_patch_set(raw, patch)
         elif spec['kind'] == 'csharp':
             require(input_path(root, spec['source']).is_file(), 'Missing C# source: %s' % spec['source'])
+            require(isinstance(spec.get('additional_sources', []), list), 'Invalid additional C# sources')
+            for source in spec.get('additional_sources', []):
+                require(input_path(root, source).is_file(), 'Missing additional C# source: ' + source)
             input_path(root, spec['metadata'])
             require(isinstance(spec['references'], list), 'Invalid C# references')
         else:

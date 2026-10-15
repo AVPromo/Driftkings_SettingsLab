@@ -1378,6 +1378,7 @@ PANEL = {'actionFailed': 'La acción fracasó. Ver game.log.',
  'updates.lastCheck': 'último control',
  'updates.later': 'Más tarde',
  'updates.latest': 'Nueva versión disponible',
+ 'updates.manual': 'Instalación manual',
  'updates.never': 'Nunca',
  'updates.notChecked': 'Aún no se ha realizado ninguna verificación de actualización.',
  'updates.restartBlocked': 'El reinicio no está disponible. Verifique el estado del cliente y guarde las '

@@ -165,6 +165,12 @@ class Presenter(object):
         if updater is None or not updater.download():
             raise ValueError('Update download unavailable')
 
+    def _on_manual_update(self, data, result):
+        import BigWorld
+        from Driftkings.core.updater.endpoints import REPOSITORY
+        # Fixed official page, never a URL supplied by the panel or a manifest.
+        BigWorld.wg_openWebBrowser('https://github.com/' + REPOSITORY + '/releases')
+
     def _on_cancel_update_download(self, data, result):
         updater = getattr(self.api, 'updater', None)
         if updater is None:

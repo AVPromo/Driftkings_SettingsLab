@@ -1244,6 +1244,7 @@ PANEL = {'actionFailed': 'การดำเนินการล้มเหล
  'updates.lastCheck': 'ตรวจสอบครั้งสุดท้าย',
  'updates.later': 'ภายหลัง',
  'updates.latest': 'มีเวอร์ชันใหม่แล้ว',
+ 'updates.manual': 'ติดตั้งด้วยตนเอง',
  'updates.never': 'ไม่เคย',
  'updates.notChecked': 'ยังไม่มีการตรวจสอบการอัพเดต',
  'updates.restartBlocked': 'การรีสตาร์ทไม่พร้อมใช้งาน ตรวจสอบสถานะไคลเอ็นต์และบันทึกการแก้ไขที่ค้างอยู่',

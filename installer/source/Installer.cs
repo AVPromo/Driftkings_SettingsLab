@@ -14,7 +14,7 @@ using System.Threading;
 using System.Web.Script.Serialization;
 using System.Xml;
 
-internal static class Installer
+internal static partial class Installer
 {
     [DllImport("kernel32.dll", SetLastError = true)]
     static extern IntPtr OpenProcess(uint access, bool inherit, int pid);
@@ -137,6 +137,11 @@ internal static class Installer
         Safe(path, true);
         Require(new FileInfo(path).Length <= 65536, "Ticket exceeds limit");
         var value = Json.Deserialize<Dictionary<string, object>>(File.ReadAllText(path, Encoding.UTF8));
+        if (value != null && value.ContainsKey("schema") && value["schema"] is int && (int)value["schema"] == 2)
+        {
+            ValidateModpackTicket(value);
+            return value;
+        }
         string[] keys = { "schema", "gameVersion", "version", "size", "sha256", "installedVersion", "installedSize", "installedSha256" };
         Require(value.Count == keys.Length, "Invalid ticket fields");
         foreach (var key in keys) Require(value.ContainsKey(key), "Missing ticket field");
@@ -304,13 +309,17 @@ internal static class Installer
             {
                 owned = true;
                 var ticket = Ticket();
+                string ticketPath = Path.Combine(stage, "install.json");
+                string ticketHash;
+                using (var input = File.OpenRead(ticketPath)) ticketHash = Hash(input);
                 string readyPath = Path.Combine(stage, "Driftkings.wotmod.ready"); Safe(readyPath, true);
                 bool restart;
                 int outcome;
                 using (var ready = new FileStream(readyPath, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     Require(ready.Length == (int)ticket["size"] && Hash(ready) == (string)ticket["sha256"], "Staged package mismatch", "stagedPackageMismatch");
-                    Package(ready, (string)ticket["version"]);
+                    if ((int)ticket["schema"] == 2) ValidateDistribution(ready, ticket);
+                    else Package(ready, (string)ticket["version"]);
                     Result("prepared", null);
                     // Cooperative cancellation for unconfirmed preparation or
                     // a timeout. No permanent client-side loop is introduced.
@@ -326,7 +335,8 @@ internal static class Installer
                     Safe(cancel, false);
                     if (File.Exists(cancel)) { Result("cancelled", null); return 3; }
                     restart = RestartRequested(pid);
-                    outcome = Apply(root, ticket, ready);
+                    using (var input = File.OpenRead(ticketPath)) Require(Hash(input) == ticketHash, "Ticket changed during wait");
+                    outcome = (int)ticket["schema"] == 2 ? ApplyModpack(root, ticket, ready) : Apply(root, ticket, ready);
                 }
                 // Publish/flush final result and release transaction handles first.
                 gate.Dispose(); gate = null;

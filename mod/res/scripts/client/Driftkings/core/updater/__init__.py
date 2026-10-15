@@ -262,7 +262,7 @@ class UpdaterService(object):
             if kind == 'verifying':
                 self.state.update(status=VERIFYING, downloadPercent=100)
             elif kind == 'bytes':
-                self.state.update(downloadPercent=min(100, int(value * 100 // manifest.size)))
+                self.state.update(downloadPercent=min(100, int(value * 100 // manifest.payload_size)))
         def completed(path, error):
             if not self.active or generation != self._generation:
                 return

@@ -1208,6 +1208,7 @@ PANEL = {'actionFailed': '작업이 실패했습니다. game.log을 참조하세
  'updates.lastCheck': '마지막 확인',
  'updates.later': '나중에',
  'updates.latest': '새 버전 사용 가능',
+ 'updates.manual': '수동 설치',
  'updates.never': '절대',
  'updates.notChecked': '아직 업데이트 확인이 수행되지 않았습니다.',
  'updates.restartBlocked': '다시 시작할 수 없습니다. 클라이언트 상태를 확인하고 보류 중인 편집 내용을 저장하세요.',
