@@ -1,6 +1,11 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/battle/battle_stat.pyc": "build/staging/res/scripts/client/Driftkings/battle/battle_stat.pyc"
-    }
+  "schema_version": 1,
+  "id": "BattleStat",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.battle_stat",
+  "config_files": [
+    "default/battle_stat.json"
+  ],
+  "assets": []
 }

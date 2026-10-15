@@ -75,6 +75,8 @@ Native game icon macros: `{{icon:damage}}`, `{{icon:assist}}`, `{{icon:blocked}}
 
 A custom icon can use `gui/maps/icons/MyIcons/damage.png` or `coui://gui/maps/icons/MyIcons/damage.png`. The resource must already exist in the client or be supplied by a resource mod. Web URLs and executable URLs are not loaded. Missing images are hidden.
 
+Built-in carousel icons use `gui/maps/Driftkings/Carroucel/` and are packaged under `res/gui/maps/Driftkings/Carroucel/` in `Driftkings.wotmod`. Python reads them through `ResMgr` and sends PNG data to Gameface, preserving filenames containing `#`. Legacy `mods/Driftkings/Carroucel/` references resolve to these packaged resources; loose files in the game directory are no longer read as overrides.
+
 ## Implementation and validation
 
 - Python: `source/scripts/client/gui/mods/mod_CarouselStats.py`.

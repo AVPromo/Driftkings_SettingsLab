@@ -1,11 +1,115 @@
 {
-  "game_version": "2.4.1.0",
-  "game_root": "D:/Games/World_of_Tanks_EU",
-  "ui_dependency_directory": "build/dependencies/2.4.1",
-  "ui_dependency_files": [
-    "me.poliroid.modslistapi_1.8.0.wotmod",
-    "net.openwg.gameface_1.2.2.wotmod"
-  ],
-  "reference_source_version": "2.4.1.5488",
-  "reference_source": "E:\\Wot_Mods_\\Drift_Kings_ModPack\\WoT_Tools\\wot-src-EU"
+  "schema_version": 1,
+  "game": {
+    "version": "2.4.1.0",
+    "realm": "NA",
+    "root": "D:/Games/World_of_Tanks_NA"
+  },
+  "reference": {
+    "version": "2.4.1.5488",
+    "root": "E:/Wot_Mods_/Drift_Kings_ModPack/WoT_Tools/wot-src-EU",
+    "read_only": true
+  },
+  "package": {
+    "name": "Driftkings.wotmod",
+    "output": "build/unified/Driftkings.wotmod",
+    "compression": "stored",
+    "release_root": "build/releases",
+    "debug_root": "build/debug"
+  },
+  "components": {
+    "directory": "build_data/components",
+    "pattern": "*.json"
+  },
+  "python": {
+    "version": "2.7",
+    "source_root": "mod/res/scripts/client",
+    "staging_root": "build/staging/res/scripts/client",
+    "archive_root": "res/scripts/client",
+    "include": [
+      "**/*.py"
+    ],
+    "entrypoint": "gui/mods/mod_Driftkings.py",
+    "component_list": "Driftkings/component_list.py",
+    "optimize": 0
+  },
+  "assets": {
+    "exclude": [
+      "**/README.md",
+      "**/__pycache__/**",
+      "**/*.pyc",
+      "**/*.bak"
+    ]
+  },
+  "defaults": {
+    "source_root": "res/configs/Driftkings",
+    "install_root": "mods/configs/Driftkings",
+    "include": [
+      "load.json",
+      "default/**/*.json"
+    ],
+    "install_policy": "missing_only",
+    "in_wotmod": false
+  },
+  "ui_dependencies": {
+    "directory": "res/wotmods",
+    "files": [
+      {
+        "name": "me.poliroid.modslistapi_1.8.0.wotmod",
+        "sha256": "c6e4a1d9476b0195c3b4fab392cf5d68c00f1d02fd79e29bd7424ebda88b498c"
+      },
+      {
+        "name": "net.openwg.gameface_1.2.2.wotmod",
+        "sha256": "2bb65f28663e3ab34b5a1102a1bbd1f6e17a65e1f6a898a8645c4ab732b50184"
+      }
+    ]
+  },
+  "generators": {
+    "battle_flash": {
+      "kind": "flash",
+      "entrypoint": "flash_source/battle/src/DriftkingsBattle.as",
+      "source_paths": [
+        "flash_source/battle/src",
+        "flash_source/shared/as3"
+      ],
+      "library_manifest": "flash_source/shared/swc/manifest.json",
+      "output": "build/flash/DriftkingsBattle.swf",
+      "target_player": "11.1",
+      "swf_version": 14,
+      "width": 1024,
+      "height": 768,
+      "fps": 30
+    },
+    "carousel_bridge": {
+      "kind": "gameface_patch",
+      "resource": "gui/gameface/_dist/production/mono/hangar/main/bundle.js",
+      "game_packages": [
+        "res/packages/gui-part1.pkg",
+        "res/packages/gui-part2.pkg",
+        "res/packages/gui-part3.pkg",
+        "res/packages/gui-part4.pkg"
+      ],
+      "output": "build/gameface/carousel/bundle.js",
+      "implementation": "replace_exact",
+      "required": true,
+      "patch_file": "build_data/patches/carousel_2.4.1.json"
+    },
+    "updater_helper": {
+      "kind": "csharp",
+      "source": "installer/source/Installer.cs",
+      "output": "build/native/updater/Driftkings.UpdateInstaller.exe",
+      "metadata": "build/native/updater/helper.json",
+      "references": [
+        "System.Web.Extensions.dll",
+        "System.IO.Compression.dll"
+      ]
+    },
+    "windows_files_helper": {
+      "kind": "csharp",
+      "source": "installer/source/WindowsFiles.cs",
+      "output": "build/native/windows-files/Driftkings.WindowsFiles.exe",
+      "metadata": "build/native/windows-files/helper.json",
+      "references": []
+    }
+  }
 }

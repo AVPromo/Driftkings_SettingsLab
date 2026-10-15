@@ -1,6 +1,11 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/battle/auto_aim.pyc": "build/staging/res/scripts/client/Driftkings/battle/auto_aim.pyc"
-    }
+  "schema_version": 1,
+  "id": "AutoAimOptimize",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.auto_aim",
+  "config_files": [
+    "default/auto_aim_optimize.json"
+  ],
+  "assets": []
 }

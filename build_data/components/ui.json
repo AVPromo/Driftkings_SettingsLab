@@ -1,15 +1,45 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/ui/__init__.pyc": "build/staging/res/scripts/client/Driftkings/ui/__init__.pyc",
-        "res/scripts/client/Driftkings/ui/common/__init__.pyc": "build/staging/res/scripts/client/Driftkings/ui/common/__init__.pyc",
-        "res/scripts/client/Driftkings/ui/common/events.pyc": "build/staging/res/scripts/client/Driftkings/ui/common/events.pyc",
-        "res/scripts/client/Driftkings/ui/common/markers.pyc": "build/staging/res/scripts/client/Driftkings/ui/common/markers.pyc",
-        "res/scripts/client/Driftkings/ui/utils/__init__.pyc": "build/staging/res/scripts/client/Driftkings/ui/utils/__init__.pyc",
-        "res/scripts/client/Driftkings/ui/utils/timers.pyc": "build/staging/res/scripts/client/Driftkings/ui/utils/timers.pyc",
-        "res/scripts/client/Driftkings/ui/utils/vehicle_cache.pyc": "build/staging/res/scripts/client/Driftkings/ui/utils/vehicle_cache.pyc",
-        "res/scripts/client/Driftkings/ui/gameface.pyc": "build/staging/res/scripts/client/Driftkings/ui/gameface.pyc",
-        "res/gui/gameface/mods/Driftkings/shared/bootstrap.js": "mod/res/gui/gameface/mods/Driftkings/shared/bootstrap.js",
-        "res/gui/gameface/mods/Driftkings/shared/marks_tokens.css": "mod/res/gui/gameface/mods/Driftkings/shared/marks_tokens.css"
+  "schema_version": 1,
+  "id": "ui",
+  "kind": "shared",
+  "enabled": true,
+  "entrypoint": null,
+  "config_files": [],
+  "assets": [
+    {
+      "source": "build/native/updater/Driftkings.UpdateInstaller.exe",
+      "target": "res/gui/Driftkings/updater/Driftkings.UpdateInstaller.exe",
+      "generator": "updater_helper"
+    },
+    {
+      "source": "build/native/updater/helper.json",
+      "target": "res/gui/Driftkings/updater/helper.json",
+      "generator": "updater_helper"
+    },
+    {
+      "source": "build/native/windows-files/Driftkings.WindowsFiles.exe",
+      "target": "res/gui/Driftkings/windows-files/Driftkings.WindowsFiles.exe",
+      "generator": "windows_files_helper"
+    },
+    {
+      "source": "build/native/windows-files/helper.json",
+      "target": "res/gui/Driftkings/windows-files/helper.json",
+      "generator": "windows_files_helper"
+    },
+    {
+      "source": "build/flash/DriftkingsBattle.swf",
+      "target": "res/gui/flash/DriftkingsBattle.swf",
+      "generator": "battle_flash"
+    },
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/shared/bootstrap.js",
+      "target": "res/gui/gameface/mods/Driftkings/shared/bootstrap.js",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/shared/marks_tokens.css",
+      "target": "res/gui/gameface/mods/Driftkings/shared/marks_tokens.css",
+      "generator": null
     }
+  ]
 }

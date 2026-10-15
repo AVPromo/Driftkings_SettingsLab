@@ -1,30 +1,39 @@
 {
+  "background": true,
+  "colorRating": 0,
+  "compareValuesColor": {
+    "bestValue": "#90EE90",
+    "worstValue": "#FFBCAD"
+  },
+  "enabled": true,
+  "format": "{header}: {allyChance} {compareSign} {enemyChance}",
+  "textFormat": {
+    "bold": false,
+    "color": "#DBD7D2",
+    "font": "$FieldFont",
+    "italic": false,
+    "size": 16
+  },
+  "textLock": false,
+  "textPosition": {
+    "alignX": "right",
+    "alignY": "top",
+    "alpha": 1.0,
+    "border": false,
+    "drag": true,
+    "visible": true,
+    "x": -250,
+    "y": 443
+  },
+  "textShadow": {
+    "alpha": 1,
+    "angle": 90,
+    "blurX": 2,
+    "blurY": 2,
+    "color": "#000000",
+    "distance": 0,
     "enabled": true,
-    "format": "{header}: {allyChance} {compareSign} {enemyChance}",
-    "textLock": false,
-    "textPosition": {
-        "alignX": "right",
-        "alignY": "top",
-        "x": -250,
-        "y": 443
-    },
-    "textShadow": {
-        "enabled": true,
-        "distance": 0,
-        "angle": 90,
-        "color": "#000000",
-        "alpha": 1,
-        "blurX": 2,
-        "blurY": 2,
-        "strength": 100,
-        "quality": 1
-    },
-    "textFormat": {
-        "font": "$FieldFont",
-        "size": 16,
-        "bold": false,
-        "italic": false,
-        "color": "#DBD7D2"
-    },
-    "colorRating": 0
+    "quality": 1,
+    "strength": 100
+  }
 }

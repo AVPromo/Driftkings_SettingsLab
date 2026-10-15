@@ -1,52 +1,55 @@
 {
-  "enabled": true,
-  "minimapSchema": 1,
-  "permanentMinimapDeath": false,
-  "yaw": true,
-  "showNames": true,
-  "viewRadius": true,
-  "zoomFactor": 1.1,
-  "zoomFactorMax": 2.0,
-  "button": [
-    "KEY_LCONTROL"
-  ],
   "alpha": 90,
+  "artilleryAim": {
+    "alpha": 100,
+    "enabled": true,
+    "scale": 50,
+    "src": "gui/maps/Driftkings/Minimap/MinimapAim_0.png"
+  },
+  "button": [
+    [
+      "KEY_LSHIFT",
+      "KEY_RSHIFT"
+    ]
+  ],
   "changeColorCircles": true,
   "colorDrawCircle": "2B28D1",
   "colorMaxViewCircle": "E02810",
   "colorMinSpottingCircle": "35DE46",
   "colorViewCircle": "FF7FFF",
-  "showLastPositions": true,
-  "lastPositionDuration": 30,
-  "showVehicleTypes": true,
+  "enabled": true,
   "icons": {
-    "scale": 1.0,
     "alpha": 100,
-    "selfScale": 1.0,
+    "scale": 1.0,
     "selfAlpha": 100,
-    "selfColor": "FFFFFF"
+    "selfColor": "FFFFFF",
+    "selfScale": 1.0
   },
+  "lastPositionDuration": 30,
   "mapSize": {
-    "enabled": false,
-    "x": 5,
-    "y": 5,
-    "fontSize": 11,
     "color": "FFFFFF",
-    "format": "{{width}} x {{height}} m"
+    "enabled": false,
+    "fontSize": 11,
+    "format": "{{width}} x {{height}} m",
+    "x": 5,
+    "y": 5
   },
-  "artilleryAim": {
-    "enabled": true,
-    "scale": 50,
-    "src": "gui/maps/Driftkings/Minimap/MinimapAim_0.png",
-    "alpha": 100
-  },
+  "minimapSchema": 1,
+  "permanentMinimapDeath": false,
   "presentation": {
+    "alternativeAlpha": 100,
     "alternativeEnabled": true,
-    "zoom": true,
-    "center": true,
-    "sizeIndex": 5,
     "backgroundAlpha": 100,
+    "center": true,
     "normalAlpha": 100,
-    "alternativeAlpha": 100
-  }
+    "sizeIndex": 5,
+    "zoom": true
+  },
+  "showLastPositions": true,
+  "showNames": false,
+  "showVehicleTypes": true,
+  "viewRadius": true,
+  "yaw": true,
+  "zoomFactor": 1.1,
+  "zoomFactorMax": 2.0
 }

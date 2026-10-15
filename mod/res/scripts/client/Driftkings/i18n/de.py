@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+# Catalog completed from en.py; machine-translated additions need native review.
+
 TEXT = {'AccountManager': {'UI_description': 'AccountManager',
-                    'UI_setting_email': 'E-Mail',
-                    'UI_setting_password': 'Passwort',
-                    'UI_setting_empty': 'Keine gespeicherten Konten.',
-                    'UI_setting_keepPassword': 'Leer lassen, um das gespeicherte Passwort zu behalten.',
-                    'UI_setting_loginOnly': 'Wähle ein Konto auf dem Anmeldebildschirm.',
-                    'UI_setting_error': 'Die Aktion konnte nicht abgeschlossen werden.',
                     'UI_setting_acceptDeleteAccount': 'Akzeptieren Sie das Löschen des Kontos',
                     'UI_setting_accountDelete': 'Konto löschen',
                     'UI_setting_accountManager': 'Account Manager',
@@ -17,9 +13,15 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                     'UI_setting_delete': 'Löschen',
                     'UI_setting_deleteAccount': "<font color='#FF4500' size='18'>Löschen</font>",
                     'UI_setting_edit': "<font color='#9ACD32' size='18'>Bearbeiten</font>",
+                    'UI_setting_email': 'E-Mail',
+                    'UI_setting_empty': 'Keine gespeicherten Konten.',
                     'UI_setting_enter': "<font color='#FFFF33' size='18'>Treten Sie ein</font>",
+                    'UI_setting_error': 'Die Aktion konnte nicht abgeschlossen werden.',
+                    'UI_setting_keepPassword': 'Leer lassen, um das gespeicherte Passwort zu behalten.',
+                    'UI_setting_loginOnly': 'Wähle ein Konto auf dem Anmeldebildschirm.',
                     'UI_setting_manageYourAccount': 'Verwalten Sie Ihr Konto',
                     'UI_setting_nick': 'Nick:',
+                    'UI_setting_password': 'Passwort',
                     'UI_setting_save': 'Speichern',
                     'UI_setting_server': 'Server:',
                     'UI_setting_showPassword': 'Passwort anzeigen'},
@@ -32,8 +34,9 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                   'UI_setting_horizontal_5': 'Achteck',
                   'UI_setting_horizontal_6': 'ktulho',
                   'UI_setting_horizontal_text': 'Horizontaler Markierungstyp',
-                  'UI_setting_horizontal_tooltip': 'Art von Markierungen links und rechts vom Fadenkreuz, die die '
-                                                   'horizontalen Kantenpositionen Ihrer Waffe anzeigen.\n'
+                  'UI_setting_horizontal_tooltip': 'Art von Markierungen links und rechts vom Fadenkreuz, '
+                                                   'die die horizontalen Kantenpositionen Ihrer Waffe '
+                                                   'anzeigen.\n'
                                                    '\n'
                                                    "<img src='img://gui/AimingAngles/1/Left.png'> <img "
                                                    "src='img://gui/AimingAngles/1/Right.png'>\t<img "
@@ -55,8 +58,8 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                   'UI_setting_vertical_5': 'Achteck',
                   'UI_setting_vertical_6': 'ktulho',
                   'UI_setting_vertical_text': 'Vertikaler Markierungstyp',
-                  'UI_setting_vertical_tooltip': 'Art der Markierungen über und unter dem Fadenkreuz, die die '
-                                                 'vertikalen Kantenpositionen Ihrer Waffe anzeigen.\n'
+                  'UI_setting_vertical_tooltip': 'Art der Markierungen über und unter dem Fadenkreuz, die '
+                                                 'die vertikalen Kantenpositionen Ihrer Waffe anzeigen.\n'
                                                  '\n'
                                                  "<img src='img://gui/AimingAngles/1/Bottom.png'>\t<img "
                                                  "src='img://gui/AimingAngles/2/Bottom.png'>\t<img "
@@ -113,7 +116,7 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                      'UI_setting_disableArtyMode_tooltip': ''},
  'AutoClaimClan': {'UI_description': 'AutoClaimClan',
                    'UI_setting_enabled_text': 'Aktiviert',
-                   'UI_setting_enabled_tooltip': 'Enable/disable the mod.'},
+                   'UI_setting_enabled_tooltip': 'Aktivieren/deaktivieren Sie den Mod.'},
  'BanksLoader': {'UI_description': 'BanksLoader',
                  'UI_restart_button_close': 'Weiter',
                  'UI_restart_button_restart': 'Neustart',
@@ -178,8 +181,8 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                    'UI_setting_color_text': "<font color='#%(color)s'>Aktuelle Farbe: #%(color)s</font>",
                    'UI_setting_color_tooltip': 'Diese Farbe wird auf alle Karten angewendet',
                    'UI_setting_directivesOnlyFromStorage_text': 'Anweisungen nur aus dem Speicher',
-                   'UI_setting_directivesOnlyFromStorage_tooltip': 'Deaktivieren Sie überschreibende Anweisungen '
-                                                                   'aus dem Speicher.',
+                   'UI_setting_directivesOnlyFromStorage_tooltip': 'Deaktivieren Sie überschreibende '
+                                                                   'Anweisungen aus dem Speicher.',
                    'UI_setting_disableSoundCommander_text': 'Deaktivieren Sie Sound Commander',
                    'UI_setting_disableSoundCommander_tooltip': 'Deaktiviere Sound Commander im Kampf.',
                    'UI_setting_hideBadges_text': 'Abzeichen ausblenden',
@@ -198,15 +201,16 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                    'UI_setting_maxChatLines_text': 'Max. Chat-Linien',
                    'UI_setting_maxChatLines_tooltip': 'Begrenzen Sie die Anzahl der Kampf-Chatzeilen.',
                    'UI_setting_muteTeamBaseSound_text': 'Ton der Teambasis stumm schalten',
-                   'UI_setting_muteTeamBaseSound_tooltip': 'Deaktivieren Sie den Sound der Teambasis, wenn diese '
-                                                           'Option aktiviert ist.',
+                   'UI_setting_muteTeamBaseSound_tooltip': 'Deaktivieren Sie den Sound der Teambasis, wenn '
+                                                           'diese Option aktiviert ist.',
                    'UI_setting_postmortemTips_text': 'Postmortem-Tipps ausblenden',
-                   'UI_setting_postmortemTips_tooltip': 'Deaktivieren Sie das Popup-Panel unten nach dem Tod.',
+                   'UI_setting_postmortemTips_tooltip': 'Deaktivieren Sie das Popup-Panel unten nach dem '
+                                                        'Tod.',
                    'UI_setting_showAnonymous_text': 'Anonym anzeigen',
                    'UI_setting_showAnonymous_tooltip': '„Anonymer“ Name im Spielerbereich anzeigen.',
                    'UI_setting_showBattleHint_text': 'Flugbahnansicht ausblenden.',
-                   'UI_setting_showBattleHint_tooltip': 'Verstecken Sie die Tipps zum Ändern des Zielmodus im '
-                                                        'strategischen Modus.',
+                   'UI_setting_showBattleHint_tooltip': 'Verstecken Sie die Tipps zum Ändern des Zielmodus '
+                                                        'im strategischen Modus.',
                    'UI_setting_showFriends_text': 'Freunde anzeigen',
                    'UI_setting_showFriends_tooltip': 'Freunde im Spielerbereich anzeigen.',
                    'UI_setting_showPlayerSatisfactionWidget_text': 'Widget zur Spielerzufriedenheit anzeigen',
@@ -223,8 +227,8 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                 'UI_setting_format_text': 'Textformat',
                 'UI_setting_format_tooltip': 'Legt das Format des Textes fest',
                 'UI_setting_teamChances_text': 'Zeigen Sie Teamchancen auf',
-                'UI_setting_teamChances_tooltip': 'Zeigt den Prozentsatz der Siegchance für jedes Team während '
-                                                  'des Kampfes an'},
+                'UI_setting_teamChances_tooltip': 'Zeigt den Prozentsatz der Siegchance für jedes Team '
+                                                  'während des Kampfes an'},
  'CarouselStats': {'UI_description': 'CarouselStats',
                    'UI_setting_colorRating_text': 'Farbtabelle',
                    'UI_setting_showIcons_text': 'Symbole anzeigen'},
@@ -232,24 +236,26 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                   'UI_message_crewNotAvailable': 'Die Besatzung steht für eine Rückgabe nicht zur Verfügung',
                   'UI_message_crewReturned': 'Die Besatzung wurde zum Fahrzeug zurückgebracht',
                   'UI_setting_autoReturnDelay_text': 'Automatische Rückkehrverzögerung (Sekunden)',
-                  'UI_setting_autoReturnDelay_tooltip': 'Verzögerung vor der automatischen Rückkehr der Besatzung',
+                  'UI_setting_autoReturnDelay_tooltip': 'Verzögerung vor der automatischen Rückkehr der '
+                                                        'Besatzung',
                   'UI_setting_crewAutoReturn_text': 'Automatische Rückkehr der Besatzung',
-                  'UI_setting_crewAutoReturn_tooltip': 'Bringen Sie die Besatzung automatisch zu ihrem Fahrzeug '
-                                                       'zurück',
+                  'UI_setting_crewAutoReturn_tooltip': 'Bringen Sie die Besatzung automatisch zu ihrem '
+                                                       'Fahrzeug zurück',
                   'UI_setting_crewReturnByDefault_text': 'Standardmäßige Rückkehr der Besatzung',
-                  'UI_setting_crewReturnByDefault_tooltip': 'Beim Fahrzeugwechsel standardmäßig die Besatzung '
-                                                            'zurückbringen',
+                  'UI_setting_crewReturnByDefault_tooltip': 'Beim Fahrzeugwechsel standardmäßig die '
+                                                            'Besatzung zurückbringen',
                   'UI_setting_excludePremiumVehicles_text': 'Premium-Fahrzeuge ausschließen',
                   'UI_setting_excludePremiumVehicles_tooltip': 'Führen Sie bei Premium-Fahrzeugen keine '
                                                                'automatische Rückführung der Besatzung durch',
                   'UI_setting_showNotifications_text': 'Benachrichtigungen anzeigen',
-                  'UI_setting_showNotifications_tooltip': 'Systembenachrichtigungen anzeigen, wenn die Besatzung '
-                                                          'zurückgekehrt ist'},
+                  'UI_setting_showNotifications_tooltip': 'Systembenachrichtigungen anzeigen, wenn die '
+                                                          'Besatzung zurückgekehrt ist'},
  'DispersionCircle': {'UI_description': 'Reticle',
                       'UI_setting_gunMarkerMinimumSize_text': 'Mindestgröße des Waffenmarkierers',
                       'UI_setting_gunMarkerMinimumSize_tooltip': 'Mindestgröße der Waffenmarkierung in Pixel',
                       'UI_setting_percentCorrection_text': 'Korrektur der Absehengröße',
-                      'UI_setting_percentCorrection_tooltip': 'Passen Sie den Skalierungsfaktor des Absehens an',
+                      'UI_setting_percentCorrection_tooltip': 'Passen Sie den Skalierungsfaktor des Absehens '
+                                                              'an',
                       'UI_setting_serverReticleAimingCircleOpacity_text': 'Zielkreis-Deckkraft',
                       'UI_setting_serverReticleAimingCircleOpacity_tooltip': 'Passen Sie die Deckkraft des '
                                                                              'Server-Zielkreises an',
@@ -263,19 +269,23 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                       'UI_setting_serverReticleGunMarkerShape_tooltip': 'Wählen Sie die Form der '
                                                                         'Server-Waffenmarkierung aus',
                       'UI_setting_showClientAndServerReticleBeta_text': 'Client- und Server-Reticle (Beta)',
-                      'UI_setting_showClientAndServerReticleBeta_tooltip': 'Zeigen Sie sowohl das Client- als '
-                                                                           'auch das Server-Fadenkreuz '
+                      'UI_setting_showClientAndServerReticleBeta_tooltip': 'Zeigen Sie sowohl das Client- '
+                                                                           'als auch das Server-Fadenkreuz '
                                                                            'gleichzeitig an',
-                      'UI_setting_showServerSpgStrategicReticle_text': 'Strategisches Selbstfahrlafettenabsehen',
-                      'UI_setting_showServerSpgStrategicReticle_tooltip': 'Aktivieren Sie das Server-Fadenkreuz '
-                                                                          'für den SPG-Strategiemodus'},
+                      'UI_setting_showServerSpgStrategicReticle_text': 'Strategisches '
+                                                                       'Selbstfahrlafettenabsehen',
+                      'UI_setting_showServerSpgStrategicReticle_tooltip': 'Aktivieren Sie das '
+                                                                          'Server-Fadenkreuz für den '
+                                                                          'SPG-Strategiemodus'},
  'DispersionTimer': {'UI_description': 'DispersionTimer',
                      'UI_setting_blue_text': "<font color='#%(blue)s'>Aktuelle Farbe: #%(blue)s</font>",
                      'UI_setting_blue_tooltip': '',
-                     'UI_setting_colorBlue_text': 'Wählen Sie die Farbe für den Dispersionstimer sehr gut aus:',
+                     'UI_setting_colorBlue_text': 'Wählen Sie die Farbe für den Dispersionstimer sehr gut '
+                                                  'aus:',
                      'UI_setting_colorGreen_text': 'Wählen Sie die Farbe für den Dispersionstimer:',
                      'UI_setting_colorOrange_text': 'Wählen Sie die Farbe für den Dispersionstimer niedrig:',
-                     'UI_setting_colorPurple_text': 'Wählen Sie die Farbe für den Dispersionstimer großartig:',
+                     'UI_setting_colorPurple_text': 'Wählen Sie die Farbe für den Dispersionstimer '
+                                                    'großartig:',
                      'UI_setting_colorRed_text': 'Wählen Sie die Farbe für den Dispersions-Timer schlecht:',
                      'UI_setting_colorYellow_text': 'Wählen Sie Farbe für den Dispersionstimer normal:',
                      'UI_setting_green_text': "<font color='#%(green)s'>Aktuelle Farbe: #%(green)s</font>",
@@ -295,8 +305,8 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                      'UI_setting_yellow_text': "<font color='#%(yellow)s'>Aktuelle Farbe: #%(yellow)s</font>",
                      'UI_setting_yellow_tooltip': ''},
  'DistanceMarker': {'UI_setting_anchorHorizontalOffset_text': 'Horizontaler Versatz',
-                    'UI_setting_anchorHorizontalOffset_tooltip': 'Passt die horizontale Position der Markierung '
-                                                                 'an',
+                    'UI_setting_anchorHorizontalOffset_tooltip': 'Passt die horizontale Position der '
+                                                                 'Markierung an',
                     'UI_setting_anchorPosition_tankBottom': 'Tankboden',
                     'UI_setting_anchorPosition_tankCenter': 'Panzerzentrum',
                     'UI_setting_anchorPosition_tankMarker': 'Panzermarkierung',
@@ -304,25 +314,27 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                     'UI_setting_anchorPosition_tooltip': 'Definiert, wo die Markierung relativ zum Fahrzeug '
                                                          'positioniert wird',
                     'UI_setting_anchorVerticalOffset_text': 'Vertikaler Versatz',
-                    'UI_setting_anchorVerticalOffset_tooltip': 'Passt die vertikale Position der Markierung an',
+                    'UI_setting_anchorVerticalOffset_tooltip': 'Passt die vertikale Position der Markierung '
+                                                               'an',
                     'UI_setting_decimalPrecision_text': 'Dezimale Präzision',
-                    'UI_setting_decimalPrecision_tooltip': 'Legt fest, wie viele Dezimalstellen in der Entfernung '
-                                                           'angezeigt werden',
+                    'UI_setting_decimalPrecision_tooltip': 'Legt fest, wie viele Dezimalstellen in der '
+                                                           'Entfernung angezeigt werden',
                     'UI_setting_displayMode_always': 'Immer',
                     'UI_setting_displayMode_onAltPressed': 'Wenn Alt gedrückt wird',
                     'UI_setting_displayMode_text': 'Anzeigemodus',
-                    'UI_setting_displayMode_tooltip': 'Legt fest, wann die Entfernungsmarkierung angezeigt wird',
+                    'UI_setting_displayMode_tooltip': 'Legt fest, wann die Entfernungsmarkierung angezeigt '
+                                                      'wird',
                     'UI_setting_drawTextShadow_text': 'Textschatten',
-                    'UI_setting_drawTextShadow_tooltip': 'Fügt dem Text Schatten hinzu, um die Sichtbarkeit zu '
-                                                         'verbessern',
+                    'UI_setting_drawTextShadow_tooltip': 'Fügt dem Text Schatten hinzu, um die Sichtbarkeit '
+                                                         'zu verbessern',
                     'UI_setting_lockPositionOffsets_text': 'Positionsversätze sperren',
-                    'UI_setting_lockPositionOffsets_tooltip': 'Verhindert Änderungen der Markierungspositionen '
-                                                              'während des Spiels',
+                    'UI_setting_lockPositionOffsets_tooltip': 'Verhindert Änderungen der '
+                                                              'Markierungspositionen während des Spiels',
                     'UI_setting_markerTarget_allyAndEnemy': 'Verbündete und Feinde',
                     'UI_setting_markerTarget_onlyEnemy': 'Nur Feinde',
                     'UI_setting_markerTarget_text': 'Markierungsziele',
-                    'UI_setting_markerTarget_tooltip': 'Legt fest, welche Fahrzeuge die Entfernungsmarkierung '
-                                                       'erhalten',
+                    'UI_setting_markerTarget_tooltip': 'Legt fest, welche Fahrzeuge die '
+                                                       'Entfernungsmarkierung erhalten',
                     'UI_setting_textAlpha_text': 'Texttransparenz',
                     'UI_setting_textAlpha_tooltip': 'Passt die Transparenz des Markierungstextes an',
                     'UI_setting_textColor_text': 'Textfarbe',
@@ -330,11 +342,11 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                     'UI_setting_textSize_text': 'Textgröße',
                     'UI_setting_textSize_tooltip': 'Passt die Schriftgröße der Markierung an',
                     'modDisplayName': 'DistanzMarker'},
- 'Driftkings': {'UI_description': 'Driftkings profiles',
-                'UI_profile_active': 'Active profile: {0}',
-                'UI_profile_copy': 'Create a copy of the active profile (optional)',
-                'UI_profile_restart': 'Restart the game to apply a different profile.',
-                'UI_profile_select': 'Profile for the next game start'},
+ 'Driftkings': {'UI_description': 'Driftkings-Profile',
+                'UI_profile_active': 'Aktives Profil: {0}',
+                'UI_profile_copy': 'Erstellen Sie eine Kopie des aktiven Profils (optional)',
+                'UI_profile_restart': 'Starten Sie das Spiel neu, um ein anderes Profil anzuwenden.',
+                'UI_profile_select': 'Profil für den nächsten Spielstart'},
  'FlightTimer': {'UI_description': 'FlightTimer',
                  'UI_setting_spgOnly_text': 'Nur für SPG?',
                  'UI_setting_spgOnly_tooltip': 'Wenn diese Option aktiviert ist, ist der Timer nur für SPG '
@@ -353,16 +365,17 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                    'UI_description': 'HangarOptions',
                    'UI_setting_allowChannelButtonBlinking_text': 'Blinken der Kanaltaste zulassen',
                    'UI_setting_allowChannelButtonBlinking_tooltip': 'Zulassen, dass die Schaltfläche des '
-                                                                    'Messenger-Leistenkanals (Clan oder privater '
-                                                                    'Chat) blinkt.',
+                                                                    'Messenger-Leistenkanals (Clan oder '
+                                                                    'privater Chat) blinkt.',
                    'UI_setting_allowExchangeXPInTechTree_text': 'XP-Austausch im Forschungsbaum',
-                   'UI_setting_allowExchangeXPInTechTree_tooltip': 'Aktivieren Sie den XP-zu-Gold-Austausch im '
-                                                                   'Technologiebaum',
+                   'UI_setting_allowExchangeXPInTechTree_tooltip': 'Aktivieren Sie den XP-zu-Gold-Austausch '
+                                                                   'im Technologiebaum',
                    'UI_setting_autoLogin_text': 'Automatische Anmeldung',
                    'UI_setting_autoLogin_tooltip': 'Melden Sie sich automatisch beim Spiel an',
                    'UI_setting_blockVehicleIfLowAmmo_text': 'Blockieren Sie den Kampf bei geringer Munition',
                    'UI_setting_blockVehicleIfLowAmmo_tooltip': 'Verhindern Sie den Kampfeintritt, wenn die '
-                                                               'Munition des ausgewählten Fahrzeugs niedrig ist.',
+                                                               'Munition des ausgewählten Fahrzeugs niedrig '
+                                                               'ist.',
                    'UI_setting_clock24Hour_text': '24-Stunden-Format',
                    'UI_setting_clockScale_text': 'Uhrengröße (%)',
                    'UI_setting_clockSeconds_text': 'Sekunden anzeigen',
@@ -371,68 +384,79 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                    'UI_setting_clockY_text': 'Uhr: vertikale Position',
                    'UI_setting_clock_text': 'Uhranzeige',
                    'UI_setting_clock_tooltip': 'Gameface-Uhr in der Garage anzeigen',
-                   'UI_setting_showBuyPremiumButton_text': 'Show Premium account button',
-                   'UI_setting_showPremiumShopButton_text': 'Show Premium Shop',
-                   'UI_setting_showReferralButton_text': 'Show referral program',
-                   'UI_setting_showWotPlusButton_text': 'Show WoT Plus button',
-                   'UI_setting_premiumTime_text': 'Show Premium account expiry',
-                   'UI_setting_customClockText_text': 'Clock format (restart required)',
                    'UI_setting_customClockFormat_text': 'Benutzerdefiniertes Uhrformat',
-                   'UI_setting_customClockFormat_tooltip': 'Verwenden Sie benutzerdefinierte Farben und Formate '
-                                                           'für die Uhranzeige',
+                   'UI_setting_customClockFormat_tooltip': 'Verwenden Sie benutzerdefinierte Farben und '
+                                                           'Formate für die Uhranzeige',
+                   'UI_setting_customClockText_text': 'Uhrformat (Neustart erforderlich)',
                    'UI_setting_fieldMail_text': 'Feldpost',
-                   'UI_setting_fieldMail_tooltip': 'Show/hide Field Mail.',
+                   'UI_setting_fieldMail_tooltip': 'Feldmail ein-/ausblenden.',
                    'UI_setting_hideBtnCounters_text': 'Tooltips deaktivieren',
-                   'UI_setting_hideBtnCounters_tooltip': "<img src='img://gui/maps/uiKit/dialogs/icons/alert.png' "
+                   'UI_setting_hideBtnCounters_tooltip': '<img '
+                                                         "src='img://gui/maps/uiKit/dialogs/icons/alert.png' "
                                                          "width='16' height='16'><font color='#FF0000'>Zum "
                                                          'Aktivieren/Deaktivieren müssen Sie das Spiel neu '
                                                          'starten.</font><img '
                                                          "src='img://gui/maps/uiKit/dialogs/icons/alert.png' "
                                                          "width='16' height='16'>",
                    'UI_setting_lootBoxesWidget_text': 'Lootbox-Widget',
-                   'UI_setting_lootBoxesWidget_tooltip': 'Show/hide lootbox widget in hangar',
+                   'UI_setting_lootBoxesWidget_tooltip': 'Lootbox-Widget im Hangar ein-/ausblenden',
                    'UI_setting_lowAmmoPercentage_text': 'Niedriger Munitionsanteil',
-                   'UI_setting_lowAmmoPercentage_tooltip': 'Der Munitionsschwellenwert wird verwendet, um ein '
-                                                           'Fahrzeug als betriebsbereit oder mit wenig Munition '
-                                                           'zu markieren.',
+                   'UI_setting_lowAmmoPercentage_tooltip': 'Der Munitionsschwellenwert wird verwendet, um '
+                                                           'ein Fahrzeug als betriebsbereit oder mit wenig '
+                                                           'Munition zu markieren.',
+                   'UI_setting_premiumTime_text': 'Ablauf des Premium-Kontos anzeigen',
                    'UI_setting_showAchievementPopups_text': 'Erfolgs-Popups',
-                   'UI_setting_showAchievementPopups_tooltip': 'Show/hide Achievement Popups.',
+                   'UI_setting_showAchievementPopups_tooltip': 'Leistungs-Popups ein-/ausblenden.',
                    'UI_setting_showAchievementRewardWindow_text': 'Belohnungsfenster für Erfolge',
-                   'UI_setting_showAchievementRewardWindow_tooltip': 'Show/hide fullscreen achievement reward '
-                                                                     'window.',
+                   'UI_setting_showAchievementRewardWindow_tooltip': 'Vollbild-Erfolgsbelohnungsfenster '
+                                                                     'ein-/ausblenden.',
                    'UI_setting_showBattleCount_text': 'Kampfzähler',
-                   'UI_setting_showBattleCount_tooltip': 'Show/hide the battle count display',
+                   'UI_setting_showBattleCount_tooltip': 'Anzeige der Gefechtsanzahl ein-/ausblenden',
                    'UI_setting_showBattlePassWidget_text': 'Battle Pass-Widget',
-                   'UI_setting_showBattlePassWidget_tooltip': 'Show/hide Battle Pass widget in hangar.',
+                   'UI_setting_showBattlePassWidget_tooltip': 'Battle Pass-Widget im Hangar ein-/ausblenden.',
                    'UI_setting_showButtonCounters_text': 'Knopfzähler',
-                   'UI_setting_showButtonCounters_tooltip': 'Show/hide notification counters on buttons',
+                   'UI_setting_showButtonCounters_tooltip': 'Benachrichtigungszähler auf Schaltflächen '
+                                                            'ein-/ausblenden',
                    'UI_setting_showButton_text': 'Schaltfläche „Statistik“.',
-                   'UI_setting_showButton_tooltip': 'Show/hide the session statistics button',
+                   'UI_setting_showButton_tooltip': 'Schaltfläche „Sitzungsstatistik“ ein-/ausblenden',
+                   'UI_setting_showBuyPremiumButton_text': 'Schaltfläche „Premium-Konto anzeigen“.',
                    'UI_setting_showDailyQuestWidget_text': 'Tägliche Missionen',
-                   'UI_setting_showDailyQuestWidget_tooltip': 'Show/hide daily mission widget in hangar',
+                   'UI_setting_showDailyQuestWidget_tooltip': 'Tägliches Missions-Widget im Hangar '
+                                                              'ein-/ausblenden',
                    'UI_setting_showEventBanner_text': 'Event-Banner',
-                   'UI_setting_showEventBanner_tooltip': 'Show/hide event banners in hangar',
+                   'UI_setting_showEventBanner_tooltip': 'Veranstaltungsbanner im Hangar ein-/ausblenden',
                    'UI_setting_showEventTournamentWidget_text': 'Turnier-Widget',
-                   'UI_setting_showEventTournamentWidget_tooltip': 'Show/hide tournament banner widget in hangar.',
+                   'UI_setting_showEventTournamentWidget_tooltip': 'Turnierbanner-Widget im Hangar '
+                                                                   'ein-/ausblenden.',
                    'UI_setting_showGeneralChatButton_text': 'Allgemeiner Chat',
-                   'UI_setting_showGeneralChatButton_tooltip': 'Show/hide the General Chat button',
+                   'UI_setting_showGeneralChatButton_tooltip': 'Die Schaltfläche „Allgemeiner Chat“ '
+                                                               'ein-/ausblenden',
                    'UI_setting_showHangarPrestigeWidget_text': 'Hangar-Prestige-Ausstellung',
-                   'UI_setting_showHangarPrestigeWidget_tooltip': 'Show/hide elite level widget in hangar',
+                   'UI_setting_showHangarPrestigeWidget_tooltip': 'Elite-Level-Widget im Hangar '
+                                                                  'ein-/ausblenden',
                    'UI_setting_showPopUpMessages_text': 'Popup-Benachrichtigungen',
-                   'UI_setting_showPopUpMessages_tooltip': 'Show/hide popup notification messages',
+                   'UI_setting_showPopUpMessages_tooltip': 'Popup-Benachrichtigungen anzeigen/ausblenden',
+                   'UI_setting_showPremiumShopButton_text': 'Premium-Shop anzeigen',
                    'UI_setting_showProfilePrestigeWidget_text': 'Profil-Prestige-Display',
-                   'UI_setting_showProfilePrestigeWidget_tooltip': 'Show/hide elite level widget in profile',
+                   'UI_setting_showProfilePrestigeWidget_tooltip': 'Elite-Level-Widget im Profil '
+                                                                   'ein-/ausblenden',
                    'UI_setting_showProgressiveDecalsWindow_text': 'Progressive Abziehbilder',
-                   'UI_setting_showProgressiveDecalsWindow_tooltip': 'Show/hide progressive decal notifications',
+                   'UI_setting_showProgressiveDecalsWindow_tooltip': 'Benachrichtigungen zu progressiven '
+                                                                     'Aufklebern ein-/ausblenden',
                    'UI_setting_showPromoPremVehicle_text': 'Vorschau auf Premium-Fahrzeuge',
-                   'UI_setting_showPromoPremVehicle_tooltip': 'Show/hide premium vehicle previews in hangar',
+                   'UI_setting_showPromoPremVehicle_tooltip': 'Premium-Fahrzeugvorschauen im Hangar '
+                                                              'ein-/ausblenden',
                    'UI_setting_showRankedBattleResults_text': 'Ergebnisse der Ranglistenkämpfe',
-                   'UI_setting_showRankedBattleResults_tooltip': 'Show/hide ranked battle results window',
+                   'UI_setting_showRankedBattleResults_tooltip': 'Fenster mit Ranglistenkampfergebnissen '
+                                                                 'ein-/ausblenden',
+                   'UI_setting_showReferralButton_text': 'Empfehlungsprogramm anzeigen',
                    'UI_setting_showUnreadCounter_text': 'Benachrichtigungszähler',
-                   'UI_setting_showUnreadCounter_tooltip': 'Show/hide unread notification counters',
+                   'UI_setting_showUnreadCounter_tooltip': 'Zähler für ungelesene Benachrichtigungen '
+                                                           'ein-/ausblenden',
+                   'UI_setting_showWotPlusButton_text': 'WoT Plus-Schaltfläche anzeigen',
                    'UI_setting_showXpToUnlockVeh_text': 'Fahrzeug-XP-Anforderungen',
-                   'UI_setting_showXpToUnlockVeh_tooltip': 'Zeigen Sie die erforderlichen XP an, um Fahrzeuge '
-                                                           'freizuschalten'},
+                   'UI_setting_showXpToUnlockVeh_tooltip': 'Zeigen Sie die erforderlichen XP an, um '
+                                                           'Fahrzeuge freizuschalten'},
  'InfoPanel': {'UI_delay_format': ' Sek.',
                'UI_description': 'InfoPanel',
                'UI_setting_aliveOnly_text': 'Nur lebendig',
@@ -446,8 +470,8 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                'UI_setting_delay_text': 'Verzögerung',
                'UI_setting_delay_tooltip': 'Panel-Verzögerung ausblenden (in Sekunden)',
                'UI_setting_showFor_text': 'Anzeigen für',
-               'UI_setting_showFor_tooltip': '• <b>Verbündeter</b> - Zeigen Sie den „ALLY“-Spielern einfach die '
-                                             'Panzer.\n'
+               'UI_setting_showFor_tooltip': '• <b>Verbündeter</b> - Zeigen Sie den „ALLY“-Spielern einfach '
+                                             'die Panzer.\n'
                                              '• <b>Feind</b> - Zeigen Sie den „ENEMY“-Spielern einfach die '
                                              'Panzer.\n'
                                              '• <b>Alle</b> - Zeige „ALLEN“ Spielern Panzer.',
@@ -455,8 +479,8 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                'UI_setting_templatePreset_tooltip': 'Wählen Sie eine vordefinierte Vorlage für die '
                                                     'Informationsanzeige',
                'UI_setting_textLock_text': 'Deaktivieren Sie das Ziehen von Text mit der Maus',
-               'UI_setting_textLock_tooltip': 'Diese Einstellung steuert, ob Sie das Textfenster mit der Maus '
-                                              'verschieben können oder nicht.',
+               'UI_setting_textLock_tooltip': 'Diese Einstellung steuert, ob Sie das Textfenster mit der '
+                                              'Maus verschieben können oder nicht.',
                'UI_showFor_all': 'Alle',
                'UI_showFor_ally': 'Verbündeter',
                'UI_showFor_enemy': 'Feind',
@@ -476,10 +500,11 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                  'UI_setting_logSwapper_text': 'Aktivieren Sie Reverse Log.',
                  'UI_setting_logSwapper_tooltip': 'Kehrt die Position des Schadensprotokolls in der '
                                                   'Kampfoberfläche um.',
-                 'UI_setting_wgLogHideAssist_text': 'WG Log Hide Assist',
+                 'UI_setting_wgLogHideAssist_text': 'Verstecken Sie das Wargaming-Hilfeprotokoll',
                  'UI_setting_wgLogHideAssist_tooltip': 'Versteckt Meldungen zur Schadensunterstützung im '
                                                        'Standard-WG-Kampfprotokoll.',
-                 'UI_setting_wgLogHideBlock_text': 'WG Log Hide Block',
+                 'UI_setting_wgLogHideBlock_text': 'Verstecken Sie das von Wargaming blockierte '
+                                                   'Schadensprotokoll',
                  'UI_setting_wgLogHideBlock_tooltip': 'Versteckt blockierte Schadensmeldungen im '
                                                       'Standard-WG-Kampfprotokoll.',
                  'UI_setting_wgLogHideCritics_text': 'WG-Protokoll Kritiker ausblenden',
@@ -493,22 +518,17 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
  'MarksOnGunBattle': {'NaN': '[<b>NaN</b>]',
                       'UI_HangarStatsEnd': '{c_damageToMark65}, {c_damageToMark85}\n'
                                            '{c_damageToMark95}, {c_damageToMark100}',
-                      'UI_HangarStatsStart': '<b>{currentPercent}<font size="14">[{currentDamage}]</font> </b>',
+                      'UI_HangarStatsStart': '<b>{currentPercent}<font size="14">[{currentDamage}]</font> '
+                                             '</b>',
                       'UI_description': 'MarksOnGunBattle',
-                      'UI_setting_displayMode_text': 'Presentation',
-                      'UI_setting_showMarks_text': 'Show marks',
-                      'UI_setting_showDelta_text': 'Show estimated delta',
-                      'UI_setting_showDamage_text': 'Show damage',
-                      'UI_setting_showProgress_text': 'Show progress',
-                      'UI_setting_showTargets_text': 'Show targets',
-                      'UI_marks_legacy': 'Legacy (12 presets / custom format)',
-                      'UI_marks_compact': 'Compact',
-                      'UI_marks_normal': 'Normal',
-                      'UI_marks_detailed': 'Detailed',
-                      'UI_marks_damage': 'Damage',
                       'UI_marks_assist': 'Assist',
-                      'UI_marks_current': 'Current MoE',
                       'UI_marks_combined': 'Combined',
+                      'UI_marks_compact': 'Compact',
+                      'UI_marks_current': 'Aktuelles MoE',
+                      'UI_marks_damage': 'Damage',
+                      'UI_marks_detailed': 'Detailed',
+                      'UI_marks_legacy': 'Legacy (12 Voreinstellungen / benutzerdefiniertes Format)',
+                      'UI_marks_normal': 'Normal',
                       'UI_menu_UIConfig': 'Konfig',
                       'UI_menu_UIMyp': '<font color="#D042F3">@Myp</font> Wahl [<font '
                                        'color="#D042F3">twitch.tv/myp_</font>]',
@@ -518,8 +538,8 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                       'UI_menu_UIReplayDamage': 'für Wiederholungen mit Schaden',
                       'UI_menu_UIcircon': '<font color="#02C9B3">@Circon</font> Wahl [<font '
                                           'color="#02C9B3">twitch.tv/circon</font>]',
-                      'UI_menu_UIkorbenDallasNoMercy': '<font color="#e3256b">@KorbenDallasNoMercy</font> Wahl '
-                                                       '[<font '
+                      'UI_menu_UIkorbenDallasNoMercy': '<font color="#e3256b">@KorbenDallasNoMercy</font> '
+                                                       'Wahl [<font '
                                                        'color="#e3256b">youtube.com/c/KorbenDallasNoMercy</font>]',
                       'UI_menu_UIoldskool': '<font color="#FFD700">@Oldskool</font> Wahl [<font '
                                             'color="#FFD700">twitch.tv/oldskool</font>]',
@@ -549,6 +569,9 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                       'UI_setting_buttonSizeUp_tooltip': '',
                       'UI_setting_colorRating_text': 'Farbtabelle',
                       'UI_setting_colorRating_tooltip': 'Farbskala für Erfolgsmarkierungen.',
+                      'UI_setting_displayMode_text': 'Presentation',
+                      'UI_setting_showDamage_text': 'Schäden anzeigen',
+                      'UI_setting_showDelta_text': 'Geschätztes Delta anzeigen',
                       'UI_setting_showInBattleHalfPercents_text': 'Kampf: Schaden auf +0,5 % anzeigen',
                       'UI_setting_showInBattleHalfPercents_tooltip': '',
                       'UI_setting_showInBattle_text': 'Schlacht: Hallo-Nachricht',
@@ -559,14 +582,17 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                       'UI_setting_showInReplay_tooltip': 'Nicht gut, aber für Tests nützlich',
                       'UI_setting_showInStatistic_text': 'Statistik: aktiviert',
                       'UI_setting_showInStatistic_tooltip': '',
+                      'UI_setting_showMarks_text': 'Markierungen zeigen',
+                      'UI_setting_showProgress_text': 'Fortschritt anzeigen',
+                      'UI_setting_showTargets_text': 'Ziele anzeigen',
                       'UI_setting_techTreeMarkOfGunPercentSize_value': '',
                       'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} aktueller '
                                      'gleitender Durchschnittsschaden</font>\n'
                                      '<font color="#FFFFFF" size="12">{currentDamage} aktueller '
                                      'Summenschaden</font>\n'
-                                     'Zu <font color="#FFFFFF" size="12">{nextPercent}% </font>   brauchen <font '
-                                     'color="#FFFFFF" size="12">{needDamage}</font> gleitender durchschnittlicher '
-                                     'Schaden\n'
+                                     'Zu <font color="#FFFFFF" size="12">{nextPercent}% </font>   brauchen '
+                                     '<font color="#FFFFFF" size="12">{needDamage}</font> gleitender '
+                                     'durchschnittlicher Schaden\n'
                                      'Diese Statistik ist für das letzte Gefecht dieses Fahrzeugs verfügbar\n'
                                      'Zu <font color="#FFFFFF" size="12">20% </font>   brauchen <font '
                                      'color="{c20}" size="12">~{_20}</font> gleitender durchschnittlicher '
@@ -596,6 +622,7 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                       'battleMessageSizeUp': 'MoE-Mod: Größe <b>+10%</b>'},
  'MarksOnGunHangar': {'UI_description': 'MarksOnGunHangar',
                       'UI_panel_achieved': 'Erreicht',
+                      'UI_panel_additionalGoal': 'Zusätzliches Ziel',
                       'UI_panel_automatic': 'Automatisch',
                       'UI_panel_average': 'Kombinierte EMA',
                       'UI_panel_battles': 'Schlachten',
@@ -607,9 +634,6 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                       'UI_panel_goal1': '1. Note (65 %)',
                       'UI_panel_goal2': '2. Note (85 %)',
                       'UI_panel_goal3': '3. Note (95 %)',
-                      'UI_panel_thirdAchieved': '3rd MARK ACHIEVED',
-                      'UI_panel_trend': 'Observed trend',
-                      'UI_panel_additionalGoal': 'Additional goal',
                       'UI_panel_header': 'AUSZEICHNUNGEN FÜR EXZELLENZ',
                       'UI_panel_historyWaiting': 'Geschichte: Warten auf die nächste Schlacht',
                       'UI_panel_locked': 'GESPERRT',
@@ -624,7 +648,9 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                       'UI_panel_observedBattles': 'Schlachten beobachtet',
                       'UI_panel_remaining': 'verbleibende PP',
                       'UI_panel_selectVehicle': 'Wählen Sie ein Fahrzeug im Hangar aus.',
+                      'UI_panel_thirdAchieved': '3. MARKIERUNG ERREICHT',
                       'UI_panel_tierLimit': 'Markierungen ab Stufe V verfügbar',
+                      'UI_panel_trend': 'Beobachteter Trend',
                       'UI_panel_winRate': 'GEWINNRATE',
                       'UI_setting_colorRating_NoobMeter': 'NoobMeter',
                       'UI_setting_colorRating_WotLabs': 'WotLabs',
@@ -634,14 +660,15 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                       'UI_setting_compactMode_text': 'Kompaktes Panel',
                       'UI_setting_compactMode_tooltip': 'Sekundäre Fahrzeugstatistiken ausblenden.',
                       'UI_setting_goalSelection_text': 'Ziel markieren',
-                      'UI_setting_goalSelection_tooltip': 'Automatisch wählt die nächste unverdiente Markierung '
-                                                          'aus. Beim Schaden handelt es sich um eine '
-                                                          'proportionale Schätzung, nicht um einen '
+                      'UI_setting_goalSelection_tooltip': 'Automatisch wählt die nächste unverdiente '
+                                                          'Markierung aus. Beim Schaden handelt es sich um '
+                                                          'eine proportionale Schätzung, nicht um einen '
                                                           'Serverschwellenwert oder eine Vorhersage für den '
                                                           'nächsten Kampf.',
                       'UI_setting_historyBattles_text': 'Aktuelle Schlachten in der Geschichte',
                       'UI_setting_historyBattles_tooltip': 'Updates können mehrere Gefechte gruppieren. Der '
-                                                           'Verlauf beginnt mit der Installation dieser Version.',
+                                                           'Verlauf beginnt mit der Installation dieser '
+                                                           'Version.',
                       'UI_setting_positionX_text': 'Horizontale Position (X)',
                       'UI_setting_positionX_tooltip': 'Kleiner: links. Größer: richtig.',
                       'UI_setting_positionY_text': 'Vertikale Position (Y)',
@@ -658,12 +685,12 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                                      'gleitender Durchschnittsschaden</font>\n'
                                      '<font color="#FFFFFF" size="12">{currentDamage} aktueller '
                                      'Summenschaden</font>\n'
-                                     'Zu <font color="#FFFFFF" size="12">{nextPercent}% </font> brauchen <font '
-                                     'color="#FFFFFF" size="12">{needDamage}</font> gleitender durchschnittlicher '
-                                     'Schaden\n'
-                                     '<font color="#FFFFFF" size="12">{mastery}</font>   <font color="#FFFFFF" '
-                                     'size="12">WN8: {wn8}</font>   <font color="#FFFFFF" size="12">WR: '
-                                     '{winRate}</font>',
+                                     'Zu <font color="#FFFFFF" size="12">{nextPercent}% </font> brauchen '
+                                     '<font color="#FFFFFF" size="12">{needDamage}</font> gleitender '
+                                     'durchschnittlicher Schaden\n'
+                                     '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
+                                     'color="#FFFFFF" size="12">WN8: {wn8}</font>   <font color="#FFFFFF" '
+                                     'size="12">WR: {winRate}</font>',
                       'UI_tooltipsFull': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} aktueller '
                                          'gleitender Durchschnittsschaden</font>\n'
                                          '<font color="#FFFFFF" size="12">{currentDamage} aktueller '
@@ -672,8 +699,8 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                                          '<font color="#FFFFFF" size="12">{needDamage}</font> gleitender '
                                          'durchschnittlicher Schaden\n'
                                          '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
-                                         'color="#FFFFFF" size="12">WN8: {wn8}</font>   <font color="#FFFFFF" '
-                                         'size="12">WR: {winRate}</font>\n'
+                                         'color="#FFFFFF" size="12">WN8: {wn8}</font>   <font '
+                                         'color="#FFFFFF" size="12">WR: {winRate}</font>\n'
                                          'Diese Statistik ist ab dem letzten Gefecht für dieses Fahrzeug '
                                          'verfügbar\n'
                                          'Zu <font color="#FFFFFF" size="12">20% </font> brauchen <font '
@@ -709,98 +736,6 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
  'MinimapPlugins': {'UI_description': 'MinimapPlugins',
                     'UI_field_alpha': 'Opacity',
                     'UI_field_mode': 'Visibility',
-                    'UI_mode_client': 'Client setting',
-                    'UI_mode_off': 'Hide',
-                    'UI_mode_on': 'Show',
-                    'UI_setting_button_text': 'Zoom-Taste',
-                    'UI_setting_button_tooltip': 'Hotkey zum Zoomen.',
-                    'UI_setting_changeColorCircles_text': 'Farbkreise ändern',
-                    'UI_setting_changeColorCircles_tooltip': 'Wenn diese Option aktiviert ist, können Sie die '
-                                                             'Farbe der Kreise auf der Minikarte ändern.',
-                    'UI_setting_circles_draw_text': 'Draw range',
-                    'UI_setting_circles_maxView_text': 'Maximum spotting range',
-                    'UI_setting_circles_proximity_text': 'Proximity detection',
-                    'UI_setting_circles_view_text': 'Vehicle view range',
-                    'UI_setting_colorDrawCircleCheck_text': 'Zeichnen Sie einen Entfernungskreis',
-                    'UI_setting_colorDrawCircle_text': "Standard: <font color='#%(colorDrawCircle)s'></font>",
-                    'UI_setting_colorDrawCircle_tooltip': '',
-                    'UI_setting_colorMaxViewCircleCheck_text': 'Max. Reichweitenkreis anzeigen',
-                    'UI_setting_colorMaxViewCircle_text': 'Standard: <font '
-                                                          "color='#%(colorMaxViewCircle)s'></font>",
-                    'UI_setting_colorMaxViewCircle_tooltip': '',
-                    'UI_setting_colorMinSpottingCircleCheck_text': 'Min. Spotting Range Circle',
-                    'UI_setting_colorMinSpottingCircle_text': 'Standard: <font '
-                                                              "color='#%(colorMinSpottingCircle)s'></font>",
-                    'UI_setting_colorMinSpottingCircle_tooltip': '',
-                    'UI_setting_colorViewCircleCheck_text': 'Reichweitenkreis anzeigen',
-                    'UI_setting_colorViewCircle_text': "Standard: <font color='#%(colorViewCircle)s'></font>",
-                    'UI_setting_colorViewCircle_tooltip': '',
-                    'UI_setting_labels_alpha_text': 'Label opacity',
-                    'UI_setting_labels_alternative_text': 'Alternative label',
-                    'UI_setting_labels_dead_text': 'Destroyed label',
-                    'UI_setting_labels_enabled_text': 'Custom labels',
-                    'UI_setting_labels_fontSize_text': 'Label font size',
-                    'UI_setting_labels_lost_text': 'Last known position label',
-                    'UI_setting_labels_normal_text': 'Normal label',
-                    'UI_setting_lastPositionDuration_text': 'Dauer der letzten Position',
-                    'UI_setting_lastPositionDuration_tooltip': 'Wie lange werden die letzten bekannten Positionen '
-                                                               'angezeigt (in Sekunden)?',
-                    'UI_setting_labels_x_text': 'Label horizontal offset',
-                    'UI_setting_labels_y_text': 'Label vertical offset',
-                    'UI_setting_labels_align_text': 'Label alignment',
-                    'UI_setting_labels_shadow_text': 'Label shadow',
-                    'UI_setting_labels_customColors_text': 'Custom label colors',
-                    'UI_setting_labels_avoidOverlap_text': 'Reduce overlapping names',
-                    'UI_setting_labels_compactLength_text': 'Shortened name length',
-                    'UI_setting_labels_allyColor_text': 'Ally label color',
-                    'UI_setting_labels_enemyColor_text': 'Enemy label color',
-                    'UI_setting_labels_squadColor_text': 'Platoon label color',
-                    'UI_setting_labels_deadColor_text': 'Destroyed label color',
-                    'UI_setting_labels_ally_text': 'Ally format (empty: use normal)',
-                    'UI_setting_labels_enemy_text': 'Enemy format (empty: use normal)',
-                    'UI_setting_labels_squad_text': 'Platoon format (empty: use normal)',
-                    'UI_setting_labels_alternativeAlly_text': 'Alternative ally format',
-                    'UI_setting_labels_alternativeEnemy_text': 'Alternative enemy format',
-                    'UI_setting_labels_alternativeSquad_text': 'Alternative platoon format',
-                    'UI_setting_icons_scale_text': 'Vehicle icon scale',
-                    'UI_setting_icons_alpha_text': 'Vehicle icon opacity',
-                    'UI_setting_icons_selfScale_text': 'Own arrow scale',
-                    'UI_setting_icons_selfAlpha_text': 'Own arrow opacity',
-                    'UI_setting_icons_selfColor_text': 'Own arrow color',
-                    'UI_setting_health_visibility_text': 'HP visibility',
-                    'UI_setting_health_mode_text': 'HP display',
-                    'UI_setting_health_x_text': 'HP horizontal offset',
-                    'UI_setting_health_y_text': 'HP vertical offset',
-                    'UI_setting_health_width_text': 'HP bar width',
-                    'UI_setting_health_height_text': 'HP bar height',
-                    'UI_setting_health_fontSize_text': 'HP font size',
-                    'UI_setting_lostMarker_showSeconds_text': 'Seconds since last detection',
-                    'UI_setting_lostMarker_fade_text': 'Fade last-known markers',
-                    'UI_setting_lostMarker_minimumAlpha_text': 'Minimum last-known opacity',
-                    'UI_setting_mapSize_enabled_text': 'Show map dimensions',
-                    'UI_setting_mapSize_x_text': 'Map dimensions horizontal offset',
-                    'UI_setting_mapSize_y_text': 'Map dimensions vertical offset',
-                    'UI_setting_mapSize_fontSize_text': 'Map dimensions font size',
-                    'UI_setting_mapSize_color_text': 'Map dimensions color',
-                    'UI_setting_mapSize_format_text': 'Map dimensions format',
-                    'UI_setting_lines_geometry_text': 'Custom line geometry (requires custom style)',
-                    'UI_setting_lines_length_text': 'Line length (minimap units)',
-                    'UI_setting_lines_thickness_text': 'Stroke thickness',
-                    'UI_setting_lines_dash_text': 'Dash length (0: continuous)',
-                    'UI_setting_lines_gap_text': 'Dash spacing',
-                    'UI_setting_extraCircles_text': 'Extra circles (JSON, up to 8)',
-                    'UI_setting_presentation_backgroundAlpha_text': 'Map background opacity',
-                    'UI_mode_left': 'Left',
-                    'UI_mode_right': 'Right',
-                    'UI_mode_center': 'Center',
-                    'UI_mode_never': 'Never',
-                    'UI_mode_key': 'While holding the minimap key',
-                    'UI_mode_always': 'Always',
-                    'UI_mode_value': 'Value',
-                    'UI_mode_percent': 'Percentage',
-                    'UI_mode_bar': 'Bar',
-                    'UI_setting_artilleryAim_enabled_text': 'Artillery aim on minimap',
-                    'UI_setting_artilleryAim_scale_text': 'Artillery aim scale (%)',
                     'UI_minimapAim_0': 'Original gelb',
                     'UI_minimapAim_1': 'Blauer Kreis',
                     'UI_minimapAim_2': 'Roter Kreis',
@@ -808,102 +743,198 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                     'UI_minimapAim_4': 'Violettes Sechseck',
                     'UI_minimapAim_5': 'Schwarz',
                     'UI_minimapAim_6': 'Türkis',
+                    'UI_mode_always': 'Always',
+                    'UI_mode_bar': 'Bar',
+                    'UI_mode_center': 'Center',
+                    'UI_mode_client': 'Client-Einstellung',
+                    'UI_mode_key': 'Während Sie die Minikartentaste gedrückt halten',
+                    'UI_mode_left': 'Left',
+                    'UI_mode_never': 'Never',
+                    'UI_mode_off': 'Hide',
+                    'UI_mode_on': 'Show',
+                    'UI_mode_percent': 'Percentage',
+                    'UI_mode_right': 'Right',
+                    'UI_mode_value': 'Value',
+                    'UI_setting_artilleryAim_alpha_text': 'Zielundurchsichtigkeit der Artillerie (%)',
+                    'UI_setting_artilleryAim_enabled_text': 'Artillerieziel auf der Minikarte',
+                    'UI_setting_artilleryAim_scale_text': 'Artilleriezielskala (%)',
                     'UI_setting_artilleryAim_src_text': 'Artillery aim PNG image',
-                    'UI_setting_artilleryAim_alpha_text': 'Artillery aim opacity (%)',
-                    'UI_setting_lines_alpha_text': 'Line opacity',
-                    'UI_setting_lines_customStyle_text': 'Custom line colors',
-                    'UI_setting_lines_directionColor_text': 'Direction line color',
-                    'UI_setting_lines_direction_text': 'Camera direction line',
-                    'UI_setting_lines_sectorColor_text': 'Sector line color',
-                    'UI_setting_lines_sector_text': 'Gun traverse sector',
+                    'UI_setting_button_text': 'Zoom-Taste',
+                    'UI_setting_button_tooltip': 'Hotkey zum Zoomen.',
+                    'UI_setting_changeColorCircles_text': 'Farbkreise ändern',
+                    'UI_setting_changeColorCircles_tooltip': 'Wenn diese Option aktiviert ist, können Sie '
+                                                             'die Farbe der Kreise auf der Minikarte ändern.',
+                    'UI_setting_circles_draw_text': 'Zugbereich',
+                    'UI_setting_circles_maxView_text': 'Maximale Reichweite',
+                    'UI_setting_circles_proximity_text': 'Näherungserkennung',
+                    'UI_setting_circles_view_text': 'Sichtweite des Fahrzeugs',
+                    'UI_setting_colorDrawCircleCheck_text': 'Zeichnen Sie einen Entfernungskreis',
+                    'UI_setting_colorDrawCircle_text': "Standard: <font color='#%(colorDrawCircle)s'></font>",
+                    'UI_setting_colorDrawCircle_tooltip': '',
+                    'UI_setting_colorMaxViewCircleCheck_text': 'Max. Reichweitenkreis anzeigen',
+                    'UI_setting_colorMaxViewCircle_text': 'Standard: <font '
+                                                          "color='#%(colorMaxViewCircle)s'></font>",
+                    'UI_setting_colorMaxViewCircle_tooltip': '',
+                    'UI_setting_colorMinSpottingCircleCheck_text': 'Kreis der minimalen Sichtweite',
+                    'UI_setting_colorMinSpottingCircle_text': 'Standard: <font '
+                                                              "color='#%(colorMinSpottingCircle)s'></font>",
+                    'UI_setting_colorMinSpottingCircle_tooltip': '',
+                    'UI_setting_colorViewCircleCheck_text': 'Reichweitenkreis anzeigen',
+                    'UI_setting_colorViewCircle_text': "Standard: <font color='#%(colorViewCircle)s'></font>",
+                    'UI_setting_colorViewCircle_tooltip': '',
+                    'UI_setting_extraCircles_text': 'Zusätzliche Kreise (JSON, bis zu 8)',
+                    'UI_setting_health_fontSize_text': 'HP-Schriftgröße',
+                    'UI_setting_health_height_text': 'Höhe der HP-Stange',
+                    'UI_setting_health_mode_text': 'HP-Display',
+                    'UI_setting_health_visibility_text': 'HP-Sichtbarkeit',
+                    'UI_setting_health_width_text': 'HP-Stabbreite',
+                    'UI_setting_health_x_text': 'Horizontaler HP-Versatz',
+                    'UI_setting_health_y_text': 'Vertikaler HP-Versatz',
+                    'UI_setting_icons_alpha_text': 'Deckkraft des Fahrzeugsymbols',
+                    'UI_setting_icons_scale_text': 'Fahrzeugsymbol-Skala',
+                    'UI_setting_icons_selfAlpha_text': 'Eigene Pfeilopazität',
+                    'UI_setting_icons_selfColor_text': 'Eigene Pfeilfarbe',
+                    'UI_setting_icons_selfScale_text': 'Eigene Pfeilskala',
+                    'UI_setting_labels_align_text': 'Etikettenausrichtung',
+                    'UI_setting_labels_allyColor_text': 'Farbe des Ally-Etiketts',
+                    'UI_setting_labels_ally_text': 'Ally-Format (leer: Normal verwenden)',
+                    'UI_setting_labels_alpha_text': 'Deckkraft der Beschriftung',
+                    'UI_setting_labels_alternativeAlly_text': 'Alternatives Verbündetenformat',
+                    'UI_setting_labels_alternativeEnemy_text': 'Alternatives Feindformat',
+                    'UI_setting_labels_alternativeSquad_text': 'Alternatives Platoon-Format',
+                    'UI_setting_labels_alternative_text': 'Alternatives Etikett',
+                    'UI_setting_labels_avoidOverlap_text': 'Reduzieren Sie überlappende Namen',
+                    'UI_setting_labels_compactLength_text': 'Verkürzte Namenslänge',
+                    'UI_setting_labels_customColors_text': 'Benutzerdefinierte Etikettenfarben',
+                    'UI_setting_labels_deadColor_text': 'Zerstörte Etikettenfarbe',
+                    'UI_setting_labels_dead_text': 'Zerstörtes Etikett',
+                    'UI_setting_labels_enabled_text': 'Benutzerdefinierte Etiketten',
+                    'UI_setting_labels_enemyColor_text': 'Farbe der Feindbeschriftung',
+                    'UI_setting_labels_enemy_text': 'Feindformat (leer: normal verwenden)',
+                    'UI_setting_labels_fontSize_text': 'Schriftgröße der Beschriftung',
+                    'UI_setting_labels_lost_text': 'Letzte bekannte Positionsbezeichnung',
+                    'UI_setting_labels_normal_text': 'Normales Etikett',
+                    'UI_setting_labels_shadow_text': 'Schatten beschriften',
+                    'UI_setting_labels_squadColor_text': 'Farbe der Platoon-Beschriftung',
+                    'UI_setting_labels_squad_text': 'Platoon-Format (leer: Normal verwenden)',
+                    'UI_setting_labels_x_text': 'Horizontaler Versatz der Beschriftung',
+                    'UI_setting_labels_y_text': 'Vertikaler Versatz der Beschriftung',
+                    'UI_setting_lastPositionDuration_text': 'Dauer der letzten Position',
+                    'UI_setting_lastPositionDuration_tooltip': 'Wie lange werden die letzten bekannten '
+                                                               'Positionen angezeigt (in Sekunden)?',
+                    'UI_setting_lines_alpha_text': 'Linienopazität',
+                    'UI_setting_lines_customStyle_text': 'Benutzerdefinierte Linienfarben',
+                    'UI_setting_lines_dash_text': 'Strichlänge (0: durchgehend)',
+                    'UI_setting_lines_directionColor_text': 'Farbe der Richtungslinie',
+                    'UI_setting_lines_direction_text': 'Kamerarichtungslinie',
+                    'UI_setting_lines_gap_text': 'Strichabstand',
+                    'UI_setting_lines_geometry_text': 'Benutzerdefinierte Liniengeometrie '
+                                                      '(benutzerdefinierter Stil erforderlich)',
+                    'UI_setting_lines_length_text': 'Linienlänge (Minikarteneinheiten)',
+                    'UI_setting_lines_sectorColor_text': 'Farbe der Sektorlinie',
+                    'UI_setting_lines_sector_text': 'Geschütztraverse-Sektor',
+                    'UI_setting_lines_thickness_text': 'Strichstärke',
+                    'UI_setting_lostMarker_fade_text': 'Letzte bekannte Markierungen ausblenden',
+                    'UI_setting_lostMarker_minimumAlpha_text': 'Minimale zuletzt bekannte Deckkraft',
+                    'UI_setting_lostMarker_showSeconds_text': 'Sekunden seit der letzten Erkennung',
+                    'UI_setting_mapSize_color_text': 'Farbe der Kartenabmessungen',
+                    'UI_setting_mapSize_enabled_text': 'Kartenabmessungen anzeigen',
+                    'UI_setting_mapSize_fontSize_text': 'Schriftgröße der Kartenabmessungen',
+                    'UI_setting_mapSize_format_text': 'Format der Kartenabmessungen',
+                    'UI_setting_mapSize_x_text': 'Horizontaler Versatz der Kartenabmessungen',
+                    'UI_setting_mapSize_y_text': 'Vertikaler Versatz der Kartenabmessungen',
                     'UI_setting_permanentMinimapDeath_text': 'Permanenter Tod auf der Minikarte',
-                    'UI_setting_permanentMinimapDeath_tooltip': 'Zeigen Sie immer die Zerstörten auf der Karte an',
-                    'UI_setting_presentation_alternativeAlpha_text': 'Alternative map opacity',
-                    'UI_setting_presentation_alternativeEnabled_text': 'Enable alternative presentation',
-                    'UI_setting_presentation_center_text': 'Center alternative map',
-                    'UI_setting_presentation_normalAlpha_text': 'Normal map opacity',
-                    'UI_setting_presentation_sizeIndex_text': 'Alternative map size (0-5)',
-                    'UI_setting_presentation_zoom_text': 'Enlarge alternative map',
+                    'UI_setting_permanentMinimapDeath_tooltip': 'Zeigen Sie immer die Zerstörten auf der '
+                                                                'Karte an',
+                    'UI_setting_presentation_alternativeAlpha_text': 'Alternative Kartendeckkraft',
+                    'UI_setting_presentation_alternativeEnabled_text': 'Alternative Darstellung aktivieren',
+                    'UI_setting_presentation_backgroundAlpha_text': 'Deckkraft des Kartenhintergrunds',
+                    'UI_setting_presentation_center_text': 'Alternativkarte zentrieren',
+                    'UI_setting_presentation_normalAlpha_text': 'Normale Kartendeckkraft',
+                    'UI_setting_presentation_sizeIndex_text': 'Alternative Kartengröße (0-5)',
+                    'UI_setting_presentation_zoom_text': 'Alternativkarte vergrößern',
                     'UI_setting_showLastPositions_text': 'Letzte bekannte Positionen anzeigen',
-                    'UI_setting_showLastPositions_tooltip': 'Zeigt die letzten bekannten Positionen feindlicher '
-                                                            'Fahrzeuge an',
+                    'UI_setting_showLastPositions_tooltip': 'Zeigt die letzten bekannten Positionen '
+                                                            'feindlicher Fahrzeuge an',
                     'UI_setting_showNames_text': 'Namen anzeigen',
                     'UI_setting_showNames_tooltip': 'Zeigen Sie die Namen zerstörter Panzer an',
                     'UI_setting_showVehicleTypes_text': 'Fahrzeugtypen anzeigen',
-                    'UI_setting_showVehicleTypes_tooltip': 'Zeigen Sie Fahrzeugtypsymbole auf der Minikarte an',
+                    'UI_setting_showVehicleTypes_tooltip': 'Zeigen Sie Fahrzeugtypsymbole auf der Minikarte '
+                                                           'an',
                     'UI_setting_viewRadius_text': 'Echte Ansicht',
-                    'UI_setting_viewRadius_tooltip': 'Entfernen Sie die Begrenzung des Sichtkreises auf 445 m',
+                    'UI_setting_viewRadius_tooltip': 'Entfernen Sie die Begrenzung des Sichtkreises auf 445 '
+                                                     'm',
                     'UI_setting_yaw_text': 'Schwebewinkel anzeigen',
                     'UI_setting_yaw_tooltip': 'Schwebewinkel für alle Fahrzeuge dort anzeigen, wo sie sich '
                                               'befinden',
                     'UI_setting_zoomFactorMax_text': 'Maximaler Zoomfaktor',
                     'UI_setting_zoomFactorMax_tooltip': 'Maximale Zoomstufe für die Minikarte (1,0–3,0)',
-                    'UI_setting_zoomFactor_text': 'Zoom scale'},
+                    'UI_setting_zoomFactor_text': 'Zoomskala'},
  'OwnHealth': {'UI_description': 'OwnHealth',
                'UI_setting_x_text': 'Position X',
                'UI_setting_x_tooltip': '',
                'UI_setting_y_text': 'Position Y',
                'UI_setting_y_tooltip': ''},
- 'PlayerPanelPro': {'UI_panel_diagnostics': u'Leistungsdiagnose im Protokoll',
-                   'UI_panel_squadIconOffsetXLeft': u'Left platoon icon: X offset',
-                    'UI_panel_squadIconOffsetXRight': u'Right platoon icon: X offset',
-                    'UI_panel_loadingTips': u'Loading with tips',
-                    'UI_panel_frags': u'Destroyed vehicles',
-                    'UI_panel_vehicleIconAlpha': u'Vehicle icon opacity',
-                    'UI_panel_vehicleIconOffsetXLeft': u'Left vehicle icon: X offset',
-                    'UI_panel_vehicleIconOffsetXRight': u'Right vehicle icon: X offset',
-                    'UI_panel_removeSquadIcon': u'Hide platoon icons',
-                    'UI_panel_removeRankBadgeIcon': u'Hide badges',
-                    'UI_panel_removeTesterIcon': u'Hide tester icons',
-                    'UI_panel_removePrestigeLevel': u'Hide elite levels',
-                    'UI_panel_removeVehicleLevel': u'Hide vehicle tiers',
-                    'UI_panel_removeVehicleTypeIcon': u'Hide vehicle type icons',
-                    'UI_panel_removePlayerStatusIcon': u'Hide player status icons',
-                    'UI_panel_removeHealthPoints': u'HP-Balken des Spiels ausblenden',
-                    'UI_panel_clientDefault': u'Spieleinstellung',
-                    'UI_panel_none': u'Ausgeblendetes Panel',
-                    'UI_panel_large': u'Großes Panel',
-                    'UI_panel_medium2': u'Mittleres Panel (Fahrzeuge)',
-                    'UI_panel_startMode': u'Anfänglicher Panelmodus',
-                    'UI_panel_altMode': u'Panelmodus bei gedrückter ALT-Taste',
-                    'UI_panel_alpha': u'Deckkraft des Panelhintergrunds',
-                    'UI_panel_iconAlpha': u'Deckkraft des Fahrzeugsymbols',
-                    'UI_panel_removeSelectedBackground': u'Hintergrund des ausgewählten Spielers ausblenden',
-                    'UI_panel_removeSpottedIndicator': u'Erkennungsanzeige des Spiels ersetzen',
-                    'UI_panel_layer': u'Ebene',
-                    'UI_panel_bindToIcon': u'Am Fahrzeugsymbol verankern',
-                    'UI_description': 'PlayerPanelPro',
+ 'PlayerPanelPro': {'UI_description': 'PlayerPanelPro',
+                    'UI_panel_alpha': 'Deckkraft des Panelhintergrunds',
+                    'UI_panel_altMode': 'Panelmodus bei gedrückter ALT-Taste',
+                    'UI_panel_bindToIcon': 'Am Fahrzeugsymbol verankern',
+                    'UI_panel_clientDefault': 'Spieleinstellung',
                     'UI_panel_color': 'Color',
-                    'UI_panel_colors': 'Color scale',
+                    'UI_panel_colors': 'Farbskala',
+                    'UI_panel_diagnostics': 'Leistungsdiagnose im Protokoll',
                     'UI_panel_enabled': 'Enabled',
-                    'UI_panel_fixedColor': 'Use fixed color',
-                    'UI_panel_full': 'Full panel',
+                    'UI_panel_fixedColor': 'Verwenden Sie eine feste Farbe',
+                    'UI_panel_frags': 'Zerstörte Fahrzeuge',
+                    'UI_panel_full': 'Vollständiges Panel',
                     'UI_panel_general': 'General',
-                    'UI_panel_hideIfDead': 'Hide when destroyed',
-                    'UI_panel_loading': 'Battle loading',
-                    'UI_panel_long': 'Long panel',
-                    'UI_panel_medium': 'Medium panel',
+                    'UI_panel_hideIfDead': 'Verstecke dich, wenn es zerstört wird',
+                    'UI_panel_hpKey': 'Taste zum Anzeigen der HP',
+                    'UI_panel_hpVisibility': 'HP-Sichtbarkeit',
+                    'UI_panel_hp_always': 'Immer sichtbar',
+                    'UI_panel_hp_hold': 'Solange die Taste gedrückt wird',
+                    'UI_panel_hp_never': 'Nie sichtbar',
+                    'UI_panel_iconAlpha': 'Deckkraft des Fahrzeugsymbols',
+                    'UI_panel_large': 'Großes Panel',
+                    'UI_panel_layer': 'Ebene',
+                    'UI_panel_loading': 'Gefechtsladung',
+                    'UI_panel_loadingTips': 'Vollgepackt mit Tipps',
+                    'UI_panel_long': 'Langes Panel',
+                    'UI_panel_medium': 'Mittleres Panel',
+                    'UI_panel_medium2': 'Mittleres Panel (Fahrzeuge)',
                     'UI_panel_nick': 'Nickname',
-                    'UI_panel_panel': 'Players panel',
-                    'UI_panel_rating': 'Rating macro r',
-                    'UI_panel_short': 'Short panel',
-                    'UI_panel_statistics': 'Player statistics',
-                    'UI_panel_tab': 'TAB statistics',
-                    'UI_panel_text': 'Text / macros',
-                    'UI_panel_unavailable': 'Show unavailable statistics',
+                    'UI_panel_none': 'Ausgeblendetes Panel',
+                    'UI_panel_panel': 'Spielerpanel',
+                    'UI_panel_rating': 'Bewertungsmakro r',
+                    'UI_panel_removeHealthPoints': 'HP-Balken des Spiels ausblenden',
+                    'UI_panel_removePlayerStatusIcon': 'Spielerstatussymbole ausblenden',
+                    'UI_panel_removePrestigeLevel': 'Elite-Level ausblenden',
+                    'UI_panel_removeRankBadgeIcon': 'Abzeichen ausblenden',
+                    'UI_panel_removeSelectedBackground': 'Hintergrund des ausgewählten Spielers ausblenden',
+                    'UI_panel_removeSpottedIndicator': 'Erkennungsanzeige des Spiels ersetzen',
+                    'UI_panel_removeSquadIcon': 'Platoon-Symbole ausblenden',
+                    'UI_panel_removeTesterIcon': 'Testersymbole ausblenden',
+                    'UI_panel_removeVehicleLevel': 'Fahrzeugstufen ausblenden',
+                    'UI_panel_removeVehicleTypeIcon': 'Fahrzeugtypsymbole ausblenden',
+                    'UI_panel_short': 'Kurzes Panel',
+                    'UI_panel_squadIconOffsetXLeft': 'Linkes Platoon-Symbol: X-Versatz',
+                    'UI_panel_squadIconOffsetXRight': 'Rechtes Platoon-Symbol: X-Versatz',
+                    'UI_panel_startMode': 'Anfänglicher Panelmodus',
+                    'UI_panel_statistics': 'Spielerstatistiken',
+                    'UI_panel_tab': 'TAB-Statistiken',
+                    'UI_panel_text': 'Text / Makros',
+                    'UI_panel_unavailable': 'Nicht verfügbare Statistiken anzeigen',
                     'UI_panel_vehicle': 'Vehicle',
+                    'UI_panel_vehicleIconAlpha': 'Deckkraft des Fahrzeugsymbols',
+                    'UI_panel_vehicleIconOffsetXLeft': 'Linkes Fahrzeugsymbol: X-Versatz',
+                    'UI_panel_vehicleIconOffsetXRight': 'Rechtes Fahrzeugsymbol: X-Versatz',
                     'UI_setting_dead_text': 'Tot',
                     'UI_setting_dead_tooltip': '',
                     'UI_setting_help_text': 'Hilfe:',
                     'UI_setting_help_tooltip': 'PlayerPanelPro: general.json, playersPanel.json, '
-                                               'battleLoading.json, statisticForm.json and '
+                                               'battleLoading.json, statisticForm.json und '
                                                'panelShort/Medium/Long/Full.json.',
                     'UI_setting_hpEnabled_text': 'HP anzeigen',
-                    'UI_panel_hpVisibility': 'HP-Sichtbarkeit',
-                    'UI_panel_hpKey': 'Taste zum Anzeigen der HP',
-                    'UI_panel_hp_always': 'Immer sichtbar',
-                    'UI_panel_hp_hold': 'Solange die Taste gedrückt wird',
-                    'UI_panel_hp_never': 'Nie sichtbar',
                     'UI_setting_hpEnabled_tooltip': 'HP anzeigen.',
                     'UI_setting_lost_text': 'Verloren',
                     'UI_setting_lost_tooltip': '',
@@ -914,8 +945,8 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                     'UI_setting_mode_tooltip': ' • <b>Immer</b> - HP-Marker werden immer angezeigt.\n'
                                                ' • <b>Umschalten</b> - HP-Marker werden beim Drücken der '
                                                'Umschalttaste ein-/ausgeschaltet.\n'
-                                               ' • <b>Halten</b> - HP-Marker werden nur angezeigt <b>während</b> '
-                                               'die Umschalttaste wird gedrückt.',
+                                               ' • <b>Halten</b> - HP-Marker werden nur angezeigt '
+                                               '<b>während</b> die Umschalttaste wird gedrückt.',
                     'UI_setting_neverSeen_text': 'Noch nie gesehen',
                     'UI_setting_neverSeen_tooltip': '',
                     'UI_setting_spottedEnabled_text': 'Aufklärungsstatus anzeigen',
@@ -923,8 +954,8 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                     'UI_setting_spotted_text': 'Gefleckt',
                     'UI_setting_spotted_tooltip': '',
                     'UI_setting_toggleKey_text': 'Hotkey umschalten',
-                    'UI_setting_toggleKey_tooltip': 'Durch Drücken dieser Taste im Kampf wird die Anzeige der '
-                                                    'HP-Marker umgeschaltet.'},
+                    'UI_setting_toggleKey_tooltip': 'Durch Drücken dieser Taste im Kampf wird die Anzeige '
+                                                    'der HP-Marker umgeschaltet.'},
  'RepairExtended': {'UI_description': 'RepairExtended',
                     'UI_setting_autoRepair_text': 'Automatische Nutzung',
                     'UI_setting_autoRepair_tooltip': '',
@@ -951,11 +982,14 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
  'SafeShot': {'UI_battle_activateMessage': 'SafeShot: Aktiviert!',
               'UI_description': 'SafeShot',
               'UI_setting_activateMessage_text': 'Nachricht aktivieren',
-              'UI_setting_activateMessage_tooltip': 'Beim Eintritt in den Kampf eine Benachrichtigung anzeigen',
+              'UI_setting_activateMessage_tooltip': 'Beim Eintritt in den Kampf eine Benachrichtigung '
+                                                    'anzeigen',
               'UI_setting_chatMessages_text': 'Nachricht formatieren',
               'UI_setting_chatMessages_tooltip': 'Benutzerdefiniertes Nachrichtenformat beim Blockieren von '
-                                                 'Teamschüssen. Benutzen {name} und {vehicle} als Platzhalter',
-              'UI_setting_deadShotBlockTimeOut_text': 'Dead Shot Block TimeOut',
+                                                 'Teamschüssen. Benutzen {name} und {vehicle} als '
+                                                 'Platzhalter',
+              'UI_setting_deadShotBlockTimeOut_text': 'Zeitlimit für das Blockieren von Schüssen auf '
+                                                      'zerstörte Fahrzeuge',
               'UI_setting_deadShotBlockTimeOut_tooltip': 'Zeit in Sekunden, um Schüsse nach der '
                                                          'Fahrzeugzerstörung abzuwehren',
               'UI_setting_deadShotBlock_text': 'Dead-Shot-Block',
@@ -967,7 +1001,8 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
               'UI_setting_teamShotBlock_text': 'Team-Schussblock',
               'UI_setting_teamShotBlock_tooltip': 'Verhindert das Schießen auf Teamkollegen',
               'UI_setting_triggerMessage_text': 'Nachricht deaktivieren',
-              'UI_setting_triggerMessage_tooltip': 'Show/hide notification messages when shots are blocked',
+              'UI_setting_triggerMessage_tooltip': 'Benachrichtigungen anzeigen/ausblenden, wenn Schüsse '
+                                                   'blockiert sind',
               'UI_setting_wasteShotBlock_text': 'Abfallschussblock',
               'UI_setting_wasteShotBlock_tooltip': 'Verhindert das Schießen, wenn kein Ziel ausgewählt ist',
               'UI_triggerText_disabled': 'SafeShot: Deaktiviert!',
@@ -978,62 +1013,54 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                           'UI_description': 'ServerTurretExtended',
                           'UI_setting_activateMessage_text': 'Aktivierungsnachricht anzeigen',
                           'UI_setting_activateMessage_tooltip': 'Aktivierungsnachricht im Kampf anzeigen',
-                          'UI_setting_autoActivateWheelMode_text': 'Räder: Automatischer Geschwindigkeitsmodus',
-                          'UI_setting_autoActivateWheelMode_tooltip': 'Schaltet automatisch den Geschwindigkeits- '
-                                                                      'oder Manövriermodus ein',
-                          'UI_setting_buttonAutoMode_text': 'Taste: Automatischer Geschwindigkeitsmodus der Räder',
+                          'UI_setting_autoActivateWheelMode_text': 'Räder: Automatischer '
+                                                                   'Geschwindigkeitsmodus',
+                          'UI_setting_autoActivateWheelMode_tooltip': 'Schaltet automatisch den '
+                                                                      'Geschwindigkeits- oder Manövriermodus '
+                                                                      'ein',
+                          'UI_setting_buttonAutoMode_text': 'Taste: Automatischer Geschwindigkeitsmodus der '
+                                                            'Räder',
                           'UI_setting_buttonAutoMode_tooltip': '',
                           'UI_setting_buttonMaxMode_text': 'Taste: Räder behalten maximale Geschwindigkeit',
                           'UI_setting_buttonMaxMode_tooltip': '',
                           'UI_setting_fixAccuracyInMove_text': 'Korrigieren Sie die Genauigkeit',
-                          'UI_setting_fixAccuracyInMove_tooltip': 'Wenn Sie den Panzer bewegen und dann anhalten, '
-                                                                  'verwenden Sie die Fixgenauigkeit, um das '
-                                                                  'Zielen nicht zu verlieren',
+                          'UI_setting_fixAccuracyInMove_tooltip': 'Wenn Sie den Panzer bewegen und dann '
+                                                                  'anhalten, verwenden Sie die '
+                                                                  'Fixgenauigkeit, um das Zielen nicht zu '
+                                                                  'verlieren',
                           'UI_setting_fixWheelCruiseControl_text': 'Befestigen Sie den Tempomat auf Rädern',
                           'UI_setting_fixWheelCruiseControl_tooltip': 'Wenn Sie den Radmodus mit Tempomat '
                                                                       'aktivieren, wird das Fahrzeug bei '
-                                                                      'stehendem Fahrzeug durch diese Einstellung '
-                                                                      'deaktiviert',
+                                                                      'stehendem Fahrzeug durch diese '
+                                                                      'Einstellung deaktiviert',
                           'UI_setting_maxWheelMode_text': 'Räder: Maximale Geschwindigkeit beibehalten',
-                          'UI_setting_maxWheelMode_tooltip': 'Beim Erreichen der Höchstgeschwindigkeit wird der '
-                                                             'Geschwindigkeitsmodus beim Manövrieren nicht '
-                                                             'deaktiviert',
+                          'UI_setting_maxWheelMode_tooltip': 'Beim Erreichen der Höchstgeschwindigkeit wird '
+                                                             'der Geschwindigkeitsmodus beim Manövrieren '
+                                                             'nicht deaktiviert',
                           'UI_setting_serverTurret_text': 'Serverturm',
-                          'UI_setting_serverTurret_tooltip': 'Bewegen Sie den Turm zu den Zielkoordinaten des '
-                                                             'Servers (in den Spieleinstellungen muss die '
-                                                             'Serversicht aktiviert sein).'},
+                          'UI_setting_serverTurret_tooltip': 'Bewegen Sie den Turm zu den Zielkoordinaten '
+                                                             'des Servers (in den Spieleinstellungen muss '
+                                                             'die Serversicht aktiviert sein).'},
  'SixthSense': {'UI_description': 'SixthSense',
-                'UI_setting_userIcon_text': 'Custom image path',
-                'UI_setting_userIcon_tooltip': 'Used when the embedded image is disabled. PNG or JPEG inside mods/configs/.',
-                'UI_setting_sixthSenseSound_text': 'Detection sound',
-                'UI_sound_SixthSense_01': 'Electro',
-                'UI_sound_SixthSense_02': 'Buzz',
-                'UI_sound_SixthSense_03': 'Buzz timer',
-                'UI_sound_SixthSense_04': 'Car',
-                'UI_sound_SixthSense_05': 'Long (loud)',
-                'UI_sound_SixthSense_06': 'Long (quiet)',
-                'UI_sound_SixthSense_07': 'Sauron',
-                'UI_sound_SixthSense_08': 'Super Mario',
-                'UI_sound_SixthSense_09': 'Trap',
-                'UI_sound_SixthSense_10': 'X-Files',
                 'UI_setting_defaultIconName_text': 'Standardsymbolname',
                 'UI_setting_defaultIconName_tooltip': 'Wählen Sie ein eingebettetes Bild aus.',
                 'UI_setting_defaultIcon_text': 'Standardsymbol',
                 'UI_setting_defaultIcon_tooltip': 'Eingebettetes Bild verwenden.',
                 'UI_setting_delay_text': 'Verzögerung',
-                'UI_setting_delay_tooltip': 'Die Textnachricht bleibt diese Sekunden lang auf dem Bildschirm, '
-                                            'bevor sie ausgeblendet wird.',
+                'UI_setting_delay_tooltip': 'Die Textnachricht bleibt diese Sekunden lang auf dem '
+                                            'Bildschirm, bevor sie ausgeblendet wird.',
                 'UI_setting_helpMessage_text': 'Hilfemeldung',
-                'UI_setting_helpMessage_tooltip': 'Automatisches Senden einer Chat-Nachricht (Helfen Sie mir).',
+                'UI_setting_helpMessage_tooltip': 'Automatisches Senden einer Chat-Nachricht (Helfen Sie '
+                                                  'mir).',
                 'UI_setting_iconSize_text': 'Bildgröße',
                 'UI_setting_iconSize_tooltip': 'In Pixel (max. 180)',
                 'UI_setting_infoSpottedMessage_text': 'Gefleckte Nachrichten:',
                 'UI_setting_lampShowTime_text': 'Zeit der Lampenshow',
                 'UI_setting_lampShowTime_tooltip': '<b>Wie lange bleibt das Ziel sichtbar?</b><br>Nach dem '
-                                                   'Erkennen bleibt der Panzer auch ohne direkte Sichtverbindung '
-                                                   'sichtbar. Standard: ~10 Sekunden, kann je nach Besatzung, '
-                                                   'Ausrüstung und Anweisungen zwischen 7 und 13 Sekunden '
-                                                   'variieren.',
+                                                   'Erkennen bleibt der Panzer auch ohne direkte '
+                                                   'Sichtverbindung sichtbar. Standard: ~10 Sekunden, kann '
+                                                   'je nach Besatzung, Ausrüstung und Anweisungen zwischen 7 '
+                                                   'und 13 Sekunden variieren.',
                 'UI_setting_playTickSound_text': 'Tick-Sound abspielen',
                 'UI_setting_playTickSound_tooltip': 'Tick-Sound abspielen.',
                 'UI_setting_showTimerGraphicsColor_text': 'Grafikfarbe.',
@@ -1044,15 +1071,29 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                 'UI_setting_showTimerGraphics_tooltip': 'Grafischen Timerkreis anzeigen.',
                 'UI_setting_showTimer_text': 'Timer anzeigen',
                 'UI_setting_showTimer_tooltip': 'Countdown-Timer anzeigen, wenn entdeckt.',
+                'UI_setting_sixthSenseSound_text': 'Erkennungston',
                 'UI_setting_spottedMessage_text': 'Gefleckt',
                 'UI_setting_spottedMessage_tooltip': 'Aktivieren Sie entdeckten Text im Kampf.',
                 'UI_setting_spottedText_text': 'Textformat',
                 'UI_setting_spottedText_tooltip': 'Verwenden Sie Makros, um die Nachricht zu bearbeiten\n'
                                                   "(Makro:'%(pos)s').",
                 'UI_setting_timerSettings_text': 'Timer-Einstellungen:',
+                'UI_setting_userIcon_text': 'Benutzerdefinierter Bildpfad',
+                'UI_setting_userIcon_tooltip': 'Wird verwendet, wenn das eingebettete Bild deaktiviert ist. '
+                                               'PNG oder JPEG in mods/configs/.',
                 'UI_setting_userSound_text': 'Benutzersound',
-                'UI_setting_userSound_tooltip': 'Aktivieren Sie den benutzerdefinierten Ton, wenn Sie entdeckt '
-                                                'werden.'},
+                'UI_setting_userSound_tooltip': 'Aktivieren Sie den benutzerdefinierten Ton, wenn Sie '
+                                                'entdeckt werden.',
+                'UI_sound_SixthSense_01': 'Electro',
+                'UI_sound_SixthSense_02': 'Buzz',
+                'UI_sound_SixthSense_03': 'Buzz-Timer',
+                'UI_sound_SixthSense_04': 'Car',
+                'UI_sound_SixthSense_05': 'Lang (laut)',
+                'UI_sound_SixthSense_06': 'Lang (leise)',
+                'UI_sound_SixthSense_07': 'Sauron',
+                'UI_sound_SixthSense_08': 'Super Mario',
+                'UI_sound_SixthSense_09': 'Trap',
+                'UI_sound_SixthSense_10': 'X-Files'},
  'SpottedExtendedLight': {'UI_description': 'SpottedExtendedLight',
                           'UI_macros_help': 'Verwenden Sie diese Makros in Ihren Nachrichtenformaten, um '
                                             'Benachrichtigungen anzupassen:\n'
@@ -1068,26 +1109,27 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                           'UI_setting_AssistRadio_description': 'Format der angezeigten Meldung bei '
                                                                 'Radio-Assist-Schaden',
                           'UI_setting_AssistRadio_text': 'Funkunterstützung:',
-                          'UI_setting_AssistRadio_tooltip': 'Passen Sie die Meldung an, die angezeigt wird, wenn '
-                                                            'ein Schaden am Radio-Assist vorliegt',
+                          'UI_setting_AssistRadio_tooltip': 'Passen Sie die Meldung an, die angezeigt wird, '
+                                                            'wenn ein Schaden am Radio-Assist vorliegt',
                           'UI_setting_AssistStun_default': 'Standard: {icons}{vehicles}{damage}',
                           'UI_setting_AssistStun_description': 'Format der angezeigten Meldung für '
                                                                'Betäubungshilfeschaden',
                           'UI_setting_AssistStun_text': 'Betäubungsassistent:',
-                          'UI_setting_AssistStun_tooltip': 'Passen Sie die Meldung an, die angezeigt wird, wenn '
-                                                           'Sie Schaden durch Betäubungsunterstützung erhalten',
+                          'UI_setting_AssistStun_tooltip': 'Passen Sie die Meldung an, die angezeigt wird, '
+                                                           'wenn Sie Schaden durch Betäubungsunterstützung '
+                                                           'erhalten',
                           'UI_setting_AssistTrack_default': 'Standard: {icons}{vehicles}{damage}',
-                          'UI_setting_AssistTrack_description': 'Format der angezeigten Meldung bei Schäden am '
-                                                                'Track Assist',
+                          'UI_setting_AssistTrack_description': 'Format der angezeigten Meldung bei Schäden '
+                                                                'am Track Assist',
                           'UI_setting_AssistTrack_text': 'Track-Assistent:',
-                          'UI_setting_AssistTrack_tooltip': 'Passen Sie die Meldung an, die angezeigt wird, wenn '
-                                                            'ein Track-Assist-Schaden angezeigt wird',
+                          'UI_setting_AssistTrack_tooltip': 'Passen Sie die Meldung an, die angezeigt wird, '
+                                                            'wenn ein Track-Assist-Schaden angezeigt wird',
                           'UI_setting_Spotted_default': 'Standard: {icons}{vehicles}',
-                          'UI_setting_Spotted_description': 'Format der Nachricht, die angezeigt wird, wenn Sie '
-                                                            'einen Feind entdecken',
+                          'UI_setting_Spotted_description': 'Format der Nachricht, die angezeigt wird, wenn '
+                                                            'Sie einen Feind entdecken',
                           'UI_setting_Spotted_text': 'Gefleckt:',
-                          'UI_setting_Spotted_tooltip': 'Passen Sie die Meldung an, die angezeigt wird, wenn Sie '
-                                                        'ein feindliches Fahrzeug entdecken',
+                          'UI_setting_Spotted_tooltip': 'Passen Sie die Meldung an, die angezeigt wird, wenn '
+                                                        'Sie ein feindliches Fahrzeug entdecken',
                           'UI_setting_iconSizeX_default': 'Standard: 47 px',
                           'UI_setting_iconSizeX_text': 'Symbolbreite',
                           'UI_setting_iconSizeX_tooltip': 'Breite der Fahrzeugsymbole in Benachrichtigungen',
@@ -1097,35 +1139,41 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                           'UI_setting_iconSizeY_tooltip': 'Höhe der Fahrzeugsymbole in Benachrichtigungen',
                           'UI_setting_iconSizeY_value': ' px',
                           'UI_setting_macrosList': 'Verfügbare Makros: {icons} - Fahrzeugsymbole, {names} - '
-                                                   'Spielernamen, {vehicles} - Fahrzeugnamen, {icons_names} - '
-                                                   'Symbole mit Namen, {icons_vehicles} - Symbole mit '
-                                                   'Fahrzeugnamen, {full} - vollständige Informationen, {damage} '
-                                                   '- Schadenshöhe',
-                          'UI_setting_messageColorAssistRadioCheck_text': 'Farbe der Funkunterstützungsmeldung',
+                                                   'Spielernamen, {vehicles} - Fahrzeugnamen, {icons_names} '
+                                                   '- Symbole mit Namen, {icons_vehicles} - Symbole mit '
+                                                   'Fahrzeugnamen, {full} - vollständige Informationen, '
+                                                   '{damage} - Schadenshöhe',
+                          'UI_setting_messageColorAssistRadioCheck_text': 'Farbe der '
+                                                                          'Funkunterstützungsmeldung',
                           'UI_setting_messageColorAssistRadio_text': 'Aktuell: <font '
                                                                      "color='#%(messageColorAssistRadio)s'>■■■■</font>",
-                          'UI_setting_messageColorAssistRadio_tooltip': 'Farbe, die für den Benachrichtigungstext '
-                                                                        '„Radio Hit Assist“ verwendet wird',
-                          'UI_setting_messageColorAssistStunCheck_text': 'Farbe der Betäubungshilfe-Nachricht',
+                          'UI_setting_messageColorAssistRadio_tooltip': 'Farbe, die für den '
+                                                                        'Benachrichtigungstext „Radio Hit '
+                                                                        'Assist“ verwendet wird',
+                          'UI_setting_messageColorAssistStunCheck_text': 'Farbe der '
+                                                                         'Betäubungshilfe-Nachricht',
                           'UI_setting_messageColorAssistStun_text': 'Aktuell: <font '
                                                                     "color='#%(messageColorAssistStun)s'>■■■■</font>",
-                          'UI_setting_messageColorAssistStun_tooltip': 'Farbe, die für den Benachrichtigungstext '
-                                                                       '„Stun Hit Assist“ verwendet wird',
+                          'UI_setting_messageColorAssistStun_tooltip': 'Farbe, die für den '
+                                                                       'Benachrichtigungstext „Stun Hit '
+                                                                       'Assist“ verwendet wird',
                           'UI_setting_messageColorAssistTrackCheck_text': 'Farbe der Track-Assistenzmeldung',
                           'UI_setting_messageColorAssistTrack_text': 'Aktuell: <font '
                                                                      "color='#%(messageColorAssistTrack)s'>■■■■</font>",
-                          'UI_setting_messageColorAssistTrack_tooltip': 'Farbe, die für den Benachrichtigungstext '
-                                                                        '„Track Hit Assist“ verwendet wird',
+                          'UI_setting_messageColorAssistTrack_tooltip': 'Farbe, die für den '
+                                                                        'Benachrichtigungstext „Track Hit '
+                                                                        'Assist“ verwendet wird',
                           'UI_setting_messageColorSpottedCheck_text': 'Gefleckte Nachrichtenfarbe',
                           'UI_setting_messageColorSpotted_text': 'Aktuell: <font '
                                                                  "color='#%(messageColorSpotted)s'>■■■■</font>",
-                          'UI_setting_messageColorSpotted_tooltip': 'Farbe, die für den Benachrichtigungstext '
-                                                                    '„Spotted“ verwendet wird',
+                          'UI_setting_messageColorSpotted_tooltip': 'Farbe, die für den '
+                                                                    'Benachrichtigungstext „Spotted“ '
+                                                                    'verwendet wird',
                           'UI_setting_soundAssist_default': 'Standard: gun_intuition',
                           'UI_setting_soundAssist_text': 'Assist-Benachrichtigungston',
                           'UI_setting_soundAssist_tooltip': 'Es wird ein Ton abgespielt, wenn Sie '
-                                                            'Unterstützungsschaden (Radio, Track oder Betäubung) '
-                                                            'erhalten.',
+                                                            'Unterstützungsschaden (Radio, Track oder '
+                                                            'Betäubung) erhalten.',
                           'UI_setting_soundSpotted_default': 'Standard: feindlich_sichtbar_for_team',
                           'UI_setting_soundSpotted_text': 'Gefleckter Benachrichtigungston',
                           'UI_setting_soundSpotted_tooltip': 'Es wird ein Ton abgespielt, wenn Sie ein '
@@ -1136,18 +1184,20 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
                                                       'entdeckte Feinde und den Assist-Schaden ein'},
  'ZoomExtended': {'UI_description': 'ZoomExtended',
                   'UI_setting_disableCamAfterShotLatency_text': 'Deaktivieren Sie die Cam-After-Shot-Latenz',
-                  'UI_setting_disableCamAfterShotLatency_tooltip': 'Verzögern Sie das automatische Herunterfahren '
-                                                                   'der Kamera.',
-                  'UI_setting_disableCamAfterShotSkipClip_text': 'Deaktivieren Sie den Clip „Kamera nach Aufnahme '
-                                                                 'überspringen“.',
-                  'UI_setting_disableCamAfterShotSkipClip_tooltip': 'Beenden Sie das Magazinladesystem nicht.',
+                  'UI_setting_disableCamAfterShotLatency_tooltip': 'Verzögern Sie das automatische '
+                                                                   'Herunterfahren der Kamera.',
+                  'UI_setting_disableCamAfterShotSkipClip_text': 'Deaktivieren Sie den Clip „Kamera nach '
+                                                                 'Aufnahme überspringen“.',
+                  'UI_setting_disableCamAfterShotSkipClip_tooltip': 'Beenden Sie das Magazinladesystem '
+                                                                    'nicht.',
                   'UI_setting_disableCamAfterShot_text': 'Deaktivieren Sie die Kamera nach der Aufnahme',
-                  'UI_setting_disableCamAfterShot_tooltip': 'Deaktivieren Sie den Scharfschützenmodus nach dem '
-                                                            'Schuss.',
+                  'UI_setting_disableCamAfterShot_tooltip': 'Deaktivieren Sie den Scharfschützenmodus nach '
+                                                            'dem Schuss.',
                   'UI_setting_noBinoculars_text': 'Fernglas deaktivieren.',
                   'UI_setting_noBinoculars_tooltip': 'Beseitigen Sie den Blackout im Scharfschützenmodus.',
                   'UI_setting_noFlashBang_text': 'Deaktivieren Sie den roten Blitz.',
-                  'UI_setting_noFlashBang_tooltip': 'Entfernen Sie den roten Blitz, wenn Sie Schaden erleiden.',
+                  'UI_setting_noFlashBang_tooltip': 'Entfernen Sie den roten Blitz, wenn Sie Schaden '
+                                                    'erleiden.',
                   'UI_setting_noShockWave_text': 'Schockwelle',
                   'UI_setting_noShockWave_tooltip': 'Beseitigen Sie Kamerawackeln, wenn sie von einem Panzer '
                                                     'getroffen werden.',
@@ -1163,4 +1213,176 @@ TEXT = {'AccountManager': {'UI_description': 'AccountManager',
             'UI_native_press': 'Taste drücken...',
             'UI_native_save': 'Speichern',
             'UI_native_saved': 'Einstellungen gespeichert'}}
- 
+
+PANEL = {'actionFailed': 'Die Aktion ist fehlgeschlagen. Siehe game.log.',
+ 'all': 'Alle',
+ 'applied': 'Änderungen übernommen.',
+ 'apply': 'Anwenden',
+ 'applyTiming.battle': 'Verfügbar im nächsten Gefecht. Kein Neustart des Spiels erforderlich.',
+ 'applyTiming.live': 'Wird nach dem Speichern beim nächsten Modul-Update angewendet. Kein Neustart '
+                     'erforderlich.',
+ 'applyTiming.restart': 'Diese Option erfordert einen Neustart des Spiels nach dem Speichern.',
+ 'applyTiming.view': 'Verfügbar, wenn Sie den Bildschirm erneut öffnen oder die Funktion erneut verwenden. '
+                     'Kein Neustart erforderlich.',
+ 'author': 'Autor',
+ 'cancel': 'Abbrechen',
+ 'category.battle': 'Schlacht',
+ 'category.general': 'Allgemein',
+ 'category.hangar': 'Hangar',
+ 'category.system': 'System',
+ 'clearSecret': 'Klar',
+ 'close': 'Schließen',
+ 'color.area': 'Farbspektrum',
+ 'color.current': 'Aktuelle Farbe',
+ 'color.new': 'Neue Farbe',
+ 'compatibility.confirmed': '{integration}: Überlappende Funktionalität ist aktiv und kann {component} '
+                            'beeinträchtigen.',
+ 'compatibility.possible': '{integration} erkannt; es kann sich mit {component} überschneiden.',
+ 'confirmDelete': 'Dieses Profil löschen?',
+ 'confirmDiscard': 'Änderungen verwerfen',
+ 'confirmSave': 'Speichern und anwenden',
+ 'confirmStay': 'Abbrechen',
+ 'confirmText': 'Sie haben Änderungen, die nicht gespeichert wurden.',
+ 'confirmTitle': 'Ungespeicherte Änderungen',
+ 'core.accent': 'Akzentfarbe',
+ 'core.accent.tip': 'Hervorhebungsfarbe des Einstellungsfensters.',
+ 'core.appearance': 'Darstellung',
+ 'core.background': 'Hintergrundfarbe',
+ 'core.border': 'Randfarbe',
+ 'core.debug': 'Debug-Protokollierung',
+ 'core.debug.tip': 'Schreibt zusätzliche [Driftkings.Settings] DEBUG-Zeilen in game.log.',
+ 'core.description': 'Einstellungen für die integrierte Driftkings-Schnittstelle.',
+ 'core.diagnostics': 'Diagnose',
+ 'core.fontSize': 'Schriftgröße',
+ 'core.general': 'Allgemein',
+ 'core.hotkey': 'Verknüpfung öffnen/schließen',
+ 'core.hover': 'Hover-Farbe',
+ 'core.language': 'Sprache der Oberfläche',
+ 'core.language.auto': 'Spielsprache',
+ 'core.name': 'Oberfläche und Einstellungen',
+ 'core.opacity': 'Fensteropazität',
+ 'core.secondary': 'Sekundärtext',
+ 'core.sectionFontSize': 'Schriftgröße des Abschnitts',
+ 'core.sidebarOpacity': 'Deckkraft der Seitenleiste',
+ 'core.textColor': 'Textfarbe',
+ 'core.theme': 'Thema',
+ 'core.uiScale': 'Schnittstellenskala',
+ 'dependencyMissing': 'Fehlende Abhängigkeit',
+ 'hex': 'VERHEXEN',
+ 'image.unavailable': 'Bild nicht verfügbar',
+ 'installed': 'Installierte Mods',
+ 'invalidValue': 'Ungültiger Wert.',
+ 'modified': 'Geändert',
+ 'noControls': 'Dieser Mod hat keine Einstellungen.',
+ 'noKey': 'Nicht zugewiesen',
+ 'noMods': 'Keine Mods haben registrierte Einstellungen.',
+ 'notApplied': 'Nicht angewendet',
+ 'off': 'AUS',
+ 'on': 'AN',
+ 'pathHelp': 'Geben Sie den Pfad ein. Native Dateidialoge sind nicht verfügbar.',
+ 'presets': 'Voreinstellungen',
+ 'pressKey': 'Taste drücken (Esc bricht ab)',
+ 'profileCreate': 'Erstellen / duplizieren',
+ 'profileDelete': 'Auswahl löschen',
+ 'profileDone': 'Profil aktualisiert. Importierte Werte müssen Anwenden.',
+ 'profileExport': 'JSON exportieren',
+ 'profileHelp': 'Wählen Sie ein Profil aus oder geben Sie einen neuen Namen ein. Der Export schließt '
+                'Geheimnisse aus. Fügen Sie JSON zum Importieren ein.',
+ 'profileImport': 'JSON importieren',
+ 'profileLoad': 'Laden',
+ 'profileName': 'Profilname',
+ 'profileRename': 'Umbenennen',
+ 'profiles': 'Profile',
+ 'reset': 'Standard wiederherstellen',
+ 'resetDone': 'Standardeinstellungen wiederhergestellt. Bewerben Sie sich, um sie zu nutzen.',
+ 'resetTheme': 'Thema zurücksetzen',
+ 'restartLater': 'Später',
+ 'restartNow': 'Jetzt neu starten',
+ 'restartRequired': 'Erfordert einen Neustart des Spiels.',
+ 'restartText': 'Änderungen wurden gespeichert. Einige Optionen werden nach dem Neustart des Spiels '
+                'verfügbar.',
+ 'restartTitle': 'Neustart erforderlich',
+ 'saveApply': 'Speichern und anwenden',
+ 'saveFailed': 'Einstellungen konnten nicht gespeichert werden. Siehe game.log.',
+ 'saved': 'Einstellungen gespeichert.',
+ 'search': 'Mods und Einstellungen suchen…',
+ 'secretEmpty': 'Nicht festgelegt',
+ 'secretSet': 'Gespeichert (versteckt)',
+ 'sound.bank': 'Soundbank',
+ 'sound.eventMissing': 'Das Wwise-Event ist in diesem Spielkontext nicht verfügbar.',
+ 'sound.missing': 'Die Soundbank ist nicht geladen.',
+ 'sound.name': 'Sound-Mods',
+ 'sound.play': 'Abspielen',
+ 'sound.stop': 'Stoppen',
+ 'sound.unknown': 'Ladestatus unbekannt',
+ 'status.available': 'Komponente verfügbar',
+ 'status.disabled': 'AUS',
+ 'status.enabled': 'Aktiv',
+ 'status.restart': 'Neustart erforderlich',
+ 'status.unavailable': 'Nicht verfügbar',
+ 'status.unknown': 'Status nicht verfügbar',
+ 'statusActive': 'Aktiv',
+ 'statusConfigError': 'Die Konfigurationsdatei konnte nicht gelesen werden. Standardwerte werden angezeigt; '
+                      'Die Datei bleibt beim Speichern erhalten und wird gesichert.',
+ 'statusError': 'Dieser Mod hat einen Fehler gemeldet. Siehe game.log.',
+ 'theme.black': 'Schwarz',
+ 'theme.custom': 'Brauch',
+ 'theme.dark': 'Dunkel',
+ 'theme.transparent': 'Transparent',
+ 'theme.wot': 'WoT-Standard',
+ 'timing.battle': 'Nächster Kampf',
+ 'timing.live': 'Sofort',
+ 'timing.restart': 'Erfordert einen Neustart',
+ 'timing.view': 'Nächste Ansichtsöffnung',
+ 'title': 'DRIFTKINGS – EINSTELLUNGEN',
+ 'undo': 'Rückgängig machen',
+ 'unsaved': 'Ungespeicherte Änderungen',
+ 'updates.AVAILABLE': 'Update verfügbar',
+ 'updates.CHECKING': 'Suche nach Updates...',
+ 'updates.DOWNLOADING': 'Update wird heruntergeladen',
+ 'updates.ERROR': 'Der Vorgang konnte nicht abgeschlossen werden.',
+ 'updates.IDLE': 'DriftKings ist auf dem neuesten Stand.',
+ 'updates.INSTALLING': 'Vorbereiten einer sicheren Installation...',
+ 'updates.READY': 'Update zur Installation bereit.',
+ 'updates.RESTART_REQUIRED': 'Update vorbereitet. Es wird nach der Schließung von World of Tanks angewendet.',
+ 'updates.VERIFYING': 'Aktualisierung wird überprüft...',
+ 'updates.autoCheck': 'Suchen Sie automatisch nach Updates',
+ 'updates.availableNotice': 'Ein DriftKings-Update ist verfügbar: {version}. Öffnen Sie die Einstellungen, '
+                            'um es zu überprüfen.',
+ 'updates.beta': 'Beta',
+ 'updates.block.battleContext': 'Kehren Sie zum Hangar zurück, um die Installation vorzubereiten.',
+ 'updates.block.loadingContext': 'Warten Sie, bis der Hangar vollständig geladen ist.',
+ 'updates.block.replayContext': 'Beenden Sie die Wiedergabe, bevor Sie die Installation vorbereiten.',
+ 'updates.block.unknownContext': 'Der Clientstatus erlaubt keine Installationsvorbereitung.',
+ 'updates.block.unsafeContext': 'Kehren Sie zum Hangar zurück, um die Installation vorzubereiten.',
+ 'updates.cancelDownload': 'Download abbrechen',
+ 'updates.cancelInstall': 'Update abbrechen',
+ 'updates.cancelling': 'Warten auf Stornierungsbestätigung...',
+ 'updates.channel': 'Kanal',
+ 'updates.check': 'Nach Updates suchen',
+ 'updates.download': 'Update herunterladen',
+ 'updates.incompatible': 'Nicht kompatibel mit dieser Spielversion.',
+ 'updates.install': 'Jetzt aktualisieren',
+ 'updates.installBlocked': 'Die Installation kann nur im Hangar sicher vorbereitet werden.',
+ 'updates.installed': 'Installierte Version',
+ 'updates.lastCheck': 'Letzte Kontrolle',
+ 'updates.later': 'Später',
+ 'updates.latest': 'Neue Version verfügbar',
+ 'updates.never': 'Niemals',
+ 'updates.notChecked': 'Es wurde noch keine Update-Prüfung durchgeführt.',
+ 'updates.restartBlocked': 'Neustart ist nicht verfügbar. Überprüfen Sie den Clientstatus und speichern Sie '
+                           'alle ausstehenden Änderungen.',
+ 'updates.restartText': 'Das Installationsprogramm ist vorbereitet. Das Spiel wird geschlossen und erneut '
+                        'geöffnet, sobald das Update installiert ist. Wenn die Installation fehlschlägt, '
+                        'öffnen Sie das Spiel manuell, um das Ergebnis zu überprüfen.',
+ 'updates.result.cancelled': 'Update abgebrochen.',
+ 'updates.result.failed': 'Das Update konnte nicht angewendet werden.',
+ 'updates.result.installed': 'DriftKings wurde auf {version} aktualisiert.',
+ 'updates.result.rolled_back': 'Das Update ist fehlgeschlagen und die vorherige Version wurde '
+                               'wiederhergestellt.',
+ 'updates.stable': 'Stabil',
+ 'updates.title': 'Updates',
+ 'updates.transportUnavailable': 'Der sichere Netzwerktransport ist in dieser Laufzeit nicht verfügbar.',
+ 'updates.wgcLimit': 'Das Spiel wird geschlossen, um das Update zu installieren, und nach der Installation '
+                     'erneut geöffnet. Starten Sie es während dieses Vorgangs nicht manuell.',
+ 'version': 'Version'}

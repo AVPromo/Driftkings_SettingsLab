@@ -5,10 +5,20 @@ from random import choice
 
 from PlayerEvents import g_playerEvents
 from SoundGroups import g_instance
+from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 
 from Driftkings._constants import SIXTH_SENSE
 from Driftkings.meta.battle.sixth_sense import SixthSenseMeta
 
+_STATES_TO_HIDE = frozenset((
+    VEHICLE_VIEW_STATE.SWITCHING, VEHICLE_VIEW_STATE.RESPAWNING,
+    VEHICLE_VIEW_STATE.DESTROYED, VEHICLE_VIEW_STATE.CREW_DEACTIVATED))
+_MESSAGES = (
+    "Detected: <font color='#daff8f'>{}</font> sec.",
+    "Hide: <font color='#daff8f'>{}</font> sec.",
+    "Run: <font color='#daff8f'>{}</font> sec.",
+    "Alert: <font color='#ff7f7f'>{}</font> sec.",
+    "Danger: <font color='#ff5555'>{}</font> sec.")
 
 def _component():
     # Resolve live state after component initialization; avoid circular imports.
@@ -83,7 +93,7 @@ class SixthSense(SixthSenseMeta):
         self.radio_installed = 'improvedRadioCommunication' in (device.groupName for device in devices if device is not None)
 
     def getNewRandomMessage(self):
-        return choice([message for message in _component().MESSAGES if message != self.__message])
+        return choice([message for message in _MESSAGES if message != self.__message])
 
     def _onObservedByEnemy(self, detection_type, is_observed):
         if not is_observed:
@@ -108,7 +118,7 @@ class SixthSense(SixthSenseMeta):
         self.as_showS(time)
 
     def _onVehicleStateUpdated(self, state, value):
-        if state in _component()._STATES_TO_HIDE:
+        if state in _STATES_TO_HIDE:
             self.as_hideS()
 
     def _onRoundFinished(self, *_):

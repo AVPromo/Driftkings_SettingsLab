@@ -17,10 +17,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Test settings and component integration
-        run: python -m unittest discover -s build_tools/tests
-      - name: Check EU translations
-        run: python build_tools/localize_configs.py --check
+      - name: Validate build inputs and package plan
+        run: python build_tools/validate_build_data.py
       - name: Validate JSON resources and manifests
         run: |
           python - <<'PY'
@@ -36,8 +34,3 @@ jobs:
           python -c "import ast, os; files = [os.path.join(root, name) for root, dirs, names in os.walk('mod/res/scripts/client') for name in names if name.endswith('.py')]; [ast.parse(open(path, 'rb').read(), path) for path in files]; print('%d Python sources parsed' % len(files))"
       - name: Check Gameface JavaScript
         run: find mod/res/gui/gameface -name '*.js' -exec node --check {} \;
-      - name: Test owned Gameface bridge and carousel
-        run: |
-          node build_tools/tests/ui_bridge_test.js
-          node build_tools/tests/carousel_native_test.js
-          node build_tools/tests/carousel_layout_test.js

@@ -4,7 +4,7 @@ from functools import partial
 import BigWorld
 import Keys
 
-from Driftkings.common import callback
+from BigWorld import callback
 
 __all__ = ('BigWorld_callback', 'sendPanelMessage', 'checkKeys', 'refreshCurrentVehicle', 'Sound',)
 

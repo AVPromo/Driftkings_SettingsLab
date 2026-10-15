@@ -1,9 +1,27 @@
 {
-    "enabled": true,
-    "files": {
-        "res/gui/maps/Driftkings/AccountManager/**": "mod/res/gui/maps/Driftkings/AccountManager/**",
-        "res/scripts/client/Driftkings/components/account_manager.pyc": "build/staging/res/scripts/client/Driftkings/components/account_manager.pyc",
-        "res/gui/gameface/mods/Driftkings/AccountManager/**": "mod/res/gui/gameface/mods/Driftkings/AccountManager/**",
-        "res/gui/gen_resources/driftkings.DriftkingsAccountManager.json": "mod/res/gui/gen_resources/driftkings.DriftkingsAccountManager.json"
+  "schema_version": 1,
+  "id": "AccountManager",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "components.account_manager",
+  "config_files": [
+    "default/account_manager.json"
+  ],
+  "assets": [
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/AccountManager/**",
+      "target": "res/gui/gameface/mods/Driftkings/AccountManager/**",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gen_resources/driftkings.DriftkingsAccountManager.json",
+      "target": "res/gui/gen_resources/driftkings.DriftkingsAccountManager.json",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/maps/Driftkings/AccountManager/**",
+      "target": "res/gui/maps/Driftkings/AccountManager/**",
+      "generator": null
     }
+  ]
 }

@@ -1,37 +1,37 @@
 {
+  "backGroundEnabled": false,
+  "background": {
+    "alpha": 80,
+    "height": 50,
+    "image": "../maps/Driftkings/MainGun/bg.png",
+    "width": 200
+  },
+  "enabled": true,
+  "format": "<font size=\"16\" face=\"$FieldFont\"><b>{mainGun}</b></font>",
+  "mainGun": {
+    "dynamic": true,
     "enabled": true,
-    "backGroundEnabled": false,
-    "textLock": false,
-    "format": "<font size=\"16\" face=\"$FieldFont\"><b>{mainGun}</b></font>",
-    "background": {
-        "width": 200,
-        "height": 50,
-        "alpha": 80,
-        "image": "../maps/Driftkings/MainGun/bg.png"
-    },
-    "mainGun": {
-        "enabled": true,
-        "dynamic": true,
-        "format": "{mainGunIcon}{mainGunDoneIcon}{mainGunFailureIcon}  <font color='#E0E06D'>{mainGun}</font>",
-        "mainGunDoneIcon": "<img src='img://gui/maps/icons/library/done.png' width='32' height='32' vspace='-8'>",
-        "mainGunFailureIcon": "<img src='img://gui/maps/icons/library/icon_alert_32x32.png' width='32' height='32' vspace='-8'>",
-        "mainGunIcon": "<img src='img://gui/maps/icons/achievement/32x32/mainGun.png' width='32' height='32' vspace='-8'>"
-    },
-    "shadow": {
-        "enabled": true,
-        "distance": 0,
-        "angle": 90,
-        "color": "#000000",
-        "alpha": 0.8,
-        "blurX": 2,
-        "blurY": 2,
-        "strength": 2,
-        "quality": 4
-    },
-    "textPosition": {
-        "alignX": "left",
-        "alignY": "top",
-        "x": 200,
-        "y": 200
-    }
+    "format": "{mainGunIcon}{mainGunDoneIcon}{mainGunFailureIcon} <font color='#E0E06D'>{mainGun}</font>",
+    "mainGunDoneIcon": "<img src='img://gui/maps/icons/library/done.png' width='32' height='32' vspace='-8'>",
+    "mainGunFailureIcon": "<img src='img://gui/maps/icons/library/icon_alert_32x32.png' width='32' height='32' vspace='-8'>",
+    "mainGunIcon": "<img src='img://gui/maps/icons/achievement/32x32/mainGun.png' width='32' height='32' vspace='-8'>"
+  },
+  "shadow": {
+    "alpha": 0.8,
+    "angle": 90,
+    "blurX": 2,
+    "blurY": 2,
+    "color": "#000000",
+    "distance": 0,
+    "enabled": true,
+    "quality": 4,
+    "strength": 2
+  },
+  "textLock": false,
+  "textPosition": {
+    "alignX": "left",
+    "alignY": "top",
+    "x": 200,
+    "y": 200
+  }
 }

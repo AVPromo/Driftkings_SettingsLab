@@ -1,6 +1,11 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/battle/zoom.pyc": "build/staging/res/scripts/client/Driftkings/battle/zoom.pyc"
-    }
+  "schema_version": 1,
+  "id": "ZoomExtended",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.zoom",
+  "config_files": [
+    "default/zoom_extended.json"
+  ],
+  "assets": []
 }

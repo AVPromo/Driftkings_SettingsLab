@@ -1,8 +1,9 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/stats/__init__.pyc": "build/staging/res/scripts/client/Driftkings/stats/__init__.pyc",
-        "res/scripts/client/Driftkings/stats/vehinfo.pyc": "build/staging/res/scripts/client/Driftkings/stats/vehinfo.pyc",
-        "res/scripts/client/Driftkings/stats/xvm_stats.pyc": "build/staging/res/scripts/client/Driftkings/stats/xvm_stats.pyc"
-    }
+  "schema_version": 1,
+  "id": "stats",
+  "kind": "shared",
+  "enabled": true,
+  "entrypoint": null,
+  "config_files": [],
+  "assets": []
 }

@@ -1,6 +1,11 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/battle/info_panel.pyc": "build/staging/res/scripts/client/Driftkings/battle/info_panel.pyc"
-    }
+  "schema_version": 1,
+  "id": "InfoPanel",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.info_panel",
+  "config_files": [
+    "default/info_panel.json"
+  ],
+  "assets": []
 }

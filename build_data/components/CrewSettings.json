@@ -1,6 +1,11 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/lobby/crew.pyc": "build/staging/res/scripts/client/Driftkings/lobby/crew.pyc"
-    }
+  "schema_version": 1,
+  "id": "CrewSettings",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "lobby.crew",
+  "config_files": [
+    "default/crew_settings.json"
+  ],
+  "assets": []
 }

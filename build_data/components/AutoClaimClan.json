@@ -1,6 +1,11 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/lobby/auto_claim_clan.pyc": "build/staging/res/scripts/client/Driftkings/lobby/auto_claim_clan.pyc"
-    }
+  "schema_version": 1,
+  "id": "AutoClaimClan",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "lobby.auto_claim_clan",
+  "config_files": [
+    "default/auto_claim_clan.json"
+  ],
+  "assets": []
 }

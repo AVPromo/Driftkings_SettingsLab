@@ -1,74 +1,55 @@
 # -*- coding: utf-8 -*-
-"""Carousel PNGs from external overrides or packaged resources."""
+"""Carousel PNGs from the resource tree mounted by the client's .wotmod loader."""
 import base64
 import logging
 import os
 import re
 
-ICON_ROOT = 'mods/Driftkings/Carroucel/'
-ICON_PATH = re.compile(r'mods/Driftkings/Carroucel/[#A-Za-z0-9_-]+\.png')
-MAX_IMAGE_SIZE = 2 * 1024 * 1024
+LEGACY_ROOT = 'mods/Driftkings/Carroucel/'
 RESOURCE_ROOT = 'gui/maps/Driftkings/Carroucel/'
+ICON_PATH = re.compile(r'(?:(?:coui|img)://)?gui/maps/Driftkings/Carroucel/[#A-Za-z0-9_-]+\.png|mods/Driftkings/Carroucel/[#A-Za-z0-9_-]+\.png')
+MAX_IMAGE_SIZE = 2 * 1024 * 1024
 
 
 class CarouselImages(object):
     def __init__(self, root=None):
-        self.root = os.path.realpath(root or os.getcwd())
+        # Explicit resource root for offline tools; the game always uses ResMgr.
+        self.root = os.path.realpath(root) if root is not None else None
         self.cache = {}
         self.missing = set()
 
     def resolve(self, path):
         if not ICON_PATH.match(path) or ICON_PATH.match(path).group(0) != path:
             return ''
-        absolute = os.path.realpath(os.path.join(self.root, path))
-        allowed = os.path.realpath(os.path.join(self.root, ICON_ROOT)) + os.sep
-        if not os.path.normcase(absolute).startswith(os.path.normcase(allowed)):
-            return ''
+        resource = path.split('://', 1)[-1]
+        if resource.startswith(LEGACY_ROOT):
+            resource = RESOURCE_ROOT + resource[len(LEGACY_ROOT):]
+        if resource in self.cache:
+            return self.cache[resource]
         try:
-            stat = os.stat(absolute)
-            signature = (stat.st_mtime, stat.st_size)
-            cached = self.cache.get(path)
-            if cached and cached[0] == signature:
-                return cached[1]
-            if stat.st_size > MAX_IMAGE_SIZE:
-                return ''
-            with open(absolute, 'rb') as stream:
-                data = stream.read(MAX_IMAGE_SIZE + 1)
-            if len(data) > MAX_IMAGE_SIZE or not data.startswith(b'\x89PNG\r\n\x1a\n'):
-                return ''
+            try:
+                import ResMgr
+            except ImportError:
+                data = None
+                if self.root is not None:
+                    with open(os.path.join(self.root, resource), 'rb') as stream:
+                        data = stream.read(MAX_IMAGE_SIZE + 1)
+            else:
+                section = ResMgr.openSection(resource)
+                data = section.asBinary if section is not None else None
+        except (IOError, OSError, ValueError):
+            data = None
+        if data and len(data) <= MAX_IMAGE_SIZE and data.startswith(b'\x89PNG\r\n\x1a\n'):
             result = 'data:image/png;base64,' + base64.b64encode(data).decode('ascii')
             if len(self.cache) >= 32:
                 self.cache.clear()
-            self.cache[path] = (signature, result)
+            self.cache[resource] = result
             self.missing.discard(path)
             return result
-        except (IOError, OSError):
-            resource = RESOURCE_ROOT + path[len(ICON_ROOT):]
-            cached = self.cache.get(resource)
-            if cached is not None:
-                return cached
-            try:
-                import ResMgr
-                section = ResMgr.openSection(resource)
-                data = section.asBinary if section is not None else None
-            except ImportError:
-                # Local tools read the same res tree without the client API.
-                try:
-                    with open(os.path.join(self.root, resource), 'rb') as stream:
-                        data = stream.read(MAX_IMAGE_SIZE + 1)
-                except (IOError, OSError):
-                    data = None
-            if data and len(data) <= MAX_IMAGE_SIZE and data.startswith(b'\x89PNG\r\n\x1a\n'):
-                result = 'data:image/png;base64,' + base64.b64encode(data).decode('ascii')
-                if len(self.cache) >= 32:
-                    self.cache.clear()
-                self.cache[resource] = result
-                self.missing.discard(path)
-                return result
-            if path not in self.missing:
-                self.missing.add(path)
-                logging.getLogger('Driftkings.CarouselStats').warning('Carousel icon not found: %s', path)
-            return ''
+        if path not in self.missing:
+            self.missing.add(path)
+            logging.getLogger('Driftkings.CarouselStats').warning('Packaged carousel icon not found: %s', resource)
+        return ''
 
     def collect(self, vehicles):
         paths = set()

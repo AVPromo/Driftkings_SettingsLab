@@ -1,6 +1,11 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/battle/own_health.pyc": "build/staging/res/scripts/client/Driftkings/battle/own_health.pyc"
-    }
+  "schema_version": 1,
+  "id": "OwnHealth",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.own_health",
+  "config_files": [
+    "default/own_health.json"
+  ],
+  "assets": []
 }

@@ -1,6 +1,11 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/battle/gun_marks.pyc": "build/staging/res/scripts/client/Driftkings/battle/gun_marks.pyc"
-    }
+  "schema_version": 1,
+  "id": "MarksOnGunBattle",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.gun_marks",
+  "config_files": [
+    "default/marks_on_gun_battle.json"
+  ],
+  "assets": []
 }

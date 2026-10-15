@@ -1,7 +1,20 @@
 {
-    "enabled": true,
-    "files": {
-        "res/gui/gameface/mods/Driftkings/DKModSettings/**": "mod/res/gui/gameface/mods/Driftkings/DKModSettings/**",
-        "res/gui/gen_resources/driftkings.DriftkingsDKModSettings.json": "mod/res/gui/gen_resources/driftkings.DriftkingsDKModSettings.json"
+  "schema_version": 1,
+  "id": "DKModSettings",
+  "kind": "shared",
+  "enabled": true,
+  "entrypoint": null,
+  "config_files": [],
+  "assets": [
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/DKModSettings/**",
+      "target": "res/gui/gameface/mods/Driftkings/DKModSettings/**",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gen_resources/driftkings.DriftkingsDKModSettings.json",
+      "target": "res/gui/gen_resources/driftkings.DriftkingsDKModSettings.json",
+      "generator": null
     }
+  ]
 }

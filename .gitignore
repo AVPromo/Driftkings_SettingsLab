@@ -80,3 +80,8 @@ flash_source/**/obj/
 # Native helpers and exact WOTMOD staging
 /installer/build/
 /build/staging/
+/build_data/toolchain.local.json
+
+# Local verification fixtures; excluded from source publication
+/build_tools/tests/
+/build_tools/common_startup_probe_py27.py

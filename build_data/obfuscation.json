@@ -1,4 +1,6 @@
 {
+  "schema_version": 1,
+  "path_root": "res/scripts/client",
   "enabled": true,
   "profile": "safe",
   "include": [

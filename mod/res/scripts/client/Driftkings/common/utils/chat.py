@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from functools import partial
 
-from Driftkings.common import callback
+from BigWorld import callback
 
 __all__ = ('sendChatMessage',)
 MAX_CHAT_MESSAGE_LENGTH = 220

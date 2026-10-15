@@ -740,20 +740,20 @@ DEFAULTS = {
             'normal': {
                 'textFieldShadow': {GLOBAL.ENABLED: True, GLOBAL.COLOR: '#000000', GLOBAL.ALPHA: 80, GLOBAL.BLUR: 2, GLOBAL.STRENGTH: 2, GLOBAL.DISTANCE: 0, GLOBAL.ANGLE: 0},
                 'extraFields': [
-                    {GLOBAL.X: 140, GLOBAL.Y: 18, GLOBAL.ALPHA: '{{v.battles?100|0}}', 'format': "<img src='mods/Driftkings/Carroucel/battles.png' width='13' height='13'>", GLOBAL.SHADOW: '$ref:textFieldShadow'},
+                    {GLOBAL.X: 140, GLOBAL.Y: 18, GLOBAL.ALPHA: '{{v.battles?100|0}}', 'format': "<img src='gui/maps/Driftkings/Carroucel/battles.png' width='13' height='13'>", GLOBAL.SHADOW: '$ref:textFieldShadow'},
                     {GLOBAL.X: 140, GLOBAL.Y: 15, GLOBAL.ALIGN: GLOBAL.RIGHT, 'format': "<font face='mono' size='12' color='{{v.c_battles}}'><b>{{v.battles}}</b></font>", GLOBAL.SHADOW: '$ref:textFieldShadow'},
-                    {GLOBAL.X: 140, GLOBAL.Y: 33, GLOBAL.ALPHA: '{{v.winrate?100|0}}', 'format': "<img src='mods/Driftkings/Carroucel/wins.png' width='13' height='13'>", GLOBAL.SHADOW: '$ref:textFieldShadow'},
+                    {GLOBAL.X: 140, GLOBAL.Y: 33, GLOBAL.ALPHA: '{{v.winrate?100|0}}', 'format': "<img src='gui/maps/Driftkings/Carroucel/wins.png' width='13' height='13'>", GLOBAL.SHADOW: '$ref:textFieldShadow'},
                     {GLOBAL.X: 140, GLOBAL.Y: 30, GLOBAL.ALIGN: GLOBAL.RIGHT, 'format': "<b><font face='mono' size='12' color='{{v.c_winrate|#CFCFCF}}'>{{v.winrate%2d~%}}</font></b>", GLOBAL.SHADOW: '$ref:textFieldShadow'},
                     {GLOBAL.X: 0,   GLOBAL.Y: 33, GLOBAL.ALPHA: '{{v.hitsRatio?100|0}}', 'format': "<font face='mono' size='14' color='#00AAFF'>&#x25CE;</font>", GLOBAL.SHADOW: '$ref:textFieldShadow'},
                     {GLOBAL.X: 15,  GLOBAL.Y: 35, GLOBAL.ALIGN: GLOBAL.LEFT, 'format': "<b><font face='mono' size='11'color='{{v.c_hitsRatio}}'>{{v.hitsRatio%2d~%}}</font></b>", GLOBAL.SHADOW: '$ref:textFieldShadow'},
-                    {GLOBAL.X: 0,   GLOBAL.Y: 63, GLOBAL.ALPHA: '{{v.tfb?100|0}}', 'format': "<img src='mods/Driftkings/Carroucel/damage.png' width='18' height='18'>", GLOBAL.SHADOW: '$ref:textFieldShadow'},
+                    {GLOBAL.X: 0,   GLOBAL.Y: 63, GLOBAL.ALPHA: '{{v.tfb?100|0}}', 'format': "<img src='gui/maps/Driftkings/Carroucel/damage.png' width='18' height='18'>", GLOBAL.SHADOW: '$ref:textFieldShadow'},
                     {GLOBAL.X: 19,  GLOBAL.Y: 63, GLOBAL.ALIGN: GLOBAL.LEFT, 'format': "<font face='mono' size='12' color='{{v.c_wn8effd}}'><b>{{v.tdb%d}}</b></font> <font size='12' color='#CFCFCF'>{{v.tfb?/|}}{{v.tfb?{{v.wn8expd%d}}|}}</font>", GLOBAL.SHADOW: '$ref:textFieldShadow'},
                     {GLOBAL.X: 152, GLOBAL.Y: 63, GLOBAL.ALIGN: GLOBAL.RIGHT, 'format': '[{{v.battletiermin}}-{{v.battletiermax}}]', GLOBAL.SHADOW: '$ref:textFieldShadow'},
                     {GLOBAL.X: 1,   GLOBAL.Y: 12, 'format': "<img src='{{icon:mastery}}' width='23' height='23'>", GLOBAL.SHADOW: '$ref:textFieldShadow'},
                     {GLOBAL.X: 140, GLOBAL.Y: 45, GLOBAL.WIDTH: 14, GLOBAL.HEIGHT: 14, GLOBAL.ALPHA: '{{v.marksOnGun?100|0}}', 'format': "<img src='{{icon:marksOnGun}}' width='14' height='14'>"},
                     {GLOBAL.X: 140, GLOBAL.Y: 45, GLOBAL.ALIGN: GLOBAL.RIGHT, 'format': "<font size='12' color='{{v.c_damageRating}}'><b>{{v.damageRating%4.01f~%}}</b></font>", GLOBAL.SHADOW: '$ref:textFieldShadow'},
                     {GLOBAL.X: 1,   GLOBAL.Y: 1, 'layer': 'substrate', GLOBAL.WIDTH: 160, GLOBAL.HEIGHT: 100, 'bgColor': '#0A0A0A'},
-                    {GLOBAL.ENABLED: True, GLOBAL.X: 2, GLOBAL.Y: 2, 'layer': 'substrate', GLOBAL.WIDTH: 160, GLOBAL.HEIGHT: 100, GLOBAL.ALPHA: '{{v.selected?100|0}}', 'format': "<img src='mods/Driftkings/Carroucel/{{v.c_type}}.png' width='154' height='94'>"}
+                    {GLOBAL.ENABLED: True, GLOBAL.X: 2, GLOBAL.Y: 2, 'layer': 'substrate', GLOBAL.WIDTH: 160, GLOBAL.HEIGHT: 100, GLOBAL.ALPHA: '{{v.selected?100|0}}', 'format': "<img src='gui/maps/Driftkings/Carroucel/{{v.c_type}}.png' width='154' height='94'>"}
                 ],
                 'fields': {
                     'flag': {GLOBAL.ENABLED: True, 'dx': 0, 'dy': 0, GLOBAL.ALPHA: 100, 'scale': 1},

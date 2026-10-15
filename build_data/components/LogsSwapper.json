@@ -1,6 +1,11 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/components/log_files.pyc": "build/staging/res/scripts/client/Driftkings/components/log_files.pyc"
-    }
+  "schema_version": 1,
+  "id": "LogsSwapper",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "components.log_files",
+  "config_files": [
+    "default/logs_swapper.json"
+  ],
+  "assets": []
 }

@@ -32,8 +32,9 @@ def battlePageAliases():
 def battlePageCandidates(alias):
     # The 2.4.1 Wulf HUD event follows the legacy Scaleform page event.
     # It must not redirect our Flash component factory onto the Wulf HUD.
-    pages = [page for page, hud in VIEW_BATTLE_PAGE_CONFIG_BY_ARENA_GUI_TYPE.values()
-             if hud == alias and page is not None]
+    # Client extensions can register a page-only tuple, without a Wulf HUD.
+    pages = [config[0] for config in VIEW_BATTLE_PAGE_CONFIG_BY_ARENA_GUI_TYPE.values()
+             if len(config) >= 2 and config[1] == alias and config[0] is not None]
     result = []
     for page in sorted(set(pages)) + [alias]:
         if page not in result:
@@ -115,6 +116,8 @@ class BattleViewHandler(PackageBusinessHandler):
             return False
         view.flashObject.as_DriftkingsCreate(missing)
         if getattr(view, '_isBattleLoading', False):
-            # New HUD components must be restored when native loading closes.
-            view._blToggling.update(alias for alias in missing if view.isFlashComponentRegistered(alias))
+            # Match native components: hide during loading, then restore them.
+            registered = [alias for alias in missing if view.isFlashComponentRegistered(alias)]
+            view.as_setComponentsVisibilityS(None, registered)
+            view._blToggling.update(registered)
         return all(view.isFlashComponentRegistered(alias) for alias in aliases)

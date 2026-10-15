@@ -1,7 +1,7 @@
 {
-    "enabled": true,
-    "logSwapper": true,
-    "wgLogHideCritics": true,
-    "wgLogHideBlock": true,
-    "wgLogHideAssist": true
+  "enabled": true,
+  "logSwapper": true,
+  "wgLogHideAssist": true,
+  "wgLogHideBlock": true,
+  "wgLogHideCritics": true
 }

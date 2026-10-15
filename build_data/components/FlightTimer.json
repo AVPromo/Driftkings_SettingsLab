@@ -1,6 +1,11 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/battle/flight_timer.pyc": "build/staging/res/scripts/client/Driftkings/battle/flight_timer.pyc"
-    }
+  "schema_version": 1,
+  "id": "FlightTimer",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.flight_timer",
+  "config_files": [
+    "default/flight_timer.json"
+  ],
+  "assets": []
 }

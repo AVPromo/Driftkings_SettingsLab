@@ -1,6 +1,11 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/battle/spotted_light.pyc": "build/staging/res/scripts/client/Driftkings/battle/spotted_light.pyc"
-    }
+  "schema_version": 1,
+  "id": "SpottedExtendedLight",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.spotted_light",
+  "config_files": [
+    "default/spotted_extended_light.json"
+  ],
+  "assets": []
 }

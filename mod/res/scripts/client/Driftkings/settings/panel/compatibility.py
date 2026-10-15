@@ -170,7 +170,7 @@ class TemplateAdapter(object):
                 raise ValueError('alphaPath must name a declared numeric field')
             mod.index[color_key].metadata['alphaKey'] = alpha_key
         if key == 'SixthSense' and 'sixthSenseSound' in names:
-            from Driftkings.settings.panel.locales import translations
+            from Driftkings.i18n.panel import translations
             mod.category = translations('sound.name')
             mod.icon = 'speaker'
             play = Control('button', 'soundPreview', translations('sound.play'), column=0)

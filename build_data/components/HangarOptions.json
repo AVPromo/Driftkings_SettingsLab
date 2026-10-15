@@ -1,13 +1,47 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/lobby/hangar_options.pyc": "build/staging/res/scripts/client/Driftkings/lobby/hangar_options.pyc",
-        "res/gui/gameface/mods/Driftkings/HangarClock/model.html": "mod/res/gui/gameface/mods/Driftkings/HangarClock/model.html",
-        "res/gui/gameface/mods/Driftkings/HangarClock/clock.js": "mod/res/gui/gameface/mods/Driftkings/HangarClock/clock.js",
-        "res/gui/gameface/mods/Driftkings/HangarClock/clock.css": "mod/res/gui/gameface/mods/Driftkings/HangarClock/clock.css",
-        "res/gui/gen_resources/driftkings.DriftkingsHangarClock.json": "mod/res/gui/gen_resources/driftkings.DriftkingsHangarClock.json",
-        "res/gui/maps/Driftkings/clock/clockBg.png": "mod/res/gui/maps/Driftkings/clock/clockBg.png",
-        "res/gui/maps/Driftkings/clock/XVM-LICENSE.txt": "mod/res/gui/maps/Driftkings/clock/XVM-LICENSE.txt",
-        "res/gui/gameface/mods/Driftkings/HangarClock/header_options.js": "mod/res/gui/gameface/mods/Driftkings/HangarClock/header_options.js"
+  "schema_version": 1,
+  "id": "HangarOptions",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "lobby.hangar_options",
+  "config_files": [
+    "default/hangar_options.json"
+  ],
+  "assets": [
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/HangarClock/clock.css",
+      "target": "res/gui/gameface/mods/Driftkings/HangarClock/clock.css",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/HangarClock/clock.js",
+      "target": "res/gui/gameface/mods/Driftkings/HangarClock/clock.js",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/HangarClock/header_options.js",
+      "target": "res/gui/gameface/mods/Driftkings/HangarClock/header_options.js",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/HangarClock/model.html",
+      "target": "res/gui/gameface/mods/Driftkings/HangarClock/model.html",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gen_resources/driftkings.DriftkingsHangarClock.json",
+      "target": "res/gui/gen_resources/driftkings.DriftkingsHangarClock.json",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/maps/Driftkings/clock/XVM-LICENSE.txt",
+      "target": "res/gui/maps/Driftkings/clock/XVM-LICENSE.txt",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/maps/Driftkings/clock/clockBg.png",
+      "target": "res/gui/maps/Driftkings/clock/clockBg.png",
+      "generator": null
     }
+  ]
 }

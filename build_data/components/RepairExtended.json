@@ -1,6 +1,11 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/battle/repair.pyc": "build/staging/res/scripts/client/Driftkings/battle/repair.pyc"
-    }
+  "schema_version": 1,
+  "id": "RepairExtended",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.repair",
+  "config_files": [
+    "default/repair_extended.json"
+  ],
+  "assets": []
 }

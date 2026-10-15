@@ -107,18 +107,18 @@ class ModHandle(object):
         return self._add('textarea', id, label, default, options)
 
     def add_file(self, id, label=None, default=u'', **options):
-        from Driftkings.settings.panel.locales import translations
+        from Driftkings.i18n.panel import translations
         options.setdefault('description', translations('pathHelp'))
         return self._add('file', id, label, default, options)
 
     def add_directory(self, id, label=None, default=u'', **options):
-        from Driftkings.settings.panel.locales import translations
+        from Driftkings.i18n.panel import translations
         options.setdefault('description', translations('pathHelp'))
         return self._add('directory', id, label, default, options)
 
     def add_sound_preview(self, id, label=None, event=None, **options):
         from Driftkings.settings.panel.sound import sound_manager
-        from Driftkings.settings.panel.locales import translations
+        from Driftkings.i18n.panel import translations
         self.add_button(id, label or translations('sound.play'), callback=lambda handle: sound_manager.play(event, self.id), **options)
         return self.add_button(id + '_stop', translations('sound.stop'), callback=lambda handle: sound_manager.stop(event), **options)
 

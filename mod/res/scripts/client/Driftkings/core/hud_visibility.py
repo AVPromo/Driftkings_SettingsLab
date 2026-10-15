@@ -39,7 +39,24 @@ class HudVisibility(object):
         self.publish()
 
     def nativeVisibility(self, original, page, visible, hidden):
-        result = original(page, visible, hidden)
+        # Owned components are registered with DAAPI, not the native page's
+        # private AS3 visibility registry. Route them to their own public API.
+        from Driftkings.views import BATTLE_COMPONENTS
+        def route(aliases, shown):
+            if aliases is None:
+                return []
+            native = []
+            for componentAlias in aliases:
+                if componentAlias not in BATTLE_COMPONENTS:
+                    native.append(componentAlias)
+                    continue
+                component = page.components.get(componentAlias)
+                if component is not None:
+                    component.as_setComponentVisible(shown)
+            return native
+        nativeVisible = route(visible, True)
+        nativeHidden = route(hidden, False)
+        result = original(page, nativeVisible, nativeHidden)
         alias = getattr(page, '_fullStatsAlias', None)
         if self.active and alias:
             if alias in (hidden or ()):

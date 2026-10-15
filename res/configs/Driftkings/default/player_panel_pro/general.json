@@ -1,23 +1,23 @@
 {
-  "schemaVersion": 2,
-  "enabled": true,
-  "statsEnabled": true,
   "colorScale": 0,
-  "rating": "wn8",
-  "performance": {
-    "cacheEnabled": true,
-    "cacheExpiry": 3600,
-    "minBattlesToShow": 10,
-    "requestTimeout": 5,
-    "diagnostics": false
-  },
+  "enabled": true,
   "hpEnabled": true,
-  "hpVisibility": "always",
   "hpKey": [
     [
       56,
       184
     ]
   ],
-  "spottedEnabled": true
+  "hpVisibility": "hold",
+  "performance": {
+    "cacheEnabled": true,
+    "cacheExpiry": 3600,
+    "diagnostics": false,
+    "minBattlesToShow": 10,
+    "requestTimeout": 5
+  },
+  "rating": "wn8",
+  "schemaVersion": 2,
+  "spottedEnabled": true,
+  "statsEnabled": true
 }

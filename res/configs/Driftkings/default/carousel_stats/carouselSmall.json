@@ -1,181 +1,181 @@
 {
-  "textFieldShadow": {
-    "enabled": true,
-    "color": "#000000",
-    "alpha": 80,
-    "blur": 2,
-    "strength": 2,
-    "distance": 0,
-    "angle": 0
-  },
   "extraFields": [
     {
-      "x": 1,
-      "y": 1,
+      "bgColor": "#0A0A0A",
+      "height": 35,
       "layer": "substrate",
       "width": 160,
-      "height": 35,
-      "bgColor": "#0A0A0A"
+      "x": 1,
+      "y": 1
     },
     {
       "enabled": true,
-      "x": 4,
-      "y": 14,
-      "width": 23,
       "height": 23,
-      "src": "{{icon:mastery}}"
+      "src": "{{icon:mastery}}",
+      "width": 23,
+      "x": 4,
+      "y": 14
     },
     {
-      "enabled": true,
-      "x": 159,
-      "y": 14,
       "align": "right",
+      "enabled": true,
       "format": "<font face='$FieldFont' size='15' color='{{v.premium?#FFA759|#C8C8B5}}'>{{v.name}}</font>",
       "shadow": {
         "$ref": "textFieldShadow",
-        "color": "{{v.premium?0xFC3700|0xC8C8B5}}",
         "alpha": "{{v.premium?85|35}}",
-        "blur": "{{v.premium?10|8}}"
-      }
+        "blur": "{{v.premium?10|8}}",
+        "color": "{{v.premium?0xFC3700|0xC8C8B5}}"
+      },
+      "x": 159,
+      "y": 14
     },
     {
       "enabled": true,
-      "x": 24,
-      "y": 16,
       "format": "<b><font face='$FieldFont' size='12' color='{{v.c_winrate|#C8C8B5}}'>{{v.winrate%2d~%}}</font></b>",
-      "shadow": "$ref:textFieldShadow"
+      "shadow": "$ref:textFieldShadow",
+      "x": 24,
+      "y": 16
     }
   ],
   "fields": {
+    "actionPrice": {
+      "alpha": 100,
+      "dx": 0,
+      "dy": 0,
+      "enabled": true,
+      "scale": 1
+    },
+    "clanLock": {
+      "alpha": 100,
+      "dx": 0,
+      "dy": 0,
+      "enabled": true,
+      "scale": 1
+    },
+    "coreBorder": {
+      "alpha": 100,
+      "enabled": true
+    },
+    "crystalsBorder": {
+      "alpha": 100,
+      "enabled": true
+    },
+    "crystalsIcon": {
+      "alpha": 100,
+      "dx": 0,
+      "dy": 0,
+      "enabled": true
+    },
+    "favorite": {
+      "alpha": 100,
+      "dx": 0,
+      "dy": 0,
+      "enabled": true,
+      "scale": 1
+    },
     "flag": {
-      "enabled": true,
+      "alpha": 100,
       "dx": 0,
       "dy": 0,
-      "alpha": 100,
+      "enabled": true,
       "scale": 1
     },
-    "tankIcon": {
-      "enabled": true,
+    "info": {
+      "alpha": 100,
       "dx": 0,
       "dy": 0,
-      "alpha": 100,
-      "scale": 1
+      "enabled": true,
+      "scale": 1,
+      "shadow": {},
+      "textFormat": {}
     },
-    "tankType": {
-      "enabled": true,
+    "infoBuy": {
+      "alpha": 100,
       "dx": 0,
       "dy": 0,
+      "enabled": true,
+      "scale": 1,
+      "shadow": {},
+      "textFormat": {}
+    },
+    "infoImg": {
       "alpha": 100,
+      "dx": 0,
+      "dy": 0,
+      "enabled": true,
       "scale": 1
     },
     "level": {
+      "alpha": 100,
+      "dx": 0,
+      "dy": 0,
       "enabled": true,
-      "dx": 0,
-      "dy": 0,
-      "alpha": 100,
-      "scale": 1
-    },
-    "xp": {
-      "enabled": true,
-      "dx": 0,
-      "dy": 0,
-      "alpha": 100,
-      "scale": 1
-    },
-    "tankName": {
-      "enabled": false,
-      "dx": 0,
-      "dy": 0,
-      "alpha": 100,
-      "scale": 1,
-      "textFormat": {},
-      "shadow": {}
-    },
-    "info": {
-      "enabled": true,
-      "dx": 0,
-      "dy": 0,
-      "alpha": 100,
-      "scale": 1,
-      "textFormat": {},
-      "shadow": {}
-    },
-    "infoImg": {
-      "enabled": true,
-      "dx": 0,
-      "dy": 0,
-      "alpha": 100,
-      "scale": 1
-    },
-    "infoBuy": {
-      "enabled": true,
-      "dx": 0,
-      "dy": 0,
-      "alpha": 100,
-      "scale": 1,
-      "textFormat": {},
-      "shadow": {}
-    },
-    "clanLock": {
-      "enabled": true,
-      "dx": 0,
-      "dy": 0,
-      "alpha": 100,
       "scale": 1
     },
     "price": {
-      "enabled": true,
+      "alpha": 100,
       "dx": 0,
       "dy": 0,
-      "alpha": 100,
+      "enabled": true,
       "scale": 1
-    },
-    "actionPrice": {
-      "enabled": true,
-      "dx": 0,
-      "dy": 0,
-      "alpha": 100,
-      "scale": 1
-    },
-    "favorite": {
-      "enabled": true,
-      "dx": 0,
-      "dy": 0,
-      "alpha": 100,
-      "scale": 1
-    },
-    "crystalsBorder": {
-      "enabled": true,
-      "alpha": 100
-    },
-    "crystalsIcon": {
-      "enabled": true,
-      "dx": 0,
-      "dy": 0,
-      "alpha": 100
-    },
-    "coreBorder": {
-      "enabled": true,
-      "alpha": 100
-    },
-    "stats": {
-      "enabled": true,
-      "dx": 0,
-      "dy": 0,
-      "alpha": 100,
-      "scale": 1,
-      "textFormat": {},
-      "shadow": {}
     },
     "progressionPoints": {
-      "enabled": true,
+      "alpha": 100,
       "dx": 0,
       "dy": 0,
+      "enabled": true,
+      "scale": 1
+    },
+    "stats": {
       "alpha": 100,
+      "dx": 0,
+      "dy": 0,
+      "enabled": true,
+      "scale": 1,
+      "shadow": {},
+      "textFormat": {}
+    },
+    "tankIcon": {
+      "alpha": 100,
+      "dx": 0,
+      "dy": 0,
+      "enabled": true,
+      "scale": 1
+    },
+    "tankName": {
+      "alpha": 100,
+      "dx": 0,
+      "dy": 0,
+      "enabled": false,
+      "scale": 1,
+      "shadow": {},
+      "textFormat": {}
+    },
+    "tankType": {
+      "alpha": 100,
+      "dx": 0,
+      "dy": 0,
+      "enabled": true,
+      "scale": 1
+    },
+    "xp": {
+      "alpha": 100,
+      "dx": 0,
+      "dy": 0,
+      "enabled": true,
       "scale": 1
     }
   },
   "gap": 10,
   "height": 70,
+  "textFieldShadow": {
+    "alpha": 80,
+    "angle": 0,
+    "blur": 2,
+    "color": "#000000",
+    "distance": 0,
+    "enabled": true,
+    "strength": 2
+  },
   "width": 160
 }

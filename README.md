@@ -16,9 +16,8 @@ AutoAimOptimize displays a box around the native autoaim target. Assisted acquis
 | --- | --- |
 | [mod/res/scripts/client](mod/res/scripts/client) | Runtime Python; entrypoint `gui/mods/mod_Driftkings.py` |
 | [mod/res/gui](mod/res/gui) | Canonical Flash, Gameface and map assets |
-| [build_data](build_data) | Targets, component definitions, locales and package contracts |
-| [build_tools](build_tools) | Existing build, package, audit and test tools |
-| [build_tools/tests](build_tools/tests) | Regression tests; fixtures retain their current paths |
+| [build_data](build_data/README.md) | Schema 1: targets, component definitions, defaults and package contracts |
+| [build_tools](build_tools/README.md) | Compiler, build-data validator and explicit release publication |
 | [flash_source](flash_source/README.md) | One active battle project, shared AS3 and external SWCs |
 | [installer/source](installer/source) | Native updater and WindowsFiles C# helper sources |
 | [res](res) | Config presets, external inputs, Wwise sources and historical resources |
@@ -29,26 +28,26 @@ AutoAimOptimize displays a box around the native autoaim target. Assisted acquis
 
 Development uses Python 3 and PowerShell on Windows; client sources retain Python 2.7 compatibility. Compilation uses SourceTree's embedded Python 2.7 host; focused probes also reference standalone Python 2.7. Flash requires Java, Flex, playerglobal and game SWCs. Native helpers require the Windows .NET compiler; protected builds additionally require PJOrion. Game/reference resources are external, read-only inputs.
 
-Run from the repository root after reviewing the [build guide](UNIFIED_BUILD.md):
+Read the [compiler guide](build_tools/README.md) and [build-data contract](build_data/README.md). From the repository root:
 
 ```powershell
-python -m unittest discover -s build_tools/tests
-python build_tools/localize_configs.py --check
-python build_tools/check_flash_contracts.py
-python build_tools/build_lab.py --flash --no-obfuscation
+python build_tools/validate_build_data.py
+python build_tools/validate_build_data.py --check-game --write-plan build/build_plan.json
+.\debug.cmd
+.\release.cmd
 ```
 
-`debug.cmd` and `release.cmd` invoke the existing PowerShell chain. `build_lab.py --flash` now compiles into `build/flash` and packages that output without overwriting the tracked SWF. Direct `build_flash.py --publish` still overwrites it. Release mode additionally runs selective protected-beta tooling. Neither wrapper deploys to the game or publishes to GitHub. Native installation tests require WoT closed. No build or runtime test was executed for CLEANUP-B1.
+`debug.cmd` builds a diagnostic package; `release.cmd` applies the configured protection policy. Both compile Python 2.7, Flash and native helpers, generate resources, and verify the completed package. Neither installs into the game nor publishes to GitHub. Release outputs are separated by channel and mod version under `build/releases/`; debug outputs use `build/debug/`. Failed compilation preserves earlier completed outputs.
 
-Overrides: `DK_PYTHON3` for wrappers; `--hg` for the embedded compiler host; `DK_FLEX_HOME`, `DK_MXMLC_JAR`, `DK_PLAYERGLOBAL`, `DK_JAVA` for Flash. See [reference updates](TOOL_UPDATES.md). Fixed local paths and CI provisioning gaps remain. CI configures Ubuntu/Python 3.12, Python 2.7 syntax parsing and selected JavaScript tests; it does not provision the complete Windows/native/Flash toolchain or prove a successful latest remote run.
+The data contract selects the NA installation as the read-only game resource source and the EU dump as the read-only Python/AS3 reference. CI validates build data, configuration JSON, Python 2.7 syntax and JavaScript syntax. It does not provision a complete compiler toolchain or prove in-game behavior.
 
 ## Package and settings
 
-The unified package is `build/unified/Driftkings.wotmod`. Builders also produce `PlayerPanelPro-XVM-preset.zip`, `PlayerPanelPro-HP-Spotted-preset.zip` and `Driftkings-Carousel.zip`. Protected beta metadata is separate. The Carousel ZIP validates its nine canonical icon inputs and preserves a previous ZIP on failure; see [repository maintenance](docs/development/REPOSITORY_MAINTENANCE.md).
+The latest validated unified output is `build/unified/Driftkings.wotmod`. The compiler generates the battle SWF, native helpers and patched carousel Gameface bundle before packaging. All ten carousel PNGs belong inside the WOTMOD; runtime icon loading uses mounted resources through `ResMgr`. Versioned builds also contain `release.json`, a distribution ZIP, separate defaults, dependencies and checksums.
 
-Selected 2.4.1 UI dependencies are ModsListAPI 1.8.0 and OpenWG Gameface 1.2.2 in `build/dependencies/2.4.1/`; the build rejects missing or extra packages there. Old `res/wotmods/` packages are historical inputs. Dependency preparation and evidence: [migration discovery](docs/migration/2.4.1/DISCOVERY.md). Deployment requires separate authorization and preservation of existing `mods/configs/Driftkings/` settings.
+Selected 2.4.1 UI dependencies are ModsListAPI 1.8.0 and OpenWG Gameface 1.2.2 in `res/wotmods/`, pinned by SHA-256 in `build_data/build_config.json`. Defaults in `res/configs/Driftkings` now come from the NA installation's default profile and are installed separately from the WOTMOD, preserving existing user settings. Deployment requires separate authorization.
 
-Defaults live in [settings/settings_data.py](mod/res/scripts/client/Driftkings/settings/settings_data.py); menus live in [settings/templates/](mod/res/scripts/client/Driftkings/settings/templates). Profiles, formats, persistence and i18n remain supported. See [configuration](docs/CONFIGURATION.md) and [metadata](docs/SETTINGS_METADATA.md).
+Distribution defaults live in [res/configs/Driftkings](res/configs/Driftkings); Python fallback defaults remain in [settings/settings_data.py](mod/res/scripts/client/Driftkings/settings/settings_data.py). Menus live in [settings/templates/](mod/res/scripts/client/Driftkings/settings/templates). Profiles, formats, persistence and i18n remain supported.
 
 ## Architecture, UI and updater
 

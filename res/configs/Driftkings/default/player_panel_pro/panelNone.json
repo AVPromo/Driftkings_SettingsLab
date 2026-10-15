@@ -1,25 +1,25 @@
 {
   "enabled": true,
   "expandAreaWidth": 230,
-  "layout": "vertical",
+  "extraFields": {
+    "leftPanel": {
+      "formats": [],
+      "height": 25,
+      "width": 350,
+      "x": 0,
+      "y": 65
+    },
+    "rightPanel": {
+      "formats": [],
+      "height": 25,
+      "width": 350,
+      "x": 0,
+      "y": 65
+    }
+  },
   "fixedPosition": false,
   "inviteIndicatorAlpha": 100,
   "inviteIndicatorX": 0,
   "inviteIndicatorY": 0,
-  "extraFields": {
-    "leftPanel": {
-      "x": 0,
-      "y": 65,
-      "width": 350,
-      "height": 25,
-      "formats": []
-    },
-    "rightPanel": {
-      "x": 0,
-      "y": 65,
-      "width": 350,
-      "height": 25,
-      "formats": []
-    }
-  }
+  "layout": "vertical"
 }

@@ -1,14 +1,54 @@
 {
-    "enabled": true,
-    "files": {
-        "res/gui/maps/Driftkings/Carroucel/**": "mod/res/gui/maps/Driftkings/Carroucel/**",
-        "res/scripts/client/Driftkings/lobby/carousel.pyc": "build/staging/res/scripts/client/Driftkings/lobby/carousel.pyc",
-        "res/gui/gameface/mods/Driftkings/CarouselStats/model.html": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/model.html",
-        "res/gui/gameface/mods/Driftkings/CarouselStats/carousel.js": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel.js",
-        "res/gui/gameface/mods/Driftkings/CarouselStats/carousel.css": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel.css",
-        "res/gui/gameface/mods/Driftkings/CarouselStats/carousel_layout.js": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel_layout.js",
-        "res/gui/gameface/mods/Driftkings/CarouselStats/carousel_native.js": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel_native.js",
-        "res/gui/gameface/_dist/production/mono/hangar/main/bundle.js": "build/gameface/carousel/bundle.js",
-        "res/gui/gen_resources/driftkings.DriftkingsCarouselStats.json": "mod/res/gui/gen_resources/driftkings.DriftkingsCarouselStats.json"
+  "schema_version": 1,
+  "id": "CarouselStats",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "lobby.carousel",
+  "config_files": [
+    "default/carousel_stats/carousel.json",
+    "default/carousel_stats/carouselNormal.json",
+    "default/carousel_stats/carouselSmall.json"
+  ],
+  "assets": [
+    {
+      "source": "build/gameface/carousel/bundle.js",
+      "target": "res/gui/gameface/_dist/production/mono/hangar/main/bundle.js",
+      "generator": "carousel_bridge"
+    },
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel.css",
+      "target": "res/gui/gameface/mods/Driftkings/CarouselStats/carousel.css",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel.js",
+      "target": "res/gui/gameface/mods/Driftkings/CarouselStats/carousel.js",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel_layout.js",
+      "target": "res/gui/gameface/mods/Driftkings/CarouselStats/carousel_layout.js",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel_native.js",
+      "target": "res/gui/gameface/mods/Driftkings/CarouselStats/carousel_native.js",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/model.html",
+      "target": "res/gui/gameface/mods/Driftkings/CarouselStats/model.html",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gen_resources/driftkings.DriftkingsCarouselStats.json",
+      "target": "res/gui/gen_resources/driftkings.DriftkingsCarouselStats.json",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/maps/Driftkings/Carroucel/**",
+      "target": "res/gui/maps/Driftkings/Carroucel/**",
+      "generator": null
     }
+  ]
 }

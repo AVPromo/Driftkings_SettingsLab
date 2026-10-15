@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "version_source": "mod/res/scripts/client/Driftkings/__init__.py",
+  "repository": "dkruben/Driftkings_SettingsLab",
+  "package_id": "driftkings.unified",
+  "title": "Driftkings",
+  "author": "Driftkings",
+  "changelog": []
+}

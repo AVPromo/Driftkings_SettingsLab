@@ -1,6 +1,11 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/battle/dispersion_timer.pyc": "build/staging/res/scripts/client/Driftkings/battle/dispersion_timer.pyc"
-    }
+  "schema_version": 1,
+  "id": "DispersionTimer",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.dispersion_timer",
+  "config_files": [
+    "default/dispersion_timer.json"
+  ],
+  "assets": []
 }

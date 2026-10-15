@@ -1,7 +1,21 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/battle/minimap.pyc": "build/staging/res/scripts/client/Driftkings/battle/minimap.pyc",
-        "res/gui/maps/Driftkings/Minimap/**": "mod/res/gui/maps/Driftkings/Minimap/**"
+  "schema_version": 1,
+  "id": "MinimapPlugins",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.minimap",
+  "config_files": [
+    "default/minimap_plugins.json",
+    "default/minimap_plugins/minimap.json",
+    "default/minimap_plugins/minimap_circles.json",
+    "default/minimap_plugins/minimap_labels.json",
+    "default/minimap_plugins/minimap_lines.json"
+  ],
+  "assets": [
+    {
+      "source": "mod/res/gui/maps/Driftkings/Minimap/**",
+      "target": "res/gui/maps/Driftkings/Minimap/**",
+      "generator": null
     }
+  ]
 }

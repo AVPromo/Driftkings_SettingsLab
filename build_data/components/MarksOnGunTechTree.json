@@ -1,10 +1,32 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/lobby/gun_marks_tree.pyc": "build/staging/res/scripts/client/Driftkings/lobby/gun_marks_tree.pyc",
-        "res/gui/gameface/mods/Driftkings/MarksOnGunTechTree/marks.js": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunTechTree/marks.js",
-        "res/gui/gameface/mods/Driftkings/MarksOnGunTechTree/marks.css": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunTechTree/marks.css",
-        "res/gui/gameface/mods/Driftkings/MarksOnGunTechTree/model.html": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunTechTree/model.html",
-        "res/gui/gen_resources/driftkings.DriftkingsMarksOnGunTechTree.json": "mod/res/gui/gen_resources/driftkings.DriftkingsMarksOnGunTechTree.json"
+  "schema_version": 1,
+  "id": "MarksOnGunTechTree",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "lobby.gun_marks_tree",
+  "config_files": [
+    "default/marks_on_gun_tech_tree.json"
+  ],
+  "assets": [
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunTechTree/marks.css",
+      "target": "res/gui/gameface/mods/Driftkings/MarksOnGunTechTree/marks.css",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunTechTree/marks.js",
+      "target": "res/gui/gameface/mods/Driftkings/MarksOnGunTechTree/marks.js",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunTechTree/model.html",
+      "target": "res/gui/gameface/mods/Driftkings/MarksOnGunTechTree/model.html",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gen_resources/driftkings.DriftkingsMarksOnGunTechTree.json",
+      "target": "res/gui/gen_resources/driftkings.DriftkingsMarksOnGunTechTree.json",
+      "generator": null
     }
+  ]
 }

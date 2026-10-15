@@ -1,3 +1,4 @@
 {
-    "enabled": true
+  "claimRewards": true,
+  "enabled": true
 }

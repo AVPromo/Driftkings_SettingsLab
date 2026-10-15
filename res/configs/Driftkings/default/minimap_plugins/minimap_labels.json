@@ -1,42 +1,42 @@
 {
-  "labels": {
-    "enabled": true,
-    "normal": "{{vehicle}}",
-    "alternative": "{{vehicle}} · {{name%.16s}}",
-    "dead": "{{vehicle}}",
-    "lost": "{{vehicle}}",
-    "fontSize": 10,
-    "alpha": 100,
+  "health": {
+    "fontSize": 9,
+    "height": 3,
+    "mode": "value",
+    "visibility": "never",
+    "width": 30,
     "x": 0,
-    "y": 0,
+    "y": 12
+  },
+  "labels": {
     "align": "left",
-    "shadow": true,
-    "customColors": false,
-    "allyColor": "80D639",
-    "enemyColor": "F05050",
-    "squadColor": "FFB964",
-    "deadColor": "999999",
     "ally": "",
-    "enemy": "",
-    "squad": "",
+    "allyColor": "80D639",
+    "alpha": 100,
+    "alternative": "{{vehicle}} · {{name%.16s}}",
     "alternativeAlly": "",
     "alternativeEnemy": "",
     "alternativeSquad": "",
     "avoidOverlap": false,
-    "compactLength": 14
-  },
-  "health": {
-    "visibility": "never",
-    "mode": "value",
+    "compactLength": 14,
+    "customColors": false,
+    "dead": "{{vehicle}}",
+    "deadColor": "999999",
+    "enabled": true,
+    "enemy": "",
+    "enemyColor": "F05050",
+    "fontSize": 10,
+    "lost": "{{vehicle}}",
+    "normal": "{{vehicle}}",
+    "shadow": true,
+    "squad": "",
+    "squadColor": "FFB964",
     "x": 0,
-    "y": 12,
-    "width": 30,
-    "height": 3,
-    "fontSize": 9
+    "y": 0
   },
   "lostMarker": {
-    "showSeconds": false,
     "fade": false,
-    "minimumAlpha": 25
+    "minimumAlpha": 25,
+    "showSeconds": false
   }
 }

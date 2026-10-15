@@ -1,7 +1,17 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/battle/arty_splash.pyc": "build/staging/res/scripts/client/Driftkings/battle/arty_splash.pyc",
-        "res/objects/**": "mod/res/objects/**"
+  "schema_version": 1,
+  "id": "ArtySplash",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.arty_splash",
+  "config_files": [
+    "default/arty_splash.json"
+  ],
+  "assets": [
+    {
+      "source": "mod/res/objects/**",
+      "target": "res/objects/**",
+      "generator": null
     }
+  ]
 }

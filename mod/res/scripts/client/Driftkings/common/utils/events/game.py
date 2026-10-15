@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from Driftkings.common.utils.events import ModEvent
-from Driftkings.common import callback
+from BigWorld import callback
 
 __all__ = ('fini',)
 

@@ -104,7 +104,7 @@ class Support(object):
         sendPanelMessage(_config.i18n['UI_battle_activateMessage'])
 
     def start_battle(self):
-        if settings_service.getComponentDict(_config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[SAFE_SHOT.ACTIVATE_MESSAGE]:
+        if settings_service.getComponentDict(_config)[GLOBAL.ENABLED] and settings_service.getComponentDict(_config)[SAFE_SHOT.ACTIVATE_MESSAGE]:
             callback(5.0, self.message)
 
 

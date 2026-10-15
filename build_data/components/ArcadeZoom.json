@@ -1,6 +1,11 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/battle/arcade_zoom.pyc": "build/staging/res/scripts/client/Driftkings/battle/arcade_zoom.pyc"
-    }
+  "schema_version": 1,
+  "id": "ArcadeZoom",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.arcade_zoom",
+  "config_files": [
+    "default/arcade_zoom.json"
+  ],
+  "assets": []
 }

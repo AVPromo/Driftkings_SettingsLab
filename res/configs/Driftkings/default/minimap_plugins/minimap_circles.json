@@ -1,32 +1,32 @@
 {
   "circles": {
     "draw": {
-      "mode": "client",
       "alpha": 90,
-      "thickness": 1,
       "dash": 0,
-      "gap": 5
+      "gap": 5,
+      "mode": "client",
+      "thickness": 1
     },
     "maxView": {
-      "mode": "client",
       "alpha": 90,
-      "thickness": 1,
       "dash": 0,
-      "gap": 5
+      "gap": 5,
+      "mode": "client",
+      "thickness": 1
     },
     "proximity": {
-      "mode": "client",
       "alpha": 90,
-      "thickness": 1,
       "dash": 0,
-      "gap": 5
+      "gap": 5,
+      "mode": "client",
+      "thickness": 1
     },
     "view": {
-      "mode": "client",
       "alpha": 90,
-      "thickness": 1,
       "dash": 0,
-      "gap": 5
+      "gap": 5,
+      "mode": "client",
+      "thickness": 1
     }
   },
   "extraCircles": []

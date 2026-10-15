@@ -1,10 +1,32 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/lobby/gun_marks.pyc": "build/staging/res/scripts/client/Driftkings/lobby/gun_marks.pyc",
-        "res/gui/gameface/mods/Driftkings/MarksOnGunHangar/model.html": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunHangar/model.html",
-        "res/gui/gameface/mods/Driftkings/MarksOnGunHangar/marks.js": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunHangar/marks.js",
-        "res/gui/gameface/mods/Driftkings/MarksOnGunHangar/marks.css": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunHangar/marks.css",
-        "res/gui/gen_resources/driftkings.DriftkingsMarksOnGunHangar.json": "mod/res/gui/gen_resources/driftkings.DriftkingsMarksOnGunHangar.json"
+  "schema_version": 1,
+  "id": "MarksOnGunHangar",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "lobby.gun_marks",
+  "config_files": [
+    "default/marks_on_gun_hangar.json"
+  ],
+  "assets": [
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunHangar/marks.css",
+      "target": "res/gui/gameface/mods/Driftkings/MarksOnGunHangar/marks.css",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunHangar/marks.js",
+      "target": "res/gui/gameface/mods/Driftkings/MarksOnGunHangar/marks.js",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunHangar/model.html",
+      "target": "res/gui/gameface/mods/Driftkings/MarksOnGunHangar/model.html",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gen_resources/driftkings.DriftkingsMarksOnGunHangar.json",
+      "target": "res/gui/gen_resources/driftkings.DriftkingsMarksOnGunHangar.json",
+      "generator": null
     }
+  ]
 }

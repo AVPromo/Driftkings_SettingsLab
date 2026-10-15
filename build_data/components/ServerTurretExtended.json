@@ -1,6 +1,11 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/battle/server_turret.pyc": "build/staging/res/scripts/client/Driftkings/battle/server_turret.pyc"
-    }
+  "schema_version": 1,
+  "id": "ServerTurretExtended",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.server_turret",
+  "config_files": [
+    "default/server_turret_extended.json"
+  ],
+  "assets": []
 }

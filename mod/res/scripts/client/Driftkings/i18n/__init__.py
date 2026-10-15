@@ -8,13 +8,8 @@ import os
 
 from Driftkings.settings.store import SettingsStore, merge, recover_file
 
-LANGUAGES = ('cs', 'de', 'en', 'es', 'fr', 'hu', 'it', 'pl', 'pt', 'ru', 'tr', 'uk')
+from Driftkings.locale_support import CODES as LANGUAGES, language_code
 LOG = logging.getLogger('Driftkings.i18n')
-
-
-def language_code(language):
-    code = str(language).lower().replace('-', '_').split('_')[0]
-    return code if code in LANGUAGES else 'en'
 
 
 def read_catalog(path):

@@ -1,19 +1,102 @@
 {
-    "locales": [
-        "cs",
-        "de",
-        "en",
-        "es",
-        "fr",
-        "hu",
-        "it",
-        "pl",
-        "ru",
-        "tr",
-        "uk",
-        "pt"
+  "schema_version": 1,
+  "locales": [
+    "cs",
+    "de",
+    "en",
+    "es",
+    "fr",
+    "hu",
+    "it",
+    "ja",
+    "ko",
+    "pl",
+    "pt",
+    "ru",
+    "th",
+    "tr",
+    "uk",
+    "vi",
+    "zh_cn",
+    "zh_tw"
+  ],
+  "source": "Wargaming World of Tanks regional portal language selectors (EU, NA, ASIA)",
+  "game_version": "2.4.1.0",
+  "translation_method": "Existing localized text preserved. Missing entries and English prose completed with machine translation from en.py. Formatting macros, markup, paths and colors protected; native-speaker terminology review pending. English fallback retained.",
+  "regions": {
+    "EU": [
+      "cs",
+      "de",
+      "en",
+      "es",
+      "fr",
+      "hu",
+      "it",
+      "pl",
+      "ru",
+      "tr",
+      "uk"
     ],
-    "source": "WoT EU game_info.xml: available_content_languages",
-    "game_version": "2.4.0.2",
-    "translation_method": "Machine translation of UI text; markup, paths and formatting placeholders preserved. Native-speaker terminology review pending."
+    "NA": [
+      "en",
+      "es",
+      "pt"
+    ],
+    "ASIA": [
+      "en",
+      "ja",
+      "ko",
+      "th",
+      "vi",
+      "zh_cn",
+      "zh_tw"
+    ]
+  },
+  "aliases": {
+    "cz": "cs",
+    "jp": "ja",
+    "kr": "ko",
+    "vn": "vi",
+    "zh": "zh_cn",
+    "zh_sg": "zh_cn",
+    "zh_hans": "zh_cn",
+    "zh_hans_cn": "zh_cn",
+    "zh_hans_sg": "zh_cn",
+    "zh_hk": "zh_tw",
+    "zh_mo": "zh_tw",
+    "zh_hant": "zh_tw",
+    "zh_hant_tw": "zh_tw",
+    "zh_hant_hk": "zh_tw"
+  },
+  "verified_on": "2026-10-15",
+  "source_urls": [
+    "https://worldoftanks.eu/en/wgc/",
+    "https://worldoftanks.com/es-ar/content/guide/events/",
+    "https://worldoftanks.asia/th/content/guide/clans/global-map/"
+  ],
+  "coverage": {
+    "component_keys": 909,
+    "panel_keys": 160,
+    "complete_key_coverage": [
+      "cs",
+      "de",
+      "en",
+      "es",
+      "fr",
+      "hu",
+      "it",
+      "ja",
+      "ko",
+      "pl",
+      "pt",
+      "ru",
+      "th",
+      "tr",
+      "uk",
+      "vi",
+      "zh_cn",
+      "zh_tw"
+    ],
+    "native_speaker_review": "pending for machine-translated entries"
+  }
 }

@@ -1,8 +1,27 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/battle/sixth_sense.pyc": "build/staging/res/scripts/client/Driftkings/battle/sixth_sense.pyc",
-        "res/gui/maps/icons/SixthSense/**": "mod/res/gui/maps/icons/SixthSense/**",
-        "res/audioww/driftkings_sixthsense.xml": "mod/res/audioww/driftkings_sixthsense.xml"
+  "schema_version": 1,
+  "id": "SixthSense",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.sixth_sense",
+  "config_files": [
+    "default/sixth_sense.json"
+  ],
+  "assets": [
+    {
+      "source": "mod/res/audioww/driftkings_sixthsense.bnk",
+      "target": "res/audioww/driftkings_sixthsense.bnk",
+      "generator": null
+    },
+    {
+      "source": "mod/res/audioww/driftkings_sixthsense.xml",
+      "target": "res/audioww/driftkings_sixthsense.xml",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/maps/icons/SixthSense/**",
+      "target": "res/gui/maps/icons/SixthSense/**",
+      "generator": null
     }
+  ]
 }

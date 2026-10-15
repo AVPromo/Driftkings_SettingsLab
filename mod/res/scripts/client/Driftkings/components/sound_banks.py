@@ -373,6 +373,9 @@ class BanksLoaderController(object):
         loadBanks = audio_mods_new.createSection('loadBanks')
         for name in banks:
             loadBanks.createSection('bank').writeString('name', name)
+        # Explicit audio_mods loading owns these banks. Do not also register
+        # them in engine_config profiles, and remove stale profile entries.
+        bankFiles['audio_mods_allowed'] = set(bankFiles['audio_mods_allowed']) | set(banks)
         return audio_mods_new
 
     def manageMemorySettings(self, soundMgr):

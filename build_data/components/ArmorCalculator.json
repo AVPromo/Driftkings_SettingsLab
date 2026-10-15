@@ -1,6 +1,11 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/battle/armor_calculator.pyc": "build/staging/res/scripts/client/Driftkings/battle/armor_calculator.pyc"
-    }
+  "schema_version": 1,
+  "id": "ArmorCalculator",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.armor_calculator",
+  "config_files": [
+    "default/armor_calculator.json"
+  ],
+  "assets": []
 }

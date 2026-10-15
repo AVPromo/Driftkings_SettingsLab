@@ -1,6 +1,11 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/battle/battle_options.pyc": "build/staging/res/scripts/client/Driftkings/battle/battle_options.pyc"
-    }
+  "schema_version": 1,
+  "id": "BattleOptions",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.battle_options",
+  "config_files": [
+    "default/battle_options.json"
+  ],
+  "assets": []
 }

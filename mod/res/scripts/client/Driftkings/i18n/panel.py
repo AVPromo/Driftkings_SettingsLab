@@ -1,29 +1,28 @@
 # -*- coding: utf-8 -*-
 """Interface catalogs; English is complete and the fallback for every key.
 
-Add a language by creating <code>.py with STRINGS and listing it in LANGUAGES.
+Add a language with PANEL and register it in Driftkings.locale_support.
 Optional overrides: <config root>/locales/<code>.json (strings only).
 """
 import json
+import logging
 import os
 
-from Driftkings.settings.panel import logger
-from Driftkings.settings.panel.controls import is_text
+from Driftkings.locale_support import LANGUAGES, language_code as normalize
 
-LANGUAGES = (('en', u'English'), ('pt', u'Português'))
+logger = logging.getLogger('Driftkings.i18n.panel')
+try:
+    text_types = (str, unicode)
+except NameError:
+    text_types = (str,)
 
 
-def normalize(language):
-    code = str(language or 'en').lower().replace('-', '_')
-    for known, _ in LANGUAGES:
-        if code == known or code.startswith(known + '_'):
-            return known
-    return 'en'
-
+def is_text(value):
+    return isinstance(value, text_types)
 
 def _catalog(code):
-    module = __import__('Driftkings.settings.panel.locales.' + code, fromlist=['STRINGS'])
-    return dict(module.STRINGS)
+    module = __import__('Driftkings.i18n.' + code, fromlist=['PANEL'])
+    return dict(module.PANEL)
 
 
 def load(language, override_root=None):

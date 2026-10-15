@@ -1,6 +1,11 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/battle/safe_shot.pyc": "build/staging/res/scripts/client/Driftkings/battle/safe_shot.pyc"
-    }
+  "schema_version": 1,
+  "id": "SafeShot",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.safe_shot",
+  "config_files": [
+    "default/safe_shot.json"
+  ],
+  "assets": []
 }

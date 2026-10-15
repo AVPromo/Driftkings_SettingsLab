@@ -1,6 +1,11 @@
 {
-    "enabled": true,
-    "files": {
-        "res/scripts/client/Driftkings/battle/dispersion_circle.pyc": "build/staging/res/scripts/client/Driftkings/battle/dispersion_circle.pyc"
-    }
+  "schema_version": 1,
+  "id": "DispersionCircle",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.dispersion_circle",
+  "config_files": [
+    "default/dispersion_circle.json"
+  ],
+  "assets": []
 }

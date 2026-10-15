@@ -188,13 +188,19 @@ def new_VehicleTypeInfoVO_update(func, self, *args, **kwargs):
 # Battle Messages
 def onReload(avatar):
     macro = defaultdict(lambda: 'Macros not found')
-    reloadingState = avatar.guiSessionProvider.shared.ammo.getGunReloadingState()
+    if not avatar.isVehicleAlive:
+        return
+    ammo = avatar.guiSessionProvider.shared.ammo
+    if ammo is None:
+        return
+    reloadingState = ammo.getGunReloadingState()
+    macro['pos'] = square_position.getSquarePosition()
+    macro['load'] = '0'
     if reloadingState:
-        macro['load'] = str(math.ceil(reloadingState.getTimeLeft()))
-        macro['pos'] = square_position.getSquarePosition()
+        macro['load'] = str(int(math.ceil(reloadingState.getTimeLeft())))
     template = settings_service.getComponentDict(config)[BATTLE_OPTIONS.LOAD_TXT]
     try:
-        message = template.format(**macro)
+        message = template % macro if '%(' in template else template.format(**macro)
     except (IndexError, KeyError, ValueError):
         try:
             message = template % macro
@@ -208,13 +214,12 @@ def onReload(avatar):
 
 @override(PlayerAvatar, 'handleKey')
 def new__handleKey(func, self, isDown, key, mods):
+    result = func(self, isDown, key, mods)
     if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[BATTLE_OPTIONS.CLIP_LOAD]:
         cmdMap = CommandMapping.g_instance
         if cmdMap.isFired(CommandMapping.CMD_RELOAD_PARTIAL_CLIP, key) and isDown and self.isVehicleAlive:
-            if hasattr(self.guiSessionProvider.shared.ammo, 'reloadPartialClip'):
-                self.guiSessionProvider.shared.ammo.reloadPartialClip(self)
-                callback(0.5, partial(onReload, self))
-    return func(self, isDown, key, mods)
+            callback(0.5, partial(onReload, self))
+    return result
 
 
 # hide badges
