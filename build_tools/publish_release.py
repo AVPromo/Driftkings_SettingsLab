@@ -12,6 +12,7 @@ if str(ROOT) not in sys.path:
 
 from build_tools.compiler import version_contract
 from build_tools.package_tools import sha
+from build_tools.modpack import verify as verify_modpack
 from build_tools.validate_build_data import input_path, read_json, relative_path, require
 
 
@@ -33,13 +34,28 @@ def prepare(folder):
         require(path.stat().st_size == item['size'] and sha(path) == item['sha256'], 'Artifact changed: ' + name)
     require(sha(folder / 'Driftkings.wotmod') == manifest['sha256'] and
             (folder / 'Driftkings.wotmod').stat().st_size == manifest['size'], 'Release package mismatch')
+    inventory = verify_modpack(folder, manifest, read_json(folder / 'modpack.json'))
+    require(report.get('verification', {}).get('modpack', {}).get('status') == 'passed',
+            'Missing packaged Python 2.7 modpack verification')
+    required = {'Driftkings.wotmod', 'release.json', 'modpack.json', 'Driftkings-defaults.zip', inventory.distribution['file']}
+    required.update('dependencies/' + Path(item['path']).name for item in inventory.files if item['kind'] == 'dependency')
+    require(required.issubset(report['artifacts']), 'Incomplete release artifacts')
+    for item in inventory.files:
+        if item['kind'] == 'dependency':
+            path = input_path(folder, 'dependencies/' + Path(item['path']).name)
+            require(path.stat().st_size == item['size'] and sha(path) == item['sha256'], 'Dependency differs from modpack')
     # The checksum list covers the report as well as the uploaded artifacts.
+    covered = set()
     for line in (folder / 'SHA256SUMS.txt').read_text(encoding='utf-8').splitlines():
         digest, name = line.split('  ', 1)
         relative_path(name)
+        require(name not in covered, 'Duplicate checksum entry')
+        covered.add(name)
         require(sha(input_path(folder, name)) == digest, 'Checksum mismatch: ' + name)
-    names = {name for name in report['artifacts'] if '/' not in name} | {'build-report.json', 'SHA256SUMS.txt'}
+    require(covered == set(report['artifacts']) | {'build-report.json'}, 'Incomplete checksum inventory')
+    names = set(report['artifacts']) | {'build-report.json', 'SHA256SUMS.txt'}
     files = [folder / name for name in sorted(names)]
+    require(len({path.name.lower() for path in files}) == len(files), 'Release assets have duplicate filenames')
     command = ['gh', 'release', 'create', 'v' + version.text, '--repo', release['repository'],
                '--target', report['git']['commit'] or '', '--title', release['title'] + ' ' + version.text]
     if channel == 'beta':

@@ -69,6 +69,13 @@ def process(job_path):
             raise ValueError('Packaged version/calculator contract failed')
         result = dict(python=sys.version, verified=count, version=Driftkings.VERSION,
                       components=len(COMPONENTS), updaterManifest='valid')
+        if 'modpack' in job:
+            from Driftkings.core.updater.inventory import Inventory
+            with open(job['modpack'], 'rb') as stream:
+                document = json.loads(stream.read().decode('utf-8'))
+            inventory = Inventory(document, manifest.version.text, manifest.channel, manifest.game_version)
+            inventory.verify_archive(os.path.join(os.path.dirname(job['modpack']), inventory.distribution['file']))
+            result['modpack'] = dict(status='passed', files=len(inventory.files), defaults=len(inventory.defaults))
         settings_package = types.ModuleType('Driftkings.settings')
         settings_package.__path__ = [origin + '/Driftkings/settings']
         sys.modules[settings_package.__name__] = settings_package

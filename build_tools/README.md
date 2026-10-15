@@ -108,6 +108,7 @@ are under `build/debug/<channel>/<version>/`:
 | --- | --- |
 | `Driftkings.wotmod` | Stored ZIP with Python 2.7 bytecodes, Flash, resources, native helpers and `meta.xml` |
 | `release.json` | Schema 1 metadata consumed by the existing updater |
+| `modpack.json` | Full distribution inventory: version/channel/game, ZIP hash, code, dependencies and individual defaults |
 | `Driftkings-defaults.zip` | Your selected Driftkings defaults, separate from the WOTMOD |
 | `dependencies/*.wotmod` | The two pinned external UI dependencies |
 | `Driftkings-<version>-WoT-<game>.zip` | Distribution with `mods/<game>/`, a separate defaults ZIP and installation instructions |
@@ -118,6 +119,24 @@ New installations may extract the separate defaults ZIP. Existing installations
 keep their `mods/configs/Driftkings` settings. The compiler does not change these
 settings. The current in-game updater updates the unified WOTMOD only; dependency
 and first-install-default distribution remain separate payloads.
+
+The compiler now generates `modpack.json` beside `release.json`. Both describe
+the same unified WOTMOD. The new inventory records the complete distribution ZIP,
+each of its five members and every JSON inside the separate defaults ZIP. The
+compiler verifies exact paths, sizes and hashes, then repeats this verification
+with the inventory module loaded from the compiled Python 2.7 package. Publication
+preview requires that verification and a complete checksum list; it includes both
+external dependencies as individual release assets as well as in the distribution.
+
+`core/updater/inventory.py` also provides a read-only installation planner.
+It distinguishes install/replace/keep/conflict/removal, requiring fresh disk
+observations. Removal and replacement require a previous inventory, an explicit
+ownership receipt and matching old bytes. Existing shared dependencies are never
+adopted automatically. A legacy unified package requires a separate identity check
+before migration. Configurations never become replacement/removal candidates.
+This planner does not mutate files or arm the native helper. Wiring the complete
+modpack into download, native transactions, rollback and startup receipts is the
+next part of phase 5; the current in-game updater still uses `release.json`.
 
 Each invocation gets a fresh `build/runs/<id>/` directory containing logs,
 compiled code and generated resources. Failed compilation/verification does not

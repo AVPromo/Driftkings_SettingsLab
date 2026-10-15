@@ -24,6 +24,7 @@ from build_tools.toolchain import discover, require_tools
 from build_tools.protection import obfuscator
 from build_tools.validate_build_data import apply_patch_set, build_plan, input_path, read_json, require
 from build_tools.generate_defaults import TARGET as DEFAULT_VALUES, render as render_defaults, assemble as assemble_defaults
+from build_tools.modpack import create as create_modpack
 
 
 def version_contract(root=ROOT):
@@ -212,6 +213,18 @@ def atomic_copy(source, destination):
     os.replace(temporary, destination)
 
 
+def replace_directory(source, destination):
+    """Bound transient Windows scanner/sharing locks; never retry other errors."""
+    for attempt in range(5):
+        try:
+            os.replace(source, destination)
+            return
+        except OSError as error:
+            if getattr(error, 'winerror', None) not in (5, 32, 33) or attempt == 4:
+                raise
+            time.sleep(0.1 * (2 ** attempt))
+
+
 def publish_local(root, candidate, destination, config, generated, compiled, plan):
     """Promote only verified outputs; preserve the previous version directory."""
     require(candidate.resolve().is_relative_to((root / 'build').resolve()) and
@@ -222,12 +235,12 @@ def publish_local(root, candidate, destination, config, generated, compiled, pla
     if destination.exists():
         previous = output_path(root, 'build/previous/' + destination.name + '-' + uuid.uuid4().hex)
         previous.parent.mkdir(parents=True, exist_ok=True)
-        os.replace(destination, previous)
+        replace_directory(destination, previous)
     try:
-        os.replace(candidate, destination)
+        replace_directory(candidate, destination)
     except OSError:
         if previous is not None:
-            os.replace(previous, destination)
+            replace_directory(previous, destination)
         raise
     atomic_copy(destination / 'Driftkings.wotmod', output_path(root, config['package']['output']))
     for name, source in generated.items():
@@ -317,9 +330,6 @@ def build(args):
                                 file='Driftkings.wotmod', size=package.stat().st_size, sha256=sha(package),
                                 download='https://github.com/%s/releases/download/v%s/Driftkings.wotmod' % (release['repository'], version), changelog=changelog)
         write_json(candidate / 'release.json', release_manifest)
-        report['verification'] = run_worker(tools, run, dict(action='verify', package=str(package), manifest=str(candidate / 'release.json'),
-                                                           version=version, channel=channel, game_version=config['game']['version'], components=components,
-                                                           defaults=assemble_defaults(root)[0], selector=assemble_defaults(root)[1]), 'verify')
         defaults = {item['target']: (root / item['source']).read_bytes() for item in plan['defaults']}
         zip_entries(candidate / 'Driftkings-defaults.zip', defaults, zipfile.ZIP_DEFLATED)
         distribution = {'mods/' + config['game']['version'] + '/Driftkings.wotmod': package.read_bytes(),
@@ -337,6 +347,12 @@ def build(args):
                         'No game files were installed by this build.\n') % (version, channel, config['game']['version'])
         distribution['INSTALL.txt'] = instructions.encode('utf-8')
         zip_entries(candidate / ('Driftkings-%s-WoT-%s.zip' % (version, config['game']['version'])), distribution, zipfile.ZIP_DEFLATED)
+        modpack = create_modpack(candidate, version, channel, config['game']['version'], defaults)
+        write_json(candidate / 'modpack.json', modpack)
+        report['verification'] = run_worker(tools, run, dict(action='verify', package=str(package), manifest=str(candidate / 'release.json'),
+                                                           modpack=str(candidate / 'modpack.json'),
+                                                           version=version, channel=channel, game_version=config['game']['version'], components=components,
+                                                           defaults=assemble_defaults(root)[0], selector=assemble_defaults(root)[1]), 'verify')
         require(source_inventory(root, plan) == inventory, 'Build inputs changed during compilation; previous output preserved')
         report.update(status='success', publishable=bool(args.mode == 'release' and (protection or not policy['enabled'])),
                       counts=dict(components=len(components), python=len(plan['python']), assets=len(plan['assets']), entries=len(entries), defaults=len(defaults)),

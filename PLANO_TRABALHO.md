@@ -371,6 +371,40 @@ Estado: implementação concluída; validação no cliente fica para o fim, conf
 
 ### Fase 5 — Fechar instalação e atualização do modpack
 
+Estado: em curso, dividida em contrato/inventário (5.1) e transação completa (5.2).
+
+Etapa 5.1 implementada:
+
+- O compilador emite `modpack.json` com identidade, versão, canal, versão do jogo,
+  tamanho/hash do ZIP completo, código, duas dependências, arquivo de defaults,
+  instruções e inventário dos 48 JSON individuais. Mantém `release.json` compatível
+  com o atualizador atual, que ainda substitui apenas o WOTMOD unificado.
+- A validação exige correspondência exata entre inventário e ZIP, incluindo o ZIP
+  de defaults aninhado, limites de tamanho, destinos locais válidos e hashes.
+  Executa também o contrato compilado dentro do pacote em Python 2.7.
+- Planeador sem escritas em `core/updater/inventory.py`: configurações excluídas
+  de substituição/remoção, dependências partilhadas preservadas, conflitos explícitos,
+  migração do pacote antigo sujeita a verificação de identidade. Substituição ou
+  remoção de ficheiros antigos exige recibo de propriedade e bytes ainda coincidentes.
+- Preparação de publicação verifica o modpack e a cobertura integral de checksums;
+  inclui as duas dependências nos assets. Apenas executado em preview local.
+- Promoção local da build repete erros transitórios Windows 5/32/33, até cinco
+  tentativas, mantendo a recuperação da saída anterior se o bloqueio persistir.
+- Passaram 97 verificações locais: 41 gerais, 10 do inventário em Python 2.7,
+  7 configurações, 17 core, 8 UI Python, 6 compatibilidade e 8 JavaScript.
+- Build protegida local `0.1.2-beta.1+modpackcheck`: 251 módulos Python,
+  Flash, 171 recursos, 48 defaults e duas dependências. Inventário verificado
+  dentro do pacote compilado: cinco membros da distribuição e 48 JSON.
+  O bloqueio Windows persistiu durante a promoção no processo de compilação;
+  a promoção concluiu num processo separado após revalidar fontes, artefactos
+  e recursos gerados. A causa do bloqueio continua por identificar.
+
+Próxima etapa 5.2: ligar o inventário ao download e ao instalador nativo, estabelecer
+o recibo de propriedade efetivamente instalada, aplicar código/dependências numa
+transação recuperável após fechar o jogo e verificar todos os ficheiros no arranque.
+O planeador não instala ficheiros; a fase 5 ainda não cumpre o critério de aceitação
+até essa ligação e os cenários de falha/recuperação estarem validados.
+
 - Expandir o manifesto de um .wotmod para inventário completo de componentes e dependências.
 - Ligar versão/canal/compatibilidade/hashes aos artefactos emitidos pelo compilador.
 - Separar código, dependências e defaults; preservar perfis e personalizações.
@@ -416,7 +450,7 @@ finais de novos módulos serão fixados ao migrar os seus consumidores.
 
 ### Regras de execução
 
-- Próximo trabalho: fase 5, instalação e atualização do modpack. Por indicação do utilizador,
+- Próximo trabalho: fase 5.2, transação de instalação e atualização do modpack. Por indicação do utilizador,
   a validação em jogo será realizada apenas no fim da reorganização.
 - Migrar por conjuntos funcionais verificáveis; remover a camada obsoleta quando os seus
   consumidores estiverem migrados, sem manter uma segunda arquitetura permanente.
