@@ -8,6 +8,7 @@ from Driftkings.core.callbacks import callback
 from Driftkings.core.hooks import override, on_event
 from Driftkings.common.utils import events
 from Driftkings.core.keyboard import keyboard
+from Driftkings.core.battle_policy import battle_policy
 from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.battle.safe_shot import SafeShotSettings as Settings
 
@@ -15,7 +16,6 @@ from Driftkings.settings.definitions.battle.safe_shot import SafeShotSettings as
 class SafeShotController(object):
     def __init__(self, config):
         self.config = config
-        self.isEventBattle = False
         self.deadDict = {}
         self.isKeyPressed = True
         self._battleStarted = False
@@ -23,13 +23,12 @@ class SafeShotController(object):
         override(FragsCollectableStats, 'addVehicleStatusUpdate', self.new__addVehicleStatusUpdate)
         override(PlayerAvatar, 'shoot', self.new__shoot)
         override(PlayerAvatar, 'shootDualGun', self.new__shootDualGun)
-        override(PlayerAvatar, 'onBecomePlayer', self.new__onBecomePlayer)
         on_event(events.PlayerAvatar.destroyGUI.after, self.new__destroyGUI)
         on_event(events.PlayerAvatar.startGUI.after, self.new__startGUI)
 
 
     def isShotAllowed(self):
-        if not (settings_service.getComponentDict(self.config)[GLOBAL.ENABLED] and self.isKeyPressed and not self.isEventBattle):
+        if not (settings_service.getComponentDict(self.config)[GLOBAL.ENABLED] and self.isKeyPressed and battle_policy.decision('safe_shot')[0]):
             return True
         target = getTarget()
         player = getPlayer()
@@ -82,17 +81,12 @@ class SafeShotController(object):
         if self.isShotAllowed():
             func(orig, chargeActionType, isPrepared, isRepeat)
 
-    def new__onBecomePlayer(self, func, orig):
-        func(orig)
-        self.isEventBattle = getPlayer().guiSessionProvider.arenaVisitor.gui.isEventBattle()
-
     def new__startGUI(self, *args):
         self.start_battle()
         support.start_battle()
 
     def new__destroyGUI(self, orig, *args):
         self.endBattle()
-        self.isEventBattle = False
         self.isKeyPressed = True
         self.deadDict.clear()
 

@@ -1,0 +1,38 @@
+# -*- coding: utf-8 -*-
+"""Feature restrictions, separate from passive external-mod observations."""
+import logging
+
+from Driftkings.core.battle_capabilities import battle_capabilities
+
+LOG = logging.getLogger('Driftkings.BattlePolicy')
+REGULAR_ONLY = ('marks_on_gun_battle', 'battle_stat', 'main_gun')
+
+
+class BattlePolicy(object):
+    def __init__(self, capabilities=None):
+        self.capabilities = battle_capabilities if capabilities is None else capabilities
+        self._logged = {}
+
+    def decision(self, feature, enabled=True, spg_only=False):
+        context = self.capabilities
+        if not enabled:
+            reason = 'disabled_in_settings'
+        elif not context.is_in_battle():
+            reason = 'outside_battle'
+        elif feature in REGULAR_ONLY and not context.is_regular():
+            reason = 'requires_regular_battle'
+        elif feature == 'safe_shot' and context.is_event():
+            reason = 'unsupported_event_battle'
+        elif spg_only and not context.is_spg():
+            reason = 'requires_spg'
+        else:
+            reason = 'allowed'
+        result = (reason == 'allowed', reason)
+        if self._logged.get(feature) != result:
+            self._logged[feature] = result
+            LOG.info('%s allowed=%s reason=%s mode=%s replay=%s',
+                     feature, result[0], reason, context.current_mode(), context.is_replay())
+        return result
+
+
+battle_policy = BattlePolicy()

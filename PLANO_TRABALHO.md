@@ -339,6 +339,36 @@ visibilidade, ratings, carrossel e painel continuam funcionais em jogo.
 
 Aceitação: motivos de ativação/desativação explícitos e validação dos contextos suportados.
 
+Estado: implementação concluída; validação no cliente fica para o fim, conforme combinado.
+
+- Deteção passiva do Battle Observer pelos nomes reais do entry point e do módulo
+  de minimapa; corrigida a coleção de um elemento do XVM. Presença, importação
+  incompleta, sobreposição possível e conflito confirmado continuam distintos.
+  Nenhum módulo é desativado apenas por observar outro mod carregado.
+- `core/battle_capabilities.py` concentra consultas WG. `is_regular()` distingue
+  REGULAR do conjunto mais amplo de batalhas Random; Comp7 inclui treino,
+  torneio e Light. Replay é uma dimensão independente do modo.
+- `core/battle_policy.py` concentra as restrições existentes de marcas em batalha,
+  Battle Stat, Main Gun, Safe Shot e Flight Timer. Os consumidores usam a decisão
+  e o diagnóstico regista o motivo apenas quando muda. Não há callbacks ou hooks
+  novos para esta política.
+- Marcas/Battle Stat/Main Gun continuam limitados a REGULAR. Safe Shot deixa a
+  operação nativa passar nos eventos identificados. Flight Timer respeita enabled
+  e SPG_ONLY. As restantes funcionalidades mantêm as suas verificações nativas;
+  a classificação de um modo não constitui certificação de todos os módulos nesse modo.
+- O adaptador BattleMeta usa a deteção central de Comp7. Removido o hook de
+  onBecomePlayer do Safe Shot e o estado de evento duplicado.
+- Matriz local cobre Random/REGULAR, outra variante Random, variantes Comp7,
+  Frontline, eventos, White Tiger, especial, desconhecido, replay, SPG e hangar,
+  incluindo APIs ausentes. São simulações, sem validação de interfaces em jogo.
+- Validação: 72 verificações locais passaram (26 gerais, 7 configurações, 17 core,
+  8 UI Python, 8 JavaScript e 6 compatibilidade/modos). Build protegida verificada:
+  250 módulos Python, Flash, 171 recursos, 48 defaults e duas dependências.
+  A substituição da saída anterior foi recusada pelo Windows; a repetição com
+  identificador local `0.1.2-beta.1+phase4` concluiu sem alterar a versão fonte.
+  Testes e artefactos permanecem locais.
+
+
 ### Fase 5 — Fechar instalação e atualização do modpack
 
 - Expandir o manifesto de um .wotmod para inventário completo de componentes e dependências.
@@ -386,7 +416,7 @@ finais de novos módulos serão fixados ao migrar os seus consumidores.
 
 ### Regras de execução
 
-- Próximo trabalho: fase 4, compatibilidade e adaptação ao jogo. Por indicação do utilizador,
+- Próximo trabalho: fase 5, instalação e atualização do modpack. Por indicação do utilizador,
   a validação em jogo será realizada apenas no fim da reorganização.
 - Migrar por conjuntos funcionais verificáveis; remover a camada obsoleta quando os seus
   consumidores estiverem migrados, sem manter uma segunda arquitetura permanente.

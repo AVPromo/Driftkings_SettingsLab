@@ -8,6 +8,7 @@ from math_utils import VectorConstant
 
 from Driftkings._constants import FLIGHT_TIMER, GLOBAL
 from Driftkings.common import getPlayer
+from Driftkings.core.battle_policy import battle_policy
 from Driftkings.meta.battle.flight_timer import FlightTimeMeta
 
 
@@ -20,9 +21,7 @@ class FlightTime(FlightTimeMeta):
     def isFlightTimeEnabled(self):
         settings = self.getSettings()
         enabled = settings[GLOBAL.ENABLED]
-        if settings[FLIGHT_TIMER.SPG_ONLY]:
-            return enabled and self.isSPG()
-        return enabled
+        return battle_policy.decision('flight_timer', enabled, settings[FLIGHT_TIMER.SPG_ONLY])[0]
 
     def _populate(self):
         super(FlightTime, self)._populate()

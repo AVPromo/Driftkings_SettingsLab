@@ -14,9 +14,11 @@ MODULES = {
     'XVM': ('xvm_main', 'xvm_battle', 'xvm_battle_minimap'),
     'ModsListAPI': ('gui.modsListApi',),
     'OpenWGGameface': ('openwg_gameface',),
+    'BattleObserver': ('gui.mods.mod_armagomen_battle_observer',
+                       'armagomen.battle_observer.battle.minimap'),
 }
 FEATURES = {
-    'player_panel_pro': ('XVM'),
+    'player_panel_pro': ('XVM',),
     'minimap_plugins': ('XVM', 'BattleObserver')
 }
 

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """Common DAAPI lifecycle; the native page owns component destruction."""
 from account_helpers.settings_core.settings_constants import GRAPHICS
-from constants import ARENA_BONUS_TYPE
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from helpers import dependency
 from skeletons.account_helpers.settings_core import ISettingsCore
 from skeletons.gui.battle_session import IBattleSessionProvider
 
 from Driftkings.core.hud_visibility import hudVisibility
+from Driftkings.core.battle_capabilities import battle_capabilities
 from Driftkings.settings.service import settings_service
 
 
@@ -52,7 +52,7 @@ class BattleMeta(HudMeta):
 
     @property
     def isComp7Battle(self):
-        return self._arenaVisitor.getArenaBonusType() == ARENA_BONUS_TYPE.COMP7
+        return battle_capabilities.is_comp7()
 
     @property
     def gui(self):

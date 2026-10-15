@@ -2,7 +2,7 @@
 import math
 
 from Vehicle import Vehicle
-from constants import ARENA_BONUS_TYPE
+from Driftkings.core.battle_policy import battle_policy
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.shared.ribbons_aggregator import RibbonsAggregator
 from gui.battle_control.arena_info import vos_collections
@@ -75,7 +75,7 @@ class MainGun(object):
             #    g_flash.hide()
             return
         player = getPlayer()
-        if not player or not player.arena or player.arena.bonusType != ARENA_BONUS_TYPE.REGULAR or not self.showMainGun or not self.totals[0]:
+        if not player or not player.arena or not battle_policy.decision('main_gun')[0] or not self.showMainGun or not self.totals[0]:
             # if g_flash is not None:
             #    g_flash.hide()
             return
@@ -162,7 +162,7 @@ class SysClass(object):
         player = getPlayer()
         # Match MarksOnGunBattle and BattleEfficiency: statistics-bearing
         # regular battles only, before subscribing to damage/roster events.
-        if not player or not player.arena or player.arena.bonusType != ARENA_BONUS_TYPE.REGULAR:
+        if not player or not player.arena or not battle_policy.decision('main_gun')[0]:
             return
         arena_dp = player.guiSessionProvider.getArenaDP()
         enemy_teams = arena_dp.getEnemyTeams() if arena_dp else ()

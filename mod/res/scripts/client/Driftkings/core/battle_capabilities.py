@@ -65,6 +65,10 @@ class BattleCapabilities(object):
     def is_comp7(self):
         return self.is_in_battle() and self._match('ARENA_BONUS_TYPE', self._bonus(), ('COMP7', 'TOURNAMENT_COMP7', 'TRAINING_COMP7', 'COMP7_LIGHT'))
 
+    def is_regular(self):
+        # Economy/marks rules require REGULAR, not the wider RANDOM_RANGE.
+        return self.is_in_battle() and self._match('ARENA_BONUS_TYPE', self._bonus(), ('REGULAR',))
+
     def is_frontline(self):
         return self.is_in_battle() and (call(self._gui(), 'isEpicBattle') is True or
             self._match('ARENA_BONUS_TYPE', self._bonus(), ('EPIC_BATTLE', 'EPIC_BATTLE_TRAINING')))
@@ -163,6 +167,7 @@ class BattleCapabilities(object):
 battle_capabilities = BattleCapabilities()
 current_mode = battle_capabilities.current_mode
 is_random = battle_capabilities.is_random
+is_regular = battle_capabilities.is_regular
 is_comp7 = battle_capabilities.is_comp7
 is_frontline = battle_capabilities.is_frontline
 is_replay = battle_capabilities.is_replay

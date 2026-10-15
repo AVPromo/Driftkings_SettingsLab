@@ -13,7 +13,7 @@ from Avatar import PlayerAvatar
 from BattleFeedbackCommon import BATTLE_EVENT_TYPE
 from CurrentVehicle import g_currentVehicle
 from Vehicle import Vehicle
-from constants import ARENA_BONUS_TYPE
+from Driftkings.core.battle_policy import battle_policy
 from dossiers2.ui.achievements import ACHIEVEMENT_BLOCK
 from gui.Scaleform.daapi.view.lobby.profile.ProfileUtils import ProfileUtils
 from gui.battle_control.controllers import feedback_events
@@ -455,7 +455,7 @@ class Worker(object):
         player = getPlayer()
         if not player.arena:
             return
-        if player.arena.bonusType != ARENA_BONUS_TYPE.REGULAR:
+        if not battle_policy.decision('marks_on_gun_battle')[0]:
             return
         if self.level and self.movingAvgDamage:
             isKeyDownTrigger = event.isKeyDown()
@@ -729,7 +729,7 @@ def new__updateCrewModel(func, *args):
 
 @on_event(battleEvents.feedback)
 def new_onBattleEvents(*args):
-    if getPlayer().arena.bonusType == ARENA_BONUS_TYPE.REGULAR:
+    if battle_policy.decision('marks_on_gun_battle')[0]:
         worker.onBattleEvents(args[1])
 
 
@@ -746,7 +746,7 @@ def new_vehicleStartVisual(func, *args):
 
 @on_event(events.PlayerAvatar.startGUI.after)
 def new_startGUI(*args):
-    if getPlayer().arena.bonusType == ARENA_BONUS_TYPE.REGULAR:
+    if battle_policy.decision('marks_on_gun_battle')[0]:
         g_flash.startBattle()
         worker.startBattle()
 
@@ -754,7 +754,7 @@ def new_startGUI(*args):
 @on_event(events.PlayerAvatar.destroyGUI.before)
 def new_destroyGUI(*args):
     try:
-        if getPlayer().arena.bonusType == ARENA_BONUS_TYPE.REGULAR:
+        if battle_policy.decision('marks_on_gun_battle')[0]:
             g_flash.stopBattle()
             worker.endBattle()
             worker.clearData()

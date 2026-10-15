@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from constants import ARENA_BONUS_TYPE
+from Driftkings.core.battle_policy import battle_policy
 from helpers.CallbackDelayer import CallbackDelayer
 from items import vehicles
 from vehicle_systems.CompoundAppearance import CompoundAppearance
@@ -298,7 +298,7 @@ class BattleStatDisplay(CallbackDelayer):
     def onBattleStarted(self):
         self.onBattleEnded()
         arena = getPlayer().arena
-        if arena.bonusType != ARENA_BONUS_TYPE.REGULAR:
+        if not battle_policy.decision('battle_stat')[0]:
             return
         self.inBattle = True
         for vehicleID, info in arena.vehicles.items():
