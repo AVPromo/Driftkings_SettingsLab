@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Driftkings.interface_catalog import gameface_spec
 import logging
 import math
 
@@ -22,8 +23,7 @@ from Driftkings.stats import getVehicleInfoData
 
 LOG = logging.getLogger('Driftkings.MarksOnGunHangar')
 FEATURE = 'DriftkingsMarksOnGunHangar'
-RESOURCE = 'mods/Driftkings/MarksOnGunHangar/model'
-ASSETS = 'coui://gui/gameface/mods/Driftkings/MarksOnGunHangar/'
+RESOURCE = gameface_spec(FEATURE)['resource']
 g_controller = None
 THRESHOLDS = (65, 85, 95)
 

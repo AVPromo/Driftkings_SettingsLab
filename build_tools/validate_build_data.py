@@ -10,9 +10,11 @@ import zipfile
 try:
     from .validate_locales import validate_catalogs
     from .generate_defaults import check_generated as check_default_values
+    from .generate_ui_catalog import validate as validate_ui_catalog
 except ImportError:
     from validate_locales import validate_catalogs
     from generate_defaults import check_generated as check_default_values
+    from generate_ui_catalog import validate as validate_ui_catalog
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_KEYS = {'schema_version', 'id', 'kind', 'enabled', 'entrypoint', 'config_files', 'assets'}
@@ -221,6 +223,7 @@ def build_plan(root=ROOT, check_generated=False, check_game=False, check_compone
                                                        for target in node.targets) for node in catalog_source.body),
                 'Missing panel translations in locale: %s' % language)
     validate_catalogs(root)
+    validate_ui_catalog(root, plan)
     if check_defaults:
         check_default_values(root)
     obfuscation = read_json(root / 'build_data/obfuscation.json')

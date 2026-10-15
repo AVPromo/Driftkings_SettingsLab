@@ -1,62 +1,140 @@
-/* Driftkings-owned loader. Uses only the client's engine/subViews API. */
+/* Driftkings-owned loader: catalog assets, ordered scripts and explicit disposal. */
 (function () {
     'use strict';
     if (window.__dkUIBridge) { return; }
-    var active = {}, disposed = false;
-    var owners = {
-        DriftkingsCarouselStats: '__dkCarouselStats',
-        DriftkingsHangarClock: '__dkHangarClock',
-        DriftkingsModSettingsButton: '__dkModSettingsButton',
-        DriftkingsMarksOnGunHangar: '__dkHangarMarks',
-        DriftkingsMarksOnGunTechTree: '__dkTechMarks',
-        DriftkingsBattleEfficiency: '__dkBattleEfficiency',
-        DriftkingsRatingPlayers: '__dkPlayerRatings'
+    var active = {}, retiring = {}, disposed = false;
+    /* GENERATED CATALOG START */
+    var features = {
+        "DriftkingsBattleEfficiency": {
+            "owner": "__dkBattleEfficiency",
+            "scripts": [
+                "coui://gui/gameface/mods/Driftkings/BattleEfficiency/results.js"
+            ],
+            "styles": [
+                "coui://gui/gameface/mods/Driftkings/BattleEfficiency/results.css"
+            ]
+        },
+        "DriftkingsCarouselStats": {
+            "owner": "__dkCarouselStats",
+            "scripts": [
+                "coui://gui/gameface/mods/Driftkings/CarouselStats/carousel_native.js",
+                "coui://gui/gameface/mods/Driftkings/CarouselStats/carousel_layout.js",
+                "coui://gui/gameface/mods/Driftkings/CarouselStats/carousel.js"
+            ],
+            "styles": [
+                "coui://gui/gameface/mods/Driftkings/CarouselStats/carousel.css"
+            ]
+        },
+        "DriftkingsHangarClock": {
+            "owner": "__dkHangarClock",
+            "scripts": [
+                "coui://gui/gameface/mods/Driftkings/HangarClock/clock.js"
+            ],
+            "styles": [
+                "coui://gui/gameface/mods/Driftkings/HangarClock/clock.css"
+            ]
+        },
+        "DriftkingsHangarHeaderOptions": {
+            "owner": "__dkHangarHeaderOptions",
+            "scripts": [
+                "coui://gui/gameface/mods/Driftkings/HangarHeaderOptions/header_options.js"
+            ],
+            "styles": []
+        },
+        "DriftkingsMarksOnGunHangar": {
+            "owner": "__dkHangarMarks",
+            "scripts": [
+                "coui://gui/gameface/mods/Driftkings/MarksOnGunHangar/marks.js"
+            ],
+            "styles": [
+                "coui://gui/gameface/mods/Driftkings/shared/marks_tokens.css",
+                "coui://gui/gameface/mods/Driftkings/MarksOnGunHangar/marks.css"
+            ]
+        },
+        "DriftkingsMarksOnGunTechTree": {
+            "owner": "__dkTechMarks",
+            "scripts": [
+                "coui://gui/gameface/mods/Driftkings/MarksOnGunTechTree/marks.js"
+            ],
+            "styles": [
+                "coui://gui/gameface/mods/Driftkings/shared/marks_tokens.css",
+                "coui://gui/gameface/mods/Driftkings/MarksOnGunTechTree/marks.css"
+            ]
+        },
+        "DriftkingsRatingPlayers": {
+            "owner": "__dkPlayerRatings",
+            "scripts": [
+                "coui://gui/gameface/mods/Driftkings/RatingPlayers/ratings.js"
+            ],
+            "styles": [
+                "coui://gui/gameface/mods/Driftkings/RatingPlayers/ratings.css"
+            ]
+        }
     };
-    function urls(value) {
-        var list;
-        try { list = JSON.parse(value || '[]'); } catch (error) { return []; }
-        if (!Array.isArray(list)) { return []; }
-        return list.filter(function (url) {
-            return typeof url === 'string' && url.indexOf('coui://gui/gameface/mods/Driftkings/') === 0;
-        });
+    /* GENERATED CATALOG END */
+
+    function remove(node) {
+        node.onload = node.onerror = null;
+        if (node.parentNode) { node.parentNode.removeChild(node); }
+    }
+    function disposeOwner(name) {
+        var key = features[name].owner, owner = window[key];
+        try {
+            if (owner && typeof owner.dispose === 'function') { owner.dispose(); }
+        } catch (error) {
+            console.error('[Driftkings] Cannot dispose UI owner: ' + name, error);
+        } finally {
+            if (window[key] === owner) { delete window[key]; }
+        }
     }
     function unload(name) {
         var entry = active[name];
         if (!entry) { return; }
         entry.cancelled = true;
-        var owner = window[owners[name]];
-        if (owner && typeof owner.dispose === 'function') { owner.dispose(); }
-        entry.nodes.forEach(function (node) {
-            node.onerror = null;
-            if (node.parentNode) { node.parentNode.removeChild(node); }
-        });
         delete active[name];
+        // Let an in-flight script finish before loading another generation.
+        // It may still execute after its view disappeared and create an owner.
+        if (entry.pending) { retiring[name] = entry; }
+        disposeOwner(name);
+        entry.nodes.forEach(function (node) {
+            if (node !== entry.pending) { remove(node); }
+        });
     }
-    function load(meta) {
-        if (active[meta.name] || !owners[meta.name]) { return; }
-        var entry = active[meta.name] = {nodes: [], cancelled: false};
-        urls(meta.styles).forEach(function (url) {
+    function retired(name, entry, node) {
+        disposeOwner(name);
+        remove(node);
+        if (retiring[name] === entry) { delete retiring[name]; }
+        if (!disposed) { refresh(); }
+    }
+    function load(name) {
+        if (disposed || active[name] || retiring[name] || !features[name]) { return; }
+        var spec = features[name];
+        var entry = active[name] = {nodes: [], pending: null, cancelled: false};
+        spec.styles.forEach(function (url) {
             var node = document.createElement('link');
             node.rel = 'stylesheet'; node.href = url;
+            node.onerror = function () {
+                if (active[name] === entry) { unload(name); }
+            };
             entry.nodes.push(node); document.head.appendChild(node);
         });
-        var scripts = urls(meta.scripts);
         function next(index) {
-            if (disposed || entry.cancelled || index >= scripts.length) { return; }
+            if (disposed || entry.cancelled || index >= spec.scripts.length) { return; }
             var node = document.createElement('script');
-            node.async = false; node.src = scripts[index];
+            node.async = false; node.src = spec.scripts[index];
             node.onload = function () {
-                if (entry.cancelled) {
-                    var lateOwner = window[owners[meta.name]];
-                    if (!active[meta.name] && lateOwner && lateOwner.dispose) { lateOwner.dispose(); }
-                    return;
-                }
+                entry.pending = null;
+                node.onload = node.onerror = null;
+                if (entry.cancelled) { retired(name, entry, node); return; }
                 next(index + 1);
             };
             node.onerror = function () {
+                entry.pending = null;
                 console.error('[Driftkings] Cannot load UI asset: ' + node.src);
-                unload(meta.name);
+                if (entry.cancelled) { retired(name, entry, node); return; }
+                unload(name);
             };
+            entry.pending = node;
             entry.nodes.push(node); document.head.appendChild(node);
         }
         next(0);
@@ -67,7 +145,7 @@
         window.subViews.ids().forEach(function (id) {
             var child = window.subViews.get(id);
             var meta = child && child.model && child.model.DriftkingsUI;
-            if (meta && owners[meta.name]) { present[meta.name] = true; load(meta); }
+            if (meta && features[meta.name]) { present[meta.name] = true; load(meta.name); }
         });
         Object.keys(active).forEach(function (name) { if (!present[name]) { unload(name); } });
     }
@@ -78,8 +156,9 @@
         engine.off('subViews.onRemoved', refresh);
         Object.keys(active).forEach(unload);
         window.removeEventListener('unload', dispose);
+        if (window.__dkUIBridge === bridge) { delete window.__dkUIBridge; }
     }
-    window.__dkUIBridge = {dispose: dispose};
+    var bridge = window.__dkUIBridge = {dispose: dispose};
     engine.whenReady.then(function () {
         if (disposed) { return; }
         engine.on('subViews.onAdded', refresh);

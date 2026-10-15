@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Owned UI lifecycle connected to the Gameface dependency required by ModList."""
-import json
+from Driftkings.interface_catalog import GAMEFACE, gameface_spec
 
 from frameworks.wulf import ViewModel
 from gui.impl.gen import R
@@ -15,6 +15,8 @@ BOOTSTRAP = 'coui://gui/gameface/mods/Driftkings/shared/bootstrap.js'
 def resource_id(key):
     # WG 2.4.1 loads gui/gen_resources declarations into the native R tree.
     # Keep the existing callers' slash-separated keys within our own subtree.
+    if key not in set(spec['resource'] for spec in GAMEFACE.values()):
+        raise ValueError('Unregistered Driftkings resource key: ' + key)
     parts = key.split('/')
     if len(parts) != 4 or parts[:2] != ['mods', 'Driftkings'] or not all(parts):
         raise ValueError('Unknown Driftkings resource key: ' + key)
@@ -25,20 +27,19 @@ def resource_id(key):
 
 
 class AssetsModel(ViewModel):
-    def __init__(self, name, styles, scripts):
+    def __init__(self, name):
         self._name = name
-        self._styles = json.dumps(styles or [])
-        self._scripts = json.dumps(scripts or [])
-        super(AssetsModel, self).__init__(properties=3, commands=0)
+        super(AssetsModel, self).__init__(properties=1, commands=0)
 
     def _initialize(self):
         super(AssetsModel, self)._initialize()
         self._addStringProperty('name', self._name)
-        self._addStringProperty('styles', self._styles)
-        self._addStringProperty('scripts', self._scripts)
 
 
-def attach_assets(model, name, styles=None, scripts=None):
-    model._addViewModelProperty('DriftkingsUI', AssetsModel(name, styles, scripts))
-    # OpenWG injects only our bootstrap; it retains ordered loading and cleanup.
+def attach_assets(model, name):
+    spec = gameface_spec(name)
+    if spec['owner'] is None:
+        raise ValueError('Standalone layouts load their own assets: ' + name)
+    model._addViewModelProperty('DriftkingsUI', AssetsModel(name))
+    # Ordered assets and disposal ownership come from the generated catalog.
     gf_mod_inject(model, name + 'Bridge', scripts=[BOOTSTRAP])

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Publish our battle package; the client owns view registration and lifecycle."""
 import weakref
+from Driftkings.interface_catalog import FLASH_LIBRARY, FLASH_COMPONENTS
 
 BATTLE_COMPONENTS = {}
 BATTLE_HANDLERS = weakref.WeakSet()
@@ -14,6 +15,11 @@ class BattleViews(object):
         self.active = False
 
     def register(self, alias, view, config):
+        spec = FLASH_COMPONENTS.get(alias)
+        if spec is None or getattr(view, 'FLASH_CLASS', None) != spec['as3']:
+            raise ValueError('Unknown or mismatched Flash contract: ' + alias)
+        if getattr(config, 'NAME', None) != spec['section']:
+            raise ValueError('Wrong settings section for Flash component: ' + alias)
         if alias in self.definitions:
             raise ValueError('Duplicate battle component: ' + alias)
         self.definitions[alias] = (view, config)
@@ -51,7 +57,7 @@ class BattleViews(object):
 
 class BattlePackageRegistration(object):
     PACKAGE = 'Driftkings.views.battle'
-    SWF = 'DriftkingsBattle.swf'
+    SWF = FLASH_LIBRARY
 
     def __init__(self):
         self.addedPackages = []

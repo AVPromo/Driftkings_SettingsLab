@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Driftkings.interface_catalog import gameface_spec
 from Driftkings._constants import GLOBAL, HANGAR_OPTIONS
 from Driftkings.settings.service import settings_service, affects
 """Presentation adapter for HangarOptions; gameplay state stays in its component."""
@@ -83,7 +84,7 @@ def install_clock_gameface():
         def _initialize(self):
             super(ClockModel, self)._initialize()
             self._addStringProperty('payload', '{}')
-            attach_assets(self, _component().FEATURE, styles=[_component().ASSETS + 'clock.css'], scripts=[_component().ASSETS + 'clock.js'])
+            attach_assets(self, _component().FEATURE)
 
     class ClockView(ViewComponent):
         def __init__(self, parent, resource_id):
@@ -166,11 +167,11 @@ def install_header_options():
         def _initialize(self):
             super(HeaderOptionsModel, self)._initialize()
             self._addStringProperty('payload', '{}')
-            attach_assets(self, 'DriftkingsHangarHeaderOptions', scripts=[_component().ASSETS + 'header_options.js'])
+            attach_assets(self, 'DriftkingsHangarHeaderOptions')
 
     class HeaderOptionsView(ViewComponent):
         def __init__(self):
-            super(HeaderOptionsView, self).__init__(layoutID=resource_id(_component().RESOURCE), model=HeaderOptionsModel)
+            super(HeaderOptionsView, self).__init__(layoutID=resource_id(gameface_spec('DriftkingsHangarHeaderOptions')['resource']), model=HeaderOptionsModel)
 
         def _onLoading(self, *args, **kwargs):
             super(HeaderOptionsView, self)._onLoading(*args, **kwargs)
@@ -195,5 +196,5 @@ def install_header_options():
     @override(LobbyHeader, '_getChildComponents')
     def header_children(base, self):
         children = dict(base(self))
-        children[resource_id(_component().RESOURCE)] = HeaderOptionsView
+        children[resource_id(gameface_spec('DriftkingsHangarHeaderOptions')['resource'])] = HeaderOptionsView
         return children

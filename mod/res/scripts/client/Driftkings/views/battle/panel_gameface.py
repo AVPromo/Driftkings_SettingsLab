@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Driftkings.interface_catalog import gameface_spec
 from Driftkings._constants import GLOBAL, PLAYER_PANEL_PRO
 from Driftkings.settings.service import settings_service
 """Gameface roster bridge for the current random TAB and White Tiger loading."""
@@ -24,8 +25,7 @@ class GamefaceLoading(object):
                 super(RatingModel,self)._initialize()
                 self._addStringProperty('payload','{}')
                 self.onPerformance = self._addCommand('onPerformance')
-                root='coui://gui/gameface/mods/Driftkings/RatingPlayers/'
-                attach_assets(self,'DriftkingsRatingPlayers',styles=[root+'ratings.css'],scripts=[root+'ratings.js'])
+                attach_assets(self, 'DriftkingsRatingPlayers')
         class RatingView(ViewImpl):
             def _getEvents(self):
                 return tuple(super(RatingView,self)._getEvents()) + (
@@ -36,10 +36,10 @@ class GamefaceLoading(object):
                 result=original(view,*args,**kwargs)
                 if bridge.owner.active:
                     try:
-                        resource=resource_id('mods/Driftkings/RatingPlayers/model')
+                        resource=resource_id(gameface_spec('DriftkingsRatingPlayers')['resource'])
                         child=RatingView(ViewSettings(resource,model=RatingModel()))
                         view.setChildView(resource,child)
-                        bridge.children[view]={'child':child,'screen':screen,'data':None,
+                        bridge.children[view]={'child':child,'resource':resource,'screen':screen,'data':None,
                             'visible':view.showingStatus in (ShowingStatus.SHOWING,ShowingStatus.SHOWN)}
                         bridge.owner.refresh()
                         logging.getLogger('Driftkings.PlayerPanelPro').info('Gameface roster attached: %s',screen)
@@ -104,6 +104,9 @@ class GamefaceLoading(object):
     def update(self,enabled,rows):
         if not self.children: return
         for view,record in list(self.children.items()):
+            if view.getChildView(record['resource']) is not record['child']:
+                self.children.pop(view, None)
+                continue
             screen=record['screen']
             if not record.get('visible',True) or not enabled:
                 data={'enabled':False,'screen':screen,'rows':[]}
@@ -131,4 +134,11 @@ class GamefaceLoading(object):
 
     def clear(self):
         self.update(False,[])
+
+    def dispose(self):
+        self.clear()
+        for parent, record in list(self.children.items()):
+            resource = record['resource']
+            if parent.getChildView(resource) is record['child']:
+                parent.setChildView(resource, None)
         self.children.clear()

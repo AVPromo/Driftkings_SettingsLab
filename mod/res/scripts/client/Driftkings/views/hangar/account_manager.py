@@ -10,9 +10,10 @@ from gui.impl.pub import ViewImpl
 from gui.impl.pub.window_impl import WindowImpl
 
 from Driftkings.core.accounts import AccountError
+from Driftkings.interface_catalog import gameface_spec
 from Driftkings.ui.gameface import resource_id
 
-RESOURCE = 'mods/Driftkings/AccountManager/window'
+RESOURCE = gameface_spec('DriftkingsAccountManager')['resource']
 
 
 def _component():

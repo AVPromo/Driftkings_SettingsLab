@@ -89,7 +89,8 @@ class RatingViews(object):
         override(PlayersPanel,'setInitialMode',self.initialMode)
         override(PlayersPanel,'tryToSetPanelModeByMouse',self.nativeHover)
         from Driftkings.views.battle.panel_gameface import GamefaceLoading
-        self.gameface=GamefaceLoading(self)
+        if not hasattr(self, 'gameface'):
+            self.gameface=GamefaceLoading(self)
         self.refresh()
 
     def stop(self):
@@ -100,6 +101,8 @@ class RatingViews(object):
         battleEvents.release(self)
         g_eventBus.removeListener(events.ComponentEvent.COMPONENT_REGISTERED,self.component,scope=EVENT_BUS_SCOPE.GLOBAL)
         self.end()
+        if hasattr(self, 'gameface'):
+            self.gameface.dispose()
         # Native page owns component destruction; end() clears its presentation.
 
     def onSettingsChanged(self, component, settings):

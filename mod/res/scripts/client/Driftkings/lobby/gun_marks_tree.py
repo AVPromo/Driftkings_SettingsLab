@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Driftkings.interface_catalog import gameface_spec
 from Driftkings._constants import GLOBAL, MARKS_ON_GUN_TECH_TREE
 from Driftkings.settings.service import settings_service, affects
 """EU 2.4 Gameface implementation; the legacy NationTreeNode SWF is not used."""
@@ -16,8 +17,7 @@ from Driftkings.views.hangar.gun_marks_tree import install
 
 LOG = logging.getLogger('Driftkings.MarksOnGunTechTree')
 FEATURE = 'DriftkingsMarksOnGunTechTree'
-RESOURCE = 'mods/Driftkings/MarksOnGunTechTree/model'
-ASSETS = 'coui://gui/gameface/mods/Driftkings/MarksOnGunTechTree/'
+RESOURCE = gameface_spec(FEATURE)['resource']
 _views = weakref.WeakKeyDictionary()
 
 

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Driftkings.interface_catalog import gameface_spec
 """Configurable own-vehicle statistics on EU Gameface carousel cards."""
 import logging
 import math
@@ -22,8 +23,7 @@ from Driftkings.settings.service import settings_service
 
 LOG = logging.getLogger('Driftkings.CarouselStats')
 FEATURE = 'DriftkingsCarouselStats'
-RESOURCE = 'mods/Driftkings/CarouselStats/model'
-ASSETS = 'coui://gui/gameface/mods/Driftkings/CarouselStats/'
+RESOURCE = gameface_spec(FEATURE)['resource']
 g_controller = None
 ICONS = {
     'damage': 'library/efficiency/48x48/damage.png',

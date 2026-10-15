@@ -2,13 +2,14 @@
 
 Atualizado em 2026-10-15. Este documento regista as prioridades acordadas e deve
 ser consultado antes de iniciar a próxima fase. A comparação foi guardada a pedido
-do utilizador. A unificação dos defaults e nomes está concluída localmente. As fases 1 e 2 da
+do utilizador. A unificação dos defaults e nomes está concluída localmente. As fases 1, 2 e 3 da
 reorganização foram implementadas e validadas localmente; teste em jogo no fim.
 Antes do ponto 2, o utilizador pediu a substituição da arquitetura antiga de
 ConfigInterface/TemplateBuilder; consultar [análise das configurações](#organização-das-configurações--direção-da-refatoração).
 Também foi analisada a organização de Flash/Gameface da referência; consultar
 [análise das interfaces](#flash-e-gameface--análise-de-organização) ao refatorar o carregamento
-de vistas e recursos. A reorganização específica das interfaces Flash/Gameface continua pendente.
+de vistas e recursos. A organização de interfaces Flash/Gameface foi implementada na fase 3;
+consultar o estado e os limites de validação abaixo.
 Foi também guardada a [auditoria dos hooks](#auditoria-de-hooks-e-overrides): priorizar a
 consolidação dos produtores de eventos de batalha e remover a sobreposição com
 as pontes antigas durante esta refatoração. A primeira consolidação foi implementada na fase 2; consultar o estado abaixo.
@@ -269,6 +270,55 @@ falha parcial não ativa consumidores sem dependências nem impede limpeza.
 
 ### Fase 3 — Organizar interfaces e recursos
 
+**Implementada e validada localmente em 2026-10-15; teste em jogo no fim.**
+
+- `interface_catalog.py` concentra os nove componentes Flash e as nove vistas
+  Gameface: alias técnico, secção, classe/fábrica Python, classe AS3, contexto,
+  recurso R, layout, estilos, ordem dos scripts e proprietário de limpeza.
+  O catálogo é importável sem inicializar APIs do jogo.
+- `build_tools/generate_ui_catalog.py` gera `ComponentCatalog.as` e o bloco de
+  catálogo do bootstrap JS. Editar o catálogo e executar
+  `python build_tools/generate_ui_catalog.py --write` antes de compilar.
+- A validação da build rejeita divergências entre catálogo, BATTLE_ALIASES,
+  contratos DAAPI, classes Python/AS3, recursos R, layouts e ficheiros empacotados.
+  Também rejeita recursos com caminhos externos/traversal e fontes gerados desatualizados.
+- Continua a existir um único `DriftkingsBattle.swf`. A fábrica de HUD pertence
+  a `BaseBattlePage.prototype.as_DriftkingsCreate`; a fábrica restrita de ratings
+  usa `AbstractView.prototype.as_DriftkingsCreateRatings`. A seleção por superfície
+  impede a criação dos restantes componentes numa raiz de ratings.
+- A classe AS3 `ComponentFactory` partilha o registo, e o mapa de classes é gerado
+  do catálogo. Foi mantido `registerFlashComponentS`, a comunicação DAAPI e o
+  encaminhamento de visibilidade existente; não foi introduzida a API protegida
+  `registerComponent` que falhou nas experiências anteriores.
+- O registo Python verifica classe Flash e secção de configuração de cada vista.
+  O handler central seleciona os componentes e evita recriá-los quando já existem.
+- Os modelos Gameface passam apenas a identidade da funcionalidade ao bootstrap.
+  A ordem de CSS/JS vem do catálogo, em vez de listas repetidas em cada modelo.
+  Mantidos OpenWG, ordem, tratamento de falhas e limpeza dos recursos.
+- Corrigido o cabeçalho: faltava no registo do bootstrap. Agora tem proprietário
+  `__dkHangarHeaderOptions`, recurso R próprio e HTML/JS em `HangarHeaderOptions/`;
+  os manifests foram atualizados em conjunto. O relógio mantém os seus recursos.
+- Removida do bootstrap a entrada sem consumidor de ModSettingsButton.
+- O carregador partilha uma carga entre instâncias da mesma funcionalidade,
+  limpa owners/nós/listeners e espera pelo script em curso antes de carregar uma
+  nova geração. Um script que termine depois do fecho tem o seu owner libertado.
+  Falhas no dispose de um owner não impedem a limpeza dos seus nós.
+- Ratings mantém os filhos Wulf existentes ao terminar uma batalha, desativando
+  o payload. Na paragem do módulo, remove apenas os filhos que ainda lhe pertencem,
+  preservando substituições de outros mods. A ponte é reutilizada entre ativações.
+- A ponte específica do carrossel e a validação do patch por versão continuam
+  isoladas. Não foram recriados os testes do carrossel pedidos para remover.
+- Verificação: 26 testes existentes/de catálogo, 7 de configurações, 17 de Core,
+  8 de contratos UI em Python 2.7 e 8 de lifecycle JS com DOM/engine simulados:
+  **66 verificações locais**. Sintaxe dos 17 JS verificada com Node.
+- Build protegida `0.1.2-beta.1`: 249 módulos Python, 171 assets, 48 defaults e
+  duas dependências. Flash, ponte do carrossel e helpers recompilados; pacote verificado.
+- Limites: a execução no Scaleform/Coherent real será validada no jogo no fim.
+  A matriz de modos e conflitos continua na fase 4; esta etapa preserva as regras
+  existentes e delimita as superfícies. Não há alegações de melhoria de FPS.
+
+Objetivos desta fase:
+
 - Catálogo central de vistas: aliases técnicos, classes Python/AS3, recursos, modos e lifecycle.
 - Manter um SWF de batalha, classes por funcionalidade e bases/utilitários partilhados.
 - Delimitar fábricas de batalha e ratings; validar o contrato nativo antes de alterar registos.
@@ -336,7 +386,7 @@ finais de novos módulos serão fixados ao migrar os seus consumidores.
 
 ### Regras de execução
 
-- Próximo trabalho: fase 3, organização de interfaces e recursos. Por indicação do utilizador,
+- Próximo trabalho: fase 4, compatibilidade e adaptação ao jogo. Por indicação do utilizador,
   a validação em jogo será realizada apenas no fim da reorganização.
 - Migrar por conjuntos funcionais verificáveis; remover a camada obsoleta quando os seus
   consumidores estiverem migrados, sem manter uma segunda arquitetura permanente.

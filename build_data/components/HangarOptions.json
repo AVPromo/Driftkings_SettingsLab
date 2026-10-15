@@ -19,8 +19,8 @@
       "generator": null
     },
     {
-      "source": "mod/res/gui/gameface/mods/Driftkings/HangarClock/header_options.js",
-      "target": "res/gui/gameface/mods/Driftkings/HangarClock/header_options.js",
+      "source": "mod/res/gui/gameface/mods/Driftkings/HangarHeaderOptions/header_options.js",
+      "target": "res/gui/gameface/mods/Driftkings/HangarHeaderOptions/header_options.js",
       "generator": null
     },
     {
@@ -41,6 +41,16 @@
     {
       "source": "mod/res/gui/maps/Driftkings/clock/clockBg.png",
       "target": "res/gui/maps/Driftkings/clock/clockBg.png",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/HangarHeaderOptions/model.html",
+      "target": "res/gui/gameface/mods/Driftkings/HangarHeaderOptions/model.html",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gen_resources/driftkings.DriftkingsHangarHeaderOptions.json",
+      "target": "res/gui/gen_resources/driftkings.DriftkingsHangarHeaderOptions.json",
       "generator": null
     }
   ]

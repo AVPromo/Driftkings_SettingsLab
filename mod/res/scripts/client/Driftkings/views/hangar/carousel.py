@@ -70,7 +70,7 @@ def install_gameface():
             super(CarouselModel, self)._initialize()
             self._addStringProperty('payload', '{}')
             self.onRequestVehicles = self._addCommand('onRequestVehicles')
-            attach_assets(self, _component().FEATURE, styles=[_component().ASSETS + 'carousel.css'], scripts=[_component().ASSETS + 'carousel_native.js', _component().ASSETS + 'carousel_layout.js', _component().ASSETS + 'carousel.js'])
+            attach_assets(self, _component().FEATURE)
 
     class CarouselView(ViewComponent):
         def __init__(self, parent, resource_id):

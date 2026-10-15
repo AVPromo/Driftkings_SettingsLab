@@ -167,3 +167,20 @@ in `build_data/release.json`.
 python build_tools/validate_locales.py
 python build_tools/validate_build_data.py --check-generated
 ```
+
+
+## UI catalog
+
+`mod/res/scripts/client/Driftkings/interface_catalog.py` declares the Flash and
+Gameface contracts, settings sections, surfaces, layouts and ordered assets.
+After changing a declaration, regenerate the tracked AS3/JS source maps:
+
+```powershell
+python build_tools/generate_ui_catalog.py --write
+```
+
+The normal build validates these maps, DAAPI classes, native R declarations and
+packaged resources before compiling. Battle and ratings factories remain in one
+SWF; injected Gameface views use the generated bootstrap catalog. Standalone
+windows retain their HTML-owned assets. Runtime checks with simulated APIs do
+not replace the final in-game validation.

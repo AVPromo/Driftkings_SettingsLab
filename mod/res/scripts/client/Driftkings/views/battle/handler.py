@@ -10,6 +10,7 @@ from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
 
 from Driftkings.views import BATTLE_COMPONENTS, BATTLE_HANDLERS
+from Driftkings.interface_catalog import selected_components, surface_aliases
 
 LOG = logging.getLogger('Driftkings.Views')
 
@@ -89,8 +90,7 @@ class BattleViewHandler(PackageBusinessHandler):
         self.pending = None
         if not self.active:
             return
-        aliases = [alias for alias, definition in sorted(BATTLE_COMPONENTS.items())
-                   if definition[1].data.get('enabled', True)]
+        aliases = selected_components(BATTLE_COMPONENTS)
         if not aliases:
             return
         try:
@@ -109,15 +109,20 @@ class BattleViewHandler(PackageBusinessHandler):
             LOG.warning('Battle library not ready on page %s after 80 attempts', self.pageAlias)
 
     def onViewFound(self, view, aliases):
-        missing = [alias for alias in aliases if not view.isFlashComponentRegistered(alias)]
+        battle = hasattr(view.flashObject, 'as_DriftkingsCreate')
+        method = 'as_DriftkingsCreate' if battle else 'as_DriftkingsCreateRatings'
+        requested = surface_aliases(aliases, 'battle' if battle else 'ratings')
+        if not requested:
+            return False
+        missing = [alias for alias in requested if not view.isFlashComponentRegistered(alias)]
         if not missing:
             return True
-        if not hasattr(view.flashObject, 'as_DriftkingsCreate'):
+        if not hasattr(view.flashObject, method):
             return False
-        view.flashObject.as_DriftkingsCreate(missing)
-        if getattr(view, '_isBattleLoading', False):
-            # Match native components: hide during loading, then restore them.
+        getattr(view.flashObject, method)(missing)
+        if battle and getattr(view, '_isBattleLoading', False):
+            # Keep the existing DAAPI visibility routing for owned components.
             registered = [alias for alias in missing if view.isFlashComponentRegistered(alias)]
             view.as_setComponentsVisibilityS(None, registered)
             view._blToggling.update(registered)
-        return all(view.isFlashComponentRegistered(alias) for alias in aliases)
+        return all(view.isFlashComponentRegistered(alias) for alias in requested)

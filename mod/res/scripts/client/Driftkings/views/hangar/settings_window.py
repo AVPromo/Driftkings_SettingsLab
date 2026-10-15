@@ -18,9 +18,10 @@ from Driftkings.core.keycodes import MAX_KEY_CODE, valid_key_code
 from Driftkings.settings.panel import core_page, logger
 from Driftkings.settings.panel.controls import is_text
 from Driftkings.settings.panel.presenter import CORE_ID, MAX_REQUEST, Presenter
+from Driftkings.interface_catalog import gameface_spec
 from Driftkings.ui.gameface import resource_id
 
-WINDOW_RESOURCE = 'mods/Driftkings/DKModSettings/window'
+WINDOW_RESOURCE = gameface_spec('DriftkingsDKModSettings')['resource']
 _JSON = {'separators': (',', ':'), 'allow_nan': False}
 
 

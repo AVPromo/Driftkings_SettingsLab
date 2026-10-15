@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Driftkings.interface_catalog import gameface_spec
 from Driftkings.core.hooks import on_event
 from Driftkings.common.utils import events
 import gui.shared.tooltips.vehicle as tooltips
@@ -386,8 +387,7 @@ def new__setItemField(func, self, clientID, key, value):
 
 # Hangar clock: one Gameface child per hangar, no global Flash timer.
 FEATURE = 'DriftkingsHangarClock'
-RESOURCE = 'mods/Driftkings/HangarClock/model'
-ASSETS = 'coui://gui/gameface/mods/Driftkings/HangarClock/'
+RESOURCE = gameface_spec(FEATURE)['resource']
 
 
 g_clockController = ClockController()

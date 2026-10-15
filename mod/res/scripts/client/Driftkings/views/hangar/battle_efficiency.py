@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Driftkings.interface_catalog import gameface_spec
 from Driftkings._constants import BATTLE_EFFICIENCY, GLOBAL
 from Driftkings.settings.service import settings_service
 """Presentation adapter for BattleEfficiency; gameplay state stays in its component."""
@@ -23,8 +24,7 @@ def install_results_gameface():
     from Driftkings.ui.gameface import INVALID_RES_ID, attach_assets, resource_id as resolve_resource
 
     feature = 'DriftkingsBattleEfficiency'
-    resource = 'mods/Driftkings/BattleEfficiency/model'
-    assets = 'coui://gui/gameface/mods/Driftkings/BattleEfficiency/'
+    resource = gameface_spec('DriftkingsBattleEfficiency')['resource']
 
     class ResultsModel(ViewModel):
         def __init__(self):
@@ -33,7 +33,7 @@ def install_results_gameface():
         def _initialize(self):
             super(ResultsModel, self)._initialize()
             self._addStringProperty('payload', '{}')
-            attach_assets(self, feature, styles=[assets + 'results.css'], scripts=[assets + 'results.js'])
+            attach_assets(self, feature)
 
     class ResultsView(ViewComponent):
         def __init__(self, parent, resource_id):
