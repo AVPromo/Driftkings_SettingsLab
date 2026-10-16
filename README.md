@@ -4,9 +4,9 @@ Modpack for Wargaming World of Tanks: battle overlays, hangar improvements and a
 
 ## Downloads
 
-**[Download the beta](https://github.com/dkruben/Driftkings_SettingsLab/releases/tag/v0.1.2-beta.2)** · [All releases](https://github.com/dkruben/Driftkings_SettingsLab/releases)
+**[Download the beta](https://github.com/dkruben/Driftkings_SettingsLab/releases/tag/v0.1.2-beta.3)** · [All releases](https://github.com/dkruben/Driftkings_SettingsLab/releases)
 
-Source version: **0.1.2-beta.3**, for **WoT 2.4.1.0**. Beta releases remain under refinement. The download above links to the latest published package.
+Current version: **0.1.2-beta.3**, for **WoT 2.4.1.0**. Beta releases remain under refinement.
 
 ## Battle interface and statistics
 
@@ -34,7 +34,7 @@ Available behavior depends on configuration, vehicle and game mode.
 ## Installation
 
 1. Close World of Tanks.
-2. Download `Driftkings-0.1.2-beta.2-WoT-2.4.1.0.zip` from the release assets.
+2. Download `Driftkings-0.1.2-beta.3-WoT-2.4.1.0.zip` from the release assets.
 3. Extract its `mods` folder into the game installation, merging folders. It includes Driftkings and the required ModsListAPI and OpenWG Gameface packages under `mods/2.4.1.0/`.
 4. For a new installation, extract the separate `Driftkings-defaults.zip` into the game installation. Preserve existing `mods/configs/Driftkings` settings when updating.
 5. Start the game and open Driftkings settings through the mods list.

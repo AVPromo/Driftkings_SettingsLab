@@ -6,10 +6,11 @@
   "title": "Driftkings",
   "author": "Driftkings",
   "changelog": [
-    "First public beta for World of Tanks 2.4.1.0.",
-    "Unified battle and hangar modpack with integrated settings and 18 locales.",
-    "Separate configuration defaults and pinned UI dependencies.",
-    "Fix Python 2.7 Unicode colors preventing distance marker creation.",
-    "EU startup and replay checked locally; further refinements and updater validation remain planned."
+    "Migrate MarksOnGun battle and hangar panels to Gameface with a shared calculation engine.",
+    "Add panel scaling, position locking and saved header dragging; battle dragging uses the native cursor (normally left Ctrl).",
+    "Remove obsolete Flash marks panel, HTML templates and legacy configuration defaults.",
+    "Expose custom sniper zoom steps and fix fractional post-shot camera delay validation.",
+    "Stop creating automatic .bak files during normal settings saves; preserve personal configurations.",
+    "NA hangar and replay dragging confirmed. Live-battle mark estimates, other realms and the complete updater flow still require validation."
   ]
 }
