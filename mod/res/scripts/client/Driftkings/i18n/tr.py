@@ -1155,6 +1155,9 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_sound_tooltip': 'Tespit edilen düşmanlar ve yardım hasarı için sesli '
                                                         'bildirimleri açın/kapatın'},
  'zoom_extended': {'UI_description': 'ZoomExtended',
+                   'UI_setting_zoomSteps_enabled_text': u'Özel yakınlaştırma seviyeleri',
+                   'UI_setting_zoomSteps_steps_text': u'Yakınlaştırma seviyeleri (JSON listesi)',
+                   'UI_setting_zoomSteps_steps_tooltip': u'2 veya üzeri en az dört farklı sayı girin, örneğin [4, 6, 8, 12, 16, 25, 30]. Sonraki savaşta uygulanır.',
                    'UI_setting_disableCamAfterShotLatency_text': 'Çekim Sonrası Kamera Gecikmesini Devre '
                                                                  'Dışı Bırak',
                    'UI_setting_disableCamAfterShotLatency_tooltip': 'Kameranın otomatik kapanmasını '

@@ -1161,6 +1161,9 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_sound_tooltip': 'Alternar as notificações sonoras para os inimigos '
                                                         'avistados e ajudar a causar danos'},
  'zoom_extended': {'UI_description': 'ZoomExtended',
+                   'UI_setting_zoomSteps_enabled_text': u'Níveis de zoom personalizados',
+                   'UI_setting_zoomSteps_steps_text': u'Níveis de zoom (lista JSON)',
+                   'UI_setting_zoomSteps_steps_tooltip': u'Introduz pelo menos quatro números distintos iguais ou superiores a 2, por exemplo [4, 6, 8, 12, 16, 25, 30]. Aplicado na próxima batalha.',
                    'UI_setting_disableCamAfterShotLatency_text': 'Desativar latência da câmara após disparo',
                    'UI_setting_disableCamAfterShotLatency_tooltip': 'Atrase o desligamento automático da '
                                                                     'câmara.',

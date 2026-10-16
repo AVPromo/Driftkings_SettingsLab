@@ -1175,6 +1175,9 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_sound_tooltip': 'Переключение звуковых уведомлений об обнаруженных '
                                                         'врагах и нанесении урона'},
  'zoom_extended': {'UI_description': 'ZoomExtended',
+                   'UI_setting_zoomSteps_enabled_text': u'Свои уровни приближения',
+                   'UI_setting_zoomSteps_steps_text': u'Уровни приближения (список JSON)',
+                   'UI_setting_zoomSteps_steps_tooltip': u'Введите минимум четыре разных числа от 2, например [4, 6, 8, 12, 16, 25, 30]. Применяется со следующего боя.',
                    'UI_setting_disableCamAfterShotLatency_text': 'Отключить задержку камеры после снимка',
                    'UI_setting_disableCamAfterShotLatency_tooltip': 'Задержка автоматического выключения '
                                                                     'камеры.',

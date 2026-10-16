@@ -1172,6 +1172,9 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_sound_tooltip': 'Kapcsolja be a hangos értesítéseket a kiszúrt '
                                                         'ellenségekről, és segítse a sebzést'},
  'zoom_extended': {'UI_description': 'ZoomExtended',
+                   'UI_setting_zoomSteps_enabled_text': u'Egyéni nagyítási szintek',
+                   'UI_setting_zoomSteps_steps_text': u'Nagyítási szintek (JSON-lista)',
+                   'UI_setting_zoomSteps_steps_tooltip': u'Adj meg legalább négy különböző, legalább 2 értékű számot, például [4, 6, 8, 12, 16, 25, 30]. A következő csatától érvényes.',
                    'UI_setting_disableCamAfterShotLatency_text': 'A Cam After Shot késleltetés letiltása',
                    'UI_setting_disableCamAfterShotLatency_tooltip': 'A kamera automatikus kikapcsolásának '
                                                                     'késleltetése.',

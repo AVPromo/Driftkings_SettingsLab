@@ -1157,6 +1157,9 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_sound_tooltip': 'Przełączaj powiadomienia dźwiękowe dla wykrytych '
                                                         'wrogów i wspomagaj obrażenia'},
  'zoom_extended': {'UI_description': 'ZoomExtended',
+                   'UI_setting_zoomSteps_enabled_text': u'Własne poziomy przybliżenia',
+                   'UI_setting_zoomSteps_steps_text': u'Poziomy przybliżenia (lista JSON)',
+                   'UI_setting_zoomSteps_steps_tooltip': u'Podaj co najmniej cztery różne liczby od 2, np. [4, 6, 8, 12, 16, 25, 30]. Zmiana od następnej bitwy.',
                    'UI_setting_disableCamAfterShotLatency_text': 'Wyłącz opóźnienie kamery po oddaniu '
                                                                  'strzału',
                    'UI_setting_disableCamAfterShotLatency_tooltip': 'Opóźnij automatyczne wyłączenie '

@@ -1210,6 +1210,9 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_sound_tooltip': 'Attiva/disattiva le notifiche sonore per i nemici '
                                                         'individuati e i danni assistiti'},
  'zoom_extended': {'UI_description': 'ZoomExtended',
+                   'UI_setting_zoomSteps_enabled_text': u'Livelli di zoom personalizzati',
+                   'UI_setting_zoomSteps_steps_text': u'Livelli di zoom (lista JSON)',
+                   'UI_setting_zoomSteps_steps_tooltip': u'Inserisci almeno quattro numeri distinti maggiori o uguali a 2, ad esempio [4, 6, 8, 12, 16, 25, 30]. Applicato nella prossima battaglia.',
                    'UI_setting_disableCamAfterShotLatency_text': 'Disabilita la latenza della telecamera '
                                                                  'dopo lo scatto',
                    'UI_setting_disableCamAfterShotLatency_tooltip': 'Ritarda lo spegnimento automatico della '

@@ -1209,6 +1209,9 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_sound_tooltip': 'Schalten Sie die akustischen Benachrichtigungen für '
                                                         'entdeckte Feinde und den Assist-Schaden ein'},
  'zoom_extended': {'UI_description': 'ZoomExtended',
+                   'UI_setting_zoomSteps_enabled_text': u'Eigene Zoomstufen',
+                   'UI_setting_zoomSteps_steps_text': u'Zoomstufen (JSON-Liste)',
+                   'UI_setting_zoomSteps_steps_tooltip': u'Mindestens vier verschiedene Zahlen ab 2 eingeben, z. B. [4, 6, 8, 12, 16, 25, 30]. Gilt ab dem nächsten Gefecht.',
                    'UI_setting_disableCamAfterShotLatency_text': 'Deaktivieren Sie die Cam-After-Shot-Latenz',
                    'UI_setting_disableCamAfterShotLatency_tooltip': 'Verzögern Sie das automatische '
                                                                     'Herunterfahren der Kamera.',

@@ -1135,6 +1135,9 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_sound_tooltip': 'Přepínejte zvuková upozornění na spatřené nepřátele '
                                                         'a asistujte poškození'},
  'zoom_extended': {'UI_description': 'ZoomExtended',
+                   'UI_setting_zoomSteps_enabled_text': u'Vlastní úrovně přiblížení',
+                   'UI_setting_zoomSteps_steps_text': u'Úrovně přiblížení (seznam JSON)',
+                   'UI_setting_zoomSteps_steps_tooltip': u'Zadejte alespoň čtyři různá čísla od 2, například [4, 6, 8, 12, 16, 25, 30]. Použije se v další bitvě.',
                    'UI_setting_disableCamAfterShotLatency_text': 'Zakázat latenci kamery po záběru',
                    'UI_setting_disableCamAfterShotLatency_tooltip': 'Zpoždění automatického vypnutí '
                                                                     'fotoaparátu.',
