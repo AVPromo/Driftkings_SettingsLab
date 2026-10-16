@@ -6,12 +6,12 @@ Modpack for Wargaming World of Tanks: battle overlays, hangar improvements and a
 
 **[Download the beta](https://github.com/dkruben/Driftkings_SettingsLab/releases/tag/v0.1.2-beta.2)** · [All releases](https://github.com/dkruben/Driftkings_SettingsLab/releases)
 
-Current version: **0.1.2-beta.2**, for **WoT 2.4.1.0**. First public beta; further refinements are planned.
+Source version: **0.1.2-beta.3**, for **WoT 2.4.1.0**. Beta releases remain under refinement. The download above links to the latest published package.
 
 ## Battle interface and statistics
 
 - Player panels and battle-loading statistics.
-- Gun-mark progress, battle statistics and High Caliber progress.
+- Gameface gun-mark panels in battle and hangar, battle statistics and High Caliber progress.
 - Own-vehicle health, target information and distance markers.
 - Minimap options, spotted indicators and Sixth Sense customization.
 
@@ -43,7 +43,7 @@ The defaults are the author's selected mod configurations. Existing personal JSO
 
 ## Compatibility and beta status
 
-Designed for Wargaming EU, NA and ASIA clients; Mir Tankov/RU is outside scope. This beta was checked locally on EU 2.4.1.0, including normal startup and a battle replay. Other realms and every feature have not been fully validated in-game. A complete update through the in-game updater remains to be validated.
+Designed for Wargaming EU, NA and ASIA clients; Mir Tankov/RU is outside scope. This beta was checked locally on EU 2.4.1.0, including normal startup and a battle replay. Other realms and every feature have not been fully validated in-game. MarksOnGun panel dragging was confirmed on NA in the hangar and battle replay; complete mark estimates still need live-battle validation. A complete update through the in-game updater remains to be validated.
 
 ## Languages
 
@@ -59,7 +59,7 @@ On Windows, configure the tools described in the [compiler guide](build_tools/RE
 python build_tools/compiler.py --plan
 python build_tools/validate_build_data.py
 .\debug.cmd
-.\release.cmd --version 0.1.2-beta.2 --channel beta
+.\release.cmd --version 0.1.2-beta.3 --channel beta
 ```
 
 The current build contract uses the (EU, NA) installation as its resource source and an EU source reference. Local tool paths belong in ignored `build_data/toolchain.local.json`. Builds compile Python 2.7, Flash and native helpers, generate the carousel integration and verify the packages. Outputs go to `build/`; compilation does not install or publish them.
@@ -74,7 +74,7 @@ The current build contract uses the (EU, NA) installation as its resource source
 | `res` | Canonical defaults, dependencies and resource sources |
 | `docs` | Architecture, maintenance and historical evidence |
 
-See the [build contract](build_data/README.md), [documentation index](docs/README.md) and [work plan](PLANO_TRABALHO.md).
+See the [build contract](build_data/README.md).
 
 ## Support and credits
 

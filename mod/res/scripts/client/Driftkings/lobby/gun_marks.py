@@ -9,8 +9,9 @@ from gui.Scaleform.daapi.view.lobby.profile.ProfileUtils import ProfileUtils
 from gui.shared.gui_items.dossier.achievements.mark_on_gun import MarkOnGunAchievement
 from gui.shared.personality import ServicesLocator
 
-from Driftkings.core.marks_calculator import ceil_damage, ceil_damage_tens, combined_damage
-from Driftkings.views.marks_model import delta_model
+from Driftkings.core.marks_calculator import ceil_damage, combined_damage, statistics, hangar_goal
+from Driftkings.views.marks_model import delta_model, milestone_model
+from Driftkings.core.marks_state import marks_state
 from Driftkings._constants import GLOBAL, MARKS_ON_GUN_HANGAR
 from Driftkings.common import logException, getStatisticColor, getMoeDamageColor
 from Driftkings.common import loadJson
@@ -37,24 +38,7 @@ def finite(value, default=0.0):
 
 
 def goal(percent, moving_average, tier, selection=0, earned_marks=0):
-    percent = max(0.0, min(100.0, finite(percent)))
-    earned_marks = max(0, min(3, int(finite(earned_marks))))
-    selection = max(0, min(3, int(finite(selection))))
-    # Awarded marks are retained even if the current percentage later falls.
-    progress_marks = max(earned_marks, sum(percent >= limit for limit in THRESHOLDS))
-    mark = selection or min(3, progress_marks + 1)
-    threshold = THRESHOLDS[mark - 1]
-    eligible = finite(tier) >= 5
-    achieved = eligible and (earned_marks >= mark or percent >= threshold)
-    estimate = None
-    average = finite(moving_average)
-    if eligible and percent > 0 and average > 0:
-        # Local proportional approximation, NOT a server threshold or a forecast
-        # of the damage needed in the next single battle.
-        estimate = int(math.ceil(average * threshold / percent / 10.0) * 10)
-    return {'eligible': eligible, 'mark': mark, 'threshold': threshold,
-            'achieved': achieved, 'gap': max(0.0, threshold - percent),
-            'estimate': estimate, 'percent': percent}
+    return hangar_goal(percent, moving_average, tier, selection, earned_marks)
 
 
 def record_snapshot(history, vehicle_id, battles, percent, average):
@@ -81,7 +65,8 @@ def record_snapshot(history, vehicle_id, battles, percent, average):
 def trend(history, vehicle_id, last_battles=10):
     points = history.get('vehicles', {}).get(str(vehicle_id), [])
     if len(points) < 2:
-        return {'battles': 0, 'delta': None, 'points': [p['percent'] for p in points]}
+        return {'battles': 0, 'delta': None, 'points': [p['percent'] for p in points],
+                'samples': [dict(p) for p in points]}
     last_battles = max(1, min(20, int(finite(last_battles, 10))))
     start = len(points) - 2
     while start > 0 and points[-1]['battles'] - points[start]['battles'] < last_battles:
@@ -89,13 +74,12 @@ def trend(history, vehicle_id, last_battles=10):
     selected = points[start:]
     return {'battles': selected[-1]['battles'] - selected[0]['battles'],
             'delta': round(selected[-1]['percent'] - selected[0]['percent'], 2),
-            'points': [p['percent'] for p in selected]}
+            'points': [p['percent'] for p in selected], 'samples': [dict(p) for p in selected]}
 
 
 from Driftkings.settings.definitions.lobby.gun_marks import MarksOnGunHangarSettings as Settings
 
 
-MARK_LEVELS = (0.0, 20.0, 40.0, 55.0, 65.0, 85.0, 95.0, 100.0)
 
 
 def read_colors(rating_color, rating_value):
@@ -127,18 +111,7 @@ class MarksOnGunData(object):
     def _normalizeDigits(value):
         return ceil_damage(value)
 
-    @staticmethod
-    def _normalizeDigitsCoeff(value):
-        return ceil_damage_tens(value)
 
-    @staticmethod
-    def _calcPercent(ema, start, end, damage, percent):
-        if not damage or not percent:
-            return 0.0
-        while start <= end < 100.001 and ema < 30000:
-            ema += 0.1
-            start = ema / damage * percent
-        return ema
 
     @staticmethod
     def _format_int(value):
@@ -222,35 +195,7 @@ class MarksOnGunData(object):
         damage = self._safe(damage, 0.0)
         if damage <= 0.0:
             damage = 1.0
-        next_percent = math.floor(percent) + 1
-        next_damage = self._calcPercent(damage, percent, next_percent, damage, percent)
-        p20 = self._calcPercent(0.0, 0.0, 20.0, damage, percent)
-        p40 = self._calcPercent(0.0, 0.0, 40.0, damage, percent)
-        p55 = self._calcPercent(0.0, 0.0, 55.0, damage, percent)
-        p65 = self._calcPercent(0.0, 0.0, 65.0, damage, percent)
-        p85 = self._calcPercent(0.0, 0.0, 85.0, damage, percent)
-        p95 = self._calcPercent(0.0, 0.0, 95.0, damage, percent)
-        p100 = self._calcPercent(0.0, 0.0, 100.0, damage, percent)
-        data = [0.0, p20, p40, p55, p65, p85, p95, p100]
-        idx = None
-        for level in MARK_LEVELS:
-            if level >= percent:
-                idx = level
-                break
-        if idx is None:
-            idx = 100.0
-        check = MARK_LEVELS.index(idx)
-        limit2 = data[check]
-        delta = limit2 - next_damage
-        for value in xrange(len(data)):
-            if data[value] == next_damage or data[value] == limit2:
-                continue
-            if value > check:
-                data[value] = self._normalizeDigitsCoeff(data[value] + delta)
-        if next_percent == 101:
-            next_percent = 100
-            next_damage = data[7]
-        return (next_percent, next_damage, data[1], data[2], data[3], data[4], data[5], data[6], data[7])
+        return statistics(percent, damage)
 
     def collect(self, dossier=None):
         vehicle = g_currentVehicle.item
@@ -284,6 +229,10 @@ class MarksOnGunData(object):
             'vehicleName': vehicle.shortUserName,
             'vehicleID': vehicle.intCD,
             'tier': vehicle.level,
+            'nation': getattr(vehicle, 'nationName', None),
+            'averageDirect': avg_damage,
+            'averageAssist': max(track, radio, stun),
+            'averageCombined': current_damage,
             'earnedMarks': dossier.getRecordValue(ACHIEVEMENT_BLOCK.TOTAL, 'marksOnGun'),
             'randomBattles': battles,
             'battles': battles,
@@ -367,10 +316,15 @@ class MarksOnGunData(object):
         result = {'config': get_view_config(config), 'state': 'empty',
                   'vehicle': config.i18n['UI_panel_chooseVehicle'], 'message': config.i18n['UI_panel_selectVehicle'],
                   'labels': {key[9:]: value for key, value in config.i18n.items() if key.startswith('UI_panel_')}}
+        result['labels'].update((key[7:], value) for key, value in config.i18n.items() if key.startswith('UI_mog_'))
         if not g_currentVehicle.isPresent():
+            marks_state.clear('hangar')
             return result
+        if marks_state.snapshot('hangar').get('vehicleId') != g_currentVehicle.item.intCD:
+            marks_state.clear('hangar')
         data = self.collect()
         if data is None:
+            marks_state.clear('hangar')
             result.update(vehicle=unicode(g_currentVehicle.item.shortUserName),
                           message=config.i18n['UI_panel_noDossier'])
             return result
@@ -383,6 +337,14 @@ class MarksOnGunData(object):
                 if mastery else '')
         result.update({
             'state': 'data', 'vehicle': unicode(data['vehicleName']), 'tier': data['tier'],
+            'vehicleId': data['vehicleID'], 'nation': data['nation'],
+            'currentMark': data['damageRating'],
+            'averageDirect': data['averageDirect'] if data['battles'] else None,
+            'averageAssist': data['averageAssist'] if data['battles'] else None,
+            'averageCombined': data['averageCombined'] if data['battles'] else None,
+            'movingAverage': data['movingAvgDamage'] if data['hasMoE'] else None,
+            'targetDamage': target['estimate'],
+            'damageNeeded': max(0, target['estimate'] - data['movingAvgDamage']) if target['estimate'] is not None else None,
             'target': target, 'recent': recent,
             'delta': delta_model(recent.get('delta')),
             'progress': target['percent'] / 100.0,
@@ -398,6 +360,10 @@ class MarksOnGunData(object):
             'winRate': ('%.2f%%' % data['winRate']) if data['battles'] else '--',
             'battles': self._format_int(data['battles'])
         })
+        result['milestone'] = milestone_model(data['damageRating'], data['earnedMarks'])
+        if result['milestone']['completed']:
+            result['targetDamage'] = result['damageNeeded'] = None
+        marks_state.publish('hangar', result)
         return result
 
 
@@ -457,3 +423,4 @@ def init():
 
 def fini():
     g_controller.stop()
+    marks_state.clear('hangar')

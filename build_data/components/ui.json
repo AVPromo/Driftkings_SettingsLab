@@ -40,6 +40,16 @@
       "source": "mod/res/gui/gameface/mods/Driftkings/shared/marks_tokens.css",
       "target": "res/gui/gameface/mods/Driftkings/shared/marks_tokens.css",
       "generator": null
+    },
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/shared/marks_panel.js",
+      "target": "res/gui/gameface/mods/Driftkings/shared/marks_panel.js",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/shared/marks_panel.css",
+      "target": "res/gui/gameface/mods/Driftkings/shared/marks_panel.css",
+      "generator": null
     }
   ]
 }

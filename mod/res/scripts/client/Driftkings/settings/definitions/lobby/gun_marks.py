@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from Driftkings._constants import MARKS_ON_GUN_HANGAR
-from Driftkings.settings.controls_schema import control, metadata, options, slider
+from Driftkings.settings.controls_schema import control, metadata, options, slider, field
 from Driftkings.settings.definitions.base import SectionDefinition
 
 
@@ -30,6 +30,15 @@ class MarksOnGunHangarSettings(SectionDefinition):
             [
                 control(MARKS_ON_GUN_HANGAR.SHOW_TOOLTIP_TARGETS),
                 control(MARKS_ON_GUN_HANGAR.TEXT_LOCK),
+                field(['gameface', 'scale'], self.i18n['UI_mog_scale'], 'Slider', 0.25, 2.0, step=0.05),
+                field(['card', 'backgroundAlpha'], self.i18n['UI_mog_opacity'], 'Slider', 0.0, 1.0, step=0.05),
+                field(['card', 'accentColor'], self.i18n['UI_mog_accent'], 'ColorChoice'),
+                field(['gameface', 'showVehicleInfo'], self.i18n['UI_mog_vehicle']),
+                field(['gameface', 'showProgress'], self.i18n['UI_mog_progress']),
+                field(['gameface', 'showDamageStatistics'], self.i18n['UI_mog_damage']),
+                field(['gameface', 'showMilestones'], self.i18n['UI_mog_milestones']),
+                field(['gameface', 'showHistory'], self.i18n['UI_mog_history']),
+                field(['gameface', 'showAdvancedStatistics'], self.i18n['UI_mog_advanced']),
                 slider(MARKS_ON_GUN_HANGAR.HISTORY_BATTLES, 1, 20, 1),
                 metadata(slider('positionX', -7680, 7680, 1, value=self.data[MARKS_ON_GUN_HANGAR.PANEL]['x']), path=[MARKS_ON_GUN_HANGAR.PANEL, 'x']),
                 metadata(slider('positionY', -4320, 4320, 1, value=self.data[MARKS_ON_GUN_HANGAR.PANEL]['y']), path=[MARKS_ON_GUN_HANGAR.PANEL, 'y'])

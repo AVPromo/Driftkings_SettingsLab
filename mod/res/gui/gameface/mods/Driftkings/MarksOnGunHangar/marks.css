@@ -1,47 +1,7 @@
-.dk-hangar-marks {
-    position: absolute; display: none; z-index: 10; box-sizing: border-box;
-    padding: 16rem 18rem; border: 1rem solid #4b515b; border-radius: 4rem;
-    background: rgba(12, 15, 20, .94); color: #f5f1e8;
-    font-family: "Warhelios", Arial, sans-serif; font-size: 13rem;
-    box-shadow: 0 6rem 24rem rgba(0, 0, 0, .35);
-    pointer-events: auto; user-select: none; -webkit-user-select: none;
-}
-.dk-hangar-marks__header {display: flex; justify-content: space-between; align-items: center; cursor: move; margin-bottom: 8rem;}
-.dk-hangar-marks--locked .dk-hangar-marks__header {cursor: default;}
-.dk-hangar-marks__eyebrow {font-size: 10rem; letter-spacing: 1.5rem; color: #c7a86a;}
-.dk-hangar-marks__hint {font-size: 10rem; opacity: .55;}
-.dk-hangar-marks__vehicle {font-size: 20rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 10rem;}
-.dk-hangar-marks__main {display: flex; align-items: center; justify-content: space-between; margin-bottom: 7rem;}
-.dk-hangar-marks__percent {font-size: 32rem; font-weight: bold; line-height: 36rem;}
-.dk-hangar-marks__marks {display: flex;}
-.dk-hangar-marks__mark {padding: 4rem 7rem; margin-left: 4rem; border: 1rem solid #4b515b; border-radius: 2rem; color: #8c919a; font-size: 11rem;}
-.dk-hangar-marks__mark--earned {background: rgba(226, 192, 122, .12);}
-.dk-hangar-marks__mark--near {animation: dk-hangar-marks-glow 2s ease-in-out infinite;}
-.dk-hangar-marks__bar {position: relative; height: 4rem; background: rgba(255, 255, 255, .12); margin-bottom: 9rem;}
-.dk-hangar-marks__fill {height: 4rem; background: #e2c07a;}
-.dk-hangar-marks__tick {position: absolute; top: -2rem; width: 1rem; height: 8rem; background: #c7a86a;}
-.dk-hangar-marks__target {font-size: 12rem; color: #e2c07a; margin-bottom: 8rem;}
-.dk-hangar-marks__detail {font-size: 11rem; margin-bottom: 4rem;}
-.dk-hangar-marks__muted {color: #8c919a; font-size: 10rem;}
-.dk-hangar-marks__stats {display: flex; align-items: center; justify-content: space-between; border-top: 1rem solid #4b515b; margin-top: 10rem; padding-top: 9rem;}
-.dk-hangar-marks__stat {display: flex; flex-direction: column; font-size: 12rem;}
-.dk-hangar-marks__mastery {display: flex; align-items: center;}
-.dk-hangar-marks__mastery img {width: 32rem; height: 32rem; margin-right: 5rem;}
-.dk-hangar-marks__footer {margin-top: 7rem; font-size: 10rem; color: #8c919a;}
-.dk-hangar-marks--compact .dk-hangar-marks__secondary {display: none;}
-@keyframes dk-hangar-marks-glow {0%, 100% {opacity: .6;} 50% {opacity: 1;}}
-
-/* Phases 8–11: existing card and compact toggle, clearer hierarchy. */
-.dk-hangar-marks { border-radius:6rem;background:rgba(18,21,24,.75);border-color:rgba(255,255,255,.1);color:#E8E4DA;box-shadow:0 4rem 16rem rgba(0,0,0,.25); }
-.dk-hangar-marks__vehicle { font-size:18rem;margin-bottom:10rem; }
-.dk-hangar-marks__percent { font-size:34rem;line-height:38rem; }
-.dk-hangar-marks__delta { font-size:16rem;white-space:nowrap;margin-left:12rem; }
-.dk-hangar-marks__marks { display:flex;margin:4rem 0 9rem; }
-.dk-hangar-marks__mark { border:0;padding:0 4rem 0 0;margin:0;font-size:20rem;line-height:22rem; }
-.dk-hangar-marks__mark--earned { background:transparent; }
-.dk-hangar-marks__bar { height:5rem;margin-bottom:25rem; }
-.dk-hangar-marks__fill { height:5rem;background:#D98219; }
-.dk-hangar-marks__milestone { position:absolute;top:8rem;font-size:9rem;color:#969BA3;transform:translateX(-50%); }
-.dk-hangar-marks__target { line-height:17rem; }
-.dk-hangar-marks__detail { font-size:12rem;line-height:18rem; }
-.dk-hangar-marks--compact .dk-hangar-marks__secondary,.dk-hangar-marks--compact .dk-hangar-marks__stats,.dk-hangar-marks--compact .dk-hangar-marks__footer,.dk-hangar-marks--compact .dk-hangar-marks__target { display:none; }
+/* Full hangar panel; shared geometry and metallic palette live in marks_panel.css. */
+.dk-mog--full .dk-mog__percent { font-size:74rem; }
+.dk-mog--full .dk-mog__metrics { margin-bottom:7rem; }
+.dk-mog--full .dk-mog__history { min-height:40rem; }
+.dk-mog--dense .dk-mog__percent { font-size:60rem; }
+.dk-mog--dense .dk-mog__metric { padding:0 9rem; }
+.dk-mog--dense .dk-mog__footer { flex-direction:column; }

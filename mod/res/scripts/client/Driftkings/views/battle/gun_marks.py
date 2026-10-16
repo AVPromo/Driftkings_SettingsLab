@@ -1,252 +1,243 @@
 # -*- coding: utf-8 -*-
-"""Presentation adapter for MarksOnGunBattle; gameplay state stays in its component."""
-from __future__ import print_function
-
+"""Owned Gameface child of WG 2.4.1 RandomHUDView; no Scaleform overlay."""
+import logging
+import weakref
 from importlib import import_module
 
-import BattleReplay
-import GUI
-from gui import g_guiResetters
-from helpers import dependency
-from skeletons.account_helpers.settings_core import ISettingsCore
-
 from Driftkings._constants import GLOBAL, MARKS_ON_GUN_BATTLE
-from Driftkings.core.overlay import ElementType, Align
-from Driftkings.core.overlay import overlays
+from Driftkings.core.marks_state import marks_state
+from Driftkings.core.hud_visibility import hudVisibility
 from Driftkings.settings.service import settings_service
+from Driftkings.views.hangar.common import publish_card
+from Driftkings.views.marks_model import finite
+
+LOG = logging.getLogger('Driftkings.MarksOnGunBattle')
+FEATURE = 'DriftkingsMarksOnGunBattle'
 
 
 def _component():
-    # Resolve live state after component initialization; avoid circular imports.
     return import_module('Driftkings.battle.gun_marks')
 
 
-class Flash(object):
-    settingsCore = dependency.descriptor(ISettingsCore)
-
+class BattleMarksAdapter(object):
     def __init__(self):
         self.active = False
-        self.name = {}
-        self.data = {}
-        self._lastMarks = None
+        self.visible = True
+        self.hudVisible = True
+        self.views = weakref.WeakKeyDictionary()
+        self.installed = False
+
+    def install(self):
+        if self.installed:
+            return
+        from gui.impl.battle.random.hud import RandomHUDView
+        from frameworks.wulf import ViewModel
+        from gui.impl.pub.view_component import ViewComponent
+        from gui.shared import events, EVENT_BUS_SCOPE
+        from Driftkings.core.hooks import override
+        from Driftkings.ui.gameface import attach_assets, resource_id
+        from Driftkings.interface_catalog import gameface_spec
+        adapter = self
+
+        class MarksModel(ViewModel):
+            def __init__(self):
+                super(MarksModel, self).__init__(properties=3, commands=1)
+
+            def _initialize(self):
+                super(MarksModel, self)._initialize()
+                self._addStringProperty('payload', '{}')
+                self.onSavePosition = self._addCommand('onSavePosition')
+                attach_assets(self, FEATURE)
+
+        class MarksView(ViewComponent):
+            def __init__(self, resource):
+                self._lastPayload = None
+                self._guiVisible = True
+                self._cursorVisible = False
+                self._ready = False
+                self._attached = False
+                self._lastVisible = None
+                super(MarksView, self).__init__(layoutID=resource, model=MarksModel)
+
+            def _onLoading(self, *args, **kwargs):
+                super(MarksView, self)._onLoading(*args, **kwargs)
+
+            def _onLoaded(self, *args, **kwargs):
+                super(MarksView, self)._onLoaded(*args, **kwargs)
+                import GUI
+                self._cursorVisible = bool(GUI.mcursor().visible)
+                self._ready = True
+                LOG.info('Gameface battle panel loaded')
+                adapter.refresh()
+
+            def _getEvents(self):
+                return tuple(super(MarksView, self)._getEvents()) + (
+                    (self.getViewModel().onSavePosition, self._savePosition))
+
+            def _savePosition(self, args):
+                settings = settings_service.getComponentDict(_component().config)
+                if not adapter.active or settings.get('gameface', {}).get('locked', True) or not isinstance(args, dict):
+                    return
+                x, y = finite(args.get('x')), finite(args.get('y'))
+                if x is None or y is None:
+                    return
+                panel = dict(settings[MARKS_ON_GUN_BATTLE.PANEL])
+                panel.update(x=max(-7680, min(7680, x)), y=max(-4320, min(4320, y)))
+                settings_service.apply(_component().config, {MARKS_ON_GUN_BATTLE.PANEL: panel})
+
+            def _getListeners(self):
+                return tuple(super(MarksView, self)._getListeners()) + (
+                    (events.GameEvent.GUI_VISIBILITY, self._visibility, EVENT_BUS_SCOPE.BATTLE),
+                    (events.GameEvent.SHOW_CURSOR, self._showCursor, EVENT_BUS_SCOPE.GLOBAL),
+                    (events.GameEvent.HIDE_CURSOR, self._hideCursor, EVENT_BUS_SCOPE.GLOBAL))
+
+            def _showCursor(self, event):
+                self._cursorVisible = True
+                adapter.refresh()
+
+            def _hideCursor(self, event):
+                self._cursorVisible = False
+                adapter.refresh()
+
+            def _visibility(self, event):
+                self._guiVisible = bool(event.ctx['visible'])
+                adapter.refresh()
+
+            def _finalize(self):
+                self._ready = False
+                for parent, child in list(adapter.views.items()):
+                    if child is self:
+                        adapter.views.pop(parent, None)
+                super(MarksView, self)._finalize()
+
+        @override(RandomHUDView, '_getChildComponents')
+        def children(original, parent, *args, **kwargs):
+            native = original(parent, *args, **kwargs)
+            result = dict.fromkeys(native) if isinstance(native, tuple) else dict(native)
+            try:
+                resource = resource_id(gameface_spec(FEATURE)['resource'])
+                if resource == -1:
+                    LOG.warning('MarksOnGun battle resource is unavailable')
+                    return result
+                if resource in result:
+                    LOG.warning('MarksOnGun battle resource already has an owner')
+                    return result
+                def create():
+                    child = MarksView(resource)
+                    adapter.views[parent] = child
+                    LOG.info('Gameface battle panel created')
+                    return child
+                result[resource] = create
+            except Exception:
+                LOG.exception('Could not attach MarksOnGun Gameface battle panel')
+            return result
+
+        marks_state.changed.connect(self.onStateChanged)
+        settings_service.onModSettingsChanged.connect(self.onSettingsChanged, MARKS_ON_GUN_BATTLE)
+        self.installed = True
 
     def startBattle(self):
         if self.active:
             return
-        if not settings_service.getComponentDict(_component().config)[GLOBAL.ENABLED]:
+        import BattleReplay
+        settings = settings_service.getComponentDict(_component().config)
+        if not settings[GLOBAL.ENABLED] or (BattleReplay.isPlaying() and not settings[MARKS_ON_GUN_BATTLE.SHOW_IN_REPLAY]):
             return
-        if BattleReplay.isPlaying() and not settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.SHOW_IN_REPLAY]:
-            return
+        marks_state.clear('battle')
         self.active = True
-        self._lastMarks = None
-        self.data = self.setup()
-        overlays.updated += self.__updatePosition
-        self.createObject(ElementType.LABEL, self.data[ElementType.LABEL])
-        self.updateObject(ElementType.LABEL, {'background': settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.BACKGROUND]})
-        g_guiResetters.add(self.screenResize)
-        self.setupSize()
+        self.visible = True
+        hudVisibility.attach(self)
+        self.refresh()
 
     def stopBattle(self):
-        if not self.active:
-            return
         self.active = False
-        g_guiResetters.discard(self.screenResize)
-        overlays.updated -= self.__updatePosition
-        self.deleteObject(ElementType.LABEL)
+        hudVisibility.detach(self)
+        marks_state.clear('battle')
+        self.refresh()
 
-    def deleteObject(self, name):
-        overlays.remove(self.name[name])
+    def dispose(self):
+        self.stopBattle()
+        marks_state.changed.disconnect(self.onStateChanged)
+        settings_service.onModSettingsChanged.disconnect(self.onSettingsChanged)
+        from Driftkings.ui.gameface import resource_id
+        from Driftkings.interface_catalog import gameface_spec
+        resource = resource_id(gameface_spec(FEATURE)['resource'])
+        for parent, child in list(self.views.items()):
+            if parent.getChildView(resource) is child:
+                child.setEnabled(False)
+                child.destroy()
+        self.views.clear()
+        self.installed = False
 
-    def createObject(self, name, data):
-        overlays.create(self.name[name], name, data)
+    def onStateChanged(self, context):
+        if context == 'battle':
+            self.refresh()
 
-    def updateObject(self, name, data):
-        overlays.update(self.name[name], data)
+    def onSettingsChanged(self, *args):
+        self.refresh()
 
-    def animateObject(self, name, data, time=1.0):
-        overlays.animate(self.name[name], time, data, True)
+    def setBattleHudVisible(self, visible):
+        self.hudVisible = visible
+        self.refresh()
 
-    # noinspection PyTypeChecker
-    def __updatePosition(self, alias, props):
-        if str(alias) != str(_component().config.NAME):
-            return
-        panel = settings_service.getSetting(_component().config, MARKS_ON_GUN_BATTLE.PANEL)
-        changes = dict((key, props[key]) for key in ('x', 'y') if props.get(key) is not None)
-        settings_service.apply(_component().config, {MARKS_ON_GUN_BATTLE.PANEL: changes})
-        for key in ('x', 'y'):
-            self.data[ElementType.LABEL][key] = panel[key]
-        self.setupSize()
+    def setupSize(self, *args):
+        self.refresh()
 
-    def setup(self):
-        self.name = {ElementType.LABEL: '%s' % _component().config.NAME}
-        self.data = {
-            ElementType.LABEL: {
-                'index': 10000,
-                'x': -226.0,
-                'y': -226.0,
-                'width': 183.0,
-                'height': 50.0,
-                'drag': True,
-                'border': True,
-                'alignX': 'left',
-                'alignY': 'bottom',
-                'visible': True,
-                'text': '',
-                'shadow': {'distance': 0, 'angle': 0, 'color': 0x000000, "alpha": 90, 'blurX': 1, 'blurY': 1, 'strength': 3000, 'quality': 1}
-            },
-        }
-        for key, value in settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL].items():
-            if key in self.data[ElementType.LABEL]:
-                self.data[ElementType.LABEL][key] = value
-        return self.data
-
-    def setupSize(self, h=None, w=None):
-        height = settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL_SIZE].get('heightNormal', 50.0) if not _component().worker.altMode else settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL_SIZE].get('heightAlt', 80.0)
-        width = settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL_SIZE].get('widthNormal', 163.0) if not _component().worker.altMode else settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL_SIZE].get('widthAlt', 163.0)
-        if settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.UI] == 1:
-            height = 30.0 if not _component().worker.altMode else 45.0
-            width = 152.0 if not _component().worker.altMode else 152.0
-        if settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.UI] == 2:
-            height = 30.0 if not _component().worker.altMode else 50.0
-            width = 130.0 if not _component().worker.altMode else 130.0
-        if settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.UI] == 3:
-            height = 70.0 if not _component().worker.altMode else 100.0
-            width = 144.0 if not _component().worker.altMode else 144.0
-        if settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.UI] == 4:
-            height = 50.0 if not _component().worker.altMode else 80.0
-            width = 163.0 if not _component().worker.altMode else 163.0
-
-        if settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.UI] in (5, 6, 7, 8):
-            height = 82.0 if not _component().worker.altMode else 82.0
-            width = 343.0 if not _component().worker.altMode else 343.0
-        if settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.UI] == 9:
-            height = 42.0 if not _component().worker.altMode else 42.0
-            width = 54.0 if not _component().worker.altMode else 115.0
-        if settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.UI] == 10:
-            height = 50.0 if not _component().worker.altMode else 90.0
-            width = 183.0 if not _component().worker.altMode else 183.0
-        if settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.UI] == 11:
-            height = 130.0 if not _component().worker.altMode else 130.0
-            width = 160.0 if not _component().worker.altMode else 160.0
-        mode = settings_service.getComponentDict(_component().config).get('displayMode', 0)
-        if mode:
-            width, height = {1: (220, 114), 2: (260, 122), 3: (300, 185)}.get(mode, (260, 122))
-        if h is not None and w is not None:
-            height = h
-            width = w
-        height = height * settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.BATTLE_MESSAGE_SIZE_IN_PERCENT] / 100.0
-        width = width * settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.BATTLE_MESSAGE_SIZE_IN_PERCENT] / 100.0
-
-        for name in self.data:
-            self.data[name]['height'] = height
-            self.data[name]['width'] = width
-        self.data[ElementType.LABEL]['height'] = height
-        self.data[ElementType.LABEL]['width'] = width
-        self.screenResize()
-        x = self.data[ElementType.LABEL]['x']
-        y = self.data[ElementType.LABEL]['y']
-        data = {'height': height, 'width': width, 'x': x, 'y': y}
-        self.updateObject(ElementType.LABEL, data)
-
-    @staticmethod
-    def textRepSize(message):
-        mod = False
-        text = ''
-        count = 0
-        for ids in message.split('\"'):
-            if count:
-                text += '"'
-            if mod:
-                text += '%s' % (int(ids) * settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.BATTLE_MESSAGE_SIZE_IN_PERCENT] / 100)
-                mod = False
-            else:
-                text += '%s' % ids
-            if 'size=' in ids:
-                mod = True
-            count += 1
-        return text
-
-    def set_text(self, text):
-        txt = '<font face="%s" color="#FFFFFF" vspace="-3" align="baseline" >%s</font>' % (settings_service.getComponentDict(_component().config)[GLOBAL.FONT], text)
-        self.updateObject(ElementType.LABEL, {'text': self.textRepSize(txt)})
+    def setVisible(self, visible):
+        if self.visible != visible:
+            self.visible = visible
+            self.refresh()
 
     def set_marks(self, payload):
+        if not marks_state.publish('battle', payload):
+            # Visibility can change without a numeric update.
+            self.refresh()
+
+    def unavailable(self, vehicle_id):
+        self.visible = True
+        marks_state.publish('battle', {'state': 'unavailable', 'vehicleId': vehicle_id})
+        self.refresh()
+
+    def refresh(self):
         settings = settings_service.getComponentDict(_component().config)
-        mode = settings.get('displayMode', 0)
-        if not mode:
-            return
-        payload = dict(payload)
-        payload['mode'] = {1: 'compact', 2: 'normal', 3: 'detailed'}.get(mode, 'normal')
-        payload['scale'] = settings[MARKS_ON_GUN_BATTLE.BATTLE_MESSAGE_SIZE_IN_PERCENT] / 100.0
-        payload['background'] = settings[MARKS_ON_GUN_BATTLE.BACKGROUND]
-        for key in ('showMarks', 'showDelta', 'showDamage', 'showProgress', 'showTargets'):
-            payload[key] = bool(settings.get(key, True))
-        if payload == self._lastMarks:
-            return
-        self._lastMarks = payload
-        self.updateObject(ElementType.LABEL, {'marks': payload, 'background': False})
-
-    def setVisible(self, status):
-        data = {'visible': status}
-        self.updateObject(ElementType.LABEL, data)
-        if settings_service.getComponentDict(_component().config).get('displayMode', 0) or settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.UI] in (5, 6, 7, 8, 11):
-            data = {'background': False}
-        else:
-            data = {'background': settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.BACKGROUND]}
-        self.updateObject(ElementType.LABEL, data)
-
-    @staticmethod
-    def screenFix(screen, value, mod, align=1):
-        if align == 1:
-            if value + mod > screen:
-                return float(max(0, screen - mod))
-            if value < 0:
-                return 0.0
-        if align == -1:
-            if value - mod < -screen:
-                return min(0, -screen + mod)
-            if value > 0:
-                return 0.0
-        if align == 0:
-            scr = screen / 2.0
-            if value < scr:
-                return float(scr - mod)
-            if value > -scr:
-                return float(-scr)
-        return value
-
-    # noinspection PyTypeChecker
-    # noinspection PyArgumentEqualDefault
-    def screenResize(self):
-        curScr = GUI.screenResolution()
-        scale = float(self.settingsCore.interfaceScale.get())
-        xMo, yMo = curScr[0] / scale, curScr[1] / scale
-        x = settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL].get('x', None)
-        if settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['alignX'] == Align.LEFT:
-            x = self.screenFix(xMo, settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['x'], settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['width'], 1)
-        if settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['alignX'] == Align.RIGHT:
-            x = self.screenFix(xMo, settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['x'], settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['width'], -1)
-        if settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['alignX'] == Align.CENTER:
-            x = self.screenFix(xMo, settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['x'], settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['width'], 0)
-        if x is not None:
-            if x != settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['x']:
-                settings_service.apply(_component().config, {MARKS_ON_GUN_BATTLE.PANEL: {'x': x}}, persist=False)
-                self.data[ElementType.LABEL]['x'] = x
-        y = settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL].get('y', None)
-        if settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['alignY'] == Align.TOP:
-            y = self.screenFix(yMo, settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['y'], settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['height'], 1)
-        if settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['alignY'] == Align.BOTTOM:
-            y = self.screenFix(yMo, settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['y'], settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['height'], -1)
-        if settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['alignY'] == Align.CENTER:
-            y = self.screenFix(yMo, settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['y'], settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['height'], 0)
-        if y is not None:
-            if y != settings_service.getComponentDict(_component().config)[MARKS_ON_GUN_BATTLE.PANEL]['y']:
-                settings_service.apply(_component().config, {MARKS_ON_GUN_BATTLE.PANEL: {'y': y}}, persist=False)
-                self.data[ElementType.LABEL]['y'] = y
-        self.updateObject(ElementType.LABEL, {'x': x, 'y': y})
-
-    def getData(self):
-        return self.data
-
-    def getNames(self):
-        return self.name
+        config = dict(settings.get('gameface', {}))
+        config.update(settings[MARKS_ON_GUN_BATTLE.PANEL])
+        config.update(scale=settings[MARKS_ON_GUN_BATTLE.BATTLE_MESSAGE_SIZE_IN_PERCENT] / 100.0,
+                      showStars=settings.get('showMarks', True), showTrend=settings.get('showDelta', True),
+                      showCombined=settings.get('showDamage', True), showProgress=settings.get('showProgress', True))
+        if not settings[MARKS_ON_GUN_BATTLE.BACKGROUND]:
+            config['backgroundOpacity'] = 0
+        config['showTargetDamage'] = bool(config.get('showTargetDamage', True) and settings.get('showTargets', True))
+        config['showRequiredDamage'] = bool(config.get('showRequiredDamage', True) and settings.get('showTargets', True))
+        enabled = bool(self.active and self.visible and self.hudVisible and settings[GLOBAL.ENABLED]
+                       and config.get('enabled', True) and config.get('visible', True))
+        payload = marks_state.snapshot('battle')
+        payload.update(config=config,
+                       labels=dict((key[7:], value) for key, value in _component().config.i18n.items() if key.startswith('UI_mog_')))
+        from Driftkings.ui.gameface import resource_id
+        from Driftkings.interface_catalog import gameface_spec
+        resource = resource_id(gameface_spec(FEATURE)['resource'])
+        for parent, child in list(self.views.items()):
+            # Native child preparation can run before setChildView has returned.
+            # Do not mistake a not-yet-attached child for an external replacement.
+            if not child._ready:
+                continue
+            current = parent.getChildView(resource)
+            if current is None and not child._attached:
+                continue
+            if current is not child:
+                self.views.pop(parent, None)
+                continue
+            child._attached = True
+            outgoing = dict(payload)
+            outgoing['config'] = dict(config, visible=bool(enabled and child._guiVisible),
+                                      draggable=bool(enabled and child._guiVisible and child._cursorVisible
+                                                     and not config.get('locked', True)))
+            try:
+                publish_card(child, outgoing)
+                visible = outgoing['config']['visible']
+                if visible != child._lastVisible:
+                    LOG.info('Gameface battle panel visible=%s state=%s', visible, outgoing.get('state'))
+                    child._lastVisible = visible
+            except Exception:
+                LOG.exception('Could not publish MarksOnGun battle data')

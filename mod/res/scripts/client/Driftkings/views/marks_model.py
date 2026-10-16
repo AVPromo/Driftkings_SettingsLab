@@ -2,11 +2,6 @@
 """Presentation only: receives calculated MoE values, never acquires game data."""
 import math
 
-TOKENS = {'background': 0x121518, 'border': 0xFFFFFF, 'text': 0xE8E4DA,
-          'muted': 0x969BA3, 'positive': 0x67C56A, 'negative': 0xE05454,
-          'accent': 0xD98219, 'backgroundAlpha': 0.75, 'borderAlpha': 0.10}
-
-
 def finite(value, default=None):
     try:
         value = float(value)
@@ -25,25 +20,34 @@ def delta_model(value):
     return {'text': symbol + ' ' + ('%+.2f%%' % value if value else '0.00%'), 'direction': direction}
 
 
-def battle_model(current, estimated, damage, assist, combined, target, target_percent,
-                 earned_marks, targets, unknown=False, labels=None):
-    labels = labels or {}
+def milestone_model(percent, earned=0):
+    """Progress inside the next excellence interval, never percent/100."""
+    percent = finite(percent)
+    if percent is None:
+        return {'nextMilestone': None, 'progress': 0, 'gap': None, 'completed': False}
+    percent = max(0.0, min(100.0, percent))
+    thresholds = (65, 85, 95)
+    achieved = max(int(finite(earned, 0)), sum(percent >= value for value in thresholds))
+    if achieved >= 3:
+        return {'nextMilestone': None, 'progress': 1, 'gap': 0, 'completed': True}
+    low = (0, 65, 85)[achieved]
+    high = thresholds[achieved]
+    return {'nextMilestone': high, 'progress': max(0.0, min(1.0, (percent - low) / (high - low))),
+            'gap': max(0.0, high - percent), 'completed': False}
+
+
+def compact_model(vehicle_id, current, estimated, damage, assists, targets, earned=0, valid=True):
+    """All numeric values are supplied by the calculation engine, not JS."""
     current, estimated = finite(current), finite(estimated)
-    valid = not unknown and current is not None and estimated is not None
-    percent = max(0.0, min(100.0, estimated)) if valid else None
-    target = finite(target)
-    target = None if target is None or target >= 30000 else target
-    marks = max(0, min(3, int(finite(earned_marks, 0))))
-    result = {'percent': '%.2f%%' % percent if percent is not None else '--',
-              'currentPercent': '%.2f%%' % current if current is not None else '--',
-              'progress': percent / 100.0 if percent is not None else 0,
-              'delta': delta_model(estimated - current if valid else None),
-              'marks': u'\u2605' * marks + u'\u2606' * (3-marks),
-              'damage': '%.0f' % finite(damage, 0), 'assist': '%.0f' % finite(assist, 0),
-              'combined': '%.0f' % finite(combined, 0), 'target': '%.0f' % target if target is not None else '--',
-              'targetState': 'unknown' if target is None or finite(combined) is None else 'below' if combined < target else 'reached' if combined == target else 'above',
-              'targetPercent': target_percent, 'targets': [], 'tokens': dict(TOKENS), 'labels': dict(labels)}
-    for threshold, value in zip((65,85,95), targets):
-        value = finite(value)
-        result['targets'].append({'percent': threshold, 'text': '%.0f' % value if value is not None and value < 30000 else '--'})
+    valid = bool(valid and current is not None and estimated is not None)
+    result = {'state': 'data' if valid else 'unavailable', 'vehicleId': vehicle_id,
+              'currentMark': current, 'estimatedMark': estimated if valid else None,
+              'marksAchieved': max(0, min(3, int(finite(earned, 0)))),
+              'directDamage': finite(damage, 0), 'assistance': list(assists),
+              'combinedDamage': finite(damage, 0) + max(assists),
+              'trend': delta_model(estimated - current if valid else None)}
+    result.update(milestone_model(estimated if valid else None, earned))
+    target = targets.get(result['nextMilestone']) if valid else None
+    result['targetDamage'] = target
+    result['damageNeeded'] = max(0, target - result['combinedDamage']) if target is not None else None
     return result

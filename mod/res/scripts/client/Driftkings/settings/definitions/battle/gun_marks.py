@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from Driftkings._constants import MARKS_ON_GUN_BATTLE
 from Driftkings.common import color_tables
-from Driftkings.settings.controls_schema import control, hotkey, options
+from Driftkings.settings.controls_schema import control, hotkey, options, field
 from Driftkings.settings.definitions.base import SectionDefinition
 
 
@@ -20,22 +20,26 @@ class MarksOnGunBattleSettings(SectionDefinition):
         return values
 
     def getControlColumns(self):
-        UIKey = 'UI_menu_'
-        UIList = ('UIConfig', 'UIskill4ltu', 'UIMyp', 'UIspoter', 'UIcircon', 'UIReplay', 'UIReplayDamage', 'UIReplayColor', 'UIReplayColorDamage', 'UIoldskool', 'UIspoterNew', 'UIkorbenDallasNoMercy')
         return (
             [
                 options(MARKS_ON_GUN_BATTLE.COLOR_RATING, [table['ScaleColor'] for table in color_tables]),
-                options('displayMode', [self.i18n['UI_marks_' + mode] for mode in ('legacy', 'compact', 'normal', 'detailed')]),
+                field(['gameface', 'enabled'], self.i18n['UI_mog_enableBattle']),
                 control('showMarks'), control('showDelta'), control('showDamage'),
                 control('showProgress'), control('showTargets'),
                 control(MARKS_ON_GUN_BATTLE.SHOW_IN_STATISTIC),
                 control(MARKS_ON_GUN_BATTLE.SHOW_IN_REPLAY),
                 control(MARKS_ON_GUN_BATTLE.SHOW_IN_BATTLE),
                 control(MARKS_ON_GUN_BATTLE.BACKGROUND),
-                options(MARKS_ON_GUN_BATTLE.UI, [self.i18n[UIKey + x] for x in UIList]),
             ],
             [
-                hotkey(MARKS_ON_GUN_BATTLE.BUTTON_SHOW),
+                field(['gameface', 'locked'], self.i18n['UI_mog_lockPosition']),
+                field(['panel', 'x'], 'X', 'Slider', -7680.0, 7680.0, step=1.0),
+                field(['panel', 'y'], 'Y', 'Slider', -4320.0, 4320.0, step=1.0),
+                field([MARKS_ON_GUN_BATTLE.BATTLE_MESSAGE_SIZE_IN_PERCENT], self.i18n['UI_mog_scale'], 'Slider', 10, 1000, step=10),
+                field(['gameface', 'backgroundOpacity'], self.i18n['UI_mog_opacity'], 'Slider', 0.0, 1.0, step=0.05),
+                field(['gameface', 'accentColor'], self.i18n['UI_mog_accent'], 'ColorChoice'),
+                field(['gameface', 'showTargetDamage'], self.i18n['UI_mog_target']),
+                field(['gameface', 'showRequiredDamage'], self.i18n['UI_mog_needed']),
                 hotkey(MARKS_ON_GUN_BATTLE.BUTTON_RESET),
                 hotkey(MARKS_ON_GUN_BATTLE.BUTTON_SIZE_UP),
                 hotkey(MARKS_ON_GUN_BATTLE.BUTTON_SIZE_DOWN)

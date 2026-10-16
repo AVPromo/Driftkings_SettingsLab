@@ -1,214 +1,67 @@
 (function () {
     'use strict';
-    var FEATURE = 'DriftkingsMarksOnGunHangar';
-    if (window.__dkHangarMarks) { window.__dkHangarMarks.dispose(); }
-    var disposed = false, card = null, fields = {}, model = null, resourceId = null;
-    var callbackId = null, pending = null, lastPayload = null, data = {}, drag = null, renderedData = null;
-
-    function number(value, fallback, min, max) {
-        var result = Number(value);
-        return isFinite(result) ? Math.max(min, Math.min(max, result)) : fallback;
-    }
-    function unit() {
-        return parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 1;
-    }
-    function color(value, fallback) {
-        if (typeof value === 'number' && isFinite(value)) {
-            return '#' + ('000000' + Math.max(0, Math.min(16777215, value)).toString(16)).slice(-6);
-        }
-        return /^#[0-9a-f]{6}$/i.test(value) ? value : fallback;
-    }
-    function element(tag, cls, parent, text) {
-        var node = document.createElement(tag);
-        node.className = 'dk-hangar-marks__' + cls;
-        if (text !== undefined) { node.textContent = text; }
-        parent.appendChild(node);
-        return node;
-    }
-    function createCard() {
-        card = document.createElement('div');
-        card.className = 'dk-hangar-marks';
-        fields.header = element('div', 'header', card);
-        fields.eyebrow = element('span', 'eyebrow', fields.header, 'MARKS OF EXCELLENCE');
-        fields.hint = element('span', 'hint', fields.header, 'DRAG');
-        fields.vehicle = element('div', 'vehicle', card);
-        var main = element('div', 'main', card);
-        fields.percent = element('div', 'percent', main);
-        fields.delta = element('div', 'delta', main);
-        var marks = element('div', 'marks', card);
-        fields.marks = [65, 85, 95].map(function (limit) { var star=element('span', 'mark', marks, '☆');star.title=limit+'%';return star; });
-        fields.bar = element('div', 'bar', card);
-        fields.fill = element('div', 'fill', fields.bar);
-        [65, 85, 95].forEach(function (limit) { element('i', 'tick', fields.bar).style.left = limit + '%'; var label=element('span','milestone',fields.bar,limit);label.style.left=limit+'%'; });
-        fields.target = element('div', 'target', card);
-        var secondary = element('div', 'secondary', card);
-        fields.average = element('div', 'detail', secondary);
-        fields.history = element('div', 'detail', secondary);
-        fields.note = element('div', 'muted', secondary, 'Estimate only; not the damage required next battle.');
-        var stats = element('div', 'stats', card);
-        var mastery = element('div', 'mastery', stats);
-        fields.icon = element('img', 'icon', mastery);
-        fields.mastery = element('span', 'stat', mastery);
-        var wn8 = element('div', 'stat', stats);
-        element('span', 'muted', wn8, 'WN8'); fields.wn8 = element('span', 'value', wn8);
-        var wins = element('div', 'stat', stats);
-        fields.winRateLabel = element('span', 'muted', wins, 'WIN RATE'); fields.wins = element('span', 'value', wins);
-        fields.footer = element('div', 'footer', card);
-        fields.header.addEventListener('mousedown', startDrag);
-        // Only the card consumes input; the rest of the hangar remains interactive.
-        card.addEventListener('mousedown', stop);
-        card.addEventListener('click', stop);
-        document.body.appendChild(card);
-    }
-    function stop(event) { event.stopPropagation(); }
-    function position() {
-        if (!card || drag) { return; }
-        var cfg = data.config || {}, scale = unit();
-        var width = card.offsetWidth, height = card.offsetHeight;
-        var x = number(cfg.x, 215, -7680, 7680) * scale;
-        var y = number(cfg.y, -246, -4320, 4320) * scale;
-        if (cfg.alignX === 'right') { x += window.innerWidth - width; }
-        else if (cfg.alignX === 'center') { x += (window.innerWidth - width) / 2; }
-        if (cfg.alignY === 'bottom') { y += window.innerHeight - height; }
-        else if (cfg.alignY === 'center') { y += (window.innerHeight - height) / 2; }
-        card.style.left = Math.max(0, Math.min(window.innerWidth - width, x)) + 'px';
-        card.style.top = Math.max(0, Math.min(window.innerHeight - height, y)) + 'px';
-    }
-    function releaseModel() {
-        if (callbackId !== null) { viewEnv.removeDataChangedCallback(callbackId, resourceId); }
-        callbackId = null; resourceId = null; model = null; lastPayload = null;
-    }
-    function readModel() {
-        var found = null, id = null;
-        if (window.subViews) {
-            var ids = window.subViews.ids();
-            for (var i = 0; i < ids.length; i++) {
-                var child = window.subViews.get(ids[i]);
-                if (child && child.model && child.model.DriftkingsUI && child.model.DriftkingsUI.name === FEATURE) {
-                    found = child.model; id = ids[i]; break;
-                }
-            }
-        }
-        if (!found) { releaseModel(); data = {}; return; }
-        if (resourceId !== id) {
-            releaseModel(); resourceId = id;
-            callbackId = viewEnv.addDataChangedCallback('model', resourceId, true);
-        }
-        model = found;
-        if (lastPayload !== model.payload) {
-            lastPayload = model.payload;
-            try { data = JSON.parse(model.payload || '{}'); } catch (error) { data = {}; }
-        }
-    }
-    function label(key, fallback) { return (data.labels || {})[key] || fallback; }
-    function render() {
-        pending = null;
-        if (disposed) { return; }
-        readModel();
-        // Global model notifications also include clocks, missions and carousel updates.
-        if (card && renderedData === data) { return; }
-        renderedData = data;
-        if (!card) { createCard(); }
-        var cfg = data.config || {};
-        card.style.display = cfg.visible ? 'block' : 'none';
-        if (!cfg.visible) { drag = null; return; }
-        card.className = 'dk-hangar-marks' + (cfg.compactMode ? ' dk-hangar-marks--compact' : '') + (cfg.locked ? ' dk-hangar-marks--locked' : '');
-        card.style.width = number(cfg.width, 362, 320, 700) + 'rem';
-        card.style.minHeight = number(cfg.height, 260, 160, 700) + 'rem';
-        var bg = color(cfg.backgroundColor, '#0c0f14');
-        card.style.backgroundColor = 'rgba(' + parseInt(bg.slice(1, 3), 16) + ',' + parseInt(bg.slice(3, 5), 16) + ',' + parseInt(bg.slice(5, 7), 16) + ',' + number(cfg.backgroundAlpha, .94, 0, 1) + ')';
-        var outline=color(cfg.outlineColor, '#ffffff');
-        card.style.borderColor = 'rgba('+parseInt(outline.slice(1,3),16)+','+parseInt(outline.slice(3,5),16)+','+parseInt(outline.slice(5,7),16)+',.10)';
-        card.style.color = color(cfg.titleColor, '#f5f1e8');
-        fields.eyebrow.style.color = color(cfg.headerColor, '#c7a86a');
-        fields.target.style.color = fields.fill.style.backgroundColor = color(cfg.accentColor, '#e2c07a');
-        fields.eyebrow.textContent = label('header', 'MARKS OF EXCELLENCE');
-        fields.hint.textContent = cfg.locked ? label('locked', 'LOCKED') : label('drag', 'DRAG');
-        fields.note.textContent = label('estimateNote', 'Estimate only; not the damage required next battle.');
-        fields.winRateLabel.textContent = label('winRate', 'WIN RATE');
-        fields.vehicle.textContent = data.vehicle || label('chooseVehicle', 'Choose a tank');
-        var target = data.target || {}, eligible = data.state === 'data' && target.eligible;
-        var percent = number(target.percent, 0, 0, 100);
-        fields.percent.textContent = eligible ? percent.toFixed(2) + '%' : '--';
-        fields.bar.style.display = eligible ? 'block' : 'none';
-        fields.fill.style.width = data.progress !== undefined ? number(data.progress,0,0,1)*100+'%' : percent+'%';
-        fields.delta.textContent = eligible && data.delta ? data.delta.text : '—';
-        fields.delta.className = 'dk-hangar-marks__delta dk-hangar-marks__delta--' + (data.delta ? data.delta.direction : 'unknown');
-        fields.delta.title = label('trend','Observed trend') + ' / ' + ((data.recent || {}).battles || 0) + ' ' + label('observedBattles','battles observed');
-        fields.marks.forEach(function (badge, i) {
-            var earned = (data.displayMarks === undefined ? data.earnedMarks : data.displayMarks) > i;
-            badge.textContent=earned ? '★' : '☆';
-            var near = target.mark === i + 1 && !target.achieved && target.gap <= number(cfg.starAnimationWindow, 5, 0, 100);
-            badge.style.display = eligible ? 'block' : 'none';
-            badge.className = 'dk-hangar-marks__mark' + (earned ? ' dk-hangar-marks__mark--earned' : '') + (near ? ' dk-hangar-marks__mark--near' : '');
-            badge.style.color = earned ? color(cfg['starColor' + [65, 85, 95][i]], '#e2c07a') : color(cfg.mutedColor, '#8c919a');
-        });
-        fields.target.textContent = data.thirdAchieved && eligible ? '✓ ' + label('thirdAchieved', '3rd MARK ACHIEVED') : data.state !== 'data' ? data.message : !eligible ? label('tierLimit', 'Marks available from tier V') :
-            label('mark', 'Mark') + ' ' + target.mark + ' / ' + target.threshold + '%  |  ' + (target.achieved ? label('achieved', 'Achieved') : Number(target.gap).toFixed(2) + ' ' + label('remaining', 'pp remaining'));
-        fields.average.textContent = eligible ? label('average', 'Combined EMA') + ': ' + data.average + '  |  ' + label('estimate', 'Goal estimate') + ': ' + data.estimate : '';
-        var recent = data.recent || {};
-        fields.history.textContent = !eligible ? '' : recent.delta === null || recent.delta === undefined ? label('historyWaiting', 'History: waiting for the next battle') :
-            (recent.delta >= 0 ? '+' : '') + Number(recent.delta).toFixed(2) + ' pp / ' + recent.battles + ' ' + label('observedBattles', 'battles observed');
-        fields.note.style.display = eligible ? 'block' : 'none';
-        fields.mastery.textContent = data.mastery || '--';
-        fields.icon.style.display = data.masteryIcon ? 'block' : 'none';
-        if (data.masteryIcon) { fields.icon.src = data.masteryIcon; fields.icon.alt = data.mastery; }
-        fields.wn8.textContent = data.wn8 || '--'; fields.wn8.style.color = color(data.wn8Color, '#8c919a');
-        fields.wins.textContent = data.winRate || '--'; fields.wins.style.color = color(data.winRateColor, '#8c919a');
-        fields.footer.textContent = data.state === 'data' ? data.battles + ' ' + label('battles', 'battles') : label('noStats', 'No statistics loaded');
-        position();
-    }
-    function changed() { if (!model || model.payload !== lastPayload) schedule(); }
-    function schedule() { if (!disposed && pending === null) { pending = setTimeout(render, 0); } }
-    function startDrag(event) {
-        if (event.button !== 0 || (data.config || {}).locked || !model) { return; }
-        var rect = card.getBoundingClientRect();
-        drag = {x: event.clientX, y: event.clientY, left: rect.left, top: rect.top};
-        event.preventDefault(); event.stopPropagation();
-    }
-    function moveDrag(event) {
-        if (!drag) { return; }
-        card.style.left = Math.max(0, Math.min(window.innerWidth - card.offsetWidth, drag.left + event.clientX - drag.x)) + 'px';
-        card.style.top = Math.max(0, Math.min(window.innerHeight - card.offsetHeight, drag.top + event.clientY - drag.y)) + 'px';
-        event.preventDefault(); event.stopPropagation();
-    }
-    function endDrag(event) {
-        if (!drag) { return; }
-        drag = null;
-        var cfg = data.config || {}, x = parseFloat(card.style.left), y = parseFloat(card.style.top);
-        if (cfg.alignX === 'right') { x -= window.innerWidth - card.offsetWidth; }
-        else if (cfg.alignX === 'center') { x -= (window.innerWidth - card.offsetWidth) / 2; }
-        if (cfg.alignY === 'bottom') { y -= window.innerHeight - card.offsetHeight; }
-        else if (cfg.alignY === 'center') { y -= (window.innerHeight - card.offsetHeight) / 2; }
-        cfg.x = Math.round(x / unit()); cfg.y = Math.round(y / unit());
-        if (model && typeof model.onSavePosition === 'function') { model.onSavePosition({x: cfg.x, y: cfg.y}); }
-        event.stopPropagation();
-    }
-    function dispose() {
-        if (disposed) { return; }
-        disposed = true; drag = null;
-        if (pending !== null) { clearTimeout(pending); }
-        engine.off('viewEnv.onDataChanged', changed);
-        engine.off('subViews.onAdded', schedule);
-        engine.off('subViews.onRemoved', schedule);
-        releaseModel();
-        window.removeEventListener('resize', position);
-        window.removeEventListener('unload', dispose);
-        document.removeEventListener('mousemove', moveDrag);
-        document.removeEventListener('mouseup', endDrag);
-        if (card && card.parentNode) { card.parentNode.removeChild(card); }
-        card = null;
-    }
-    window.__dkHangarMarks = {dispose: dispose};
-    engine.whenReady.then(function () {
-        if (disposed) { return; }
-        engine.on('viewEnv.onDataChanged', changed);
-        engine.on('subViews.onAdded', schedule);
-        engine.on('subViews.onRemoved', schedule);
-        window.addEventListener('resize', position);
-        window.addEventListener('unload', dispose);
-        document.addEventListener('mousemove', moveDrag);
-        document.addEventListener('mouseup', endDrag);
-        schedule();
+    var K = window.__dkMarksKit, root = K.node('div', 'dk-mog dk-mog--full', document.body);
+    var header = K.node('div', 'dk-mog__header', root), brand = K.node('div', 'dk-mog__brand', header);
+    K.node('span', 'dk-mog__logo', brand, '///'); K.node('span', '', brand, 'MarksOnGun');
+    var context = K.node('span', 'dk-mog__context', header, 'HANGAR');
+    var vehicle = K.node('div', 'dk-mog__vehicle', root);
+    var hero = K.node('div', 'dk-mog__hero', root), main = K.node('div', '', hero);
+    var currentLabel = K.node('div', 'dk-mog__label', main), current = K.node('div', 'dk-mog__percent', main);
+    var starsRow = K.node('div', '', hero), stars = K.stars(starsRow);
+    var unavailable = K.node('div', 'dk-mog__unavailable', root);
+    var progress = K.node('div', '', root), bar = K.node('div', 'dk-mog__bar', progress), fill = K.node('div', 'dk-mog__fill', bar);
+    var next = K.node('div', 'dk-mog__next', progress), nextLabel = K.node('span', '', next), gap = K.node('span', '', next);
+    var metrics = K.node('div', 'dk-mog__metrics', root), cards = [];
+    ['ema', 'target', 'needed'].forEach(function (name) {
+        var card = K.node('div', 'dk-mog__metric', metrics);
+        cards.push({label:K.node('div','dk-mog__label',card),value:K.node('span','dk-mog__value',card)});
     });
+    var note = K.node('div', 'dk-mog__note', root), milestones = K.node('div', 'dk-mog__milestones', root), marks = [];
+    [65, 85, 95].forEach(function (limit) {
+        var marker = K.node('div','dk-mog__milestone',milestones);
+        K.node('span','dk-mog__label',marker,limit+'%'); marks.push(K.node('span','dk-mog__star',marker,'\u2606'));
+    });
+    var history = K.node('div', 'dk-mog__history', root), historyLabel = K.node('div', 'dk-mog__label', history);
+    var chart = K.graph(history), historyInfo = K.node('div','dk-mog__muted',history), range = K.node('div','dk-mog__muted',history);
+    var advanced = K.node('div','dk-mog__footer',root), averages = K.node('span','',advanced), achievements = K.node('span','',advanced);
+    function render(data, resized) {
+        var cfg=data.config||{}, milestone=data.milestone||{}, valid=data.state==='data' && (data.target||{}).eligible;
+        root.className='dk-mog dk-mog--full'+(cfg.compactMode?' dk-mog--dense':'');
+        K.style(root,'zIndex','10000');
+        K.style(root,'pointerEvents','auto');
+        K.style(header,'cursor',cfg.locked?'default':'move');
+        var accent=K.theme(root,cfg,false);
+        K.text(context, K.label(data,'hangar','HANGAR'));
+        K.text(currentLabel,K.label(data,'current','Consolidated mark'));
+        K.text(vehicle,(data.vehicle||'\u2014')+(data.tier?' · '+data.tier:'')+(data.nation?' · '+data.nation:''));
+        K.show(vehicle,cfg.showVehicleInfo!==false);
+        K.text(current,valid?K.percent(data.currentMark):'\u2014'); K.style(current,'color',accent);
+        K.updateStars(stars,valid?data.displayMarks:0); K.updateStars(marks,valid?data.displayMarks:0);
+        K.show(unavailable,!valid); K.text(unavailable,data.message||K.label(data,'unavailable','No reliable marks data available'));
+        K.show(progress,valid&&cfg.showProgress!==false);
+        K.style(fill,'width',(K.number(milestone.progress,0)*100)+'%'); K.style(fill,'backgroundImage','linear-gradient(0deg,'+accent+',#fff1ab)');
+        K.text(nextLabel,milestone.completed?K.label(data,'completed','Three marks achieved'):K.label(data,'next','Next mark')+' '+milestone.nextMilestone+'%');
+        K.text(gap,milestone.completed?'':K.formatted(milestone.gap,2)+' pp');
+        K.show(metrics,valid&&cfg.showDamageStatistics!==false);
+        ['ema','expected','needed'].forEach(function(key,i){ K.text(cards[i].label,K.label(data,key,key)); });
+        K.text(cards[2].label,K.label(data,'ema','Combined EMA')+' Δ');
+        if ((data.target||{}).threshold && !milestone.completed) { K.text(cards[1].label,K.label(data,'expected','Estimated target')+' ('+data.target.threshold+'%)'); }
+        K.text(cards[0].value,K.formatted(data.movingAverage));
+        K.text(cards[1].value,K.formatted(data.targetDamage)); K.text(cards[2].value,K.formatted(data.damageNeeded));
+        K.style(cards[2].value,'color',accent);
+        K.text(note,K.label(data,'estimateNote','Local estimate, not a guaranteed server threshold')); K.show(note,valid&&cfg.showDamageStatistics!==false);
+        K.show(milestones,valid&&cfg.showMilestones!==false);
+        K.show(history,valid&&cfg.showHistory!==false);
+        K.text(historyLabel,K.label(data,'history','Observed progress history'));
+        var samples=(data.recent||{}).samples||[], sufficient=samples.length>=2;
+        K.show(chart.element,sufficient);
+        if (resized) { chart.invalidate(); }
+        if (sufficient&&cfg.showHistory!==false&&valid) { chart.draw(samples); }
+        K.text(historyInfo,sufficient?K.label(data,'historyNote','Dossier observations by battle counter'):K.label(data,'waiting','Not enough observed history'));
+        K.text(range,sufficient?samples[0].battles+' → '+samples[samples.length-1].battles+' · '+K.percent(samples[0].percent)+' → '+K.percent(samples[samples.length-1].percent):'');
+        K.show(advanced,valid&&cfg.showAdvancedStatistics!==false);
+        K.text(averages,K.label(data,'direct','Average direct damage')+': '+K.formatted(data.averageDirect)+' · '+K.label(data,'assist','Average assistance')+': '+K.formatted(data.averageAssist));
+        K.text(achievements,'WN8 '+(data.wn8||'\u2014')+' · '+(data.winRate||'\u2014')+' · '+(data.mastery||'\u2014'));
+    }
+    K.connect('DriftkingsMarksOnGunHangar','__dkHangarMarks',root,render,K.position,K.savedPosition);
 }());

@@ -126,12 +126,12 @@
     {
       "path": "default/marks_on_gun_battle.json",
       "source_sha256": "36fab7807469e846f1aa2887a1ba8b94d41facf22e23763087c056dc2123c2a0",
-      "sha256": "7f2300e051f88f1455a55f409bc256ba5abdd9e9d7c812e563ada59845e07694"
+      "sha256": "fe45d51fa97e2375637992b80971d0092be3e80ef55a6c73b4efdef2bee1e462"
     },
     {
       "path": "default/marks_on_gun_hangar.json",
       "source_sha256": "9adecf9063cb8036d592739f95ffcb1b5ce10d30d72b653d1c4227abab2533e5",
-      "sha256": "07a9128c2475d1e1487f5386e2f75a873ef911dd64aecad4af2566625402bff1"
+      "sha256": "fd6b87ccfbceff17c5264e7d3b389c40ce1cff63d4adffd5405af93ca6acc963"
     },
     {
       "path": "default/marks_on_gun_tech_tree.json",

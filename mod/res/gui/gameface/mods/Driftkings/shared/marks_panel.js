@@ -1,0 +1,203 @@
+/* Shared presentation and model lifecycle. No marks calculation lives in JS. */
+(function () {
+    'use strict';
+    if (window.__dkMarksKit) { return; }
+    function node(tag, cls, parent, text) {
+        var value = document.createElement(tag);
+        value.className = cls;
+        if (text !== undefined) { value.textContent = text; }
+        if (parent) { parent.appendChild(value); }
+        return value;
+    }
+    function text(element, value) {
+        value = value === null || value === undefined ? '\u2014' : String(value);
+        if (element.textContent !== value) { element.textContent = value; }
+    }
+    function style(element, key, value) { if (element.style[key] !== value) { element.style[key] = value; } }
+    function show(element, visible) { style(element, 'display', visible ? '' : 'none'); }
+    function number(value, fallback) { return typeof value === 'number' && isFinite(value) ? value : fallback; }
+    function formatted(value, precision) {
+        if (typeof value !== 'number' || !isFinite(value)) { return '\u2014'; }
+        return precision === undefined ? Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : value.toFixed(precision);
+    }
+    function percent(value) { return typeof value === 'number' && isFinite(value) ? value.toFixed(2) + '%' : '\u2014'; }
+    function color(value, fallback) {
+        if (typeof value === 'number' && isFinite(value)) { return '#' + ('000000' + Math.max(0, Math.min(16777215, value)).toString(16)).slice(-6); }
+        return /^#[0-9a-f]{6}$/i.test(value) ? value : fallback;
+    }
+    function label(data, key, fallback) { return (data.labels || {})[key] || fallback; }
+    function stars(parent) {
+        return [0, 1, 2].map(function () { return node('span', 'dk-mog__star', parent, '\u2606'); });
+    }
+    function updateStars(items, count) {
+        items.forEach(function (item, index) {
+            text(item, index < count ? '\u2605' : '\u2606');
+            item.className = 'dk-mog__star' + (index < count ? ' dk-mog__star--earned' : '');
+        });
+    }
+    function graph(parent) {
+        var area = node('div', 'dk-mog__graph', parent), segments = [], points = [], previous = null;
+        return {
+            element: area,
+            draw: function (samples) {
+                var signature = JSON.stringify(samples || []);
+                if (signature === previous) { return; }
+                previous = signature;
+                var valid = (samples || []).filter(function (p) { return typeof p.battles === 'number' && typeof p.percent === 'number' && isFinite(p.percent); });
+                var width = 100, height = 100, min = 100, max = 0;
+                valid.forEach(function (p) { min = Math.min(min, p.percent); max = Math.max(max, p.percent); });
+                var span = Math.max(.1, max - min), first = valid.length ? valid[0].battles : 0;
+                var duration = valid.length ? Math.max(1, valid[valid.length - 1].battles - first) : 1;
+                while (points.length < valid.length) { points.push(node('i', 'dk-mog__point', area)); }
+                while (segments.length < Math.max(0, valid.length - 1)) { segments.push(node('i', 'dk-mog__segment', area)); }
+                points.forEach(function (dot, i) {
+                    show(dot, i < valid.length);
+                    if (i >= valid.length) { return; }
+                    var x = (valid[i].battles - first) / duration * width;
+                    var y = 90 - (valid[i].percent - min) / span * 80;
+                    style(dot, 'left', x + '%'); style(dot, 'top', y + '%');
+                    dot.title = valid[i].battles + ': ' + percent(valid[i].percent);
+                    if (i > 0) {
+                        // CSS segments use real observation counters on X, actual percent on Y.
+                        var px = (valid[i - 1].battles - first) / duration * width;
+                        var py = 90 - (valid[i - 1].percent - min) / span * 80;
+                        var dx = (x - px) / 100 * area.clientWidth, dy = (y - py) / 100 * area.clientHeight;
+                        style(segments[i - 1], 'left', px + '%'); style(segments[i - 1], 'top', py + '%');
+                        style(segments[i - 1], 'width', Math.sqrt(dx * dx + dy * dy) + 'px');
+                        style(segments[i - 1], 'transform', 'rotate(' + Math.atan2(dy, dx) + 'rad)');
+                    }
+                });
+                segments.forEach(function (line, i) { show(line, i < valid.length - 1); });
+                area.title = valid.length ? percent(min) + ' \u2014 ' + percent(max) : '';
+            },
+            invalidate: function () { previous = null; }
+        };
+    }
+    function connect(feature, owner, root, render, position, savePosition) {
+        if (window[owner]) { window[owner].dispose(); }
+        var disposed = false, model = null, resourceId = null, callbackId = null;
+        var lastPayload = null, pending = null, drag = null, data = {};
+        function input(event) {
+            // Capture before the native UI or nested header nodes stop bubbling.
+            var target = event.target, header = root.firstChild;
+            while (target && target !== root) {
+                if (target === header) { start(event); return; }
+                target = target.parentNode;
+            }
+        }
+        function release() {
+            if (callbackId !== null) { viewEnv.removeDataChangedCallback(callbackId, resourceId); }
+            callbackId = null; model = null; resourceId = null; lastPayload = null;
+        }
+        function update() {
+            pending = null;
+            if (disposed) { return; }
+            var found = null, id = null;
+            if (window.subViews) {
+                var ids = window.subViews.ids();
+                for (var i = 0; i < ids.length; i++) {
+                    var child = window.subViews.get(ids[i]);
+                    if (child && child.model && child.model.DriftkingsUI && child.model.DriftkingsUI.name === feature) { found = child.model; id = ids[i]; break; }
+                }
+            }
+            if (!found) { release(); data = {}; drag = null; show(root, false); return; }
+            if (id !== resourceId || found !== model) {
+                release(); resourceId = id; model = found;
+                callbackId = viewEnv.addDataChangedCallback('model', resourceId, true);
+            }
+            if (lastPayload === model.payload) { return; }
+            lastPayload = model.payload;
+            try { data = JSON.parse(model.payload || '{}'); } catch (error) { data = {}; }
+            if ((data.config || {}).locked || (data.config || {}).draggable === false) { drag = null; }
+            var visible = !!(data.config || {}).visible;
+            style(root, 'display', visible ? 'block' : 'none');
+            if (!visible) { drag = null; return; }
+            render(data); position(root, data.config || {});
+        }
+        function schedule() { if (!disposed && pending === null) { pending = setTimeout(update, 0); } }
+        function changed() { if (!model || model.payload !== lastPayload) { schedule(); } }
+        function resize() { if (!disposed && (data.config || {}).visible) { render(data, true); position(root, data.config || {}); } }
+        function start(event) {
+            if (!savePosition || event.button !== 0 || !model || !(data.config || {}).visible || (data.config || {}).locked || (data.config || {}).draggable === false) { return; }
+            var rect = root.getBoundingClientRect(); drag = {x: event.clientX, y: event.clientY, left: rect.left, top: rect.top};
+            event.preventDefault(); event.stopPropagation();
+        }
+        function move(event) {
+            if (!drag) { return; }
+            var bounds = root.getBoundingClientRect();
+            style(root, 'left', Math.max(0, Math.min(window.innerWidth - bounds.width, drag.left + event.clientX - drag.x)) + 'px');
+            style(root, 'top', Math.max(0, Math.min(window.innerHeight - bounds.height, drag.top + event.clientY - drag.y)) + 'px');
+            event.preventDefault(); event.stopPropagation();
+        }
+        function end() {
+            if (!drag) { return; }
+            drag = null;
+            if (model && typeof model.onSavePosition === 'function') { model.onSavePosition(savePosition(root, data.config || {})); }
+        }
+        function stop(event) { event.stopPropagation(); }
+        function dispose() {
+            if (disposed) { return; }
+            disposed = true; drag = null;
+            if (pending !== null) { clearTimeout(pending); pending = null; }
+            engine.off('viewEnv.onDataChanged', changed); engine.off('subViews.onAdded', schedule); engine.off('subViews.onRemoved', schedule);
+            window.removeEventListener('resize', resize); window.removeEventListener('unload', dispose);
+            document.removeEventListener('mousedown', input, true);
+            document.removeEventListener('mousemove', move, true); document.removeEventListener('mouseup', end, true);
+            root.removeEventListener('mousedown', stop); root.removeEventListener('click', stop);
+            release(); if (root.parentNode) { root.parentNode.removeChild(root); }
+            if (window[owner] && window[owner].dispose === dispose) { delete window[owner]; }
+        }
+        window[owner] = {dispose: dispose};
+        engine.whenReady.then(function () {
+            if (disposed) { return; }
+            engine.on('viewEnv.onDataChanged', changed); engine.on('subViews.onAdded', schedule); engine.on('subViews.onRemoved', schedule);
+            window.addEventListener('resize', resize); window.addEventListener('unload', dispose);
+            if (savePosition) {
+                root.addEventListener('mousedown', stop); root.addEventListener('click', stop);
+                document.addEventListener('mousedown', input, true);
+                document.addEventListener('mousemove', move, true); document.addEventListener('mouseup', end, true);
+            }
+            schedule();
+        });
+        return window[owner];
+    }
+    function unit() { return parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 1; }
+    function position(root, cfg) {
+        var bounds = root.getBoundingClientRect(), match = /scale\(([^)]+)\)/.exec(root.style.transform);
+        var fit = Math.min(1, window.innerHeight * .94 / Math.max(1, bounds.height));
+        if (fit < 1 && match) {
+            style(root, 'transform', 'scale(' + parseFloat(match[1]) * fit + ')');
+            bounds = root.getBoundingClientRect();
+        }
+        var width = bounds.width, height = bounds.height;
+        var x = number(cfg.x, 20) * unit(), y = number(cfg.y, 20) * unit();
+        if (cfg.alignX === 'right') { x += window.innerWidth - width; }
+        else if (cfg.alignX === 'center') { x += (window.innerWidth - width) / 2; }
+        if (cfg.alignY === 'bottom') { y += window.innerHeight - height; }
+        else if (cfg.alignY === 'center') { y += (window.innerHeight - height) / 2; }
+        style(root, 'left', Math.max(0, Math.min(window.innerWidth - width, x)) + 'px');
+        style(root, 'top', Math.max(0, Math.min(window.innerHeight - height, y)) + 'px');
+    }
+    function savedPosition(root, cfg) {
+        var x = parseFloat(root.style.left), y = parseFloat(root.style.top), rect = root.getBoundingClientRect();
+        if (cfg.alignX === 'right') { x -= window.innerWidth - rect.width; }
+        else if (cfg.alignX === 'center') { x -= (window.innerWidth - rect.width) / 2; }
+        if (cfg.alignY === 'bottom') { y -= window.innerHeight - rect.height; }
+        else if (cfg.alignY === 'center') { y -= (window.innerHeight - rect.height) / 2; }
+        return {x: Math.round(x / unit()), y: Math.round(y / unit())};
+    }
+    function theme(root, cfg, compact) {
+        var accent = color(cfg.accentColor, '#E8C55A'), bg = color(cfg.backgroundColor, '#0b141b');
+        style(root, 'borderColor', '#518896'); style(root, 'color', color(cfg.titleColor, '#E8E4DA'));
+        style(root, 'backgroundColor', 'rgba(' + parseInt(bg.slice(1,3),16) + ',' + parseInt(bg.slice(3,5),16) + ',' + parseInt(bg.slice(5,7),16) + ',' + number(cfg.backgroundOpacity, number(cfg.backgroundAlpha, .82)) + ')');
+        var scale = Math.max(.1, Math.min(10, number(cfg.scale, 1)));
+        var base = compact ? 650 : cfg.compactMode ? 640 : 760;
+        scale = Math.min(scale, window.innerWidth / (base * unit()) * .96);
+        style(root, 'width', base + 'rem'); style(root, 'transform', 'scale(' + scale + ')');
+        style(root, 'opacity', String(number(cfg.alpha, 1)));
+        return accent;
+    }
+    window.__dkMarksKit = {node:node, text:text, style:style, show:show, number:number,
+        formatted:formatted, percent:percent, label:label, stars:stars, updateStars:updateStars,
+        graph:graph, connect:connect, position:position, savedPosition:savedPosition, theme:theme};
+}());

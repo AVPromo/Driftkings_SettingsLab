@@ -20,13 +20,11 @@ def get_view_config(config):
     settings = settings_service.getComponentDict(config)
     panel = dict(settings[MARKS_ON_GUN_HANGAR.PANEL])
     panel['compactMode'] = bool(settings[MARKS_ON_GUN_HANGAR.COMPACT_MODE])
-    panel['height'] = 194.0 if panel['compactMode'] else max(260.0, panel['height'])
     panel['locked'] = bool(settings[MARKS_ON_GUN_HANGAR.TEXT_LOCK])
     panel['visible'] = bool(settings[GLOBAL.ENABLED] and settings[MARKS_ON_GUN_HANGAR.SHOW_IN_HANGAR])
-    panel['starAnimationWindow'] = float(settings.get(MARKS_ON_GUN_HANGAR.STAR_ANIMATION_WINDOW, 5.0))
+    panel.update(settings.get('gameface', {}))
     card = settings[MARKS_ON_GUN_HANGAR.CARD]
-    for key in ('headerColor', 'titleColor', 'backgroundColor', 'backgroundAlpha',
-                'outlineColor', 'lineColor', 'accentColor', 'accentSoftColor', 'mutedColor', 'warningColor'):
+    for key in ('titleColor', 'backgroundColor', 'backgroundAlpha', 'accentColor'):
         panel[key] = card[key]
     scale = settings.get(MARKS_ON_GUN_HANGAR.COLOR_RATING, 0)
     for level in (65, 85, 95):
@@ -40,6 +38,17 @@ class MarksOnGunHangarController(HangarController):
 
     def stop(self):
         settings_service.onModSettingsChanged.disconnect(self.onSettingsChanged)
+        for child in list(self.views.values()):
+            child.setEnabled(False)
+            child.destroy()
+        self.views.clear()
+        self.visible.clear()
+
+    def setVisible(self, parent, visible):
+        super(MarksOnGunHangarController, self).setVisible(parent, visible)
+        if not visible:
+            from Driftkings.core.marks_state import marks_state
+            marks_state.clear('hangar')
 
     def onSettingsChanged(self, component, changes):
         self.onApplySettings(changes)
@@ -48,8 +57,8 @@ class MarksOnGunHangarController(HangarController):
         if changes is None or affects(changes, GLOBAL.ENABLED, MARKS_ON_GUN_HANGAR.SHOW_IN_HANGAR,
                 MARKS_ON_GUN_HANGAR.TEXT_LOCK, MARKS_ON_GUN_HANGAR.GOAL_SELECTION,
                 MARKS_ON_GUN_HANGAR.COMPACT_MODE, MARKS_ON_GUN_HANGAR.HISTORY_BATTLES,
-                MARKS_ON_GUN_HANGAR.COLOR_RATING, MARKS_ON_GUN_HANGAR.STAR_ANIMATION_WINDOW,
-                MARKS_ON_GUN_HANGAR.PANEL, MARKS_ON_GUN_HANGAR.CARD):
+                MARKS_ON_GUN_HANGAR.COLOR_RATING,
+                MARKS_ON_GUN_HANGAR.PANEL, MARKS_ON_GUN_HANGAR.CARD, 'gameface'):
             super(MarksOnGunHangarController, self).onApplySettings(changes)
 
 
@@ -110,6 +119,8 @@ def install_gameface():
                                        lambda: get_view_config(_component().config), _component().g_data.build_panel_model)
                 publish_card(self, payload)
             except Exception:
+                from Driftkings.core.marks_state import marks_state
+                marks_state.clear('hangar')
                 self._lastPayload = None
                 _component().LOG.exception('Could not update Gameface hangar card')
                 with self.getViewModel().transaction() as model:

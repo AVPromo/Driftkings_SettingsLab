@@ -41,13 +41,25 @@
             ],
             "styles": []
         },
+        "DriftkingsMarksOnGunBattle": {
+            "owner": "__dkBattleMarks",
+            "scripts": [
+                "coui://gui/gameface/mods/Driftkings/shared/marks_panel.js",
+                "coui://gui/gameface/mods/Driftkings/MarksOnGunBattle/marks.js"
+            ],
+            "styles": [
+                "coui://gui/gameface/mods/Driftkings/shared/marks_panel.css",
+                "coui://gui/gameface/mods/Driftkings/MarksOnGunBattle/marks.css"
+            ]
+        },
         "DriftkingsMarksOnGunHangar": {
             "owner": "__dkHangarMarks",
             "scripts": [
+                "coui://gui/gameface/mods/Driftkings/shared/marks_panel.js",
                 "coui://gui/gameface/mods/Driftkings/MarksOnGunHangar/marks.js"
             ],
             "styles": [
-                "coui://gui/gameface/mods/Driftkings/shared/marks_tokens.css",
+                "coui://gui/gameface/mods/Driftkings/shared/marks_panel.css",
                 "coui://gui/gameface/mods/Driftkings/MarksOnGunHangar/marks.css"
             ]
         },

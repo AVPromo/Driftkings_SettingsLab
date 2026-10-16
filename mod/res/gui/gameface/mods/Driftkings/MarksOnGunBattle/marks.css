@@ -1,0 +1,3 @@
+/* Python cursor visibility enables input only while repositioning is allowed. */
+.dk-mog--compact .dk-mog__unavailable { font-size:12rem; }
+.dk-mog--compact .dk-mog__footer { margin-top:5rem; padding-top:5rem; font-size:10rem; }
