@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""One readable JSON document per mod, atomic replacement and bounded backups."""
+"""Atomic JSON storage with explicit, bounded backups when requested."""
 import json
 import os
 import re
@@ -59,8 +59,6 @@ class ConfigStore(object):
                 stream.write(content)
                 stream.flush()
                 os.fsync(stream.fileno())
-            if not secret:
-                self.backup(name)
             _replace(temporary, path)
         finally:
             if os.path.exists(temporary):

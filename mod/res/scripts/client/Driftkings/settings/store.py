@@ -3,7 +3,6 @@
 import copy
 import json
 import os
-import shutil
 import tempfile
 
 
@@ -144,8 +143,6 @@ class SettingsStore(object):
                 stream.write(content)
                 stream.flush()
                 os.fsync(stream.fileno())
-            if os.path.isfile(self.path):
-                shutil.copy2(self.path, self.path + '.bak')
             replace_file(temporary, self.path)
         finally:
             if os.path.exists(temporary):
