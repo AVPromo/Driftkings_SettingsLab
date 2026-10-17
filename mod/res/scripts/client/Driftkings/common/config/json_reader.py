@@ -12,7 +12,7 @@ from collections import OrderedDict
 
 from Driftkings.common.config.utils import smart_update
 
-__all__ = ('loadJson', 'loadJsonOrdered',)
+__all__ = ('loadJson',)
 
 
 class JSONObjectEncoder(json.JSONEncoder):
@@ -194,27 +194,4 @@ class JSONLoader(object):
         cls.json_file_write(new_path, '\n'.join(write_lines), encrypted)
         return config_new
 
-    @classmethod
-    def loadJsonOrdered(cls, ID, path, name):
-        config_new = None
-        if not os.path.exists(path):
-            os.makedirs(path)
-        if not path.endswith('/'):
-            path += '/'
-        new_path = '%s%s.json' % (path, name)
-        if not os.path.isfile(new_path):
-            print(ID + ': ERROR: Config not found:', new_path)
-            return config_new
-        data, _, success = cls.json_file_read(new_path, False)
-        if not success:
-            return config_new
-        try:
-            config_new = cls.json_loads(data, True)
-        except Exception:
-            print(new_path)
-            traceback.print_exc()
-        return config_new
-
-
 loadJson = JSONLoader.loadJson
-loadJsonOrdered = JSONLoader.loadJsonOrdered

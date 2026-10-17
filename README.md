@@ -53,7 +53,7 @@ Settings translations: Czech, German, English, Spanish, French, Hungarian, Itali
 
 This repository contains the compiler, runtime sources, defaults and required resource inputs. Generated packages, Python bytecode, caches and local tests are excluded from Git. Download compiled packages from Releases.
 
-On Windows, configure the tools described in the [compiler guide](build_tools/README.md): Python 3.10+, Python 2.7, Java/Flex, playerglobal and game SWCs, the .NET C# compiler and PJOrion for protected releases. Game and reference directories are external read-only inputs.
+On Windows, configure Python 3.10+, Python 2.7, Java/Flex, playerglobal and game SWCs, the .NET C# compiler and PJOrion for protected releases. Game and reference directories are external read-only inputs.
 
 ```powershell
 python build_tools/compiler.py --plan
@@ -73,7 +73,7 @@ The current build contract uses the (EU, NA) installation as its resource source
 | `build_tools` | Compiler, validators and release tooling |
 | `res` | Canonical defaults, dependencies and resource sources |
 
-See the [build contract](build_data/README.md). The next beta introduces descriptive module and configuration names, with migration for existing profiles.
+The next beta introduces descriptive module and configuration names, with migration for existing profiles.
 
 ## Support and credits
 

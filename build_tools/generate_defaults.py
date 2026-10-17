@@ -7,6 +7,11 @@ import math
 from pathlib import Path
 import pprint
 
+try:
+    from .components import read_components
+except ImportError:
+    from components import read_components
+
 ROOT = Path(__file__).resolve().parents[1]
 TARGET = 'mod/res/scripts/client/Driftkings/settings/default_values.py'
 PROFILES = ('none', 'short', 'medium', 'medium2', 'large')
@@ -38,9 +43,6 @@ def read_object(path):
 def assemble(root=ROOT):
     config = read_object(root / 'build_data/build_config.json')
     source = root / config['defaults']['source_root']
-    section_source = ast.parse((root / 'mod/res/scripts/client/Driftkings/settings/sections.py').read_text(encoding='utf-8'))
-    section_names = next(ast.literal_eval(node.value) for node in section_source.body if isinstance(node, ast.Assign)
-                         and any(isinstance(target, ast.Name) and target.id == 'COMPONENT_NAMES' for target in node.targets))
     constants = ast.parse((root / 'mod/res/scripts/client/Driftkings/_constants.py').read_text(encoding='utf-8'))
     declared_names = set()
     for node in constants.body:
@@ -58,12 +60,11 @@ def assemble(root=ROOT):
             documents[name] = read_object(source / name)
         return documents[name]
     defaults = {}
-    for path in sorted((root / config['components']['directory']).glob('*.json')):
-        manifest = read_object(path)
+    for manifest in read_components(root, config['components']['source']):
         if manifest['kind'] != 'feature':
             continue
         identifier = manifest['id']
-        if section_names[identifier] not in declared_names:
+        if identifier not in declared_names:
             raise ValueError('Unknown canonical configuration section: ' + identifier)
         declared = set(manifest['config_files'])
         if not declared:
@@ -73,7 +74,7 @@ def assemble(root=ROOT):
             if name not in declared:
                 raise ValueError('%s does not declare default %s' % (identifier, name))
             return document(name)
-        if identifier == 'TeamPanels':
+        if identifier == 'team_panels':
             prefix = 'default/team_panels/'
             data = dict(get(prefix + 'general.json'))
             data.update(get(prefix + 'playersPanel.json'))
@@ -81,13 +82,13 @@ def assemble(root=ROOT):
             data['loading'].pop('tips', None)  # Retired native loading option.
             data['tab'] = get(prefix + 'statisticForm.json')
             data['profiles'] = {name: get(prefix + 'panel' + name.title() + '.json') for name in PROFILES}
-        elif identifier == 'VehicleCarousel':
+        elif identifier == 'vehicle_carousel':
             prefix = 'default/vehicle_carousel/'
             general = get(prefix + 'carousel.json')
             data = {key: general[key] for key in ('enabled', 'showIcons', 'colorRating')}
             data['carousel'] = {key: value for key, value in general.items() if key not in data}
             data['carousel'].update(normal=get(prefix + 'carouselNormal.json'), small=get(prefix + 'carouselSmall.json'))
-        elif identifier == 'MinimapEnhancements':
+        elif identifier == 'minimap_enhancements':
             data = {}
             for name in ('minimap.json', 'minimap_labels.json', 'minimap_circles.json', 'minimap_lines.json'):
                 part = get('default/minimap_enhancements/' + name)
@@ -99,7 +100,7 @@ def assemble(root=ROOT):
             if len(declared) != 1:
                 raise ValueError('Expected one defaults document for ' + identifier)
             data = get(next(iter(declared)))
-        defaults[section_names[identifier]] = data
+        defaults[identifier] = data
     selector = document('load.json')
     if not isinstance(selector.get('loadConfig'), str) or not selector['loadConfig']:
         raise ValueError('Missing default configuration profile')

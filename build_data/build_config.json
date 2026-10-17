@@ -18,8 +18,7 @@
     "debug_root": "build/debug"
   },
   "components": {
-    "directory": "build_data/components",
-    "pattern": "*.json"
+    "source": "build_data/components.json"
   },
   "python": {
     "version": "2.7",

@@ -8,10 +8,12 @@ from pathlib import Path, PurePosixPath
 import zipfile
 
 try:
+    from .components import read_components
     from .validate_locales import validate_catalogs
     from .generate_defaults import check_generated as check_default_values
     from .generate_ui_catalog import validate as validate_ui_catalog
 except ImportError:
+    from components import read_components
     from validate_locales import validate_catalogs
     from generate_defaults import check_generated as check_default_values
     from generate_ui_catalog import validate as validate_ui_catalog
@@ -106,7 +108,7 @@ def build_plan(root=ROOT, check_generated=False, check_game=False, check_compone
     relative_path(config['python']['archive_root'])
     relative_path(config['defaults']['install_root'])
     python_root = input_path(root, config['python']['source_root'])
-    manifest_root = input_path(root, config['components']['directory'])
+    manifest_path = input_path(root, config['components']['source'])
     defaults_root = input_path(root, config['defaults']['source_root'])
     plan = {'python': [], 'assets': [], 'defaults': [], 'dependencies': [], 'components': [], 'warnings': []}
     owners = {}
@@ -129,13 +131,11 @@ def build_plan(root=ROOT, check_generated=False, check_game=False, check_compone
     require(python_files, 'No Python sources')
     require((python_root / config['python']['entrypoint']).is_file(), 'Missing mod entrypoint')
     active_entrypoints, declared_configs = [], set()
-    manifests = sorted(manifest_root.glob(config['components']['pattern']))
-    require(manifests, 'No component manifests')
-    for path in manifests:
-        manifest = read_json(path)
+    manifests = read_components(root, config['components']['source'])
+    for manifest in manifests:
+        path = manifest_path
         require(set(manifest) == MANIFEST_KEYS and manifest['schema_version'] == 1,
                 '%s: invalid component schema' % path.name)
-        require(manifest['id'] == path.stem, '%s: ID does not match filename' % path.name)
         require(type(manifest['enabled']) is bool, '%s: enabled must be boolean' % path.name)
         require(manifest['kind'] in ('feature', 'shared'), '%s: unknown kind' % path.name)
         require(isinstance(manifest['config_files'], list) and isinstance(manifest['assets'], list),
