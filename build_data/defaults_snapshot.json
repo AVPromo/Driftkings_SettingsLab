@@ -9,237 +9,227 @@
       "sha256": "265114611204156190fea817623336bfc385c5854f54f3a206cb2bca75ba484c"
     },
     {
-      "path": "default/account_manager.json",
-      "source_sha256": "9901fd3aabbac03d396c6314a2bd857e379ba853b003f9e7539c485c4cc630cf",
-      "sha256": "532dff847dc57a2dfc038ff6f99beebdf83812c29ce9762e0a150b322be86c61"
-    },
-    {
-      "path": "default/aiming_angles.json",
+      "path": "default/gun_traverse_limits.json",
       "source_sha256": "9e69ff3269bc43ade06ac86bc7f6fe599ea162b69333aa9b155cbf092f5f9be5",
       "sha256": "d16819e4a6b6aea5eff3aba4eea973e42c2f5063becd906616fdfbfde672a79b"
     },
     {
-      "path": "default/arcade_zoom.json",
+      "path": "default/third_person_zoom.json",
       "source_sha256": "3d44b8311a6f1ae900c385038f7968abb0d4a0c8089e891d9a8ecaebe433ac33",
       "sha256": "36cb5c0e811d51dff3fc9b8bbdca6e9f0d8de2c705fc2cc1f3f44eaa96d412b6"
     },
     {
-      "path": "default/armor_calculator.json",
+      "path": "default/penetration_indicator.json",
       "source_sha256": "a1f41cac800ce75fe632ba2ed498606a666d7856f040ff64748f0b3ff4b7b870",
       "sha256": "b5fa9262acac0807c5cc81e179c8f07f0531cf826a4e1952d6606c9498cd7b05"
     },
     {
-      "path": "default/arty_splash.json",
+      "path": "default/artillery_blast_radius.json",
       "source_sha256": "9b8e680b9bb8d28c4c1cf42e6a3e8ae2de612b2f9f447fb6bd347ce332e9e833",
       "sha256": "67b2ccf4aa5af0d338d08cf7c78a857a04b111c742163a210cddaec54cfe5dc7"
     },
     {
-      "path": "default/auto_aim_optimize.json",
+      "path": "default/autoaim_target_indicator.json",
       "source_sha256": "f6244da9edd116a59250d88730779923ddb8ac1c4cb6f806a89f9c514f2b0adb",
       "sha256": "39556eea007aaea9a7020d40f3e8e702cd90cb9da8aa8b0962afc4d36daf01fc"
     },
     {
-      "path": "default/auto_claim_clan.json",
+      "path": "default/clan_reward_collection.json",
       "source_sha256": "6c2a8b1e10f4f2e99d69f52ef11035cc10cd27599f32761cb4dd2105917e2992",
       "sha256": "f9fa40e27c5ea2f0ae3462d6b621952086cad078865aef4530910bfa20d97cca"
     },
     {
-      "path": "default/banks_loader.json",
+      "path": "default/sound_bank_loader.json",
       "source_sha256": "b5b55ea131b15cd19a38eb2ceb15c3e1f9c4dacf2f391db45ab1859775d672e0",
       "sha256": "a7404f0ef5441ea5b5934453c7cf4597b106676e81918d32734873484a99e60d"
     },
     {
-      "path": "default/battle_efficiency.json",
+      "path": "default/battle_performance.json",
       "source_sha256": "79ab8b919f68e0255cfb6c94ae856ab8da6c6b789a2738f638391c4a433719ed",
       "sha256": "ee3be189bbc0b8af2ff5592762d5b43fa71d12fe30a57d549c9a09690751fbae"
     },
     {
-      "path": "default/battle_options.json",
+      "path": "default/battle_preferences.json",
       "source_sha256": "353c0981c97751352ac897a1b18599ae23fb8e54aada1a4b350fd678cf58bd01",
-      "sha256": "044e50efec9408890ebc04a02b1ef9080f6ab919b586153a6e507adaa1cf64ff"
+      "sha256": "d9f3a564344785b8251aa10bf4787cdcf809ee90a1cefa4df844770c2616bf54"
     },
     {
-      "path": "default/battle_stat.json",
+      "path": "default/battle_statistics.json",
       "source_sha256": "268523f342e68f311248ff5cd6bc4836979865b83acb31b2ba0d7aea79fa46c3",
       "sha256": "429a001b510f35442c5dfb323e690b50f497d83c9f00e73b148078bbfcb98e51"
     },
     {
-      "path": "default/carousel_stats/carousel.json",
+      "path": "default/vehicle_carousel/carousel.json",
       "source_sha256": "9dfc7fcdf780b1a26a395eecedbf829a6002db20c8fbd76e82e04a39fd25f695",
       "sha256": "47d5b2853d5946ee2ec253da603bb234925faa8f774759288b70f9682038a6b1"
     },
     {
-      "path": "default/carousel_stats/carouselNormal.json",
+      "path": "default/vehicle_carousel/carouselNormal.json",
       "source_sha256": "86d8fccfbfc61ed70d22c4426b287223f38a533e84c72da93b9bb581306c3f13",
       "sha256": "95ee5dccfb84f5db8823d018d4e0008b5c6fedb7995050d2e661fbe0b2779068"
     },
     {
-      "path": "default/carousel_stats/carouselSmall.json",
+      "path": "default/vehicle_carousel/carouselSmall.json",
       "source_sha256": "e6b3cc21a73acb53ef9e5f3d3616747327fd6a2b860a5b7a51dd4da18d4b6864",
       "sha256": "8c926a8556c3861fb87805344948a62905ba14a627e714449dd2d849129071c2"
     },
     {
-      "path": "default/crew_settings.json",
+      "path": "default/crew_management.json",
       "source_sha256": "2149599b4bf058e9e2a1d3839517873a5be464ab7b9332fbbc8f7c4bd8176479",
       "sha256": "c894d296811d5f2e1699bdbfd7cea57543ce76f43fc2d9315979e85e79cafbf6"
     },
     {
-      "path": "default/dispersion_circle.json",
+      "path": "default/aiming_reticles.json",
       "source_sha256": "28ce7770deded997d904566b4ece5670a879488faa369754fcc0070c364b39bb",
       "sha256": "961864053ad88b2ea6bff0134ccc3d6cb69599cc86d56217c5d7bd762530affe"
     },
     {
-      "path": "default/dispersion_timer.json",
+      "path": "default/aiming_countdown.json",
       "source_sha256": "a5dd6b8ea94bea0337bc49b18d184284ca37d5c61eac869d3755c1db8f235e91",
       "sha256": "86a27ff57d61d5e61d3f97882cceefa37bbcd28d22a8b9ba4389315dfedf779b"
     },
     {
-      "path": "default/distance_marker.json",
+      "path": "default/target_distance.json",
       "source_sha256": "bbcf88a12d49bbb9d130217aabbcee279494002b8216a69d73c72d9f7bef2f28",
       "sha256": "72bc7c3f870ebc862ec519a613fb1f4652efa0a72a9da8efcc1dc581ed99442a"
     },
     {
-      "path": "default/flight_timer.json",
+      "path": "default/shell_flight_time.json",
       "source_sha256": "760f1a256c7a8bc8c2a076b9bd4f8e3d3e0b545cdea829200dc833254bed6db7",
       "sha256": "c70584db53cc8e554374b55060f45617ba742fed16a5b7537656fbfea6f41c3c"
     },
     {
-      "path": "default/hangar_options.json",
+      "path": "default/hangar_preferences.json",
       "source_sha256": "7a514224cf02cc639df62cb8cfd3dc0c345155d2e3fe998d7a6268f4088ebe56",
-      "sha256": "808ececeda901ebec4d1c4a0b4254ee9aaffa3a1a97f192defec56075466e53e"
+      "sha256": "8a83fb84d1eef1542ed771e17bc8c71ceaaba027446dd5dc451d30d3a7647b41"
     },
     {
-      "path": "default/info_panel.json",
+      "path": "default/target_information.json",
       "source_sha256": "8500d6ab505834f30933ad88a6da9f6f5c019d22c1e2f564828375e25fe09799",
       "sha256": "5d789f563e48b7e709c7dcccb48f9f9a3a1afb00b6c31166b119dd384678e676"
     },
     {
-      "path": "default/logs_swapper.json",
+      "path": "default/game_log_manager.json",
       "source_sha256": "eab0df134ddb0fcc90ed35d329a51a5c24e3915d45e1b8c082be9b3ea1df1dae",
       "sha256": "25209095a33941009b1c92a7750ab737a5dfeb9030f0b3cfe2633e287a306ceb"
     },
     {
-      "path": "default/main_gun.json",
+      "path": "default/high_caliber_progress.json",
       "source_sha256": "8462bfbb8c2b5846c725b6da68225540eb5a6a9c386e1f762d65e16866e841db",
       "sha256": "21e30ac62a7e13557b1d3e80e2963011896d1827b5cb5cd23f2113a918b135fc"
     },
     {
-      "path": "default/marks_on_gun_battle.json",
+      "path": "default/battle_marks_of_excellence.json",
       "source_sha256": "36fab7807469e846f1aa2887a1ba8b94d41facf22e23763087c056dc2123c2a0",
       "sha256": "fe45d51fa97e2375637992b80971d0092be3e80ef55a6c73b4efdef2bee1e462"
     },
     {
-      "path": "default/marks_on_gun_hangar.json",
+      "path": "default/hangar_marks_of_excellence.json",
       "source_sha256": "9adecf9063cb8036d592739f95ffcb1b5ce10d30d72b653d1c4227abab2533e5",
       "sha256": "fd6b87ccfbceff17c5264e7d3b389c40ce1cff63d4adffd5405af93ca6acc963"
     },
     {
-      "path": "default/marks_on_gun_tech_tree.json",
+      "path": "default/tech_tree_marks_of_excellence.json",
       "source_sha256": "f0d5bb995ed0c772be8a2d346cc81d1282ef14c22dc5f11048dbf711b9a07f15",
       "sha256": "1cf946c2b1115a4e5ef90c5f2e0088558d9d07fcc7e0f865d6dd89ffa6160909"
     },
     {
-      "path": "default/minimap_plugins/minimap.json",
+      "path": "default/minimap_enhancements/minimap.json",
       "source_sha256": "de64e128582a012f20414e5aab72e09f8462db98ad1a2c17b0aabb2448d0dd33",
       "sha256": "3e6fdb220e042b955c47abd0ffd696a25dcc4c9f764bcead543cdb8a0bf65670"
     },
     {
-      "path": "default/minimap_plugins/minimap_circles.json",
+      "path": "default/minimap_enhancements/minimap_circles.json",
       "source_sha256": "2002ae27b75ae49c22721020ce5a625dec4f402d4c784ff7d012d74c378a7587",
       "sha256": "c7fecff9f97d1c8474a6e40f72059535bcec1025dfd5da45723cdaad8c723d53"
     },
     {
-      "path": "default/minimap_plugins/minimap_labels.json",
+      "path": "default/minimap_enhancements/minimap_labels.json",
       "source_sha256": "e602742ef21babeed44ce4031d3b261e43131d67b6a055787b7def0f2f6ce3d7",
       "sha256": "d5b9cabc844f3b25190ce5dc60caaef30ca5b3c25353fe21082c8989226e98b3"
     },
     {
-      "path": "default/minimap_plugins/minimap_lines.json",
+      "path": "default/minimap_enhancements/minimap_lines.json",
       "source_sha256": "59d1ff8edd5a5b497c1d0a4888e7446f953f6fe2745e4480e0f93f07685c76f6",
       "sha256": "1cd0898b407d56c8881dcc20257f76cdc508ce7353e4c934a0bbcb080ba48ede"
     },
     {
-      "path": "default/minimap_plugins.json",
+      "path": "default/minimap_enhancements.json",
       "source_sha256": "dfaa52eb85cb1a534dec7230085819638293ffd3220ac3ed81a87ac6869acb41",
       "sha256": "9ed78c5422128da5b9bd5d3806442e75b5b7176857047b452803eac6b9edeee0"
     },
     {
-      "path": "default/own_health.json",
+      "path": "default/vehicle_health.json",
       "source_sha256": "645517d8333109cfabb14e2a73405d77affe459611bb55a2ebddfbe323de3e22",
       "sha256": "c613427fa69c26a1cca0e5b48c181395d9b4375654d0106514082434d319c15a"
     },
     {
-      "path": "default/player_panel_pro/battleLoading.json",
+      "path": "default/team_panels/battleLoading.json",
       "source_sha256": "679d099a47730a88f8c074acc73404c5f05cf5a95c06ad9a4e1237251981f828",
       "sha256": "d69c859a5268ae2a2e8eefc8771400a5c760241bf911b4d88db25010d7a24d8f"
     },
     {
-      "path": "default/player_panel_pro/general.json",
+      "path": "default/team_panels/general.json",
       "source_sha256": "4282256bab3117b02fe294346bb815b28de275790df644d5b43075624258bf98",
       "sha256": "4f1be66310d01cb41a597d3e2284eaf90e007adfc97e401738a4b107cf245d11"
     },
     {
-      "path": "default/player_panel_pro/panelLarge.json",
+      "path": "default/team_panels/panelLarge.json",
       "source_sha256": "5ef252f56c2cbec9c3a7c94493345daaadfa7a0ffd23d6b2db366d8f31b57489",
       "sha256": "e72081a26e297f40ab4e59020803bad9104f6a5913c6f3c45830efa7af3238b8"
     },
     {
-      "path": "default/player_panel_pro/panelMedium.json",
+      "path": "default/team_panels/panelMedium.json",
       "source_sha256": "dfed21cb62343d8dbe2f6a0c8946e031bf015b1268dff76356aa3ac3766adc11",
       "sha256": "5705ae5e6043555ceeee4226af6fe071dd40b482aafbdcce821e9c9d6282e9c4"
     },
     {
-      "path": "default/player_panel_pro/panelMedium2.json",
+      "path": "default/team_panels/panelMedium2.json",
       "source_sha256": "f0a9dc078be5021ef9a9d468607444e47903d8c79c60b92b0267425b773d15c1",
       "sha256": "cce3c1d8761e48b6c9d7001ee8578d67b824cc511414103edfd3121a4afcb6f5"
     },
     {
-      "path": "default/player_panel_pro/panelNone.json",
+      "path": "default/team_panels/panelNone.json",
       "source_sha256": "ffe40116d3da095f491341eb5c2ec630d33d59137b04c0159ad4a07fa0678b39",
       "sha256": "b93909cfecbac9188d4c843dad34cf3a35ce1f1be5b1defd24db2f40626b60f3"
     },
     {
-      "path": "default/player_panel_pro/panelShort.json",
+      "path": "default/team_panels/panelShort.json",
       "source_sha256": "79165485c68c907fd96026f4725d8189dddd49fe7bd7838b52b7b2c26c1ed9d6",
       "sha256": "239768ba439e47228df5381e265fde73a6d737c46598af700f60d84fbd4d8742"
     },
     {
-      "path": "default/player_panel_pro/playersPanel.json",
+      "path": "default/team_panels/playersPanel.json",
       "source_sha256": "6ade42b4be21bcf9e5d385bf88e72b2d56429486a25442d9f39fa0d6040af73a",
       "sha256": "778f08033127dcf352f2c6394bf5b1e2ea39fe2fa339a0a1c032a4697137be3a"
     },
     {
-      "path": "default/player_panel_pro/statisticForm.json",
+      "path": "default/team_panels/statisticForm.json",
       "source_sha256": "b3231bd35a8d4c6a4f1863bcc321fe0d32722a48fdaf950978dd79dd130426f8",
       "sha256": "8421c6bdb54d01ab1598c232efd20b512b31dfe20cfdadd89681237014ab7a99"
     },
     {
-      "path": "default/repair_extended.json",
+      "path": "default/repair_controls.json",
       "source_sha256": "18da0797d2745eb22042c63fbdb21d97a25e998cac6471554bb4d8acedc57413",
-      "sha256": "e31683ba49a6343f44297e1a074d905a495b78f908a8baf6dbfb434c842417c4"
+      "sha256": "798a41322877bd2f42bea28c69903bf5a97e3aa3988aa8172124fa08988858de"
     },
     {
-      "path": "default/safe_shot.json",
-      "source_sha256": "429737cfae9eea8aeec68e12c130d1795e8dfc1b0d6bbde31166347820c38649",
-      "sha256": "597b0ded4ef3e4069b9cd8a6026f4d0dcc9f098c99c9f272c1f65ce67271bd43"
-    },
-    {
-      "path": "default/server_turret_extended.json",
+      "path": "default/server_turret_sync.json",
       "source_sha256": "7d6daedede815ca6c63943681308c06e397c78ac98154e6d44ed640a93e68b68",
-      "sha256": "edeef14affb1fa4b75788433f7300655e2c7b373cb8f137c881390a1b4fbed38"
+      "sha256": "03c811ee6b3ddc72eb16d1295e15fc7b44657bba740b023066effe9952702cdf"
     },
     {
-      "path": "default/sixth_sense.json",
+      "path": "default/sixth_sense_alert.json",
       "source_sha256": "463d8bbbc411dd90fb39397db58ced158c4e83a8f2567c0853b954fa438dadf2",
       "sha256": "05c0a50b79b0b01b67bcbb8dd60f3e2018e3814b69fd14f62950f34a5f4d4407"
     },
     {
-      "path": "default/spotted_extended_light.json",
+      "path": "default/enemy_spotting_status.json",
       "source_sha256": "3708b3c0ae0cde0e0b479b5c69206dcbe4b0b6609f3c5ee2a00c0cc5a89ec3a9",
       "sha256": "2285ebafb4552df75b7a3ae5f21b95c8cb4699fd2a921a47f7d71583cd56e8d3"
     },
     {
-      "path": "default/zoom_extended.json",
+      "path": "default/sniper_camera.json",
       "source_sha256": "15dceed77850de5eecf0f5e378fc8033fd6f083d98048e6aedb056bcf56c9cf6",
       "sha256": "c1bd04dac8d2dbaa21f5a6ada5c225a1e936b57770947a50659b4f565a3ff1d1"
     }

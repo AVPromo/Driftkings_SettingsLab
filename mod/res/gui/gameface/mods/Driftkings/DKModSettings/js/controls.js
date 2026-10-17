@@ -262,18 +262,45 @@
             commitValue(next);
         });
         track.tabIndex = 0;
-        track.addEventListener('keydown', function (event) {
-            if (widget.disabled || [33,34,35,36,37,38,39,40].indexOf(event.keyCode) < 0) { return; }
+        function arrowKey(event) {
+            var code = event.keyCode || event.which;
+            var key = event.key;
+            var direction = key === 'ArrowLeft' || key === 'ArrowDown' || code === 37 || code === 40 ? -1 :
+                key === 'ArrowRight' || key === 'ArrowUp' || code === 39 || code === 38 ? 1 : 0;
+            if (widget.disabled || !direction || event.ctrlKey || event.altKey || event.metaKey) { return; }
             handled(event);
             if (event.preventDefault) { event.preventDefault(); }
-            commitValue(event.keyCode === 36 ? def.min : event.keyCode === 35 ? def.max : widget.value +
-                (event.keyCode === 37 || event.keyCode === 40 || event.keyCode === 34 ? -1 : 1) * def.step * (event.keyCode === 33 || event.keyCode === 34 ? 10 : event.shiftKey ? 5 : 1));
-        });
+            var current = widget.value;
+            if (document.activeElement === text) {
+                var raw = String(text.value).trim(), typed = Number(raw.replace(',', '.'));
+                if (raw && isFinite(typed) && typed >= def.min && typed <= def.max) { current = snap(typed, def); }
+            }
+            var next = snap(current + direction * def.step, def);
+            if (next !== widget.value) { commitValue(next); }
+            else { text.value = String(widget.value); }
+        }
+        function focusedKey(event) {
+            if (document.activeElement === track || document.activeElement === text) { arrowKey(event); }
+        }
+        // A native input reliably owns keyboard focus in Gameface; a div may not.
+        document.addEventListener('keydown', focusedKey, true);
+        function wheel(event) {
+            if (widget.disabled || widget.dragging) { return; }
+            var delta = Number(event.deltaY);
+            if (!isFinite(delta) || delta === 0) { delta = Number(event.wheelDelta); }
+            if (!isFinite(delta) || delta === 0) { return; }
+            // Match the client's wheel convention used by scrollWheel above.
+            var next = snap(widget.value + (delta > 0 ? 1 : -1) * def.step, def);
+            if (event.preventDefault) { event.preventDefault(); }
+            handled(event);
+            if (next !== widget.value) { commitValue(next); }
+        }
+        wrap.addEventListener('wheel', wheel);
         function fromEvent(event) {
             var rect = track.getBoundingClientRect();
             var ratio = rect.width > 0 ? (event.clientX - rect.left) / rect.width : 0;
             var next = snap(def.min + Math.max(0, Math.min(1, ratio)) * (def.max - def.min), def);
-            if (next !== widget.value) { widget.value = next; widget.render(); if (onInput) { onInput(next); } }
+            if (next !== widget.value) { widget.value = next; text.value = String(next); widget.render(); if (onInput) { onInput(next); } }
         }
         function move(event) { fromEvent(event); }
         function cancel() {
@@ -282,7 +309,11 @@
             document.removeEventListener('mouseup', up);
             var index = activeDrags.indexOf(cancel); if (index >= 0) { activeDrags.splice(index, 1); }
         }
-        widget.dispose = cancel;
+        widget.dispose = function () {
+            cancel();
+            document.removeEventListener('keydown', focusedKey, true);
+            wrap.removeEventListener('wheel', wheel);
+        };
         function up(event) {
             fromEvent(event);
             cancel();
@@ -290,6 +321,9 @@
         }
         track.addEventListener('mousedown', function (event) {
             if (widget.disabled) { return; }
+            if (event.button !== 0) { return; }
+            DK.modal.focus(text);
+            if (event.preventDefault) { event.preventDefault(); }
             widget.dragging = true;
             activeDrags.push(cancel);
             fromEvent(event);
@@ -600,6 +634,17 @@
                     // Audition is independent of enabling the sound in battle.
                     // Python validates the preview action against the session.
                     button.addEventListener('click', function () { ctx.action(def.preview[action]); });
+                });
+            }
+            if (ctx && ctx.commit && Object.prototype.hasOwnProperty.call(def, 'default')) {
+                var reset = el('button', 'dk-option-reset', null, api.node.firstChild || api.node);
+                reset.type = 'button';
+                reset.title = (ctx.labels || {}).resetOption || 'Reset this option to default';
+                reset.setAttribute('aria-label', reset.title);
+                reset.addEventListener('click', function () {
+                    if (api.state && api.state.disabled) { return; }
+                    DK.layer.close();
+                    ctx.commit(def.id, JSON.parse(JSON.stringify(def.default)));
                 });
             }
             return api;

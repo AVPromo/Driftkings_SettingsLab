@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from Driftkings._constants import GLOBAL
+from Driftkings._constants import GLOBAL, HANGAR_PREFERENCES
 from Driftkings.settings.service import settings_service
 """Account persistence and native login lifecycle; presentation is Gameface."""
 import base64
@@ -22,10 +22,30 @@ from Driftkings.core.accounts import AccountService, AccountError
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.core.hooks import override, on_event
 from Driftkings.common.utils import events
-from Driftkings.settings.definitions.components.account_manager import AccountManagerSettings as ConfigsInterface
+from Driftkings.i18n import catalog
+from helpers import getClientLanguage
+from Driftkings.settings.settings_data import defaults
 
 LOG = logging.getLogger('Driftkings.AccountManager')
-config = ConfigsInterface()
+
+
+class AccountsConfiguration(object):
+    """Use hangar-owned settings without registering a separate settings page."""
+    @property
+    def data(self):
+        try:
+            settings = settings_service.getComponentDict(HANGAR_PREFERENCES)
+        except KeyError:
+            # Login can initialize before the hangar settings component.
+            settings = defaults(HANGAR_PREFERENCES.NAME)
+        return settings['accountManager']
+
+    @property
+    def i18n(self):
+        return catalog.section('account_manager', str(getClientLanguage()).lower())
+
+
+config = AccountsConfiguration()
 
 
 def getPreferencesDir():

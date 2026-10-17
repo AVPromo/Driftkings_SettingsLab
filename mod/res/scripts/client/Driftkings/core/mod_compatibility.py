@@ -18,8 +18,8 @@ MODULES = {
                        'armagomen.battle_observer.battle.minimap'),
 }
 FEATURES = {
-    'player_panel_pro': ('XVM',),
-    'minimap_plugins': ('XVM', 'BattleObserver')
+    'team_panels': ('XVM',),
+    'minimap_enhancements': ('XVM', 'BattleObserver')
 }
 
 
@@ -65,8 +65,8 @@ class CompatibilityManager(object):
 
     def _xvm_active(self, feature):
         module_name, path = {
-            'player_panel_pro': ('xvm_battle', 'playersPanel.enabled'),
-            'minimap_plugins': ('xvm_battle_minimap', 'minimap.enabled'),
+            'team_panels': ('xvm_battle', 'playersPanel.enabled'),
+            'minimap_enhancements': ('xvm_battle_minimap', 'minimap.enabled'),
         }.get(feature, (None, None))
         if module_name is None:
             return None

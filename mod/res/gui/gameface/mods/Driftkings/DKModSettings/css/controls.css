@@ -171,3 +171,7 @@ button:focus,input:focus,textarea:focus,select:focus,[tabindex]:focus { outline:
 .dk-alpha-value { text-align:right;margin-top:4rem; }.dk-step { min-width:28rem;margin-left:4rem; }.dk-radio { margin-right:4rem; }.dk-radio.is-selected { border-color:#d98219;background:#393025; }
 
 .dk-column .dk-input-area > textarea.dk-text.dk-multiline { height:160rem; min-height:160rem; padding:8rem 10rem; line-height:20rem; white-space:pre-wrap; overflow-y:auto; flex:0 0 auto; }
+
+.dk-option-reset { width:22rem; height:22rem; min-width:22rem; flex:0 0 22rem; margin:0 0 0 6rem; padding:0; background-color:transparent; background-image:url('../assets/icons/reset.svg'); background-repeat:no-repeat; background-position:center; background-size:15rem 15rem; border:1rem solid #555248; cursor:pointer; }
+.dk-option-reset:hover { color:#f0d69b; border-color:#b79858; }
+.dk-option-reset:disabled { opacity:.4; cursor:default; }

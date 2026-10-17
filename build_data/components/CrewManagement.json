@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "CrewManagement",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "lobby.crew_management",
+  "config_files": [
+    "default/crew_management.json"
+  ],
+  "assets": []
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "TargetDistance",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.target_distance",
+  "config_files": [
+    "default/target_distance.json"
+  ],
+  "assets": []
+}

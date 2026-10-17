@@ -4,9 +4,7 @@
   "kind": "feature",
   "enabled": true,
   "entrypoint": "components.account_manager",
-  "config_files": [
-    "default/account_manager.json"
-  ],
+  "config_files": [],
   "assets": [
     {
       "source": "mod/res/gui/gameface/mods/Driftkings/AccountManager/**",

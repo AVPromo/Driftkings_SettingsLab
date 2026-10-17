@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "RepairControls",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.repair_controls",
+  "config_files": [
+    "default/repair_controls.json"
+  ],
+  "assets": []
+}

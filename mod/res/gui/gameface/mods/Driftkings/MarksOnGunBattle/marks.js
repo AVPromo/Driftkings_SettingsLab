@@ -2,7 +2,7 @@
     'use strict';
     var K=window.__dkMarksKit, root=K.node('div','dk-mog dk-mog--compact',document.body);
     var header=K.node('div','dk-mog__header',root), brand=K.node('div','dk-mog__brand',header);
-    K.node('span','dk-mog__logo',brand,'///'); K.node('span','',brand,'MarksOnGun');
+    K.node('span','dk-mog__logo',brand,'///'); var title=K.node('span','',brand,'');
     var context=K.node('span','dk-mog__context',header);
     var overview=K.node('div','dk-mog__overview',root);
     var hero=K.node('div','dk-mog__hero',overview), main=K.node('div','',hero);
@@ -24,6 +24,7 @@
         K.style(root,'pointerEvents',interactive?'auto':'none');
         K.style(root.firstChild,'pointerEvents',interactive?'auto':'none');
         K.style(root.firstChild,'cursor',interactive?'move':'default');
+        K.text(title,K.label(data,'title','Marks of Excellence'));
         K.text(context,K.label(data,'battle','IN BATTLE'));
         K.text(estimatedLabel,K.label(data,'estimated','Estimated mark'));
         K.text(estimated,valid?K.percent(data.estimatedMark):'\u2014'); K.style(estimated,'color',accent);

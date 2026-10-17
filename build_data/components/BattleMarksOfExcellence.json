@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "id": "BattleMarksOfExcellence",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.battle_marks_of_excellence",
+  "config_files": [
+    "default/battle_marks_of_excellence.json"
+  ],
+  "assets": [
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunBattle/marks.js",
+      "target": "res/gui/gameface/mods/Driftkings/MarksOnGunBattle/marks.js",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunBattle/marks.css",
+      "target": "res/gui/gameface/mods/Driftkings/MarksOnGunBattle/marks.css",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunBattle/model.html",
+      "target": "res/gui/gameface/mods/Driftkings/MarksOnGunBattle/model.html",
+      "generator": null
+    },
+    {
+      "source": "mod/res/gui/gen_resources/driftkings.DriftkingsMarksOnGunBattle.json",
+      "target": "res/gui/gen_resources/driftkings.DriftkingsMarksOnGunBattle.json",
+      "generator": null
+    }
+  ]
+}

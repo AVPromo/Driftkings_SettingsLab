@@ -185,6 +185,7 @@ internal static partial class Installer
 
     static void Relaunch(string executable, string root)
     {
+        ExitWork.Wait(root, path => Safe(path, false));
         // Only the validated parent image; never ticket paths, arguments or shell.
         Safe(executable, true);
         NoGame();

@@ -189,3 +189,8 @@ textarea { font-family: Warhelios; font-size: 15rem; color: #e8e4da; }
 .dk-window.is-narrow .dk-footer .dk-unsaved.is-visible { display: block; max-width: 100rem; font-size: 10rem; }
 
 .dk-compatibility-warnings { color:#c9ab72;font-size:12rem;line-height:1.4;white-space:normal;margin-top:5rem; }
+
+/* Keep state colors independent of dependency/restart warnings beside them. */
+.dk-status-state.is-on { color:#65d88b; }
+.dk-status-state.is-off { color:#ef7777; }
+.dk-status-state.is-error { color:#ff9b85; }

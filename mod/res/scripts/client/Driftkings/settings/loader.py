@@ -9,7 +9,7 @@ import tempfile
 
 from Driftkings.settings.settings_data import SettingsData, user_settings, part_name
 from Driftkings.settings.default_values import SELECTOR
-from Driftkings.settings.sections import previous_name
+from Driftkings.settings.sections import previous_name, previous_sections, section_aliases
 from Driftkings.settings.store import SettingsStore, merge, recover_file, read_object
 
 try:
@@ -44,6 +44,17 @@ def validate_types(defaults, values, path=''):
                 raise ValueError('Expected text: ' + name)
         elif isinstance(default, (tuple, list)) and not isinstance(value, (tuple, list)):
             raise ValueError('Expected a list: ' + name)
+
+
+def migrate_values(component, values):
+    """Normalize legacy representation before validating against current defaults."""
+    if component == 'hangar_marks_of_excellence':
+        card = values.get('card')
+        if isinstance(card, dict):
+            color = card.get('backgroundColor')
+            if isinstance(color, number_types) and not isinstance(color, bool) and 0 <= color <= 0xFFFFFF and int(color) == color:
+                card['backgroundColor'] = '#%06X' % int(color)
+    return values
 
 
 class SettingsLoader(object):
@@ -103,8 +114,8 @@ class SettingsLoader(object):
                 if not os.path.isdir(folder):
                     continue
                 entries = os.listdir(folder)
-                known = [key + '.json' for key in self.settings.configs]
-                if any(key in entries for key in known) or any(key in entries for key in ('player_panel_pro', 'carousel_stats', 'minimap_plugins')):
+                known = [name + '.json' for key in self.settings.configs for name in (key,) + previous_sections(key)]
+                if any(key in entries for key in known) or any(key in entries for section in ('team_panels', 'vehicle_carousel', 'minimap_enhancements') for key in (section,) + previous_sections(section)):
                     names.add(name)
         return sorted(names)
 
@@ -136,14 +147,57 @@ class SettingsLoader(object):
     def path(self, component):
         return os.path.join(self.directory(self.active), part_name(component) + '.json')
 
+    def previous_path(self, component, directory=False):
+        profile = self.directory(self.active)
+        for name in previous_sections(component) + (previous_name(component),):
+            path = os.path.join(profile, name + ('' if directory else '.json'))
+            if directory:
+                if os.path.isdir(path):
+                    return path
+            else:
+                recover_file(path)
+                if os.path.isfile(path):
+                    return path
+        return None
+
+    def migrate_directory(self, component, target, factory, defaults=None):
+        source = self.previous_path(component, directory=True)
+        if source is None:
+            return False
+        profile = self.directory(self.active)
+        staging = tempfile.mkdtemp(prefix='.rename-', dir=profile)
+        try:
+            # Recover transactions before copying; never move/remove the old profile.
+            factory(source).recover()
+            for directory, dirs, files in os.walk(source):
+                dirs[:] = [name for name in dirs if not os.path.islink(os.path.join(directory, name))]
+                for name in files:
+                    path = os.path.join(directory, name)
+                    if not name.endswith('.json') or os.path.islink(path):
+                        continue
+                    destination = os.path.join(staging, os.path.relpath(path, source))
+                    SettingsStore(destination).write(read_object(path))
+            store = factory(staging)
+            if defaults is None:
+                store.load()
+            else:
+                store.load(defaults)
+            os.rename(staging, target)
+        finally:
+            if os.path.isdir(staging):
+                shutil.rmtree(staging)
+        return True
+
     def load(self, component, defaults, legacy=None):
         component = part_name(component)
         if component not in self.defaults:
             self.defaults[component] = copy.deepcopy(defaults)
         defaults = self.defaults[component]
-        if component == 'minimap_plugins':
+        if component == 'minimap_enhancements':
             from Driftkings.settings.minimap_store import MinimapStore
             directory = os.path.join(self.directory(self.active), part_name(component))
+            if not os.path.isdir(directory):
+                self.migrate_directory(component, directory, MinimapStore, defaults)
             if os.path.isdir(directory):
                 MinimapStore(directory).recover()
                 if os.path.isfile(os.path.join(directory, 'minimap.json')):
@@ -151,19 +205,23 @@ class SettingsLoader(object):
         path = self.path(component)
         recover_file(path)
         if os.path.isfile(path):
-            values = read_object(path)
+            values = migrate_values(component, read_object(path))
         else:
-            values = {}
-            if self.active == 'default':
+            old_path = self.previous_path(component)
+            values = read_object(old_path) if old_path else None
+            if values is None and self.active == 'default':
                 central = SettingsStore(os.path.join(self.root, 'Driftkings.json')).read()['components']
-                values = central.get(component, central.get(previous_name(component)))
+                values = central.get(component)
+                if values is None:
+                    values = next((central[name] for name in section_aliases(component) if name in central), None)
                 if values is None:
                     values = legacy() if legacy else {}
+            values = migrate_values(component, {} if values is None else values)
             validate_types(defaults, values, component)
             values = merge(defaults, values)
             SettingsStore(path).write(values)
         validate_types(defaults, values, component)
-        if component == 'minimap_plugins':
+        if component == 'minimap_enhancements':
             from Driftkings.settings.minimap_store import MinimapStore
             # Keep the previous single file untouched as a migration backup.
             initial = merge(defaults, values)
@@ -176,7 +234,7 @@ class SettingsLoader(object):
 
     def save(self, component, values):
         component = part_name(component)
-        if component == 'minimap_plugins':
+        if component == 'minimap_enhancements':
             from Driftkings.settings.minimap_store import MinimapStore
             directory = os.path.join(self.directory(self.active), part_name(component))
             validate_types(self.defaults.get(component, {}), values, component)
@@ -193,10 +251,12 @@ class SettingsLoader(object):
         component = part_name(component)
         target = os.path.join(self.directory(self.active), part_name(component))
         def create(directory, migrating=False):
-            if component == 'player_panel_pro':
+            if component == 'team_panels':
                 return factory(directory, legacy_root=self.root if migrating and self.active == 'default' else False)
             return factory(directory)
         if os.path.isdir(target):
+            return create(target)
+        if self.migrate_directory(component, target, create):
             return create(target)
         profile = self.directory(self.active)
         if not os.path.isdir(profile):
@@ -204,9 +264,9 @@ class SettingsLoader(object):
         staging = tempfile.mkdtemp(prefix='.settings-', dir=profile)
         try:
             if self.active == 'default':
-                migration_files = tuple(files) + (('.transaction.json',) if component == 'player_panel_pro' else ())
-                if component == 'player_panel_pro':
-                    from Driftkings.settings.player_panel_store import LEGACY_FILES
+                migration_files = tuple(files) + (('.transaction.json',) if component == 'team_panels' else ())
+                if component == 'team_panels':
+                    from Driftkings.settings.team_panel_store import LEGACY_FILES
                     migration_files += LEGACY_FILES
                 for name in migration_files:
                     source = os.path.join(legacy_directory, name)

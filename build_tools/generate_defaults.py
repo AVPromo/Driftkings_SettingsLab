@@ -40,7 +40,7 @@ def assemble(root=ROOT):
     source = root / config['defaults']['source_root']
     section_source = ast.parse((root / 'mod/res/scripts/client/Driftkings/settings/sections.py').read_text(encoding='utf-8'))
     section_names = next(ast.literal_eval(node.value) for node in section_source.body if isinstance(node, ast.Assign)
-                         and any(isinstance(target, ast.Name) and target.id == 'LEGACY_NAMES' for target in node.targets))
+                         and any(isinstance(target, ast.Name) and target.id == 'COMPONENT_NAMES' for target in node.targets))
     constants = ast.parse((root / 'mod/res/scripts/client/Driftkings/_constants.py').read_text(encoding='utf-8'))
     declared_names = set()
     for node in constants.body:
@@ -66,28 +66,31 @@ def assemble(root=ROOT):
         if section_names[identifier] not in declared_names:
             raise ValueError('Unknown canonical configuration section: ' + identifier)
         declared = set(manifest['config_files'])
+        if not declared:
+            # Features may share another section instead of owning a settings page.
+            continue
         def get(name):
             if name not in declared:
                 raise ValueError('%s does not declare default %s' % (identifier, name))
             return document(name)
-        if identifier == 'PlayerPanelPro':
-            prefix = 'default/player_panel_pro/'
+        if identifier == 'TeamPanels':
+            prefix = 'default/team_panels/'
             data = dict(get(prefix + 'general.json'))
             data.update(get(prefix + 'playersPanel.json'))
             data['loading'] = dict(get(prefix + 'battleLoading.json'))
             data['loading'].pop('tips', None)  # Retired native loading option.
             data['tab'] = get(prefix + 'statisticForm.json')
             data['profiles'] = {name: get(prefix + 'panel' + name.title() + '.json') for name in PROFILES}
-        elif identifier == 'CarouselStats':
-            prefix = 'default/carousel_stats/'
+        elif identifier == 'VehicleCarousel':
+            prefix = 'default/vehicle_carousel/'
             general = get(prefix + 'carousel.json')
             data = {key: general[key] for key in ('enabled', 'showIcons', 'colorRating')}
             data['carousel'] = {key: value for key, value in general.items() if key not in data}
             data['carousel'].update(normal=get(prefix + 'carouselNormal.json'), small=get(prefix + 'carouselSmall.json'))
-        elif identifier == 'MinimapPlugins':
+        elif identifier == 'MinimapEnhancements':
             data = {}
             for name in ('minimap.json', 'minimap_labels.json', 'minimap_circles.json', 'minimap_lines.json'):
-                part = get('default/minimap_plugins/' + name)
+                part = get('default/minimap_enhancements/' + name)
                 overlap = set(part) & set(data)
                 if overlap:
                     raise ValueError('Duplicate minimap sections: ' + ', '.join(sorted(overlap)))

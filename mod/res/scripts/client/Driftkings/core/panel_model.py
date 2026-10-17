@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from Driftkings._constants import PLAYER_PANEL_PRO
+from Driftkings._constants import TEAM_PANELS
 from Driftkings.core.panel_macros import Macros, truth
-from Driftkings.settings.player_panel_store import resolve_fields
+from Driftkings.settings.team_panel_store import resolve_fields
 
 ROMAN=('','I','II','III','IV','V','VI','VII','VIII','IX','X','XI')
 TYPES={'lightTank':'LT','mediumTank':'MT','heavyTank':'HT','AT-SPG':'TD','SPG':'SPG'}
@@ -76,7 +76,7 @@ class Roster(object):
         state=self.spotted.get(ident,'neverSeen')
         own=ident==playerID
         ally=vehicle.get('team')==team
-        available=bool(data[PLAYER_PANEL_PRO.STATS_ENABLED] and stats and 'battles' in stats and stats['battles']>=data[PLAYER_PANEL_PRO.PERFORMANCE]['minBattlesToShow'])
+        available=bool(data[TEAM_PANELS.STATS_ENABLED] and stats and 'battles' in stats and stats['battles']>=data[TEAM_PANELS.PERFORMANCE]['minBattlesToShow'])
         values=dict(stats or {}) if available else {}
         for key in ('t_battles','t_winrate','t_wins'):
             if key in values: values[key.replace('_','-')]=values[key]
@@ -96,7 +96,7 @@ class Roster(object):
             'hp':hp.get('hp',maximum) if alive else 0,'hp-max':maximum,
             'spotted':state if state in ('spotted','lost') else '',
             'c:spotted':'#FFBB00' if state=='spotted' else '#D9D9D9',
-            'a:spotted':100 if state in ('spotted','lost') and data[PLAYER_PANEL_PRO.SPOTTED_ENABLED] else 0,
+            'a:spotted':100 if state in ('spotted','lost') and data[TEAM_PANELS.SPOTTED_ENABLED] else 0,
             'c:system':'#FFDD33' if own else ('#96FF00' if ally else '#F50800'),
             'sys-color-key':'player' if own else ('ally' if ally else 'enemy'),
             'xvm-stat':'stat' if available else '', 'pp.mode':('none','short','medium','medium2','large').index(self.mode),
@@ -104,7 +104,7 @@ class Roster(object):
             'squad-num':vehicle.get('prebattleID') or None,
             'rankBadgeId':vehicle.get('rankBadgeId'), 'bp-stage':vehicle.get('bpStage'),
             'tk':'tk' if vehicle.get('isTeamKiller') else ''})
-        values['r']=values.get(data[PLAYER_PANEL_PRO.RATING])
+        values['r']=values.get(data[TEAM_PANELS.RATING])
         meta=self.metadata.get(ident,{})
         status=meta.get('playerStatus',0)
         userTags=meta.get('userTags',[])
@@ -124,17 +124,17 @@ class Roster(object):
             values['rankBadgeId']=int(icon[6:])
         values['bp-stage']=badge.get('content')
         values['hasBadges']='true' if any(m.get('hasSelectedBadge') for m in self.metadata.values()) else ''
-        values['xr']=values.get({'wn8':'xwn8','eff':'xeff','wgr':'xwgr','winrate':'xwr'}.get(data[PLAYER_PANEL_PRO.RATING],data[PLAYER_PANEL_PRO.RATING]))
-        values['r_size']={'xwn8':2,'xeff':2,'winrate':2,'wgr':5}.get(data[PLAYER_PANEL_PRO.RATING],4)
+        values['xr']=values.get({'wn8':'xwn8','eff':'xeff','wgr':'xwgr','winrate':'xwr'}.get(data[TEAM_PANELS.RATING],data[TEAM_PANELS.RATING]))
+        values['r_size']={'xwn8':2,'xeff':2,'winrate':2,'wgr':5}.get(data[TEAM_PANELS.RATING],4)
         values['kb']=values.get('battles',0)/1000.0 if available else None
         for key,divisor in (('t-kb',1000.0),('t-hb',100.0)):
             values[key]=values.get('t-battles',0)/divisor if available else None
         for key in ('wn8','eff','wgr','winrate','xwn8','xeff','battles','t-battles','t-winrate','tdv','tdb','tfb','tsb'):
             source={'t-battles':'battles','t-winrate':'winrate'}.get(key,key)
             value=values.get(key)
-            values['c:'+key]='#'+color(source,value,data[PLAYER_PANEL_PRO.COLOR_SCALE]).lstrip('#') if value is not None and available else '#AAAAAA'
+            values['c:'+key]='#'+color(source,value,data[TEAM_PANELS.COLOR_SCALE]).lstrip('#') if value is not None and available else '#AAAAAA'
             values['a:'+key]=100 if value is not None and available else 0
-        for key,target in (('r',data[PLAYER_PANEL_PRO.RATING]),('xr',data[PLAYER_PANEL_PRO.RATING]),('kb','battles')):
+        for key,target in (('r',data[TEAM_PANELS.RATING]),('xr',data[TEAM_PANELS.RATING]),('kb','battles')):
             values['c:'+key]=values.get('c:'+target,'#AAAAAA')
             values['a:'+key]=values.get('a:'+target,0)
         return values
@@ -148,16 +148,16 @@ class Roster(object):
         entries=settings.get('extraFields'+side,[])
         if isinstance(settings.get('extraFields'),dict):
             entries=settings['extraFields'][side.lower()+'Panel']['formats']
-        for field in resolve_fields(entries,data[PLAYER_PANEL_PRO.TEMPLATES]):
+        for field in resolve_fields(entries,data[TEAM_PANELS.TEMPLATES]):
             field=macros.resolve(field)
             if not truth(field.get('enabled',True)): continue
             isHP=field.get('id','').startswith('hp')
             if isHP:
-                mode=data.get(PLAYER_PANEL_PRO.HP_VISIBILITY,'always')
-                if not data[PLAYER_PANEL_PRO.HP_ENABLED] or mode=='never': continue
+                mode=data.get(TEAM_PANELS.HP_VISIBILITY,'always')
+                if not data[TEAM_PANELS.HP_ENABLED] or mode=='never': continue
                 # Groups are combined with AND; keys within each group are alternatives.
                 if mode=='hold' and not all(any(code in self.keys for code in group)
-                                            for group in data.get(PLAYER_PANEL_PRO.HP_KEY,[[56,184]])): continue
+                                            for group in data.get(TEAM_PANELS.HP_KEY,[[56,184]])): continue
             # The common HP selector governs background, bar and text together,
             # including older templates which carried their own ALT conditions.
             hotkey=None if isHP else field.get('hotKeyCode')

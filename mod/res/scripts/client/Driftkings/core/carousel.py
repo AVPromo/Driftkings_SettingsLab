@@ -27,11 +27,11 @@ def bounded(value, low, high, default):
 
 
 def defaults():
-    return component_defaults('carousel_stats')['carousel']
+    return component_defaults('vehicle_carousel')['carousel']
 
 
 def config_defaults():
-    return component_defaults('carousel_stats')
+    return component_defaults('vehicle_carousel')
 
 
 def row_count(carousel, native):

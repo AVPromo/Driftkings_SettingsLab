@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "GunTraverseLimits",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.gun_traverse_limits",
+  "config_files": [
+    "default/gun_traverse_limits.json"
+  ],
+  "assets": [
+    {
+      "source": "mod/res/gui/AimingAngles/**",
+      "target": "res/gui/AimingAngles/**",
+      "generator": null
+    }
+  ]
+}

@@ -5,7 +5,7 @@ import logging
 from Driftkings.core.battle_capabilities import battle_capabilities
 
 LOG = logging.getLogger('Driftkings.BattlePolicy')
-REGULAR_ONLY = ('marks_on_gun_battle', 'battle_stat', 'main_gun')
+REGULAR_ONLY = ('battle_marks_of_excellence', 'battle_statistics', 'high_caliber_progress')
 
 
 class BattlePolicy(object):
@@ -21,8 +21,6 @@ class BattlePolicy(object):
             reason = 'outside_battle'
         elif feature in REGULAR_ONLY and not context.is_regular():
             reason = 'requires_regular_battle'
-        elif feature == 'safe_shot' and context.is_event():
-            reason = 'unsupported_event_battle'
         elif spg_only and not context.is_spg():
             reason = 'requires_spg'
         else:

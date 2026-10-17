@@ -7,7 +7,7 @@ import logging
 import os
 
 from Driftkings.settings.store import SettingsStore, merge, recover_file
-from Driftkings.settings.sections import LEGACY_NAMES, previous_name, section_name
+from Driftkings.settings.sections import LEGACY_NAMES, previous_name, section_name, section_aliases
 
 from Driftkings.locale_support import CODES as LANGUAGES, language_code
 LOG = logging.getLogger('Driftkings.i18n')
@@ -42,8 +42,12 @@ def canonical_sections(document):
     result = {}
     for canonical in (False, True):
         for name, values in document.items():
-            if (name not in LEGACY_NAMES) == canonical:
-                section = LEGACY_NAMES.get(name, name)
+            if (section_name(name) == name) == canonical:
+                section = section_name(name)
+                values = dict(values)
+                # Retire copied internal identifiers as display titles; keep custom titles.
+                if values.get('UI_description') in section_aliases(section):
+                    values.pop('UI_description', None)
                 result[section] = merge(result.get(section, {}), values)
     return result
 

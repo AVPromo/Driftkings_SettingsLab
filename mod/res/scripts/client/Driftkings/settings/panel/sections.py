@@ -171,7 +171,7 @@ class SectionPanelBinding(object):
             if alpha_key is None or mod.index[alpha_key].type not in ('slider', 'number'):
                 raise ValueError('alphaPath must name a declared numeric field')
             mod.index[color_key].metadata['alphaKey'] = alpha_key
-        if key == 'sixth_sense' and 'sixthSenseSound' in names:
+        if key == 'sixth_sense_alert' and 'sixthSenseSound' in names:
             from Driftkings.i18n.panel import translations
             mod.category = translations('sound.name')
             mod.icon = 'speaker'
@@ -191,7 +191,7 @@ class SectionPanelBinding(object):
             for parent, accepted in parents.items():
                 # The selector is also used for auditioning before enabling
                 # the sound in battle. This does not change userSound itself.
-                if key == 'sixth_sense' and child == 'sixthSenseSound' and parent == 'userSound':
+                if key == 'sixth_sense_alert' and child == 'sixthSenseSound' and parent == 'userSound':
                     continue
                 mod.index[names[child]].depends_on[names[parent]] = accepted
         mod.saved = copy.deepcopy(mod.values)

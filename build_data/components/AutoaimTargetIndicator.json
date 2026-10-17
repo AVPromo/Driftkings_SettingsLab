@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "AutoaimTargetIndicator",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.autoaim_target_indicator",
+  "config_files": [
+    "default/autoaim_target_indicator.json"
+  ],
+  "assets": []
+}

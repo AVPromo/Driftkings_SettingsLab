@@ -237,7 +237,7 @@
 
     function contains(list, key) { return !!list && list.indexOf(key) >= 0; }
 
-    function statusText(id) {
+    function statusParts(id) {
         var text = labels(), mod = mods[id], current = (state.status || {})[id] || {}, parts = [];
         if (current.status === 'configError') { parts.push('! ' + (text.statusConfigError || 'Configuration error')); }
         else if (current.status === 'error') { parts.push('! ' + (text.statusError || 'Error')); }
@@ -249,7 +249,23 @@
             if (!dependency.installed) { parts.push('! ' + (text.dependencyMissing || 'Missing dependency') + ': ' + dependency.id); }
         });
         if (current.restartRequired || contains(state.restartRequired, id)) { parts.push('↻ ' + (text['status.restart'] || 'Restart required')); }
-        return parts.join(' • ');
+        return parts;
+    }
+
+    function statusText(id) { return statusParts(id).join(' • '); }
+    function renderStatus(node, id) {
+        if (!node.stateText) {
+            node.textContent = '';
+            node.stateText = el('span', '', null, node);
+            node.stateDetails = el('span', '', null, node);
+        }
+        if (!mods[id]) { node.stateText.textContent = ''; node.stateDetails.textContent = ''; return; }
+        var current = (state.status || {})[id] || {}, parts = statusParts(id);
+        var error = !!current.status && current.status !== 'active';
+        node.stateText.className = 'dk-status-state' + (error ? ' is-error' : current.enabled === false ? ' is-off' :
+            current.status === 'active' || current.enabled === true ? ' is-on' : '');
+        node.stateText.textContent = parts[0];
+        node.stateDetails.textContent = parts.length > 1 ? ' • ' + parts.slice(1).join(' • ') : '';
     }
 
     function onState(next) {
@@ -319,10 +335,10 @@
             setClass(item, 'is-error', !!current.status && current.status !== 'active');
             setClass(item, 'is-off', current.enabled === false);
             setClass(item, 'is-warning', missing || !!current.restartRequired || contains(state.restartRequired, id));
-            ui.navStatus[id].textContent = statusText(id);
+            renderStatus(ui.navStatus[id], id);
             item.title = mods[id].name + ' — ' + statusText(id);
         });
-        ui.modStatus.textContent = mods[modId] ? statusText(modId) : '';
+        renderStatus(ui.modStatus, modId);
         var warnings = (state.compatibilityWarnings || {})[modId] || [];
         while (ui.compatibilityWarnings.firstChild) { ui.compatibilityWarnings.removeChild(ui.compatibilityWarnings.firstChild); }
         warnings.forEach(function (warning) { el('div', '', '⚠ ' + warning.text, ui.compatibilityWarnings); });

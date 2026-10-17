@@ -25,7 +25,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_save': 'บันทึก',
                      'UI_setting_server': 'เซิร์ฟเวอร์:',
                      'UI_setting_showPassword': 'แสดงรหัสผ่าน'},
- 'aiming_angles': {'UI_description': 'AimingAngles',
+ 'gun_traverse_limits': {'UI_description': 'ขอบเขตการหมุนปืน',
                    'UI_setting_horizontal_0': 'พิการ',
                    'UI_setting_horizontal_1': 'มุม',
                    'UI_setting_horizontal_2': 'วงเล็บเหลี่ยม',
@@ -64,7 +64,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                   "src='img://gui/AimingAngles/4/Bottom.png'>\t<img "
                                                   "src='img://gui/AimingAngles/5/Bottom.png'>\t<img "
                                                   "src='img://gui/AimingAngles/6/Bottom.png'>"},
- 'arcade_zoom': {'UI_description': 'ArcadeZoom',
+ 'third_person_zoom': {'UI_description': 'การซูมกล้องภายนอก',
                  'UI_setting_max_text': 'ซูมออกสูงสุด',
                  'UI_setting_max_tooltip': 'ระยะกล้องสูงสุดจากยานพาหนะ',
                  'UI_setting_min_text': 'ซูมออกขั้นต่ำ',
@@ -73,22 +73,22 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_setting_scrollSensitivity_tooltip': 'ปรับความไวในการซูมล้อเมาส์',
                  'UI_setting_startDeadDist_text': 'เริ่มระยะทางที่ตายแล้ว',
                  'UI_setting_startDeadDist_tooltip': 'ระยะห่างของกล้องเริ่มต้นในโหมดหลังการชันสูตรพลิกศพ'},
- 'armor_calculator': {'UI_colors': {'green': '#60CB00',
+ 'penetration_indicator': {'UI_colors': {'green': '#60CB00',
                                     'orange': '#FF9900',
                                     'purple': '#6F6CD3',
                                     'red': '#ED070A',
                                     'yellow': '#FFC900'},
-                      'UI_description': 'ArmorCalculator',
+                      'UI_description': 'ตัวบ่งชี้การเจาะเกราะ',
                       'UI_noDamage': 'โจมตีคริติคอล ไม่มีความเสียหาย',
                       'UI_ricochet': 'แฉลบ',
                       'UI_setting_displayOnAllies_text': 'แสดงผลบนพันธมิตร',
                       'UI_setting_displayOnAllies_tooltip': ''},
- 'arty_splash': {'UI_artySplash_messageDotOff': 'HE Splash: ซ่อนจุด',
+ 'artillery_blast_radius': {'UI_artySplash_messageDotOff': 'HE Splash: ซ่อนจุด',
                  'UI_artySplash_messageDotOn': 'HE Splash: แสดงจุด',
                  'UI_artySplash_messageSplashOff': 'HE Splash: ซ่อน Splash',
                  'UI_artySplash_messageSplashOn': 'HE Splash: แสดงสแปลช',
                  'UI_artySplash_name': 'เขาสาด',
-                 'UI_description': 'ArtySplash',
+                 'UI_description': 'รัศมีระเบิดปืนใหญ่',
                  'UI_setting_buttonShowDot_text': 'ปุ่ม: แสดง|ซ่อนจุด',
                  'UI_setting_buttonShowDot_tooltip': '',
                  'UI_setting_buttonShowSplash_text': 'ปุ่ม: แสดง | ซ่อน Splash',
@@ -103,17 +103,17 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_setting_showModeSniper_tooltip': '',
                  'UI_setting_showSplashOnDefault_text': 'แสดง Splash ตามค่าเริ่มต้น',
                  'UI_setting_showSplashOnDefault_tooltip': ''},
- 'auto_aim_optimize': {'UI_description': 'AutoAimOptimize',
+ 'autoaim_target_indicator': {'UI_description': 'ตัวบ่งชี้เป้าหมายเล็งอัตโนมัติ',
                        'UI_setting_angle_text': 'ตั้งมุมเพื่อจับเป้าหมาย',
                        'UI_setting_angle_value': 'x',
                        'UI_setting_catchHiddenTarget_text': 'จับเป้าหมายที่ซ่อนอยู่หลังสิ่งกีดขวาง',
                        'UI_setting_catchHiddenTarget_tooltip': '',
                        'UI_setting_disableArtyMode_text': 'ปิดการใช้งานในโหมด Arty',
                        'UI_setting_disableArtyMode_tooltip': ''},
- 'auto_claim_clan': {'UI_description': 'AutoClaimClan',
+ 'clan_reward_collection': {'UI_description': 'รับรางวัลกองทัพ',
                      'UI_setting_enabled_text': 'เปิดใช้งานแล้ว',
                      'UI_setting_enabled_tooltip': 'เปิด/ปิดการใช้งานม็อด'},
- 'banks_loader': {'UI_description': 'BanksLoader',
+ 'sound_bank_loader': {'UI_description': 'โหลดชุดเสียง',
                   'UI_restart_button_close': 'ดำเนินการต่อ',
                   'UI_restart_button_restart': 'รีสตาร์ท',
                   'UI_restart_button_shutdown': 'ปิดเครื่อง',
@@ -135,7 +135,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                      'สิ่งนี้จะ <b>ไม่</b> จำเป็นในภายหลัง.\n'
                                      'คุณต้องการรีสตาร์ทเกมทันทีหรือไม่?',
                   'UI_restart_wotmod': '• กำหนดค่า <b>removed</b> จากแพ็คเกจ:'},
- 'battle_efficiency': {'UI_description': 'BattleEfficiency',
+ 'battle_performance': {'UI_description': 'ผลงานการรบ',
                        'UI_setting_battleResultsFormat_text': 'การปรับเปลี่ยนหน้าต่างผลการรบ',
                        'UI_setting_battleResultsFormat_tooltip': 'มาโครที่ใช้ได้:\n'
                                                                  "WN8:'{wn8}', สี: '{c:wn8}'\n"
@@ -165,7 +165,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                     "XTE:'{xte}', สี:'{c:x}'",
                        'UI_setting_textLock_text': 'ล็อคข้อความ',
                        'UI_setting_textLock_tooltip': 'ลากข้อความในการต่อสู้'},
- 'battle_options': {'UI_description': 'BattleOptions',
+ 'battle_preferences': {'UI_setting_removeFog_text': 'Remove fog',
+                      'UI_setting_removeFog_tooltip': 'Generates a separate package from this installation’s maps. Installation or removal happens after closing the game. Requires a restart. Disabling this module also removes the package.',
+                      'UI_fog_restart_on': 'Fog removal scheduled. Close and reopen the game to apply.',
+                      'UI_fog_restart_off': 'Fog package removal scheduled. Close and reopen the game to restore fog.',
+                      'UI_fog_error': 'Could not apply fog removal. Check game.log and try again in Battle preferences.',
+                      'UI_description': 'ตัวเลือกการรบ',
                     'UI_setting_addEnemyName_text': 'เพิ่มชื่อศัตรู',
                     'UI_setting_addEnemyName_tooltip': 'เพิ่มชื่อยานพาหนะศัตรูลงในบันทึกความเสียหาย',
                     'UI_setting_clipLoad_text': 'สถานะโหลดซ้ำ',
@@ -208,16 +213,84 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                     'UI_setting_showPostmortemDogTag_tooltip': 'ปิดการใช้งานแผงป๊อปอัปที่มีแท็กสุนัข',
                     'UI_setting_stunSound_text': 'เสียงสตัน',
                     'UI_setting_stunSound_tooltip': 'ปิดการใช้งานเอฟเฟกต์เสียงสตัน'},
- 'battle_stat': {'UI_description': 'BattleStat',
+ 'battle_statistics': {'UI_description': 'สถิติการรบ',
                  'UI_setting_colorRating_text': 'ตารางสี',
                  'UI_setting_colorRating_tooltip': 'ระดับสีสำหรับสถิติ',
                  'UI_setting_format_text': 'รูปแบบข้อความ',
                  'UI_setting_format_tooltip': 'กำหนดรูปแบบของข้อความ',
                  'UI_setting_teamChances_text': 'แสดงโอกาสของทีม',
                  'UI_setting_teamChances_tooltip': 'แสดงเปอร์เซ็นต์โอกาสในการชนะของแต่ละทีมระหว่างการต่อสู้'},
- 'carousel_stats': {'UI_description': 'CarouselStats',
-                    'UI_setting_colorRating_text': 'ตารางสี',
-                    'UI_setting_showIcons_text': 'แสดงไอคอน'},
+ 'vehicle_carousel': {
+ 'UI_carousel_params': 'Vehicle parameters',
+ 'UI_carousel_bonus': 'Experience bonus',
+ 'UI_carousel_filterFavorite': 'Favourite vehicles',
+'UI_description': 'รายการพาหนะ',
+ 'UI_setting_colorRating_text': 'ตารางสี',
+ 'UI_setting_showIcons_text': 'แสดงไอคอน',
+ 'UI_carousel_layout': 'Layout',
+ 'UI_carousel_rows': 'Rows (0 = game default)',
+ 'UI_carousel_auto': 'Automatic',
+ 'UI_carousel_normal': 'Standard layout',
+ 'UI_carousel_small': 'Compact layout',
+ 'UI_carousel_backgroundAlpha': 'Background opacity',
+ 'UI_carousel_slotBackgroundAlpha': 'Slot background opacity',
+ 'UI_carousel_slotBorderAlpha': 'Slot border opacity',
+ 'UI_carousel_slotSelectedBorderAlpha': 'Selected slot border opacity',
+ 'UI_carousel_edgeFadeAlpha': 'Edge fade opacity',
+ 'UI_carousel_scrollingSpeed': 'Scrolling speed',
+ 'UI_carousel_hideBuyTank': 'Hide vehicle purchase slot',
+ 'UI_carousel_hideBuySlot': 'Hide garage slot purchase',
+ 'UI_carousel_hideRestoreTank': 'Hide vehicle recovery slot',
+ 'UI_carousel_showTotalSlots': 'Show total garage slots',
+ 'UI_carousel_showUsedSlots': 'Show occupied garage slots',
+ 'UI_carousel_enableLockBackground': 'Show unavailable vehicle background',
+ 'UI_carousel_suppressCarouselTooltips': 'Hide carousel tooltips',
+ 'UI_carousel_filter': 'Filter',
+ 'UI_carousel_filterSpacing': 'Filter spacing',
+ 'UI_carousel_horizontal': 'Horizontal',
+ 'UI_carousel_vertical': 'Vertical',
+ 'UI_carousel_sortingCriteria': 'Sorting (comma-separated; - = descending)',
+ 'UI_carousel_nationsOrder': 'Nation order (comma-separated)',
+ 'UI_carousel_typesOrder': 'Vehicle type order (comma-separated)',
+ 'UI_carousel_width': 'Width',
+ 'UI_carousel_height': 'Height',
+ 'UI_carousel_gap': 'Spacing between slots',
+ 'UI_carousel_show': 'Show',
+ 'UI_carousel_flag': 'National flag',
+ 'UI_carousel_tankIcon': 'Vehicle image',
+ 'UI_carousel_tankType': 'Vehicle type',
+ 'UI_carousel_level': 'Vehicle tier',
+ 'UI_carousel_xp': 'Experience',
+ 'UI_carousel_tankName': 'Vehicle name',
+ 'UI_carousel_info': 'Additional information',
+ 'UI_carousel_favorite': 'Favourite indicator',
+ 'UI_carousel_progressionPoints': 'Progression points',
+ 'UI_carousel_dx': 'Horizontal offset',
+ 'UI_carousel_dy': 'Vertical offset',
+ 'UI_carousel_alpha': 'Opacity',
+ 'UI_carousel_scale': 'Scale',
+ 'UI_carousel_extraField': 'Custom field',
+ 'UI_carousel_enabled': 'Enabled',
+ 'UI_carousel_format': 'Text template',
+ 'UI_carousel_color': 'Text color',
+ 'UI_carousel_bgColor': 'Background color',
+ 'UI_carousel_src': 'Image resource path',
+ 'UI_carousel_x': 'Horizontal position',
+ 'UI_carousel_y': 'Vertical position',
+ 'UI_carousel_fontSize': 'Font size',
+ 'UI_carousel_iconSize': 'Icon size',
+ 'UI_carousel_align': 'Alignment',
+ 'UI_carousel_layer': 'Display layer',
+ 'UI_carousel_left': 'Left',
+ 'UI_carousel_center': 'Center',
+ 'UI_carousel_right': 'Right',
+ 'UI_carousel_background': 'Background',
+ 'UI_carousel_foreground': 'Foreground',
+ 'UI_carousel_premium': 'Premium vehicles',
+ 'UI_carousel_elite': 'Elite vehicles',
+ 'UI_carousel_favoriteVehicle': 'Favourite vehicles',
+ 'UI_carousel_nation': 'Nation',
+ 'UI_carousel_vehicleType': 'Vehicle type'},
  'common': {'UI_native_close': 'ปิด',
             'UI_mog_lockPosition': 'Lock panel position',
  'UI_mog_enableBattle': u'Enable battle panel',
@@ -263,7 +336,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
             'UI_native_press': 'กดปุ่ม (Esc เพื่อยกเลิก)',
             'UI_native_save': 'บันทึกและนำไปใช้',
             'UI_native_saved': 'บันทึกการตั้งค่าแล้ว'},
- 'crew_settings': {'UI_description': 'การกำหนดค่าลูกเรือ',
+ 'crew_management': {'UI_description': 'จัดการพลรถ',
                    'UI_message_crewNotAvailable': 'ลูกเรือไม่สามารถส่งคืนได้',
                    'UI_message_crewReturned': 'ลูกเรือได้กลับคืนสู่รถแล้ว',
                    'UI_setting_autoReturnDelay_text': 'ความล่าช้าในการกลับอัตโนมัติ (วินาที)',
@@ -276,7 +349,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_excludePremiumVehicles_tooltip': 'อย่าคืนลูกเรืออัตโนมัติสำหรับพาหนะพรีเมี่ยม',
                    'UI_setting_showNotifications_text': 'แสดงการแจ้งเตือน',
                    'UI_setting_showNotifications_tooltip': 'แสดงการแจ้งเตือนของระบบเมื่อลูกเรือถูกส่งคืน'},
- 'dispersion_circle': {'UI_description': 'Reticle',
+ 'aiming_reticles': {'UI_description': 'วงเล็ง',
                        'UI_setting_gunMarkerMinimumSize_text': 'ขนาดขั้นต่ำของเครื่องหมายปืน',
                        'UI_setting_gunMarkerMinimumSize_tooltip': 'ขนาดขั้นต่ำของเครื่องหมายปืนเป็นพิกเซล',
                        'UI_setting_percentCorrection_text': 'การแก้ไขขนาดเรติเคิล',
@@ -295,7 +368,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                        'UI_setting_showServerSpgStrategicReticle_text': 'เส้นเล็งเชิงกลยุทธ์ SPG',
                        'UI_setting_showServerSpgStrategicReticle_tooltip': 'เปิดใช้งานเส้นเล็งเซิร์ฟเวอร์สำหรับโหมดกลยุทธ์ '
                                                                            'SPG'},
- 'dispersion_timer': {'UI_description': 'DispersionTimer',
+ 'aiming_countdown': {'UI_description': 'เวลาเล็ง',
                       'UI_setting_blue_text': "<font color='#%(blue)s'>สีปัจจุบัน: #%(blue)s</font>",
                       'UI_setting_blue_tooltip': '',
                       'UI_setting_colorBlue_text': 'เลือกสีสำหรับตัวจับเวลาการกระจายตัวได้ดีมาก:',
@@ -320,7 +393,8 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                       'UI_setting_y_tooltip': '',
                       'UI_setting_yellow_text': "<font color='#%(yellow)s'>สีปัจจุบัน: #%(yellow)s</font>",
                       'UI_setting_yellow_tooltip': ''},
- 'distance_marker': {'UI_setting_anchorHorizontalOffset_text': 'ออฟเซ็ตแนวนอน',
+ 'target_distance': {'UI_description': 'ระยะเป้าหมาย',
+                    'UI_setting_anchorHorizontalOffset_text': 'ออฟเซ็ตแนวนอน',
                      'UI_setting_anchorHorizontalOffset_tooltip': 'ปรับตำแหน่งแนวนอนของมาร์กเกอร์',
                      'UI_setting_anchorPosition_tankBottom': 'ก้นถัง',
                      'UI_setting_anchorPosition_tankCenter': 'ศูนย์ถัง',
@@ -355,7 +429,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                 'UI_profile_copy': 'สร้างสำเนาของโปรไฟล์ที่ใช้งานอยู่ (ไม่บังคับ)',
                 'UI_profile_restart': 'รีสตาร์ทเกมเพื่อใช้โปรไฟล์อื่น',
                 'UI_profile_select': 'โปรไฟล์สำหรับการเริ่มเกมครั้งต่อไป'},
- 'flight_timer': {'UI_description': 'FlightTimer',
+ 'shell_flight_time': {'UI_description': 'เวลาบินของกระสุน',
                   'UI_setting_spgOnly_text': 'เพียงเพื่อ SPG?',
                   'UI_setting_spgOnly_tooltip': 'หากทำเครื่องหมาย จากนั้นตัวจับเวลาจะมองเห็นได้เฉพาะสำหรับ '
                                                 'SPG เท่านั้น',
@@ -365,12 +439,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                   'UI_setting_x_tooltip': '',
                   'UI_setting_y_text': 'ตำแหน่ง Y',
                   'UI_setting_y_tooltip': ''},
- 'hangar_options': {'UI_clock_analog': 'อนาล็อก',
+ 'hangar_preferences': {'UI_clock_analog': 'อนาล็อก',
                     'UI_clock_digital': 'ดิจิตอล',
                     'UI_clock_flip': 'พลิก',
                     'UI_clock_minimal': 'น้อยที่สุด',
                     'UI_clock_panel': 'แดชบอร์ด',
-                    'UI_description': 'HangarOptions',
+                    'UI_description': 'ตัวเลือกโรงรถ',
                     'UI_setting_allowChannelButtonBlinking_text': 'อนุญาตให้ปุ่มช่องกะพริบ',
                     'UI_setting_allowChannelButtonBlinking_tooltip': 'อนุญาตให้ปุ่มช่องแถบข้อความ '
                                                                      '(กลุ่มหรือแชทส่วนตัว) กะพริบ',
@@ -448,8 +522,8 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                     'UI_setting_showWotPlusButton_text': 'แสดงปุ่ม WoT Plus',
                     'UI_setting_showXpToUnlockVeh_text': 'ข้อกำหนด XP ยานพาหนะ',
                     'UI_setting_showXpToUnlockVeh_tooltip': 'แสดง XP ที่จำเป็นเพื่อปลดล็อคยานพาหนะ'},
- 'info_panel': {'UI_delay_format': 'วินาที',
-                'UI_description': 'InfoPanel',
+ 'target_information': {'UI_delay_format': 'วินาที',
+                'UI_description': 'ข้อมูลเป้าหมาย',
                 'UI_setting_aliveOnly_text': 'มีชีวิตอยู่เท่านั้น',
                 'UI_setting_aliveOnly_tooltip': 'แสดงเฉพาะผู้เล่นที่ยังมีชีวิตอยู่เท่านั้น',
                 'UI_setting_altKey_text': 'Alt สำคัญ',
@@ -483,215 +557,200 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                 'armor_piercing_he': 'เฮช',
                 'high_explosive': 'เขา',
                 'hollow_charge': 'ความร้อน'},
- 'logs_swapper': {'UI_description': 'LogsSwapper',
-                  'UI_setting_logSwapper_text': 'เปิดใช้งานบันทึกย้อนกลับ',
-                  'UI_setting_logSwapper_tooltip': 'กลับตำแหน่งของบันทึกความเสียหายในส่วนต่อประสานการรบ',
-                  'UI_setting_wgLogHideAssist_text': 'WG Log ซ่อน Assist',
-                  'UI_setting_wgLogHideAssist_tooltip': 'ซ่อนข้อความช่วยเหลือความเสียหายในบันทึกการรบ WG '
-                                                        'มาตรฐาน',
-                  'UI_setting_wgLogHideBlock_text': 'บล็อกซ่อนบันทึก WG',
-                  'UI_setting_wgLogHideBlock_tooltip': 'ซ่อนข้อความความเสียหายที่ถูกบล็อคไว้ในบันทึกการรบ WG '
-                                                       'มาตรฐาน',
-                  'UI_setting_wgLogHideCritics_text': 'WG Log ซ่อนคำวิจารณ์',
-                  'UI_setting_wgLogHideCritics_tooltip': 'ซ่อนข้อความการโจมตีคริติคอลในบันทึกการต่อสู้ WG '
-                                                         'มาตรฐาน'},
- 'main_gun': {'UI_description': 'MainGun',
+ 'game_log_manager': {'UI_description': 'บันทึกความเสียหายในการรบ',
+ 'UI_setting_logSwapper_text': 'เปิดใช้งานบันทึกย้อนกลับ',
+ 'UI_setting_logSwapper_tooltip': 'กลับตำแหน่งของบันทึกความเสียหายในส่วนต่อประสานการรบ',
+ 'UI_setting_wgLogHideAssist_text': 'WG Log ซ่อน Assist',
+ 'UI_setting_wgLogHideAssist_tooltip': 'ซ่อนข้อความช่วยเหลือความเสียหายในบันทึกการรบ WG มาตรฐาน',
+ 'UI_setting_wgLogHideBlock_text': 'บล็อกซ่อนบันทึก WG',
+ 'UI_setting_wgLogHideBlock_tooltip': 'ซ่อนข้อความความเสียหายที่ถูกบล็อคไว้ในบันทึกการรบ WG มาตรฐาน',
+ 'UI_setting_wgLogHideCritics_text': 'WG Log ซ่อนคำวิจารณ์',
+ 'UI_setting_wgLogHideCritics_tooltip': 'ซ่อนข้อความการโจมตีคริติคอลในบันทึกการต่อสู้ WG มาตรฐาน'},
+ 'high_caliber_progress': {'UI_description': 'ความคืบหน้าลำกล้องใหญ่',
               'UI_setting_backGroundEnabled_text': 'พื้นหลัง',
               'UI_setting_backGroundEnabled_tooltip': '',
               'UI_setting_textLock_text': 'ข้อความล็อค',
               'UI_setting_textLock_tooltip': ''},
- 'marks_on_gun_battle': {'NaN': '[<b>นาN</b>]',
-                         'UI_HangarStatsEnd': '{c_damageToMark65}, {c_damageToMark85}\n'
-                                              '{c_damageToMark95}, {c_damageToMark100}',
-                         'UI_HangarStatsStart': '<b>{currentPercent}<font size="14">[{currentDamage}]</font> '
-                                                '</b>',
-                         'UI_description': 'MarksOnGunBattle',
-                         'UI_marks_assist': 'ช่วยเหลือ',
-                         'UI_marks_combined': 'รวม',
-                         'UI_marks_compact': 'กะทัดรัด',
-                         'UI_marks_current': 'MoE ปัจจุบัน',
-                         'UI_marks_damage': 'ความเสียหาย',
-                         'UI_marks_detailed': 'รายละเอียด',
-                         'UI_marks_legacy': 'แบบดั้งเดิม (พรีเซ็ต 12 แบบ / รูปแบบกำหนดเอง)',
-                         'UI_marks_normal': 'ปกติ',
-                         'UI_menu_UIConfig': 'การกำหนดค่า',
-                         'UI_menu_UIMyp': '<font color="#D042F3">@Myp</font> ตัวเลือก [<font '
-                                          'color="#D042F3">twitch.tv/myp_</font>]',
-                         'UI_menu_UIReplay': 'สำหรับรีเพลย์',
-                         'UI_menu_UIReplayColor': 'สีสำหรับรีเพลย์',
-                         'UI_menu_UIReplayColorDamage': 'ระบายสีสำหรับรีเพลย์ที่มีความเสียหาย',
-                         'UI_menu_UIReplayDamage': 'สำหรับรีเพลย์ที่มีความเสียหาย',
-                         'UI_menu_UIcircon': '<font color="#02C9B3">@Circon</font> ตัวเลือก [<font '
-                                             'color="#02C9B3">twitch.tv/circon</font>]',
-                         'UI_menu_UIkorbenDallasNoMercy': '<font color="#e3256b">@KorbenDallasNoMercy</font> '
-                                                          'ตัวเลือก [<font '
-                                                          'color="#e3256b">youtube.com/c/KorbenDallasNoMercy</font>]',
-                         'UI_menu_UIoldskool': '<font color="#FFD700">@Oldskool</font> ตัวเลือก [<font '
-                                               'color="#FFD700">twitch.tv/oldskool</font>]',
-                         'UI_menu_UIskill4ltu': '<font color="#60FF00">@skill</font> ตัวเลือก [<font '
-                                                'color="#60FF00">twitch.tv/skill4ltu</font>]',
-                         'UI_menu_UIspoter': '<font color="#6595EE">@spoter</font> ตัวเลือก [<font '
-                                             'color="#6595EE">github.com/spoter</font>]',
-                         'UI_menu_UIspoterNew': 'ใหม่ <font color="#6595EE">@spoter</font> ตัวเลือก [<font '
-                                                'color="#6595EE">github.com/spoter</font>]',
-                         'UI_message': 'MoE เปลี่ยนภาพ %s',
-                         'UI_setting_UI_text': 'UI ในการต่อสู้',
-                         'UI_setting_UI_tooltip': 'UI ในการต่อสู้ ขยาย:\n'
-                                                  '<img src="img://objects/ui_extended.png"></img>\n'
-                                                  'ง่าย:\n'
-                                                  '<img src="img://objects/ui_simple.png"></img>\n'
-                                                  'Config:\n'
-                                                  '/mods/configs/Driftkings/MarksOnGunExtended/MarksOnGunExtended.json\n',
-                         'UI_setting_background_text': 'การต่อสู้: แสดงพื้นหลัง',
-                         'UI_setting_background_tooltip': '',
-                         'UI_setting_buttonReset_text': 'ปุ่ม: รีเซ็ตการตั้งค่า',
-                         'UI_setting_buttonReset_tooltip': '',
-                         'UI_setting_buttonShow_text': 'ปุ่ม: เปลี่ยนสไตล์',
-                         'UI_setting_buttonShow_tooltip': '',
-                         'UI_setting_buttonSizeDown_text': 'ปุ่ม: ขนาด -10%',
-                         'UI_setting_buttonSizeDown_tooltip': '',
-                         'UI_setting_buttonSizeUp_text': 'ปุ่ม: ขนาด +10%',
-                         'UI_setting_buttonSizeUp_tooltip': '',
-                         'UI_setting_colorRating_text': 'ตารางสี',
-                         'UI_setting_colorRating_tooltip': 'ระดับสีเพื่อเครื่องหมายแห่งความเป็นเลิศ',
-                         'UI_setting_displayMode_text': 'การนำเสนอ',
-                         'UI_setting_showDamage_text': 'แสดงความเสียหาย',
-                         'UI_setting_showDelta_text': 'แสดงเดลต้าโดยประมาณ',
-                         'UI_setting_showInBattleHalfPercents_text': 'การต่อสู้: แสดงความเสียหายถึง +0.5%',
-                         'UI_setting_showInBattleHalfPercents_tooltip': '',
-                         'UI_setting_showInBattle_text': 'การต่อสู้: สวัสดีข้อความ',
-                         'UI_setting_showInBattle_tooltip': '',
-                         'UI_setting_showInHangar_text': 'โรงเก็บเครื่องบิน: แสดง MoE mod',
-                         'UI_setting_showInHangar_tooltip': '',
-                         'UI_setting_showInReplay_text': 'เล่นซ้ำ: เปิดใช้งานแล้ว',
-                         'UI_setting_showInReplay_tooltip': 'ไม่ดีแต่มีประโยชน์สำหรับการทดสอบ',
-                         'UI_setting_showInStatistic_text': 'สถิติ: เปิดใช้งานแล้ว',
-                         'UI_setting_showInStatistic_tooltip': '',
-                         'UI_setting_showMarks_text': 'แสดงเครื่องหมาย',
-                         'UI_setting_showProgress_text': 'แสดงความคืบหน้า',
-                         'UI_setting_showTargets_text': 'แสดงเป้าหมาย',
-                         'UI_setting_techTreeMarkOfGunPercentSize_value': '',
-                         'UI_tooltips': '<font color="#FFFFFF" '
-                                        'size="12">{currentMovingAvgDamage}ความเสียหายเฉลี่ยเคลื่อนที่ในปัจจุบัน</font>\n'
-                                        '<font color="#FFFFFF" '
-                                        'size="12">{currentDamage}สรุปความเสียหายในปัจจุบัน</font>\n'
-                                        'ถึง<font color="#FFFFFF" '
-                                        'size="12">{nextPercent}%</font>ความต้องการ<font color="#FFFFFF" '
-                                        'size="12">{needDamage}</font>ความเสียหายเฉลี่ยเคลื่อนที่\n'
-                                        'สถิตินี้ใช้ได้สำหรับการรบครั้งสุดท้ายของพาหนะคันนี้\n'
-                                        'ถึง<font color="#FFFFFF" size="12">20%</font>ความต้องการ<font '
-                                        'color="{c20}" size="12">~{_20}</font>ความเสียหายเฉลี่ยเคลื่อนที่\n'
-                                        'ถึง<font color="#FFFFFF" size="12">40%</font>ความต้องการ<font '
-                                        'color="{c40}" size="12">~{_40}</font>ความเสียหายเฉลี่ยเคลื่อนที่\n'
-                                        'ถึง<font color="#FFFFFF" size="12">55%</font>ความต้องการ<font '
-                                        'color="{c55}" size="12">~{_55}</font>ความเสียหายเฉลี่ยเคลื่อนที่\n'
-                                        'ถึง<font color="#FFFFFF" size="12">65%</font>ความต้องการ<font '
-                                        'color="{c65}" size="12">~{_65}</font>ความเสียหายเฉลี่ยเคลื่อนที่\n'
-                                        'ถึง<font color="#FFFFFF" size="12">85%</font>ความต้องการ<font '
-                                        'color="{c85}" size="12">~{_85}</font>ความเสียหายเฉลี่ยเคลื่อนที่\n'
-                                        'ถึง<font color="#FFFFFF" size="12">95%</font>ความต้องการ<font '
-                                        'color="{c95}" size="12">~{_95}</font>ความเสียหายเฉลี่ยเคลื่อนที่\n'
-                                        'ถึง<font color="#FFFFFF" size="12">100%</font>ความต้องการ<font '
-                                        'color="{c100}" size="12">~{_100}</font>ความเสียหายเฉลี่ยเคลื่อนที่',
-                         'battleMessageSizeDown': 'ม็อด MoE: ขนาด<b>-10%</b>',
-                         'battleMessageSizeLimitMax': 'MoE mod: ถึงแล้ว<b>สูงสุด[1,000%]</b>',
-                         'battleMessageSizeLimitMin': 'MoE mod: ถึงแล้ว<b>ขั้นต่ำ[10%]</b>',
-                         'battleMessageSizeReset': 'MoE mod: รีเซ็ตการตั้งค่า</b>',
-                         'battleMessageSizeUp': 'ม็อด MoE: ขนาด<b>+10%</b>'},
- 'marks_on_gun_hangar': {'UI_description': 'MarksOnGunHangar',
-                         'UI_panel_achieved': 'สำเร็จแล้ว',
-                         'UI_panel_additionalGoal': 'เป้าหมายเพิ่มเติม',
-                         'UI_panel_automatic': 'อัตโนมัติ',
-                         'UI_panel_average': 'EMA รวม',
-                         'UI_panel_battles': 'การต่อสู้',
-                         'UI_panel_chooseVehicle': 'เลือกรถถัง',
-                         'UI_panel_drag': 'ลาก',
-                         'UI_panel_estimate': 'การประมาณการเป้าหมาย',
-                         'UI_panel_estimateNote': 'ประมาณการเท่านั้น '
-                                                  'ไม่ใช่ความเสียหายที่ต้องการในการรบครั้งต่อไป',
-                         'UI_panel_goal1': 'คะแนนที่ 1 (65%)',
-                         'UI_panel_goal2': 'อันดับที่ 2 (85%)',
-                         'UI_panel_goal3': 'อันดับที่ 3 (95%)',
-                         'UI_panel_header': 'เครื่องหมายแห่งความเป็นเลิศ',
-                         'UI_panel_historyWaiting': 'ประวัติ : รอการต่อสู้ครั้งต่อไป',
-                         'UI_panel_locked': 'ล็อคแล้ว',
-                         'UI_panel_mark': 'เครื่องหมาย',
-                         'UI_panel_mastery0': 'ไม่มีความเชี่ยวชาญ',
-                         'UI_panel_mastery1': 'ชั้น 3',
-                         'UI_panel_mastery2': 'ชั้น 2',
-                         'UI_panel_mastery3': 'ชั้น 1',
-                         'UI_panel_mastery4': 'เอซ แทงเกอร์',
-                         'UI_panel_noDossier': 'ไม่มีเอกสารเกี่ยวกับยานพาหนะ',
-                         'UI_panel_noStats': 'ไม่มีการโหลดสถิติ',
-                         'UI_panel_observedBattles': 'การต่อสู้ที่สังเกตได้',
-                         'UI_panel_remaining': 'เหลือ pp',
-                         'UI_panel_selectVehicle': 'เลือกยานพาหนะในโรงเก็บเครื่องบิน',
-                         'UI_panel_thirdAchieved': 'บรรลุเครื่องหมายที่ 3 แล้ว',
-                         'UI_panel_tierLimit': 'เครื่องหมายที่มีตั้งแต่ระดับ V',
-                         'UI_panel_trend': 'แนวโน้มที่สังเกตได้',
-                         'UI_panel_winRate': 'อัตราการชนะ',
-                         'UI_setting_colorRating_NoobMeter': 'นูบมิเตอร์',
-                         'UI_setting_colorRating_WotLabs': 'WotLabs',
-                         'UI_setting_colorRating_XVM': 'XVM',
-                         'UI_setting_colorRating_text': 'เลือกระดับสี',
-                         'UI_setting_colorRating_tooltip': 'เลือกโทนสีสำหรับ MoE, WN8 และ winrate',
-                         'UI_setting_compactMode_text': 'แผงขนาดกะทัดรัด',
-                         'UI_setting_compactMode_tooltip': 'ซ่อนสถิติยานพาหนะรอง',
-                         'UI_setting_goalSelection_text': 'ทำเครื่องหมายวัตถุประสงค์',
-                         'UI_setting_goalSelection_tooltip': 'อัตโนมัติเลือกเครื่องหมายที่ไม่ได้รับถัดไป '
-                                                             'ความเสียหายเป็นเพียงการประมาณการตามสัดส่วน '
-                                                             'ไม่ใช่เกณฑ์ของเซิร์ฟเวอร์หรือการทำนายการรบครั้งถัดไป',
-                         'UI_setting_historyBattles_text': 'การต่อสู้ล่าสุดในประวัติศาสตร์',
-                         'UI_setting_historyBattles_tooltip': 'การอัปเดตอาจจัดกลุ่มการรบหลายครั้ง '
-                                                              'ประวัติจะเริ่มต้นเมื่อมีการติดตั้งเวอร์ชันนี้',
-                         'UI_setting_positionX_text': 'ตำแหน่งแนวนอน (X)',
-                         'UI_setting_positionX_tooltip': 'เล็กกว่า: ซ้าย ใหญ่กว่า: ขวา.',
-                         'UI_setting_positionY_text': 'ตำแหน่งแนวตั้ง (Y)',
-                         'UI_setting_positionY_tooltip': 'เล็กกว่า: ขึ้น ใหญ่ขึ้น: ลง',
-                         'UI_setting_showInHangar_text': 'โรงเก็บเครื่องบิน: เปิดใช้งานแล้ว',
-                         'UI_setting_showInHangar_tooltip': '',
-                         'UI_setting_showInStatistic_text': 'เคล็ดลับเครื่องมือ: เปิดใช้งานแล้ว',
-                         'UI_setting_showInStatistic_tooltip': '',
-                         'UI_setting_showTooltipTargets_text': 'เคล็ดลับเครื่องมือ: แสดงระดับเป้าหมาย',
-                         'UI_setting_showTooltipTargets_tooltip': '',
-                         'UI_setting_textLock_text': 'โรงเก็บเครื่องบิน: ตำแหน่งแผงล็อค',
-                         'UI_setting_textLock_tooltip': '',
-                         'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} '
-                                        'ความเสียหายเฉลี่ยเคลื่อนที่ในปัจจุบัน</font>\n'
-                                        '<font color="#FFFFFF" size="12">{currentDamage} '
-                                        'สรุปความเสียหายในปัจจุบัน</font>\n'
-                                        'ถึง <font color="#FFFFFF" size="12">{nextPercent}% </font> '
-                                        'ความต้องการ <font color="#FFFFFF" size="12">{needDamage}</font> '
-                                        'ความเสียหายเฉลี่ยเคลื่อนที่\n'
-                                        '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
-                                        'color="#FFFFFF" size="12">WN8: {wn8}</font>   <font color="#FFFFFF" '
-                                        'size="12">วิทยานิพนธ์: {winRate}</font>',
-                         'UI_tooltipsFull': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} '
-                                            'ความเสียหายเฉลี่ยเคลื่อนที่ในปัจจุบัน</font>\n'
-                                            '<font color="#FFFFFF" size="12">{currentDamage} '
-                                            'สรุปความเสียหายในปัจจุบัน</font>\n'
-                                            'ถึง <font color="#FFFFFF" size="12">{nextPercent}% </font> '
-                                            'ความต้องการ <font color="#FFFFFF" size="12">{needDamage}</font> '
-                                            'ความเสียหายเฉลี่ยเคลื่อนที่\n'
-                                            '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
-                                            'color="#FFFFFF" size="12">WN8: {wn8}</font>   <font '
-                                            'color="#FFFFFF" size="12">วิทยานิพนธ์: {winRate}</font>\n'
-                                            'สถิตินี้ดูได้จากการรบครั้งสุดท้ายของพาหนะคันนี้\n'
-                                            'ถึง <font color="#FFFFFF" size="12">20% </font> ความต้องการ '
-                                            '<font color="#FF6347" size="12">~{_20}</font>\n'
-                                            'ถึง <font color="#FFFFFF" size="12">40% </font> ความต้องการ '
-                                            '<font color="#FE7903" size="12">~{_40}</font>\n'
-                                            'ถึง <font color="#FFFFFF" size="12">55% </font> ความต้องการ '
-                                            '<font color="#F8F400" size="12">~{_55}</font>\n'
-                                            'ถึง <font color="#FFFFFF" size="12">65% </font> ความต้องการ '
-                                            '<font color="#60FF00" size="12">~{_65}</font>\n'
-                                            'ถึง <font color="#FFFFFF" size="12">85% </font> ความต้องการ '
-                                            '<font color="#02C9B3" size="12">~{_85}</font>\n'
-                                            'ถึง <font color="#FFFFFF" size="12">95% </font> ความต้องการ '
-                                            '<font color="#D042F3" size="12">~{_95}</font>\n'
-                                            'ถึง <font color="#FFFFFF" size="12">100% </font> ความต้องการ '
-                                            '<font color="#D042F3" size="12">~{_100}</font>'},
- 'marks_on_gun_tech_tree': {'UI_description': 'MarksOnGunTechTree (Gameface)',
+ 'battle_marks_of_excellence': {'NaN': '[<b>นาN</b>]',
+ 'UI_HangarStatsEnd': '{c_damageToMark65}, {c_damageToMark85}\n{c_damageToMark95}, {c_damageToMark100}',
+ 'UI_HangarStatsStart': '<b>{currentPercent}<font size="14">[{currentDamage}]</font> </b>',
+ 'UI_description': 'เครื่องหมายความเป็นเลิศในการรบ',
+ 'UI_marks_assist': 'ช่วยเหลือ',
+ 'UI_marks_combined': 'รวม',
+ 'UI_marks_compact': 'กะทัดรัด',
+ 'UI_marks_current': 'MoE ปัจจุบัน',
+ 'UI_marks_damage': 'ความเสียหาย',
+ 'UI_marks_detailed': 'รายละเอียด',
+ 'UI_marks_legacy': 'แบบดั้งเดิม (พรีเซ็ต 12 แบบ / รูปแบบกำหนดเอง)',
+ 'UI_marks_normal': 'ปกติ',
+ 'UI_menu_UIConfig': 'การกำหนดค่า',
+ 'UI_menu_UIMyp': '<font color="#D042F3">@Myp</font> ตัวเลือก [<font color="#D042F3">twitch.tv/myp_</font>]',
+ 'UI_menu_UIReplay': 'สำหรับรีเพลย์',
+ 'UI_menu_UIReplayColor': 'สีสำหรับรีเพลย์',
+ 'UI_menu_UIReplayColorDamage': 'ระบายสีสำหรับรีเพลย์ที่มีความเสียหาย',
+ 'UI_menu_UIReplayDamage': 'สำหรับรีเพลย์ที่มีความเสียหาย',
+ 'UI_menu_UIcircon': '<font color="#02C9B3">@Circon</font> ตัวเลือก [<font '
+                     'color="#02C9B3">twitch.tv/circon</font>]',
+ 'UI_menu_UIkorbenDallasNoMercy': '<font color="#e3256b">@KorbenDallasNoMercy</font> ตัวเลือก [<font '
+                                  'color="#e3256b">youtube.com/c/KorbenDallasNoMercy</font>]',
+ 'UI_menu_UIoldskool': '<font color="#FFD700">@Oldskool</font> ตัวเลือก [<font '
+                       'color="#FFD700">twitch.tv/oldskool</font>]',
+ 'UI_menu_UIskill4ltu': '<font color="#60FF00">@skill</font> ตัวเลือก [<font '
+                        'color="#60FF00">twitch.tv/skill4ltu</font>]',
+ 'UI_menu_UIspoter': '<font color="#6595EE">@spoter</font> ตัวเลือก [<font '
+                     'color="#6595EE">github.com/spoter</font>]',
+ 'UI_menu_UIspoterNew': 'ใหม่ <font color="#6595EE">@spoter</font> ตัวเลือก [<font '
+                        'color="#6595EE">github.com/spoter</font>]',
+ 'UI_message': 'MoE เปลี่ยนภาพ %s',
+ 'UI_setting_UI_text': 'UI ในการต่อสู้',
+ 'UI_setting_UI_tooltip': 'UI ในการต่อสู้ ขยาย:\n'
+                          '<img src="img://objects/ui_extended.png"></img>\n'
+                          'ง่าย:\n'
+                          '<img src="img://objects/ui_simple.png"></img>\n'
+                          'Config:\n'
+                          '/mods/configs/Driftkings/MarksOnGunExtended/MarksOnGunExtended.json\n',
+ 'UI_setting_background_text': 'การต่อสู้: แสดงพื้นหลัง',
+ 'UI_setting_background_tooltip': 'Enable the panel background. Opacity is configured separately.',
+ 'UI_setting_buttonReset_text': 'ปุ่ม: รีเซ็ตการตั้งค่า',
+ 'UI_setting_buttonReset_tooltip': '',
+ 'UI_setting_buttonShow_text': 'ปุ่ม: เปลี่ยนสไตล์',
+ 'UI_setting_buttonShow_tooltip': '',
+ 'UI_setting_buttonSizeDown_text': 'ปุ่ม: ขนาด -10%',
+ 'UI_setting_buttonSizeDown_tooltip': '',
+ 'UI_setting_buttonSizeUp_text': 'ปุ่ม: ขนาด +10%',
+ 'UI_setting_buttonSizeUp_tooltip': '',
+ 'UI_setting_colorRating_text': 'ตารางสี',
+ 'UI_setting_colorRating_tooltip': 'ระดับสีเพื่อเครื่องหมายแห่งความเป็นเลิศ',
+ 'UI_setting_displayMode_text': 'การนำเสนอ',
+ 'UI_setting_showDamage_text': 'แสดงความเสียหาย',
+ 'UI_setting_showDelta_text': 'แสดงเดลต้าโดยประมาณ',
+ 'UI_setting_showInBattleHalfPercents_text': 'การต่อสู้: แสดงความเสียหายถึง +0.5%',
+ 'UI_setting_showInBattleHalfPercents_tooltip': '',
+ 'UI_setting_showInBattle_text': 'การต่อสู้: สวัสดีข้อความ',
+ 'UI_setting_showInBattle_tooltip': 'Show a message at battle start. This does not control panel visibility.',
+ 'UI_setting_showInHangar_text': 'โรงเก็บเครื่องบิน: แสดง MoE mod',
+ 'UI_setting_showInHangar_tooltip': '',
+ 'UI_setting_showInReplay_text': 'เล่นซ้ำ: เปิดใช้งานแล้ว',
+ 'UI_setting_showInReplay_tooltip': 'ไม่ดีแต่มีประโยชน์สำหรับการทดสอบ',
+ 'UI_setting_showInStatistic_text': 'สถิติ: เปิดใช้งานแล้ว',
+ 'UI_setting_showInStatistic_tooltip': '',
+ 'UI_setting_showMarks_text': 'แสดงเครื่องหมาย',
+ 'UI_setting_showProgress_text': 'แสดงความคืบหน้า',
+ 'UI_setting_showTargets_text': 'แสดงเป้าหมาย',
+ 'UI_setting_techTreeMarkOfGunPercentSize_value': '',
+ 'UI_tooltips': '<font color="#FFFFFF" '
+                'size="12">{currentMovingAvgDamage}ความเสียหายเฉลี่ยเคลื่อนที่ในปัจจุบัน</font>\n'
+                '<font color="#FFFFFF" size="12">{currentDamage}สรุปความเสียหายในปัจจุบัน</font>\n'
+                'ถึง<font color="#FFFFFF" size="12">{nextPercent}%</font>ความต้องการ<font color="#FFFFFF" '
+                'size="12">{needDamage}</font>ความเสียหายเฉลี่ยเคลื่อนที่\n'
+                'สถิตินี้ใช้ได้สำหรับการรบครั้งสุดท้ายของพาหนะคันนี้\n'
+                'ถึง<font color="#FFFFFF" size="12">20%</font>ความต้องการ<font color="{c20}" '
+                'size="12">~{_20}</font>ความเสียหายเฉลี่ยเคลื่อนที่\n'
+                'ถึง<font color="#FFFFFF" size="12">40%</font>ความต้องการ<font color="{c40}" '
+                'size="12">~{_40}</font>ความเสียหายเฉลี่ยเคลื่อนที่\n'
+                'ถึง<font color="#FFFFFF" size="12">55%</font>ความต้องการ<font color="{c55}" '
+                'size="12">~{_55}</font>ความเสียหายเฉลี่ยเคลื่อนที่\n'
+                'ถึง<font color="#FFFFFF" size="12">65%</font>ความต้องการ<font color="{c65}" '
+                'size="12">~{_65}</font>ความเสียหายเฉลี่ยเคลื่อนที่\n'
+                'ถึง<font color="#FFFFFF" size="12">85%</font>ความต้องการ<font color="{c85}" '
+                'size="12">~{_85}</font>ความเสียหายเฉลี่ยเคลื่อนที่\n'
+                'ถึง<font color="#FFFFFF" size="12">95%</font>ความต้องการ<font color="{c95}" '
+                'size="12">~{_95}</font>ความเสียหายเฉลี่ยเคลื่อนที่\n'
+                'ถึง<font color="#FFFFFF" size="12">100%</font>ความต้องการ<font color="{c100}" '
+                'size="12">~{_100}</font>ความเสียหายเฉลี่ยเคลื่อนที่',
+ 'battleMessageSizeDown': 'ม็อด MoE: ขนาด<b>-10%</b>',
+ 'battleMessageSizeLimitMax': 'MoE mod: ถึงแล้ว<b>สูงสุด[1,000%]</b>',
+ 'battleMessageSizeLimitMin': 'MoE mod: ถึงแล้ว<b>ขั้นต่ำ[10%]</b>',
+ 'battleMessageSizeReset': 'MoE mod: รีเซ็ตการตั้งค่า</b>',
+ 'battleMessageSizeUp': 'ม็อด MoE: ขนาด<b>+10%</b>'},
+ 'hangar_marks_of_excellence': {'UI_description': 'เครื่องหมายความเป็นเลิศในโรงรถ',
+ 'UI_panel_achieved': 'สำเร็จแล้ว',
+ 'UI_panel_additionalGoal': 'เป้าหมายเพิ่มเติม',
+ 'UI_panel_automatic': 'อัตโนมัติ',
+ 'UI_panel_average': 'EMA รวม',
+ 'UI_panel_battles': 'การต่อสู้',
+ 'UI_panel_chooseVehicle': 'เลือกรถถัง',
+ 'UI_panel_drag': 'ลาก',
+ 'UI_panel_estimate': 'การประมาณการเป้าหมาย',
+ 'UI_panel_estimateNote': 'ประมาณการเท่านั้น ไม่ใช่ความเสียหายที่ต้องการในการรบครั้งต่อไป',
+ 'UI_panel_goal1': 'คะแนนที่ 1 (65%)',
+ 'UI_panel_goal2': 'อันดับที่ 2 (85%)',
+ 'UI_panel_goal3': 'อันดับที่ 3 (95%)',
+ 'UI_panel_header': 'เครื่องหมายแห่งความเป็นเลิศ',
+ 'UI_panel_historyWaiting': 'ประวัติ : รอการต่อสู้ครั้งต่อไป',
+ 'UI_panel_locked': 'ล็อคแล้ว',
+ 'UI_panel_mark': 'เครื่องหมาย',
+ 'UI_panel_mastery0': 'ไม่มีความเชี่ยวชาญ',
+ 'UI_panel_mastery1': 'ชั้น 3',
+ 'UI_panel_mastery2': 'ชั้น 2',
+ 'UI_panel_mastery3': 'ชั้น 1',
+ 'UI_panel_mastery4': 'เอซ แทงเกอร์',
+ 'UI_panel_noDossier': 'ไม่มีเอกสารเกี่ยวกับยานพาหนะ',
+ 'UI_panel_noStats': 'ไม่มีการโหลดสถิติ',
+ 'UI_panel_observedBattles': 'การต่อสู้ที่สังเกตได้',
+ 'UI_panel_remaining': 'เหลือ pp',
+ 'UI_panel_selectVehicle': 'เลือกยานพาหนะในโรงเก็บเครื่องบิน',
+ 'UI_panel_thirdAchieved': 'บรรลุเครื่องหมายที่ 3 แล้ว',
+ 'UI_panel_tierLimit': 'เครื่องหมายที่มีตั้งแต่ระดับ V',
+ 'UI_panel_trend': 'แนวโน้มที่สังเกตได้',
+ 'UI_panel_winRate': 'อัตราการชนะ',
+ 'UI_setting_colorRating_NoobMeter': 'นูบมิเตอร์',
+ 'UI_setting_colorRating_WotLabs': 'WotLabs',
+ 'UI_setting_colorRating_XVM': 'XVM',
+ 'UI_setting_colorRating_text': 'เลือกระดับสี',
+ 'UI_setting_colorRating_tooltip': 'เลือกโทนสีสำหรับ MoE, WN8 และ winrate',
+ 'UI_setting_compactMode_text': 'แผงขนาดกะทัดรัด',
+ 'UI_setting_compactMode_tooltip': 'ซ่อนสถิติยานพาหนะรอง',
+ 'UI_setting_goalSelection_text': 'ทำเครื่องหมายวัตถุประสงค์',
+ 'UI_setting_goalSelection_tooltip': 'อัตโนมัติเลือกเครื่องหมายที่ไม่ได้รับถัดไป '
+                                     'ความเสียหายเป็นเพียงการประมาณการตามสัดส่วน '
+                                     'ไม่ใช่เกณฑ์ของเซิร์ฟเวอร์หรือการทำนายการรบครั้งถัดไป',
+ 'UI_setting_historyBattles_text': 'การต่อสู้ล่าสุดในประวัติศาสตร์',
+ 'UI_setting_historyBattles_tooltip': 'การอัปเดตอาจจัดกลุ่มการรบหลายครั้ง '
+                                      'ประวัติจะเริ่มต้นเมื่อมีการติดตั้งเวอร์ชันนี้',
+ 'UI_setting_positionX_text': 'ตำแหน่งแนวนอน (X)',
+ 'UI_setting_positionX_tooltip': 'เล็กกว่า: ซ้าย ใหญ่กว่า: ขวา.',
+ 'UI_setting_positionY_text': 'ตำแหน่งแนวตั้ง (Y)',
+ 'UI_setting_positionY_tooltip': 'เล็กกว่า: ขึ้น ใหญ่ขึ้น: ลง',
+ 'UI_setting_showInHangar_text': 'โรงเก็บเครื่องบิน: เปิดใช้งานแล้ว',
+ 'UI_setting_showInHangar_tooltip': '',
+ 'UI_setting_showInStatistic_text': 'เคล็ดลับเครื่องมือ: เปิดใช้งานแล้ว',
+ 'UI_setting_showInStatistic_tooltip': '',
+ 'UI_setting_showTooltipTargets_text': 'เคล็ดลับเครื่องมือ: แสดงระดับเป้าหมาย',
+ 'UI_setting_showTooltipTargets_tooltip': '',
+ 'UI_setting_textLock_text': 'โรงเก็บเครื่องบิน: ตำแหน่งแผงล็อค',
+ 'UI_setting_textLock_tooltip': 'Prevent header dragging. When unlocked, drag with the left mouse button; '
+                                'the position is saved.',
+ 'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} '
+                'ความเสียหายเฉลี่ยเคลื่อนที่ในปัจจุบัน</font>\n'
+                '<font color="#FFFFFF" size="12">{currentDamage} สรุปความเสียหายในปัจจุบัน</font>\n'
+                'ถึง <font color="#FFFFFF" size="12">{nextPercent}% </font> ความต้องการ <font '
+                'color="#FFFFFF" size="12">{needDamage}</font> ความเสียหายเฉลี่ยเคลื่อนที่\n'
+                '<font color="#FFFFFF" size="12">{mastery}</font>   <font color="#FFFFFF" size="12">WN8: '
+                '{wn8}</font>   <font color="#FFFFFF" size="12">วิทยานิพนธ์: {winRate}</font>',
+ 'UI_tooltipsFull': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} '
+                    'ความเสียหายเฉลี่ยเคลื่อนที่ในปัจจุบัน</font>\n'
+                    '<font color="#FFFFFF" size="12">{currentDamage} สรุปความเสียหายในปัจจุบัน</font>\n'
+                    'ถึง <font color="#FFFFFF" size="12">{nextPercent}% </font> ความต้องการ <font '
+                    'color="#FFFFFF" size="12">{needDamage}</font> ความเสียหายเฉลี่ยเคลื่อนที่\n'
+                    '<font color="#FFFFFF" size="12">{mastery}</font>   <font color="#FFFFFF" size="12">WN8: '
+                    '{wn8}</font>   <font color="#FFFFFF" size="12">วิทยานิพนธ์: {winRate}</font>\n'
+                    'สถิตินี้ดูได้จากการรบครั้งสุดท้ายของพาหนะคันนี้\n'
+                    'ถึง <font color="#FFFFFF" size="12">20% </font> ความต้องการ <font color="#FF6347" '
+                    'size="12">~{_20}</font>\n'
+                    'ถึง <font color="#FFFFFF" size="12">40% </font> ความต้องการ <font color="#FE7903" '
+                    'size="12">~{_40}</font>\n'
+                    'ถึง <font color="#FFFFFF" size="12">55% </font> ความต้องการ <font color="#F8F400" '
+                    'size="12">~{_55}</font>\n'
+                    'ถึง <font color="#FFFFFF" size="12">65% </font> ความต้องการ <font color="#60FF00" '
+                    'size="12">~{_65}</font>\n'
+                    'ถึง <font color="#FFFFFF" size="12">85% </font> ความต้องการ <font color="#02C9B3" '
+                    'size="12">~{_85}</font>\n'
+                    'ถึง <font color="#FFFFFF" size="12">95% </font> ความต้องการ <font color="#D042F3" '
+                    'size="12">~{_95}</font>\n'
+                    'ถึง <font color="#FFFFFF" size="12">100% </font> ความต้องการ <font color="#D042F3" '
+                    'size="12">~{_100}</font>'},
+ 'tech_tree_marks_of_excellence': {'UI_description': 'เครื่องหมายความเป็นเลิศในสายวิจัย',
                             'UI_setting_badgeOffsetX_text': 'ตำแหน่ง X (ซ้าย/ขวา)',
                             'UI_setting_badgeOffsetX_tooltip': 'เชิงลบ: ซ้าย แง่บวก: ถูกต้อง',
                             'UI_setting_badgeOffsetY_text': 'ตำแหน่ง Y (ขึ้น/ลง)',
@@ -707,7 +766,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_showInTechTreeMastery_tooltip': '',
                             'UI_setting_showInTechTree_text': 'TechTree: เปิดใช้งานแล้ว',
                             'UI_setting_showInTechTree_tooltip': ''},
- 'minimap_plugins': {'UI_description': 'MinimapPlugins',
+ 'minimap_enhancements': {'UI_description': 'ปรับปรุงแผนที่ย่อ',
                      'UI_field_alpha': 'ความทึบ',
                      'UI_field_mode': 'การมองเห็น',
                      'UI_minimapAim_0': 'เหลืองเดิม',
@@ -840,12 +899,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_zoomFactorMax_text': 'ปัจจัยการซูมสูงสุด',
                      'UI_setting_zoomFactorMax_tooltip': 'ระดับการซูมสูงสุดสำหรับแผนที่ย่อ (1.0-3.0)',
                      'UI_setting_zoomFactor_text': 'ระดับการซูม'},
- 'own_health': {'UI_description': 'OwnHealth',
+ 'vehicle_health': {'UI_description': 'พลังชีวิตพาหนะ',
                 'UI_setting_x_text': 'ตำแหน่ง X',
                 'UI_setting_x_tooltip': '',
                 'UI_setting_y_text': 'ตำแหน่ง Y',
                 'UI_setting_y_tooltip': ''},
- 'player_panel_pro': {'UI_description': 'PlayerPanelPro',
+ 'team_panels': {'UI_description': 'แผงทีมและการโหลดการรบ',
                       'UI_panel_alpha': 'ความทึบของพื้นหลังแผง',
                       'UI_panel_altMode': 'โหมดแผงควบคุมขณะกด ALT ค้างไว้',
                       'UI_panel_bindToIcon': 'ยึดกับไอคอนยานพาหนะ',
@@ -926,9 +985,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                       'UI_setting_toggleKey_text': 'สลับปุ่มลัด',
                       'UI_setting_toggleKey_tooltip': 'การกดปุ่มนี้ในการต่อสู้จะเป็นการสลับการแสดงเครื่องหมาย '
                                                       'HP'},
- 'repair_extended': {'UI_description': 'RepairExtended',
-                     'UI_setting_autoRepair_text': 'การใช้งานอัตโนมัติ',
-                     'UI_setting_autoRepair_tooltip': '',
+ 'repair_controls': {'UI_description': 'การควบคุมการซ่อม',
                      'UI_setting_buttonChassis_text': 'ปุ่ม: กู้คืนแชสซี',
                      'UI_setting_buttonChassis_tooltip': '',
                      'UI_setting_buttonRepair_text': 'ปุ่ม: การซ่อมแซมอัจฉริยะ',
@@ -943,62 +1000,19 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_repairDevices_tooltip': '',
                      'UI_setting_restoreChassis_text': 'คืนค่าแชสซี',
                      'UI_setting_restoreChassis_tooltip': '',
-                     'UI_setting_timerMax_format': 'วินาที',
-                     'UI_setting_timerMax_text': 'การใช้งานอัตโนมัติล่าช้าสูงสุด',
-                     'UI_setting_timerMin_format': 'วินาที',
-                     'UI_setting_timerMin_text': 'การใช้งานอัตโนมัติล่าช้าขั้นต่ำ',
                      'UI_setting_useGoldKits_text': 'ใช้ชุดทอง',
                      'UI_setting_useGoldKits_tooltip': ''},
- 'safe_shot': {'UI_battle_activateMessage': 'SafeShot: เปิดใช้งานแล้ว!',
-               'UI_description': 'SafeShot',
-               'UI_setting_activateMessage_text': 'เปิดใช้งานข้อความ',
-               'UI_setting_activateMessage_tooltip': 'แสดงข้อความแจ้งเตือนเมื่อเข้าสู่การต่อสู้',
-               'UI_setting_chatMessages_text': 'จัดรูปแบบข้อความ',
-               'UI_setting_chatMessages_tooltip': 'รูปแบบข้อความที่กำหนดเองเมื่อบล็อกการยิงของทีม ใช้ {name} '
-                                                  'และ {vehicle} เป็นตัวยึดตำแหน่ง',
-               'UI_setting_deadShotBlockTimeOut_text': 'หมดเวลาบล็อก Dead Shot',
-               'UI_setting_deadShotBlockTimeOut_tooltip': 'เวลาเป็นวินาทีในการบล็อกการยิงหลังจากยานพาหนะถูกทำลาย',
-               'UI_setting_deadShotBlock_text': 'บล็อกช็อตตาย',
-               'UI_setting_deadShotBlock_tooltip': 'ป้องกันการยิงใส่ยานพาหนะที่ถูกทำลายไปแล้ว',
-               'UI_setting_disableKey_text': 'ปิดการใช้งานคีย์',
-               'UI_setting_disableKey_tooltip': 'ปุ่มลัดเพื่อเปิด / ปิดการใช้งาน mod ชั่วคราว',
-               'UI_setting_teamKillerShotUnblock_text': 'ทีม Killer Shot เลิกบล็อก',
-               'UI_setting_teamKillerShotUnblock_tooltip': 'อนุญาตให้ยิงใส่ทีมนักฆ่า',
-               'UI_setting_teamShotBlock_text': 'บล็อกช็อตทีม',
-               'UI_setting_teamShotBlock_tooltip': 'ป้องกันการยิงใส่เพื่อนร่วมทีม',
-               'UI_setting_triggerMessage_text': 'ปิดการใช้งานข้อความ',
-               'UI_setting_triggerMessage_tooltip': 'แสดง/ซ่อนข้อความแจ้งเตือนเมื่อช็อตถูกบล็อก',
-               'UI_setting_wasteShotBlock_text': 'บล็อกช็อตเสีย',
-               'UI_setting_wasteShotBlock_tooltip': 'ป้องกันการยิงเมื่อไม่ได้เลือกเป้าหมาย',
-               'UI_triggerText_disabled': 'SafeShot: ปิดการใช้งาน!',
-               'UI_triggerText_enabled': 'SafeShot: เปิดใช้งานแล้ว!'},
- 'server_turret_extended': {'UI_battle_OFF': 'ปิด',
+ 'server_turret_sync': {'UI_battle_OFF': 'ปิด',
                             'UI_battle_ON': 'บน',
                             'UI_battle_activateMessage': "'Server Turret Extended': เปิดใช้งานแล้ว",
-                            'UI_description': 'ServerTurretExtended',
+                            'UI_description': 'ซิงค์ป้อมปืนกับเซิร์ฟเวอร์',
                             'UI_setting_activateMessage_text': 'แสดงข้อความเปิดใช้งาน',
                             'UI_setting_activateMessage_tooltip': 'แสดงข้อความเปิดใช้งานในการต่อสู้',
-                            'UI_setting_autoActivateWheelMode_text': 'ล้อ: โหมดความเร็วอัตโนมัติ',
-                            'UI_setting_autoActivateWheelMode_tooltip': 'เปิดโหมดความเร็วหรือการเคลื่อนที่โดยอัตโนมัติ',
-                            'UI_setting_buttonAutoMode_text': 'ปุ่ม: โหมดความเร็วล้ออัตโนมัติ',
-                            'UI_setting_buttonAutoMode_tooltip': '',
-                            'UI_setting_buttonMaxMode_text': 'ปุ่ม: ล้อจะรักษาความเร็วสูงสุด',
-                            'UI_setting_buttonMaxMode_tooltip': '',
-                            'UI_setting_fixAccuracyInMove_text': 'แก้ไขความแม่นยำ',
-                            'UI_setting_fixAccuracyInMove_tooltip': 'เมื่อคุณเคลื่อนที่รถถังแล้วหยุด '
-                                                                    'ใช้ความแม่นยำคงที่เพื่อไม่ให้สูญเสียการเล็ง',
-                            'UI_setting_fixWheelCruiseControl_text': 'แก้ไขระบบควบคุมความเร็วคงที่บนล้อ',
-                            'UI_setting_fixWheelCruiseControl_tooltip': 'เมื่อคุณเปิดใช้งานโหมดล้อด้วยระบบควบคุมความเร็วคงที่ '
-                                                                        'รถจะหยุด '
-                                                                        'การตั้งค่านี้จะปิดใช้งานสิ่งนั้น',
-                            'UI_setting_maxWheelMode_text': 'ล้อ: รักษาความเร็วสูงสุด',
-                            'UI_setting_maxWheelMode_tooltip': 'เมื่อถึงความเร็วสูงสุด '
-                                                               'จะไม่ปิดโหมดความเร็วเมื่อเคลื่อนที่',
                             'UI_setting_serverTurret_text': 'เซิร์ฟเวอร์ป้อมปืน',
                             'UI_setting_serverTurret_tooltip': 'ย้ายป้อมปืนไปยังพิกัด Server Aim '
                                                                '(ต้องเปิดใช้งาน Server Sight '
                                                                'ในการตั้งค่าเกม)'},
- 'sixth_sense': {'UI_description': 'SixthSense',
+ 'sixth_sense_alert': {'UI_description': 'การเตือนสัมผัสที่หก',
                  'UI_setting_defaultIconName_text': 'ชื่อไอคอนเริ่มต้น',
                  'UI_setting_defaultIconName_tooltip': 'เลือกรูปภาพที่ฝัง',
                  'UI_setting_defaultIcon_text': 'ไอคอนเริ่มต้น',
@@ -1046,7 +1060,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_sound_SixthSense_08': 'ซูเปอร์มาริโอ',
                  'UI_sound_SixthSense_09': 'กับดัก',
                  'UI_sound_SixthSense_10': 'X-Files'},
- 'spotted_extended_light': {'UI_description': 'SpottedExtendedLight',
+ 'enemy_spotting_status': {'UI_description': 'สถานะการตรวจพบศัตรู',
                             'UI_macros_help': 'ใช้มาโครเหล่านี้ในรูปแบบข้อความของคุณเพื่อปรับแต่งการแจ้งเตือน:\n'
                                               '• {icons} - แสดงไอคอนยานพาหนะ\n'
                                               '• {names} - แสดงชื่อผู้เล่น\n'
@@ -1116,7 +1130,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_sound_default': 'ค่าเริ่มต้น: เปิดใช้งาน',
                             'UI_setting_sound_text': 'เปิดใช้งานเสียงการต่อสู้',
                             'UI_setting_sound_tooltip': 'สลับการแจ้งเตือนด้วยเสียงสำหรับศัตรูที่ถูกพบและช่วยเหลือความเสียหาย'},
- 'zoom_extended': {'UI_description': 'ZoomExtended',
+ 'sniper_camera': {'UI_description': 'กล้องพลซุ่มยิง',
                    'UI_setting_zoomSteps_enabled_text': u'ระดับซูมที่กำหนดเอง',
                    'UI_setting_zoomSteps_steps_text': u'ระดับซูม (รายการ JSON)',
                    'UI_setting_zoomSteps_steps_tooltip': u'ใส่ตัวเลขที่ไม่ซ้ำกันอย่างน้อยสี่ค่าตั้งแต่ 2 ขึ้นไป เช่น [4, 6, 8, 12, 16, 25, 30] มีผลในการรบถัดไป',
@@ -1210,6 +1224,7 @@ PANEL = {'actionFailed': 'การดำเนินการล้มเหล
  'profileName': 'ชื่อโปรไฟล์',
  'profileRename': 'เปลี่ยนชื่อ',
  'profiles': 'โปรไฟล์',
+ 'resetOption': 'Reset this option to default',
  'reset': 'คืนค่าเริ่มต้น',
  'resetDone': 'คืนค่าเริ่มต้นแล้ว นำไปใช้ได้เลย',
  'resetTheme': 'รีเซ็ตธีม',

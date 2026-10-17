@@ -118,7 +118,7 @@ class Core(object):
         required = set(getattr(module, 'REQUIRES_SERVICES', ()))
         if self.runtime:
             required.update(('common', 'settings', 'lifecycle', 'keyboard', 'callbacks', 'battle_events'))
-            if name in ('battle.gun_marks', 'lobby.gun_marks'):
+            if name in ('battle.battle_marks_of_excellence', 'lobby.hangar_marks_of_excellence'):
                 required.add('dossiers')
             if module is not None:
                 if getattr(module, 'getBattleViews', None):

@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "VehicleHealth",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.vehicle_health",
+  "config_files": [
+    "default/vehicle_health.json"
+  ],
+  "assets": []
+}

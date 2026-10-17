@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "AimingCountdown",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.aiming_countdown",
+  "config_files": [
+    "default/aiming_countdown.json"
+  ],
+  "assets": []
+}

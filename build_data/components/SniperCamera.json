@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "SniperCamera",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.sniper_camera",
+  "config_files": [
+    "default/sniper_camera.json"
+  ],
+  "assets": []
+}

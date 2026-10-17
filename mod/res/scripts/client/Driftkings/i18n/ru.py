@@ -25,7 +25,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_save': 'Сохранить',
                      'UI_setting_server': 'Сервер:',
                      'UI_setting_showPassword': 'Показать пароль'},
- 'aiming_angles': {'UI_description': 'AimingAngles',
+ 'gun_traverse_limits': {'UI_description': 'Углы наведения орудия',
                    'UI_setting_horizontal_0': 'Отключено',
                    'UI_setting_horizontal_1': 'Углы',
                    'UI_setting_horizontal_2': 'Квадратные скобки',
@@ -67,7 +67,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                   "src='img://gui/AimingAngles/4/Bottom.png'>\t<img "
                                                   "src='img://gui/AimingAngles/5/Bottom.png'>\t<img "
                                                   "src='img://gui/AimingAngles/6/Bottom.png'>"},
- 'arcade_zoom': {'UI_description': 'ArcadeZoom',
+ 'third_person_zoom': {'UI_description': 'Масштаб внешней камеры',
                  'UI_setting_max_text': 'Максимальное уменьшение масштаба',
                  'UI_setting_max_tooltip': 'Максимальное расстояние камеры от автомобиля',
                  'UI_setting_min_text': 'Минимальное уменьшение масштаба',
@@ -77,22 +77,22 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                          'колесика мыши',
                  'UI_setting_startDeadDist_text': 'Стартовая мертвая дистанция',
                  'UI_setting_startDeadDist_tooltip': 'Начальное расстояние до камеры в режиме post-mortem'},
- 'armor_calculator': {'UI_colors': {'green': '#60CB00',
+ 'penetration_indicator': {'UI_colors': {'green': '#60CB00',
                                     'orange': '#FF9900',
                                     'purple': '#6F6CD3',
                                     'red': '#ED070A',
                                     'yellow': '#FFC900'},
-                      'UI_description': 'ArmorCalculator',
+                      'UI_description': 'Индикатор пробития',
                       'UI_noDamage': 'Критический удар, без урона.',
                       'UI_ricochet': 'Рикошет',
                       'UI_setting_displayOnAllies_text': 'Отображение на союзниках',
                       'UI_setting_displayOnAllies_tooltip': ''},
- 'arty_splash': {'UI_artySplash_messageDotOff': 'HE Splash: скрыть точку',
+ 'artillery_blast_radius': {'UI_artySplash_messageDotOff': 'HE Splash: скрыть точку',
                  'UI_artySplash_messageDotOn': 'HE Splash: Показать точку',
                  'UI_artySplash_messageSplashOff': 'HE Splash: скрыть всплеск',
                  'UI_artySplash_messageSplashOn': 'HE Splash: Показать всплеск',
                  'UI_artySplash_name': 'ОН Всплеск',
-                 'UI_description': 'ArtySplash',
+                 'UI_description': 'Радиус взрыва артиллерии',
                  'UI_setting_buttonShowDot_text': 'Кнопка: показать|скрыть точку',
                  'UI_setting_buttonShowDot_tooltip': '',
                  'UI_setting_buttonShowSplash_text': 'Кнопка: показать|скрыть заставку',
@@ -107,17 +107,17 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_setting_showModeSniper_tooltip': '',
                  'UI_setting_showSplashOnDefault_text': 'Показывать Splash по умолчанию',
                  'UI_setting_showSplashOnDefault_tooltip': ''},
- 'auto_aim_optimize': {'UI_description': 'AutoAimOptimize',
+ 'autoaim_target_indicator': {'UI_description': 'Индикатор цели автоприцела',
                        'UI_setting_angle_text': 'Установите угол, чтобы поймать цель',
                        'UI_setting_angle_value': 'x',
                        'UI_setting_catchHiddenTarget_text': 'Поймайте цель, спрятанную за препятствием',
                        'UI_setting_catchHiddenTarget_tooltip': '',
                        'UI_setting_disableArtyMode_text': 'Отключить в режиме Arty',
                        'UI_setting_disableArtyMode_tooltip': ''},
- 'auto_claim_clan': {'UI_description': 'AutoClaimClan',
+ 'clan_reward_collection': {'UI_description': 'Получение клановых наград',
                      'UI_setting_enabled_text': 'Включено',
                      'UI_setting_enabled_tooltip': 'Включить/отключить мод.'},
- 'banks_loader': {'UI_description': 'BanksLoader',
+ 'sound_bank_loader': {'UI_description': 'Загрузка звуковых банков',
                   'UI_restart_button_close': 'Продолжить',
                   'UI_restart_button_restart': 'Перезапустить',
                   'UI_restart_button_shutdown': 'Выключение',
@@ -139,7 +139,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                      'Это будет <b>нет</b> потребуются позже.\n'
                                      'Хотите перезапустить игру сейчас?',
                   'UI_restart_wotmod': ' • конфиги <b>удалено</b> из пакетов: '},
- 'battle_efficiency': {'UI_description': 'BattleEfficiency',
+ 'battle_performance': {'UI_description': 'Эффективность в бою',
                        'UI_setting_battleResultsFormat_text': 'Изменение окна результатов боя',
                        'UI_setting_battleResultsFormat_tooltip': 'Доступные макросы:\n'
                                                                  "ВН8:'{wn8}', Цвет: '{c:wn8}'\n"
@@ -169,7 +169,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                     "ХТЕ:'{xte}', Цвет:'{c:x}'",
                        'UI_setting_textLock_text': 'Блокировка текста',
                        'UI_setting_textLock_tooltip': 'Перетаскивание текста в бою'},
- 'battle_options': {'UI_description': 'BattleOptions',
+ 'battle_preferences': {'UI_setting_removeFog_text': 'Remove fog',
+                      'UI_setting_removeFog_tooltip': 'Generates a separate package from this installation’s maps. Installation or removal happens after closing the game. Requires a restart. Disabling this module also removes the package.',
+                      'UI_fog_restart_on': 'Fog removal scheduled. Close and reopen the game to apply.',
+                      'UI_fog_restart_off': 'Fog package removal scheduled. Close and reopen the game to restore fog.',
+                      'UI_fog_error': 'Could not apply fog removal. Check game.log and try again in Battle preferences.',
+                      'UI_description': 'Настройки боя',
                     'UI_setting_addEnemyName_text': 'Добавить имя врага',
                     'UI_setting_addEnemyName_tooltip': 'Добавляет название вражеской машины в журнал '
                                                        'повреждений.',
@@ -218,7 +223,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                     'UI_setting_showPostmortemDogTag_tooltip': 'Отключить всплывающую панель с жетоном.',
                     'UI_setting_stunSound_text': 'Оглушающий звук',
                     'UI_setting_stunSound_tooltip': 'Отключить звуковой эффект оглушения.'},
- 'battle_stat': {'UI_description': 'BattleStat',
+ 'battle_statistics': {'UI_description': 'Боевая статистика',
                  'UI_setting_colorRating_text': 'Таблица цветов',
                  'UI_setting_colorRating_tooltip': 'Цветовая шкала статистики.',
                  'UI_setting_format_text': 'Текстовый формат',
@@ -226,9 +231,77 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_setting_teamChances_text': 'Показать шансы команды',
                  'UI_setting_teamChances_tooltip': 'Отображает процент шансов на победу для каждой команды '
                                                    'во время боя.'},
- 'carousel_stats': {'UI_description': 'CarouselStats',
-                    'UI_setting_colorRating_text': 'Таблица цветов',
-                    'UI_setting_showIcons_text': 'Показывать значки'},
+ 'vehicle_carousel': {
+ 'UI_carousel_params': 'Vehicle parameters',
+ 'UI_carousel_bonus': 'Experience bonus',
+ 'UI_carousel_filterFavorite': 'Favourite vehicles',
+'UI_description': 'Карусель техники',
+ 'UI_setting_colorRating_text': 'Таблица цветов',
+ 'UI_setting_showIcons_text': 'Показывать значки',
+ 'UI_carousel_layout': 'Layout',
+ 'UI_carousel_rows': 'Rows (0 = game default)',
+ 'UI_carousel_auto': 'Automatic',
+ 'UI_carousel_normal': 'Standard layout',
+ 'UI_carousel_small': 'Compact layout',
+ 'UI_carousel_backgroundAlpha': 'Background opacity',
+ 'UI_carousel_slotBackgroundAlpha': 'Slot background opacity',
+ 'UI_carousel_slotBorderAlpha': 'Slot border opacity',
+ 'UI_carousel_slotSelectedBorderAlpha': 'Selected slot border opacity',
+ 'UI_carousel_edgeFadeAlpha': 'Edge fade opacity',
+ 'UI_carousel_scrollingSpeed': 'Scrolling speed',
+ 'UI_carousel_hideBuyTank': 'Hide vehicle purchase slot',
+ 'UI_carousel_hideBuySlot': 'Hide garage slot purchase',
+ 'UI_carousel_hideRestoreTank': 'Hide vehicle recovery slot',
+ 'UI_carousel_showTotalSlots': 'Show total garage slots',
+ 'UI_carousel_showUsedSlots': 'Show occupied garage slots',
+ 'UI_carousel_enableLockBackground': 'Show unavailable vehicle background',
+ 'UI_carousel_suppressCarouselTooltips': 'Hide carousel tooltips',
+ 'UI_carousel_filter': 'Filter',
+ 'UI_carousel_filterSpacing': 'Filter spacing',
+ 'UI_carousel_horizontal': 'Horizontal',
+ 'UI_carousel_vertical': 'Vertical',
+ 'UI_carousel_sortingCriteria': 'Sorting (comma-separated; - = descending)',
+ 'UI_carousel_nationsOrder': 'Nation order (comma-separated)',
+ 'UI_carousel_typesOrder': 'Vehicle type order (comma-separated)',
+ 'UI_carousel_width': 'Width',
+ 'UI_carousel_height': 'Height',
+ 'UI_carousel_gap': 'Spacing between slots',
+ 'UI_carousel_show': 'Show',
+ 'UI_carousel_flag': 'National flag',
+ 'UI_carousel_tankIcon': 'Vehicle image',
+ 'UI_carousel_tankType': 'Vehicle type',
+ 'UI_carousel_level': 'Vehicle tier',
+ 'UI_carousel_xp': 'Experience',
+ 'UI_carousel_tankName': 'Vehicle name',
+ 'UI_carousel_info': 'Additional information',
+ 'UI_carousel_favorite': 'Favourite indicator',
+ 'UI_carousel_progressionPoints': 'Progression points',
+ 'UI_carousel_dx': 'Horizontal offset',
+ 'UI_carousel_dy': 'Vertical offset',
+ 'UI_carousel_alpha': 'Opacity',
+ 'UI_carousel_scale': 'Scale',
+ 'UI_carousel_extraField': 'Custom field',
+ 'UI_carousel_enabled': 'Enabled',
+ 'UI_carousel_format': 'Text template',
+ 'UI_carousel_color': 'Text color',
+ 'UI_carousel_bgColor': 'Background color',
+ 'UI_carousel_src': 'Image resource path',
+ 'UI_carousel_x': 'Horizontal position',
+ 'UI_carousel_y': 'Vertical position',
+ 'UI_carousel_fontSize': 'Font size',
+ 'UI_carousel_iconSize': 'Icon size',
+ 'UI_carousel_align': 'Alignment',
+ 'UI_carousel_layer': 'Display layer',
+ 'UI_carousel_left': 'Left',
+ 'UI_carousel_center': 'Center',
+ 'UI_carousel_right': 'Right',
+ 'UI_carousel_background': 'Background',
+ 'UI_carousel_foreground': 'Foreground',
+ 'UI_carousel_premium': 'Premium vehicles',
+ 'UI_carousel_elite': 'Elite vehicles',
+ 'UI_carousel_favoriteVehicle': 'Favourite vehicles',
+ 'UI_carousel_nation': 'Nation',
+ 'UI_carousel_vehicleType': 'Vehicle type'},
  'common': {'UI_native_close': 'Закрыть',
             'UI_mog_lockPosition': 'Lock panel position',
  'UI_mog_enableBattle': u'Enable battle panel',
@@ -274,7 +347,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
             'UI_native_press': 'Нажмите клавишу...',
             'UI_native_save': 'Сохранить',
             'UI_native_saved': 'Настройки сохранены'},
- 'crew_settings': {'UI_description': 'Настройки экипажа',
+ 'crew_management': {'UI_description': 'Управление экипажем',
                    'UI_message_crewNotAvailable': 'Экипаж не доступен для возврата',
                    'UI_message_crewReturned': 'Экипаж возвращен в машину',
                    'UI_setting_autoReturnDelay_text': 'Задержка автоматического возврата (секунды)',
@@ -289,7 +362,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_showNotifications_text': 'Показать уведомления',
                    'UI_setting_showNotifications_tooltip': 'Показывать системные уведомления при возвращении '
                                                            'экипажа'},
- 'dispersion_circle': {'UI_description': 'Reticle',
+ 'aiming_reticles': {'UI_description': 'Круги сведения',
                        'UI_setting_gunMarkerMinimumSize_text': 'Минимальный размер маркера пистолета',
                        'UI_setting_gunMarkerMinimumSize_tooltip': 'Минимальный размер маркера оружия в '
                                                                   'пикселях',
@@ -315,7 +388,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                        'UI_setting_showServerSpgStrategicReticle_tooltip': 'Включить серверную прицельную '
                                                                            'марку для стратегического режима '
                                                                            'САУ.'},
- 'dispersion_timer': {'UI_description': 'DispersionTimer',
+ 'aiming_countdown': {'UI_description': 'Время сведения',
                       'UI_setting_blue_text': "<font color='#%(blue)s'>Текущий цвет: #%(blue)s</font>",
                       'UI_setting_blue_tooltip': '',
                       'UI_setting_colorBlue_text': 'Выберите Цвет для таймера дисперсии, очень хорошо:',
@@ -340,7 +413,8 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                       'UI_setting_y_tooltip': '',
                       'UI_setting_yellow_text': "<font color='#%(yellow)s'>Текущий цвет: #%(yellow)s</font>",
                       'UI_setting_yellow_tooltip': ''},
- 'distance_marker': {'UI_setting_anchorHorizontalOffset_text': 'Горизонтальное смещение',
+ 'target_distance': {'UI_description': 'Расстояние до цели',
+                    'UI_setting_anchorHorizontalOffset_text': 'Горизонтальное смещение',
                      'UI_setting_anchorHorizontalOffset_tooltip': 'Регулирует горизонтальное положение '
                                                                   'маркера',
                      'UI_setting_anchorPosition_tankBottom': 'Дно бака',
@@ -381,7 +455,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                 'UI_profile_copy': 'Создайте копию активного профиля (необязательно)',
                 'UI_profile_restart': 'Перезапустите игру, чтобы применить другой профиль.',
                 'UI_profile_select': 'Профиль для следующего старта игры'},
- 'flight_timer': {'UI_description': 'FlightTimer',
+ 'shell_flight_time': {'UI_description': 'Время полёта снаряда',
                   'UI_setting_spgOnly_text': 'Только для САУ?',
                   'UI_setting_spgOnly_tooltip': 'Если отмечено, то таймер будет виден только для САУ.',
                   'UI_setting_template_text': 'Шаблон',
@@ -390,12 +464,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                   'UI_setting_x_tooltip': '',
                   'UI_setting_y_text': 'Позиция Y',
                   'UI_setting_y_tooltip': ''},
- 'hangar_options': {'UI_clock_analog': 'Аналоговые',
+ 'hangar_preferences': {'UI_clock_analog': 'Аналоговые',
                     'UI_clock_digital': 'Цифровые',
                     'UI_clock_flip': 'Перекидные',
                     'UI_clock_minimal': 'Минимализм',
                     'UI_clock_panel': 'Панель',
-                    'UI_description': 'HangarOptions',
+                    'UI_description': 'Настройки ангара',
                     'UI_setting_allowChannelButtonBlinking_text': 'Разрешить мигание кнопки канала',
                     'UI_setting_allowChannelButtonBlinking_tooltip': 'Разрешить мигание кнопки канала панели '
                                                                      'мессенджера (клан или приватный чат).',
@@ -490,8 +564,8 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                     'UI_setting_showXpToUnlockVeh_text': 'Требования к опыту автомобиля',
                     'UI_setting_showXpToUnlockVeh_tooltip': 'Показать необходимый опыт для разблокировки '
                                                             'транспортных средств'},
- 'info_panel': {'UI_delay_format': ' сек.',
-                'UI_description': 'InfoPanel',
+ 'target_information': {'UI_delay_format': ' сек.',
+                'UI_description': 'Информация о цели',
                 'UI_setting_aliveOnly_text': 'Только живой',
                 'UI_setting_aliveOnly_tooltip': 'Показать только для живых игроков.',
                 'UI_setting_altKey_text': 'Альт. Ключ',
@@ -528,225 +602,202 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                 'armor_piercing_he': 'ХЭШ',
                 'high_explosive': 'ОН',
                 'hollow_charge': 'ТЕПЛО'},
- 'logs_swapper': {'UI_description': 'LogsSwapper',
-                  'UI_setting_logSwapper_text': 'Включить обратный журнал.',
-                  'UI_setting_logSwapper_tooltip': 'Меняет положение журнала повреждений в боевом '
-                                                   'интерфейсе.',
-                  'UI_setting_wgLogHideAssist_text': 'Помощник по скрытию журнала WG',
-                  'UI_setting_wgLogHideAssist_tooltip': 'Скрывает сообщения о нанесении урона в стандартном '
-                                                        'журнале боя WG.',
-                  'UI_setting_wgLogHideBlock_text': 'Блок сокрытия журнала WG',
-                  'UI_setting_wgLogHideBlock_tooltip': 'Скрывает сообщения о заблокированных повреждениях в '
-                                                       'стандартном журнале боя WG.',
-                  'UI_setting_wgLogHideCritics_text': 'Журнал WG Скрыть критиков',
-                  'UI_setting_wgLogHideCritics_tooltip': 'Скрывает сообщения о критических попаданиях в '
-                                                         'стандартный журнал боя WG.'},
- 'main_gun': {'UI_description': 'MainGun',
+ 'game_log_manager': {'UI_description': 'Журнал урона в бою',
+ 'UI_setting_logSwapper_text': 'Включить обратный журнал.',
+ 'UI_setting_logSwapper_tooltip': 'Меняет положение журнала повреждений в боевом интерфейсе.',
+ 'UI_setting_wgLogHideAssist_text': 'Помощник по скрытию журнала WG',
+ 'UI_setting_wgLogHideAssist_tooltip': 'Скрывает сообщения о нанесении урона в стандартном журнале боя WG.',
+ 'UI_setting_wgLogHideBlock_text': 'Блок сокрытия журнала WG',
+ 'UI_setting_wgLogHideBlock_tooltip': 'Скрывает сообщения о заблокированных повреждениях в стандартном '
+                                      'журнале боя WG.',
+ 'UI_setting_wgLogHideCritics_text': 'Журнал WG Скрыть критиков',
+ 'UI_setting_wgLogHideCritics_tooltip': 'Скрывает сообщения о критических попаданиях в стандартный журнал '
+                                        'боя WG.'},
+ 'high_caliber_progress': {'UI_description': 'Прогресс Основного калибра',
               'UI_setting_backGroundEnabled_text': 'Фон',
               'UI_setting_backGroundEnabled_tooltip': '',
               'UI_setting_textLock_text': 'ТекстЛокк',
               'UI_setting_textLock_tooltip': ''},
- 'marks_on_gun_battle': {'NaN': '[<b>НЭН</b>]',
-                         'UI_HangarStatsEnd': '{c_damageToMark65}, {c_damageToMark85}\n'
-                                              '{c_damageToMark95}, {c_damageToMark100}',
-                         'UI_HangarStatsStart': '<b>{currentPercent}<font size="14">[{currentDamage}]</font> '
-                                                '</b>',
-                         'UI_description': 'MarksOnGunBattle',
-                         'UI_marks_assist': 'Assist',
-                         'UI_marks_combined': 'Combined',
-                         'UI_marks_compact': 'Compact',
-                         'UI_marks_current': 'Текущее МО',
-                         'UI_marks_damage': 'Damage',
-                         'UI_marks_detailed': 'Detailed',
-                         'UI_marks_legacy': 'Legacy (12 пресетов/пользовательский формат)',
-                         'UI_marks_normal': 'Normal',
-                         'UI_menu_UIConfig': 'Конфигурация',
-                         'UI_menu_UIMyp': '<font color="#D042F3">@Myp</font> выбор [<font '
-                                          'color="#D042F3">twitch.tv/myp_</font>]',
-                         'UI_menu_UIReplay': 'для повторов',
-                         'UI_menu_UIReplayColor': 'Цветной для повторов',
-                         'UI_menu_UIReplayColorDamage': 'Цветной для повторов с повреждениями',
-                         'UI_menu_UIReplayDamage': 'для повторов с повреждениями',
-                         'UI_menu_UIcircon': '<font color="#02C9B3">@Циркон</font> выбор [<font '
-                                             'color="#02C9B3">twitch.tv/circon</font>]',
-                         'UI_menu_UIkorbenDallasNoMercy': '<font color="#e3256b">@KorbenDallasNoMercy</font> '
-                                                          'выбор [<font '
-                                                          'color="#e3256b">youtube.com/c/KorbenDallasNoMercy</font>]',
-                         'UI_menu_UIoldskool': '<font color="#FFD700">@Олдскул</font> выбор [<font '
-                                               'color="#FFD700">twitch.tv/oldskool</font>]',
-                         'UI_menu_UIskill4ltu': '<font color="#60FF00">@навык</font> выбор [<font '
-                                                'color="#60FF00">twitch.tv/skill4ltu</font>]',
-                         'UI_menu_UIspoter': '<font color="#6595EE">@spoter</font> выбор [<font '
-                                             'color="#6595EE">github.com/spoter</font>]',
-                         'UI_menu_UIspoterNew': 'новый <font color="#6595EE">@spoter</font> выбор [<font '
-                                                'color="#6595EE">github.com/spoter</font>]',
-                         'UI_message': 'Визуальное изменение МО %s',
-                         'UI_setting_UI_text': 'Интерфейс в бою',
-                         'UI_setting_UI_tooltip': 'Расширенный интерфейс в бою:\n'
-                                                  '<img src="img://objects/ui_extended.png"></img>\n'
-                                                  'Просто:\n'
-                                                  '<img src="img://objects/ui_simple.png"></img>\n'
-                                                  'Конфигурация:\n'
-                                                  '/mods/configs/Driftkings/MarksOnGunExtended/MarksOnGunExtended.json\n',
-                         'UI_setting_background_text': 'Битва: показать фон',
-                         'UI_setting_background_tooltip': '',
-                         'UI_setting_buttonReset_text': 'Кнопка: Сбросить настройки',
-                         'UI_setting_buttonReset_tooltip': '',
-                         'UI_setting_buttonShow_text': 'Кнопка: Изменить стиль',
-                         'UI_setting_buttonShow_tooltip': '',
-                         'UI_setting_buttonSizeDown_text': 'Кнопка: Размер -10%',
-                         'UI_setting_buttonSizeDown_tooltip': '',
-                         'UI_setting_buttonSizeUp_text': 'Кнопка: Размер +10%',
-                         'UI_setting_buttonSizeUp_tooltip': '',
-                         'UI_setting_colorRating_text': 'Таблица цветов',
-                         'UI_setting_colorRating_tooltip': 'Цветовая шкала отметок на орудии.',
-                         'UI_setting_displayMode_text': 'Presentation',
-                         'UI_setting_showDamage_text': 'Показать повреждения',
-                         'UI_setting_showDelta_text': 'Показать расчетную разницу',
-                         'UI_setting_showInBattleHalfPercents_text': 'Битва: показать урон +0,5%',
-                         'UI_setting_showInBattleHalfPercents_tooltip': '',
-                         'UI_setting_showInBattle_text': 'Битва: Приветственное сообщение',
-                         'UI_setting_showInBattle_tooltip': '',
-                         'UI_setting_showInHangar_text': 'Ангар: Показать мод МО',
-                         'UI_setting_showInHangar_tooltip': '',
-                         'UI_setting_showInReplay_text': 'Воспроизведение: включено',
-                         'UI_setting_showInReplay_tooltip': 'Нехорошо, но полезно для тестов',
-                         'UI_setting_showInStatistic_text': 'Статистика: включено',
-                         'UI_setting_showInStatistic_tooltip': '',
-                         'UI_setting_showMarks_text': 'Показать отметки',
-                         'UI_setting_showProgress_text': 'Показать прогресс',
-                         'UI_setting_showTargets_text': 'Показать цели',
-                         'UI_setting_techTreeMarkOfGunPercentSize_value': '',
-                         'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} текущий '
-                                        'скользящий средний урон</font>\n'
-                                        '<font color="#FFFFFF" size="12">{currentDamage} текущий суммарный '
-                                        'ущерб</font>\n'
-                                        'Чтобы <font color="#FFFFFF" size="12">{nextPercent}% </font>   '
-                                        'необходимость <font color="#FFFFFF" size="12">{needDamage}</font> '
-                                        'скользящий средний урон\n'
-                                        'Эта статистика доступна за последний бой на этой машине.\n'
-                                        'Чтобы <font color="#FFFFFF" size="12">20% </font>   необходимость '
-                                        '<font color="{c20}" size="12">~{_20}</font> скользящий средний '
-                                        'урон\n'
-                                        'Чтобы <font color="#FFFFFF" size="12">40% </font>   необходимость '
-                                        '<font color="{c40}" size="12">~{_40}</font> скользящий средний '
-                                        'урон\n'
-                                        'Чтобы <font color="#FFFFFF" size="12">55% </font>   необходимость '
-                                        '<font color="{c55}" size="12">~{_55}</font> скользящий средний '
-                                        'урон\n'
-                                        'Чтобы <font color="#FFFFFF" size="12">65% </font>   необходимость '
-                                        '<font color="{c65}" size="12">~{_65}</font> скользящий средний '
-                                        'урон\n'
-                                        'Чтобы <font color="#FFFFFF" size="12">85% </font>   необходимость '
-                                        '<font color="{c85}" size="12">~{_85}</font> скользящий средний '
-                                        'урон\n'
-                                        'Чтобы <font color="#FFFFFF" size="12">95% </font>   необходимость '
-                                        '<font color="{c95}" size="12">~{_95}</font> скользящий средний '
-                                        'урон\n'
-                                        'Чтобы <font color="#FFFFFF" size="12">100% </font>  необходимость '
-                                        '<font color="{c100}" size="12">~{_100}</font> скользящий средний '
-                                        'урон',
-                         'battleMessageSizeDown': 'Мод МО: Размер <b>-10%</b>',
-                         'battleMessageSizeLimitMax': 'Модификация МО: Достигнуто <b>максимум[1000%]</b>',
-                         'battleMessageSizeLimitMin': 'Модификация МО: Достигнуто <b>минимум[10%]</b>',
-                         'battleMessageSizeReset': 'Мод МО: сброс настроек</b>',
-                         'battleMessageSizeUp': 'Мод МО: Размер <b>+10%</b>'},
- 'marks_on_gun_hangar': {'UI_description': 'MarksOnGunHangar',
-                         'UI_panel_achieved': 'Достигнуто',
-                         'UI_panel_additionalGoal': 'Дополнительная цель',
-                         'UI_panel_automatic': 'Автоматический',
-                         'UI_panel_average': 'Комбинированная ЕМА',
-                         'UI_panel_battles': 'сражения',
-                         'UI_panel_chooseVehicle': 'Выберите танк',
-                         'UI_panel_drag': 'ПЕРЕТАЧИВАНИЕ',
-                         'UI_panel_estimate': 'Оценка цели',
-                         'UI_panel_estimateNote': 'Только оценка; не тот урон, который потребуется в '
-                                                  'следующем бою.',
-                         'UI_panel_goal1': '1-я оценка (65%)',
-                         'UI_panel_goal2': '2-я оценка (85%)',
-                         'UI_panel_goal3': '3-я оценка (95%)',
-                         'UI_panel_header': 'ЗНАКИ ОТЛИЧИЯ',
-                         'UI_panel_historyWaiting': 'История: ждем следующего боя',
-                         'UI_panel_locked': 'ЗАБЛОКИРОВАНО',
-                         'UI_panel_mark': 'Марк',
-                         'UI_panel_mastery0': 'Нет мастерства',
-                         'UI_panel_mastery1': '3-й класс',
-                         'UI_panel_mastery2': '2-й класс',
-                         'UI_panel_mastery3': '1-й класс',
-                         'UI_panel_mastery4': 'Туз-танкер',
-                         'UI_panel_noDossier': 'Досье автомобиля не имеется.',
-                         'UI_panel_noStats': 'Статистика не загружена',
-                         'UI_panel_observedBattles': 'наблюдались бои',
-                         'UI_panel_remaining': 'пп осталось',
-                         'UI_panel_selectVehicle': 'Выберите транспортное средство в ангаре.',
-                         'UI_panel_thirdAchieved': '3-Я ОТМЕТКА ДОСТИГНА',
-                         'UI_panel_tierLimit': 'Знаки, доступные с V уровня',
-                         'UI_panel_trend': 'Наблюдаемая тенденция',
-                         'UI_panel_winRate': 'ПРОЦЕНТ ВЫИГРЫША',
-                         'UI_setting_colorRating_NoobMeter': 'NoobMeter',
-                         'UI_setting_colorRating_WotLabs': 'WotLabs',
-                         'UI_setting_colorRating_XVM': 'XVM',
-                         'UI_setting_colorRating_text': 'Выберите рейтинг цвета',
-                         'UI_setting_colorRating_tooltip': 'Выберите цветовую схему для MoE, WN8 и винрейта.',
-                         'UI_setting_compactMode_text': 'Компактная панель',
-                         'UI_setting_compactMode_tooltip': 'Скрыть вторичную статистику транспортных '
-                                                           'средств.',
-                         'UI_setting_goalSelection_text': 'Отметить цель',
-                         'UI_setting_goalSelection_tooltip': 'Автоматически выбирает следующую '
-                                                             'незаработанную оценку. Урон — это '
-                                                             'пропорциональная оценка, а не порог сервера '
-                                                             'или прогноз следующего боя.',
-                         'UI_setting_historyBattles_text': 'Последние сражения в истории',
-                         'UI_setting_historyBattles_tooltip': 'Обновления могут группировать несколько боев. '
-                                                              'История начинается при установке этой версии.',
-                         'UI_setting_positionX_text': 'Горизонтальное положение (X)',
-                         'UI_setting_positionX_tooltip': 'Меньший: левый. Больше: верно.',
-                         'UI_setting_positionY_text': 'Вертикальное положение (Y)',
-                         'UI_setting_positionY_tooltip': 'Меньший: вверх. Больше: вниз.',
-                         'UI_setting_showInHangar_text': 'Ангар: включен',
-                         'UI_setting_showInHangar_tooltip': '',
-                         'UI_setting_showInStatistic_text': 'Подсказка: включено',
-                         'UI_setting_showInStatistic_tooltip': '',
-                         'UI_setting_showTooltipTargets_text': 'Подсказка: показать целевые уровни',
-                         'UI_setting_showTooltipTargets_tooltip': '',
-                         'UI_setting_textLock_text': 'Ангар: зафиксировать положение панели',
-                         'UI_setting_textLock_tooltip': '',
-                         'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} текущий '
-                                        'скользящий средний урон</font>\n'
-                                        '<font color="#FFFFFF" size="12">{currentDamage} текущий суммарный '
-                                        'ущерб</font>\n'
-                                        'Чтобы <font color="#FFFFFF" size="12">{nextPercent}% </font> '
-                                        'необходимость <font color="#FFFFFF" size="12">{needDamage}</font> '
-                                        'скользящий средний урон\n'
-                                        '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
-                                        'color="#FFFFFF" size="12">ВН8: {wn8}</font>   <font color="#FFFFFF" '
-                                        'size="12">ВР: {winRate}</font>',
-                         'UI_tooltipsFull': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} '
-                                            'текущий скользящий средний урон</font>\n'
-                                            '<font color="#FFFFFF" size="12">{currentDamage} текущий '
-                                            'суммарный ущерб</font>\n'
-                                            'Чтобы <font color="#FFFFFF" size="12">{nextPercent}% </font> '
-                                            'необходимость <font color="#FFFFFF" '
-                                            'size="12">{needDamage}</font> скользящий средний урон\n'
-                                            '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
-                                            'color="#FFFFFF" size="12">ВН8: {wn8}</font>   <font '
-                                            'color="#FFFFFF" size="12">ВР: {winRate}</font>\n'
-                                            'Эта статистика доступна по последнему бою на этой машине.\n'
-                                            'Чтобы <font color="#FFFFFF" size="12">20% </font> необходимость '
-                                            '<font color="#FF6347" size="12">~{_20}</font>\n'
-                                            'Чтобы <font color="#FFFFFF" size="12">40% </font> необходимость '
-                                            '<font color="#FE7903" size="12">~{_40}</font>\n'
-                                            'Чтобы <font color="#FFFFFF" size="12">55% </font> необходимость '
-                                            '<font color="#F8F400" size="12">~{_55}</font>\n'
-                                            'Чтобы <font color="#FFFFFF" size="12">65% </font> необходимость '
-                                            '<font color="#60FF00" size="12">~{_65}</font>\n'
-                                            'Чтобы <font color="#FFFFFF" size="12">85% </font> необходимость '
-                                            '<font color="#02C9B3" size="12">~{_85}</font>\n'
-                                            'Чтобы <font color="#FFFFFF" size="12">95% </font> необходимость '
-                                            '<font color="#D042F3" size="12">~{_95}</font>\n'
-                                            'Чтобы <font color="#FFFFFF" size="12">100% </font> '
-                                            'необходимость <font color="#D042F3" size="12">~{_100}</font>'},
- 'marks_on_gun_tech_tree': {'UI_description': 'MarksOnGunTechTree (Gameface)',
+ 'battle_marks_of_excellence': {'NaN': '[<b>НЭН</b>]',
+ 'UI_HangarStatsEnd': '{c_damageToMark65}, {c_damageToMark85}\n{c_damageToMark95}, {c_damageToMark100}',
+ 'UI_HangarStatsStart': '<b>{currentPercent}<font size="14">[{currentDamage}]</font> </b>',
+ 'UI_description': 'Отметки на стволе в бою',
+ 'UI_marks_assist': 'Assist',
+ 'UI_marks_combined': 'Combined',
+ 'UI_marks_compact': 'Compact',
+ 'UI_marks_current': 'Текущее МО',
+ 'UI_marks_damage': 'Damage',
+ 'UI_marks_detailed': 'Detailed',
+ 'UI_marks_legacy': 'Legacy (12 пресетов/пользовательский формат)',
+ 'UI_marks_normal': 'Normal',
+ 'UI_menu_UIConfig': 'Конфигурация',
+ 'UI_menu_UIMyp': '<font color="#D042F3">@Myp</font> выбор [<font color="#D042F3">twitch.tv/myp_</font>]',
+ 'UI_menu_UIReplay': 'для повторов',
+ 'UI_menu_UIReplayColor': 'Цветной для повторов',
+ 'UI_menu_UIReplayColorDamage': 'Цветной для повторов с повреждениями',
+ 'UI_menu_UIReplayDamage': 'для повторов с повреждениями',
+ 'UI_menu_UIcircon': '<font color="#02C9B3">@Циркон</font> выбор [<font '
+                     'color="#02C9B3">twitch.tv/circon</font>]',
+ 'UI_menu_UIkorbenDallasNoMercy': '<font color="#e3256b">@KorbenDallasNoMercy</font> выбор [<font '
+                                  'color="#e3256b">youtube.com/c/KorbenDallasNoMercy</font>]',
+ 'UI_menu_UIoldskool': '<font color="#FFD700">@Олдскул</font> выбор [<font '
+                       'color="#FFD700">twitch.tv/oldskool</font>]',
+ 'UI_menu_UIskill4ltu': '<font color="#60FF00">@навык</font> выбор [<font '
+                        'color="#60FF00">twitch.tv/skill4ltu</font>]',
+ 'UI_menu_UIspoter': '<font color="#6595EE">@spoter</font> выбор [<font '
+                     'color="#6595EE">github.com/spoter</font>]',
+ 'UI_menu_UIspoterNew': 'новый <font color="#6595EE">@spoter</font> выбор [<font '
+                        'color="#6595EE">github.com/spoter</font>]',
+ 'UI_message': 'Визуальное изменение МО %s',
+ 'UI_setting_UI_text': 'Интерфейс в бою',
+ 'UI_setting_UI_tooltip': 'Расширенный интерфейс в бою:\n'
+                          '<img src="img://objects/ui_extended.png"></img>\n'
+                          'Просто:\n'
+                          '<img src="img://objects/ui_simple.png"></img>\n'
+                          'Конфигурация:\n'
+                          '/mods/configs/Driftkings/MarksOnGunExtended/MarksOnGunExtended.json\n',
+ 'UI_setting_background_text': 'Битва: показать фон',
+ 'UI_setting_background_tooltip': 'Enable the panel background. Opacity is configured separately.',
+ 'UI_setting_buttonReset_text': 'Кнопка: Сбросить настройки',
+ 'UI_setting_buttonReset_tooltip': '',
+ 'UI_setting_buttonShow_text': 'Кнопка: Изменить стиль',
+ 'UI_setting_buttonShow_tooltip': '',
+ 'UI_setting_buttonSizeDown_text': 'Кнопка: Размер -10%',
+ 'UI_setting_buttonSizeDown_tooltip': '',
+ 'UI_setting_buttonSizeUp_text': 'Кнопка: Размер +10%',
+ 'UI_setting_buttonSizeUp_tooltip': '',
+ 'UI_setting_colorRating_text': 'Таблица цветов',
+ 'UI_setting_colorRating_tooltip': 'Цветовая шкала отметок на орудии.',
+ 'UI_setting_displayMode_text': 'Presentation',
+ 'UI_setting_showDamage_text': 'Показать повреждения',
+ 'UI_setting_showDelta_text': 'Показать расчетную разницу',
+ 'UI_setting_showInBattleHalfPercents_text': 'Битва: показать урон +0,5%',
+ 'UI_setting_showInBattleHalfPercents_tooltip': '',
+ 'UI_setting_showInBattle_text': 'Битва: Приветственное сообщение',
+ 'UI_setting_showInBattle_tooltip': 'Show a message at battle start. This does not control panel visibility.',
+ 'UI_setting_showInHangar_text': 'Ангар: Показать мод МО',
+ 'UI_setting_showInHangar_tooltip': '',
+ 'UI_setting_showInReplay_text': 'Воспроизведение: включено',
+ 'UI_setting_showInReplay_tooltip': 'Нехорошо, но полезно для тестов',
+ 'UI_setting_showInStatistic_text': 'Статистика: включено',
+ 'UI_setting_showInStatistic_tooltip': '',
+ 'UI_setting_showMarks_text': 'Показать отметки',
+ 'UI_setting_showProgress_text': 'Показать прогресс',
+ 'UI_setting_showTargets_text': 'Показать цели',
+ 'UI_setting_techTreeMarkOfGunPercentSize_value': '',
+ 'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} текущий скользящий средний '
+                'урон</font>\n'
+                '<font color="#FFFFFF" size="12">{currentDamage} текущий суммарный ущерб</font>\n'
+                'Чтобы <font color="#FFFFFF" size="12">{nextPercent}% </font>   необходимость <font '
+                'color="#FFFFFF" size="12">{needDamage}</font> скользящий средний урон\n'
+                'Эта статистика доступна за последний бой на этой машине.\n'
+                'Чтобы <font color="#FFFFFF" size="12">20% </font>   необходимость <font color="{c20}" '
+                'size="12">~{_20}</font> скользящий средний урон\n'
+                'Чтобы <font color="#FFFFFF" size="12">40% </font>   необходимость <font color="{c40}" '
+                'size="12">~{_40}</font> скользящий средний урон\n'
+                'Чтобы <font color="#FFFFFF" size="12">55% </font>   необходимость <font color="{c55}" '
+                'size="12">~{_55}</font> скользящий средний урон\n'
+                'Чтобы <font color="#FFFFFF" size="12">65% </font>   необходимость <font color="{c65}" '
+                'size="12">~{_65}</font> скользящий средний урон\n'
+                'Чтобы <font color="#FFFFFF" size="12">85% </font>   необходимость <font color="{c85}" '
+                'size="12">~{_85}</font> скользящий средний урон\n'
+                'Чтобы <font color="#FFFFFF" size="12">95% </font>   необходимость <font color="{c95}" '
+                'size="12">~{_95}</font> скользящий средний урон\n'
+                'Чтобы <font color="#FFFFFF" size="12">100% </font>  необходимость <font color="{c100}" '
+                'size="12">~{_100}</font> скользящий средний урон',
+ 'battleMessageSizeDown': 'Мод МО: Размер <b>-10%</b>',
+ 'battleMessageSizeLimitMax': 'Модификация МО: Достигнуто <b>максимум[1000%]</b>',
+ 'battleMessageSizeLimitMin': 'Модификация МО: Достигнуто <b>минимум[10%]</b>',
+ 'battleMessageSizeReset': 'Мод МО: сброс настроек</b>',
+ 'battleMessageSizeUp': 'Мод МО: Размер <b>+10%</b>'},
+ 'hangar_marks_of_excellence': {'UI_description': 'Отметки на стволе в ангаре',
+ 'UI_panel_achieved': 'Достигнуто',
+ 'UI_panel_additionalGoal': 'Дополнительная цель',
+ 'UI_panel_automatic': 'Автоматический',
+ 'UI_panel_average': 'Комбинированная ЕМА',
+ 'UI_panel_battles': 'сражения',
+ 'UI_panel_chooseVehicle': 'Выберите танк',
+ 'UI_panel_drag': 'ПЕРЕТАЧИВАНИЕ',
+ 'UI_panel_estimate': 'Оценка цели',
+ 'UI_panel_estimateNote': 'Только оценка; не тот урон, который потребуется в следующем бою.',
+ 'UI_panel_goal1': '1-я оценка (65%)',
+ 'UI_panel_goal2': '2-я оценка (85%)',
+ 'UI_panel_goal3': '3-я оценка (95%)',
+ 'UI_panel_header': 'ЗНАКИ ОТЛИЧИЯ',
+ 'UI_panel_historyWaiting': 'История: ждем следующего боя',
+ 'UI_panel_locked': 'ЗАБЛОКИРОВАНО',
+ 'UI_panel_mark': 'Марк',
+ 'UI_panel_mastery0': 'Нет мастерства',
+ 'UI_panel_mastery1': '3-й класс',
+ 'UI_panel_mastery2': '2-й класс',
+ 'UI_panel_mastery3': '1-й класс',
+ 'UI_panel_mastery4': 'Туз-танкер',
+ 'UI_panel_noDossier': 'Досье автомобиля не имеется.',
+ 'UI_panel_noStats': 'Статистика не загружена',
+ 'UI_panel_observedBattles': 'наблюдались бои',
+ 'UI_panel_remaining': 'пп осталось',
+ 'UI_panel_selectVehicle': 'Выберите транспортное средство в ангаре.',
+ 'UI_panel_thirdAchieved': '3-Я ОТМЕТКА ДОСТИГНА',
+ 'UI_panel_tierLimit': 'Знаки, доступные с V уровня',
+ 'UI_panel_trend': 'Наблюдаемая тенденция',
+ 'UI_panel_winRate': 'ПРОЦЕНТ ВЫИГРЫША',
+ 'UI_setting_colorRating_NoobMeter': 'NoobMeter',
+ 'UI_setting_colorRating_WotLabs': 'WotLabs',
+ 'UI_setting_colorRating_XVM': 'XVM',
+ 'UI_setting_colorRating_text': 'Выберите рейтинг цвета',
+ 'UI_setting_colorRating_tooltip': 'Выберите цветовую схему для MoE, WN8 и винрейта.',
+ 'UI_setting_compactMode_text': 'Компактная панель',
+ 'UI_setting_compactMode_tooltip': 'Скрыть вторичную статистику транспортных средств.',
+ 'UI_setting_goalSelection_text': 'Отметить цель',
+ 'UI_setting_goalSelection_tooltip': 'Автоматически выбирает следующую незаработанную оценку. Урон — это '
+                                     'пропорциональная оценка, а не порог сервера или прогноз следующего '
+                                     'боя.',
+ 'UI_setting_historyBattles_text': 'Последние сражения в истории',
+ 'UI_setting_historyBattles_tooltip': 'Обновления могут группировать несколько боев. История начинается при '
+                                      'установке этой версии.',
+ 'UI_setting_positionX_text': 'Горизонтальное положение (X)',
+ 'UI_setting_positionX_tooltip': 'Меньший: левый. Больше: верно.',
+ 'UI_setting_positionY_text': 'Вертикальное положение (Y)',
+ 'UI_setting_positionY_tooltip': 'Меньший: вверх. Больше: вниз.',
+ 'UI_setting_showInHangar_text': 'Ангар: включен',
+ 'UI_setting_showInHangar_tooltip': '',
+ 'UI_setting_showInStatistic_text': 'Подсказка: включено',
+ 'UI_setting_showInStatistic_tooltip': '',
+ 'UI_setting_showTooltipTargets_text': 'Подсказка: показать целевые уровни',
+ 'UI_setting_showTooltipTargets_tooltip': '',
+ 'UI_setting_textLock_text': 'Ангар: зафиксировать положение панели',
+ 'UI_setting_textLock_tooltip': 'Prevent header dragging. When unlocked, drag with the left mouse button; '
+                                'the position is saved.',
+ 'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} текущий скользящий средний '
+                'урон</font>\n'
+                '<font color="#FFFFFF" size="12">{currentDamage} текущий суммарный ущерб</font>\n'
+                'Чтобы <font color="#FFFFFF" size="12">{nextPercent}% </font> необходимость <font '
+                'color="#FFFFFF" size="12">{needDamage}</font> скользящий средний урон\n'
+                '<font color="#FFFFFF" size="12">{mastery}</font>   <font color="#FFFFFF" size="12">ВН8: '
+                '{wn8}</font>   <font color="#FFFFFF" size="12">ВР: {winRate}</font>',
+ 'UI_tooltipsFull': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} текущий скользящий средний '
+                    'урон</font>\n'
+                    '<font color="#FFFFFF" size="12">{currentDamage} текущий суммарный ущерб</font>\n'
+                    'Чтобы <font color="#FFFFFF" size="12">{nextPercent}% </font> необходимость <font '
+                    'color="#FFFFFF" size="12">{needDamage}</font> скользящий средний урон\n'
+                    '<font color="#FFFFFF" size="12">{mastery}</font>   <font color="#FFFFFF" size="12">ВН8: '
+                    '{wn8}</font>   <font color="#FFFFFF" size="12">ВР: {winRate}</font>\n'
+                    'Эта статистика доступна по последнему бою на этой машине.\n'
+                    'Чтобы <font color="#FFFFFF" size="12">20% </font> необходимость <font color="#FF6347" '
+                    'size="12">~{_20}</font>\n'
+                    'Чтобы <font color="#FFFFFF" size="12">40% </font> необходимость <font color="#FE7903" '
+                    'size="12">~{_40}</font>\n'
+                    'Чтобы <font color="#FFFFFF" size="12">55% </font> необходимость <font color="#F8F400" '
+                    'size="12">~{_55}</font>\n'
+                    'Чтобы <font color="#FFFFFF" size="12">65% </font> необходимость <font color="#60FF00" '
+                    'size="12">~{_65}</font>\n'
+                    'Чтобы <font color="#FFFFFF" size="12">85% </font> необходимость <font color="#02C9B3" '
+                    'size="12">~{_85}</font>\n'
+                    'Чтобы <font color="#FFFFFF" size="12">95% </font> необходимость <font color="#D042F3" '
+                    'size="12">~{_95}</font>\n'
+                    'Чтобы <font color="#FFFFFF" size="12">100% </font> необходимость <font color="#D042F3" '
+                    'size="12">~{_100}</font>'},
+ 'tech_tree_marks_of_excellence': {'UI_description': 'Отметки на стволе в дереве исследований',
                             'UI_setting_badgeOffsetX_text': 'Позиция X (слева/справа)',
                             'UI_setting_badgeOffsetX_tooltip': 'Отрицательное: слева. Положительное: верно.',
                             'UI_setting_badgeOffsetY_text': 'Положение Y (вверх/вниз)',
@@ -763,7 +814,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_showInTechTreeMastery_tooltip': '',
                             'UI_setting_showInTechTree_text': 'Технодерево: включено',
                             'UI_setting_showInTechTree_tooltip': ''},
- 'minimap_plugins': {'UI_description': 'MinimapPlugins',
+ 'minimap_enhancements': {'UI_description': 'Улучшения мини-карты',
                      'UI_field_alpha': 'Opacity',
                      'UI_field_mode': 'Visibility',
                      'UI_minimapAim_0': 'Оригинальный жёлтый',
@@ -902,12 +953,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_zoomFactorMax_tooltip': 'Максимальный уровень масштабирования миникарты '
                                                          '(1,0-3,0)',
                      'UI_setting_zoomFactor_text': 'Масштаб масштабирования'},
- 'own_health': {'UI_description': 'OwnHealth',
+ 'vehicle_health': {'UI_description': 'Прочность техники',
                 'UI_setting_x_text': 'Позиция X',
                 'UI_setting_x_tooltip': '',
                 'UI_setting_y_text': 'Позиция Y',
                 'UI_setting_y_tooltip': ''},
- 'player_panel_pro': {'UI_description': 'PlayerPanelPro',
+ 'team_panels': {'UI_description': 'Панели команд и загрузка боя',
                       'UI_panel_alpha': 'Непрозрачность фона панели',
                       'UI_panel_altMode': 'Режим панели при удержании ALT',
                       'UI_panel_bindToIcon': 'Привязать к иконке техники',
@@ -988,9 +1039,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                       'UI_setting_toggleKey_text': 'Переключить горячую клавишу',
                       'UI_setting_toggleKey_tooltip': 'Нажатие этой кнопки в бою переключает отображение '
                                                       'маркеров HP.'},
- 'repair_extended': {'UI_description': 'RepairExtended',
-                     'UI_setting_autoRepair_text': 'Автоматическое использование',
-                     'UI_setting_autoRepair_tooltip': '',
+ 'repair_controls': {'UI_description': 'Управление ремонтом',
                      'UI_setting_buttonChassis_text': 'Кнопка: Восстановить шасси',
                      'UI_setting_buttonChassis_tooltip': '',
                      'UI_setting_buttonRepair_text': 'Кнопка: Умный ремонт',
@@ -1005,71 +1054,19 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_repairDevices_tooltip': '',
                      'UI_setting_restoreChassis_text': 'Восстановить шасси',
                      'UI_setting_restoreChassis_tooltip': '',
-                     'UI_setting_timerMax_format': ' сек.',
-                     'UI_setting_timerMax_text': 'Автоматическое использование максимальной задержки',
-                     'UI_setting_timerMin_format': ' сек.',
-                     'UI_setting_timerMin_text': 'Автоматическое использование минимальной задержки',
                      'UI_setting_useGoldKits_text': 'Используйте золотые наборы',
                      'UI_setting_useGoldKits_tooltip': ''},
- 'safe_shot': {'UI_battle_activateMessage': 'SafeShot: активирован!',
-               'UI_description': 'SafeShot',
-               'UI_setting_activateMessage_text': 'Активировать сообщение',
-               'UI_setting_activateMessage_tooltip': 'Показывать уведомление при входе в бой',
-               'UI_setting_chatMessages_text': 'Форматировать сообщение',
-               'UI_setting_chatMessages_tooltip': 'Пользовательский формат сообщения при блокировании '
-                                                  'командных ударов. Использование {name} и {vehicle} в '
-                                                  'качестве заполнителей',
-               'UI_setting_deadShotBlockTimeOut_text': 'Тайм-аут блока мертвого броска',
-               'UI_setting_deadShotBlockTimeOut_tooltip': 'Время в секундах на блокировку выстрелов после '
-                                                          'уничтожения машины',
-               'UI_setting_deadShotBlock_text': 'Блок мертвого удара',
-               'UI_setting_deadShotBlock_tooltip': 'Предотвращает стрельбу по уже уничтоженным машинам.',
-               'UI_setting_disableKey_text': 'Отключить ключ',
-               'UI_setting_disableKey_tooltip': 'Горячая клавиша для временного включения/отключения мода',
-               'UI_setting_teamKillerShotUnblock_text': 'Разблокировка Team Killer Shot',
-               'UI_setting_teamKillerShotUnblock_tooltip': 'Позволяет стрелять в убийц команды.',
-               'UI_setting_teamShotBlock_text': 'Блок командного удара',
-               'UI_setting_teamShotBlock_tooltip': 'Предотвращает стрельбу по товарищам по команде',
-               'UI_setting_triggerMessage_text': 'Отключить сообщение',
-               'UI_setting_triggerMessage_tooltip': 'Показать/скрыть уведомления, когда выстрелы '
-                                                    'заблокированы',
-               'UI_setting_wasteShotBlock_text': 'Блок отходов',
-               'UI_setting_wasteShotBlock_tooltip': 'Предотвращает стрельбу, когда цель не выбрана',
-               'UI_triggerText_disabled': 'SafeShot: отключено!',
-               'UI_triggerText_enabled': 'SafeShot: включено!'},
- 'server_turret_extended': {'UI_battle_OFF': 'ВЫКЛ.',
+ 'server_turret_sync': {'UI_battle_OFF': 'ВЫКЛ.',
                             'UI_battle_ON': 'ВКЛ.',
                             'UI_battle_activateMessage': '«Расширенная серверная турель»: активировано.',
-                            'UI_description': 'ServerTurretExtended',
+                            'UI_description': 'Синхронизация башни с сервером',
                             'UI_setting_activateMessage_text': 'Показать сообщение активации',
                             'UI_setting_activateMessage_tooltip': 'Показывать сообщение активации в бою',
-                            'UI_setting_autoActivateWheelMode_text': 'Колеса: автоматический режим скорости.',
-                            'UI_setting_autoActivateWheelMode_tooltip': 'Автоматически включает режим '
-                                                                        'скорости или маневрирования',
-                            'UI_setting_buttonAutoMode_text': 'Кнопка: режим автоматической скорости колес.',
-                            'UI_setting_buttonAutoMode_tooltip': '',
-                            'UI_setting_buttonMaxMode_text': 'Кнопка: Колеса сохраняют максимальную '
-                                                             'скорость.',
-                            'UI_setting_buttonMaxMode_tooltip': '',
-                            'UI_setting_fixAccuracyInMove_text': 'Исправить точность',
-                            'UI_setting_fixAccuracyInMove_tooltip': 'Когда танк движется, а затем '
-                                                                    'останавливается, используется '
-                                                                    'исправление точности, чтобы не потерять '
-                                                                    'прицеливание.',
-                            'UI_setting_fixWheelCruiseControl_text': 'Исправить круиз-контроль на колесах',
-                            'UI_setting_fixWheelCruiseControl_tooltip': 'Когда вы активируете режим «Колесо» '
-                                                                        'с помощью круиз-контроля, '
-                                                                        'автомобиль останавливается, эта '
-                                                                        'настройка отключает эту функцию.',
-                            'UI_setting_maxWheelMode_text': 'Колеса: сохраняйте максимальную скорость',
-                            'UI_setting_maxWheelMode_tooltip': 'При достижении максимальной скорости не '
-                                                               'отключает скоростной режим при '
-                                                               'маневрировании',
                             'UI_setting_serverTurret_text': 'Серверная турель',
                             'UI_setting_serverTurret_tooltip': 'Переместить турель в координаты прицела '
                                                                'сервера (необходимо включить Server Sight в '
                                                                'настройках игры)'},
- 'sixth_sense': {'UI_description': 'SixthSense',
+ 'sixth_sense_alert': {'UI_description': 'Сигнал Шестого чувства',
                  'UI_setting_defaultIconName_text': 'Имя значка по умолчанию',
                  'UI_setting_defaultIconName_tooltip': 'Выберите встроенное изображение.',
                  'UI_setting_defaultIcon_text': 'Значок по умолчанию',
@@ -1120,7 +1117,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_sound_SixthSense_08': 'Супер Марио',
                  'UI_sound_SixthSense_09': 'Trap',
                  'UI_sound_SixthSense_10': 'X-Files'},
- 'spotted_extended_light': {'UI_description': 'SpottedExtendedLight',
+ 'enemy_spotting_status': {'UI_description': 'Состояние обнаружения противников',
                             'UI_macros_help': 'Используйте эти макросы в форматах сообщений для настройки '
                                               'уведомлений:\n'
                                               '• {icons} - Показывает значки транспортных средств\n'
@@ -1210,7 +1207,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_sound_text': 'Включить звуки боя',
                             'UI_setting_sound_tooltip': 'Переключение звуковых уведомлений об обнаруженных '
                                                         'врагах и нанесении урона'},
- 'zoom_extended': {'UI_description': 'ZoomExtended',
+ 'sniper_camera': {'UI_description': 'Снайперская камера',
                    'UI_setting_zoomSteps_enabled_text': u'Свои уровни приближения',
                    'UI_setting_zoomSteps_steps_text': u'Уровни приближения (список JSON)',
                    'UI_setting_zoomSteps_steps_tooltip': u'Введите минимум четыре разных числа от 2, например [4, 6, 8, 12, 16, 25, 30]. Применяется со следующего боя.',
@@ -1311,6 +1308,7 @@ PANEL = {'actionFailed': 'Акция провалилась. См. game.log.',
  'profileName': 'Название профиля',
  'profileRename': 'Переименовать',
  'profiles': 'Профили',
+ 'resetOption': 'Reset this option to default',
  'reset': 'Восстановить по умолчанию',
  'resetDone': 'Настройки по умолчанию восстановлены. Подайте заявку на их использование.',
  'resetTheme': 'Сбросить тему',

@@ -72,9 +72,8 @@ The current build contract uses the (EU, NA) installation as its resource source
 | `build_data` | Build contracts, components, targets and release metadata |
 | `build_tools` | Compiler, validators and release tooling |
 | `res` | Canonical defaults, dependencies and resource sources |
-| `docs` | Architecture, maintenance and historical evidence |
 
-See the [build contract](build_data/README.md).
+See the [build contract](build_data/README.md). The next beta introduces descriptive module and configuration names, with migration for existing profiles.
 
 ## Support and credits
 

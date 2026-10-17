@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "PenetrationIndicator",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.penetration_indicator",
+  "config_files": [
+    "default/penetration_indicator.json"
+  ],
+  "assets": []
+}

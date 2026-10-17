@@ -25,7 +25,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_save': 'Kaydet',
                      'UI_setting_server': 'Sunucu:',
                      'UI_setting_showPassword': 'Şifreyi göster'},
- 'aiming_angles': {'UI_description': 'AimingAngles',
+ 'gun_traverse_limits': {'UI_description': 'Top dönüş sınırları',
                    'UI_setting_horizontal_0': 'Devre dışı',
                    'UI_setting_horizontal_1': 'Köşeler',
                    'UI_setting_horizontal_2': 'Köşeli parantezler',
@@ -66,7 +66,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                   "src='img://gui/AimingAngles/4/Bottom.png'>\t<img "
                                                   "src='img://gui/AimingAngles/5/Bottom.png'>\t<img "
                                                   "src='img://gui/AimingAngles/6/Bottom.png'>"},
- 'arcade_zoom': {'UI_description': 'ArcadeZoom',
+ 'third_person_zoom': {'UI_description': 'Dış kamera yakınlaştırması',
                  'UI_setting_max_text': 'Maksimum Uzaklaştırma',
                  'UI_setting_max_tooltip': 'Araçtan maksimum kamera mesafesi',
                  'UI_setting_min_text': 'Minimum Uzaklaştırma',
@@ -76,22 +76,22 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                          'ayarlayın',
                  'UI_setting_startDeadDist_text': 'Ölü Mesafeyi Başlat',
                  'UI_setting_startDeadDist_tooltip': 'Ölüm sonrası modda ilk kamera mesafesi'},
- 'armor_calculator': {'UI_colors': {'green': '#60CB00',
+ 'penetration_indicator': {'UI_colors': {'green': '#60CB00',
                                     'orange': '#FF9900',
                                     'purple': '#6F6CD3',
                                     'red': '#ED070A',
                                     'yellow': '#FFC900'},
-                      'UI_description': 'ArmorCalculator',
+                      'UI_description': 'Delme göstergesi',
                       'UI_noDamage': 'Kritik Vuruş, Hasar Yok.',
                       'UI_ricochet': 'Sekme',
                       'UI_setting_displayOnAllies_text': 'Müttefiklerde Göster',
                       'UI_setting_displayOnAllies_tooltip': ''},
- 'arty_splash': {'UI_artySplash_messageDotOff': 'HE Sıçrama: Noktayı Gizle',
+ 'artillery_blast_radius': {'UI_artySplash_messageDotOff': 'HE Sıçrama: Noktayı Gizle',
                  'UI_artySplash_messageDotOn': 'HE Sıçrama: Noktayı Göster',
                  'UI_artySplash_messageSplashOff': 'HE Splash: Sıçramayı Gizle',
                  'UI_artySplash_messageSplashOn': 'HE Sıçrama: Sıçramayı Göster',
                  'UI_artySplash_name': 'O Sıçrama',
-                 'UI_description': 'ArtySplash',
+                 'UI_description': 'Topçu patlama yarıçapı',
                  'UI_setting_buttonShowDot_text': 'Düğme: göster|Noktayı gizle',
                  'UI_setting_buttonShowDot_tooltip': '',
                  'UI_setting_buttonShowSplash_text': "Düğme: Splash'ı göster|gizle",
@@ -106,17 +106,17 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_setting_showModeSniper_tooltip': '',
                  'UI_setting_showSplashOnDefault_text': "Splash'ı varsayılan olarak göster",
                  'UI_setting_showSplashOnDefault_tooltip': ''},
- 'auto_aim_optimize': {'UI_description': 'AutoAimOptimize',
+ 'autoaim_target_indicator': {'UI_description': 'Otomatik nişan hedef göstergesi',
                        'UI_setting_angle_text': 'Hedefi yakalamak için açıyı ayarlayın',
                        'UI_setting_angle_value': 'x',
                        'UI_setting_catchHiddenTarget_text': 'Bir engelin arkasına gizlenmiş hedefi yakalayın',
                        'UI_setting_catchHiddenTarget_tooltip': '',
                        'UI_setting_disableArtyMode_text': 'Arty modunda devre dışı bırak',
                        'UI_setting_disableArtyMode_tooltip': ''},
- 'auto_claim_clan': {'UI_description': 'AutoClaimClan',
+ 'clan_reward_collection': {'UI_description': 'Klan ödüllerini toplama',
                      'UI_setting_enabled_text': 'Etkin',
                      'UI_setting_enabled_tooltip': 'Modu etkinleştirin/devre dışı bırakın.'},
- 'banks_loader': {'UI_description': 'BanksLoader',
+ 'sound_bank_loader': {'UI_description': 'Ses bankası yükleme',
                   'UI_restart_button_close': 'Devam et',
                   'UI_restart_button_restart': 'Yeniden başlat',
                   'UI_restart_button_shutdown': 'Kapatma',
@@ -141,7 +141,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                      'Bu olacak <b>değil</b> daha sonra gerekli olacaktır.\n'
                                      'Oyunu şimdi yeniden başlatmak istiyor musunuz?',
                   'UI_restart_wotmod': ' • yapılandırmalar <b>kaldırıldı</b> paketlerden: '},
- 'battle_efficiency': {'UI_description': 'BattleEfficiency',
+ 'battle_performance': {'UI_description': 'Savaş performansı',
                        'UI_setting_battleResultsFormat_text': 'Savaş sonuçları penceresi değiştiriliyor',
                        'UI_setting_battleResultsFormat_tooltip': 'Mevcut Makrolar:\n'
                                                                  "WN8:'{wn8}', Renk: '{c:wn8}'\n"
@@ -171,7 +171,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                     "XTE:'{xte}', Renk:'{c:x}'",
                        'UI_setting_textLock_text': 'Metin Kilidi',
                        'UI_setting_textLock_tooltip': 'Savaşta Metni Sürükleyin'},
- 'battle_options': {'UI_description': 'BattleOptions',
+ 'battle_preferences': {'UI_setting_removeFog_text': 'Remove fog',
+                      'UI_setting_removeFog_tooltip': 'Generates a separate package from this installation’s maps. Installation or removal happens after closing the game. Requires a restart. Disabling this module also removes the package.',
+                      'UI_fog_restart_on': 'Fog removal scheduled. Close and reopen the game to apply.',
+                      'UI_fog_restart_off': 'Fog package removal scheduled. Close and reopen the game to restore fog.',
+                      'UI_fog_error': 'Could not apply fog removal. Check game.log and try again in Battle preferences.',
+                      'UI_description': 'Savaş seçenekleri',
                     'UI_setting_addEnemyName_text': 'Düşman Adını Ekle',
                     'UI_setting_addEnemyName_tooltip': 'Düşman aracının adını hasar kaydına ekler.',
                     'UI_setting_clipLoad_text': 'Yeniden Yükleme Durumu',
@@ -222,7 +227,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                                'bırakın.',
                     'UI_setting_stunSound_text': 'Sersemletme Sesi',
                     'UI_setting_stunSound_tooltip': 'Sersemletme Ses Efektini devre dışı bırakın.'},
- 'battle_stat': {'UI_description': 'BattleStat',
+ 'battle_statistics': {'UI_description': 'Savaş istatistikleri',
                  'UI_setting_colorRating_text': 'Renk tablosu',
                  'UI_setting_colorRating_tooltip': 'İstatistikler için renk ölçeği.',
                  'UI_setting_format_text': 'Metin Formatı',
@@ -230,9 +235,77 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_setting_teamChances_text': 'Takım şansını göster',
                  'UI_setting_teamChances_tooltip': 'Savaş sırasında her takımın kazanma şansı yüzdesini '
                                                    'görüntüler'},
- 'carousel_stats': {'UI_description': 'CarouselStats',
-                    'UI_setting_colorRating_text': 'Renk tablosu',
-                    'UI_setting_showIcons_text': 'Simgeleri göster'},
+ 'vehicle_carousel': {
+ 'UI_carousel_params': 'Vehicle parameters',
+ 'UI_carousel_bonus': 'Experience bonus',
+ 'UI_carousel_filterFavorite': 'Favourite vehicles',
+'UI_description': 'Araç karuseli',
+ 'UI_setting_colorRating_text': 'Renk tablosu',
+ 'UI_setting_showIcons_text': 'Simgeleri göster',
+ 'UI_carousel_layout': 'Layout',
+ 'UI_carousel_rows': 'Rows (0 = game default)',
+ 'UI_carousel_auto': 'Automatic',
+ 'UI_carousel_normal': 'Standard layout',
+ 'UI_carousel_small': 'Compact layout',
+ 'UI_carousel_backgroundAlpha': 'Background opacity',
+ 'UI_carousel_slotBackgroundAlpha': 'Slot background opacity',
+ 'UI_carousel_slotBorderAlpha': 'Slot border opacity',
+ 'UI_carousel_slotSelectedBorderAlpha': 'Selected slot border opacity',
+ 'UI_carousel_edgeFadeAlpha': 'Edge fade opacity',
+ 'UI_carousel_scrollingSpeed': 'Scrolling speed',
+ 'UI_carousel_hideBuyTank': 'Hide vehicle purchase slot',
+ 'UI_carousel_hideBuySlot': 'Hide garage slot purchase',
+ 'UI_carousel_hideRestoreTank': 'Hide vehicle recovery slot',
+ 'UI_carousel_showTotalSlots': 'Show total garage slots',
+ 'UI_carousel_showUsedSlots': 'Show occupied garage slots',
+ 'UI_carousel_enableLockBackground': 'Show unavailable vehicle background',
+ 'UI_carousel_suppressCarouselTooltips': 'Hide carousel tooltips',
+ 'UI_carousel_filter': 'Filter',
+ 'UI_carousel_filterSpacing': 'Filter spacing',
+ 'UI_carousel_horizontal': 'Horizontal',
+ 'UI_carousel_vertical': 'Vertical',
+ 'UI_carousel_sortingCriteria': 'Sorting (comma-separated; - = descending)',
+ 'UI_carousel_nationsOrder': 'Nation order (comma-separated)',
+ 'UI_carousel_typesOrder': 'Vehicle type order (comma-separated)',
+ 'UI_carousel_width': 'Width',
+ 'UI_carousel_height': 'Height',
+ 'UI_carousel_gap': 'Spacing between slots',
+ 'UI_carousel_show': 'Show',
+ 'UI_carousel_flag': 'National flag',
+ 'UI_carousel_tankIcon': 'Vehicle image',
+ 'UI_carousel_tankType': 'Vehicle type',
+ 'UI_carousel_level': 'Vehicle tier',
+ 'UI_carousel_xp': 'Experience',
+ 'UI_carousel_tankName': 'Vehicle name',
+ 'UI_carousel_info': 'Additional information',
+ 'UI_carousel_favorite': 'Favourite indicator',
+ 'UI_carousel_progressionPoints': 'Progression points',
+ 'UI_carousel_dx': 'Horizontal offset',
+ 'UI_carousel_dy': 'Vertical offset',
+ 'UI_carousel_alpha': 'Opacity',
+ 'UI_carousel_scale': 'Scale',
+ 'UI_carousel_extraField': 'Custom field',
+ 'UI_carousel_enabled': 'Enabled',
+ 'UI_carousel_format': 'Text template',
+ 'UI_carousel_color': 'Text color',
+ 'UI_carousel_bgColor': 'Background color',
+ 'UI_carousel_src': 'Image resource path',
+ 'UI_carousel_x': 'Horizontal position',
+ 'UI_carousel_y': 'Vertical position',
+ 'UI_carousel_fontSize': 'Font size',
+ 'UI_carousel_iconSize': 'Icon size',
+ 'UI_carousel_align': 'Alignment',
+ 'UI_carousel_layer': 'Display layer',
+ 'UI_carousel_left': 'Left',
+ 'UI_carousel_center': 'Center',
+ 'UI_carousel_right': 'Right',
+ 'UI_carousel_background': 'Background',
+ 'UI_carousel_foreground': 'Foreground',
+ 'UI_carousel_premium': 'Premium vehicles',
+ 'UI_carousel_elite': 'Elite vehicles',
+ 'UI_carousel_favoriteVehicle': 'Favourite vehicles',
+ 'UI_carousel_nation': 'Nation',
+ 'UI_carousel_vehicleType': 'Vehicle type'},
  'common': {'UI_native_close': 'Kapat',
             'UI_mog_lockPosition': 'Lock panel position',
  'UI_mog_enableBattle': u'Enable battle panel',
@@ -278,7 +351,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
             'UI_native_press': 'Bir tuşa basın...',
             'UI_native_save': 'Kaydet',
             'UI_native_saved': 'Ayarlar kaydedildi'},
- 'crew_settings': {'UI_description': 'Mürettebat Ayarları',
+ 'crew_management': {'UI_description': 'Mürettebat yönetimi',
                    'UI_message_crewNotAvailable': 'Mürettebat geri dönüş için müsait değil',
                    'UI_message_crewReturned': 'Mürettebat araca geri gönderildi',
                    'UI_setting_autoReturnDelay_text': 'Otomatik Geri Dönüş Gecikmesi (saniye)',
@@ -295,7 +368,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_showNotifications_text': 'Bildirimleri Göster',
                    'UI_setting_showNotifications_tooltip': 'Mürettebat geri döndüğünde sistem bildirimlerini '
                                                            'göster'},
- 'dispersion_circle': {'UI_description': 'Reticle',
+ 'aiming_reticles': {'UI_description': 'Nişan çemberleri',
                        'UI_setting_gunMarkerMinimumSize_text': 'Tabanca İşaretleyici Minimum Boyutu',
                        'UI_setting_gunMarkerMinimumSize_tooltip': 'Silah işaretleyicisinin piksel cinsinden '
                                                                   'minimum boyutu',
@@ -319,7 +392,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                        'UI_setting_showServerSpgStrategicReticle_text': 'SPG Stratejik Nişangâh',
                        'UI_setting_showServerSpgStrategicReticle_tooltip': 'SPG stratejik modu için sunucu '
                                                                            'retikülünü etkinleştirin'},
- 'dispersion_timer': {'UI_description': 'DispersionTimer',
+ 'aiming_countdown': {'UI_description': 'Nişan alma süresi',
                       'UI_setting_blue_text': "<font color='#%(blue)s'>Mevcut renk: #%(blue)s</font>",
                       'UI_setting_blue_tooltip': '',
                       'UI_setting_colorBlue_text': "Dağılım zamanlayıcısı çok iyi için Renk'i seçin:",
@@ -344,7 +417,8 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                       'UI_setting_y_tooltip': '',
                       'UI_setting_yellow_text': "<font color='#%(yellow)s'>Mevcut renk: #%(yellow)s</font>",
                       'UI_setting_yellow_tooltip': ''},
- 'distance_marker': {'UI_setting_anchorHorizontalOffset_text': 'Yatay Ofset',
+ 'target_distance': {'UI_description': 'Hedef mesafesi',
+                    'UI_setting_anchorHorizontalOffset_text': 'Yatay Ofset',
                      'UI_setting_anchorHorizontalOffset_tooltip': 'İşaretçinin yatay konumunu ayarlar',
                      'UI_setting_anchorPosition_tankBottom': 'Tank tabanı',
                      'UI_setting_anchorPosition_tankCenter': 'Tank merkezi',
@@ -384,7 +458,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                 'UI_profile_copy': 'Etkin profilin bir kopyasını oluşturun (isteğe bağlı)',
                 'UI_profile_restart': 'Farklı bir profil uygulamak için oyunu yeniden başlatın.',
                 'UI_profile_select': 'Bir sonraki oyun başlangıcı için profil'},
- 'flight_timer': {'UI_description': 'FlightTimer',
+ 'shell_flight_time': {'UI_description': 'Mermi uçuş süresi',
                   'UI_setting_spgOnly_text': 'Sadece SPG için mi?',
                   'UI_setting_spgOnly_tooltip': 'İşaretlenirse zamanlayıcı yalnızca SPG için görünür '
                                                 'olacaktır.',
@@ -394,12 +468,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                   'UI_setting_x_tooltip': '',
                   'UI_setting_y_text': 'Y Konumu',
                   'UI_setting_y_tooltip': ''},
- 'hangar_options': {'UI_clock_analog': 'Analog',
+ 'hangar_preferences': {'UI_clock_analog': 'Analog',
                     'UI_clock_digital': 'Dijital',
                     'UI_clock_flip': 'Çevirmeli',
                     'UI_clock_minimal': 'Minimal',
                     'UI_clock_panel': 'Panel',
-                    'UI_description': 'HangarOptions',
+                    'UI_description': 'Garaj seçenekleri',
                     'UI_setting_allowChannelButtonBlinking_text': 'Kanal Düğmesinin Yanıp Sönmesine İzin Ver',
                     'UI_setting_allowChannelButtonBlinking_tooltip': 'Messenger çubuğu kanalının (klan veya '
                                                                      'özel sohbet) düğmesinin yanıp '
@@ -490,8 +564,8 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                     'UI_setting_showXpToUnlockVeh_text': 'Araç XP Gereksinimleri',
                     'UI_setting_showXpToUnlockVeh_tooltip': "Araçların kilidini açmak için gerekli XP'yi "
                                                             'göster'},
- 'info_panel': {'UI_delay_format': ' sn.',
-                'UI_description': 'InfoPanel',
+ 'target_information': {'UI_delay_format': ' sn.',
+                'UI_description': 'Hedef bilgileri',
                 'UI_setting_aliveOnly_text': 'Yalnızca Hayatta',
                 'UI_setting_aliveOnly_tooltip': 'Yalnızca canlı oyuncular için göster.',
                 'UI_setting_altKey_text': 'Alt. Anahtar',
@@ -528,216 +602,199 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                 'armor_piercing_he': 'HESH',
                 'high_explosive': 'O',
                 'hollow_charge': 'ISI'},
- 'logs_swapper': {'UI_description': 'LogsSwapper',
-                  'UI_setting_logSwapper_text': 'Ters Günlüğü Etkinleştir.',
-                  'UI_setting_logSwapper_tooltip': 'Savaş arayüzündeki hasar günlüğünün konumunu tersine '
-                                                   'çevirir.',
-                  'UI_setting_wgLogHideAssist_text': 'WG Günlüğünü Gizleme Yardımı',
-                  'UI_setting_wgLogHideAssist_tooltip': 'Standart WG savaş günlüğündeki hasar destek '
-                                                        'mesajlarını gizler.',
-                  'UI_setting_wgLogHideBlock_text': 'WG Günlüğü Gizleme Bloğu',
-                  'UI_setting_wgLogHideBlock_tooltip': 'Standart WG savaş günlüğünde engellenen hasar '
-                                                       'mesajlarını gizler.',
-                  'UI_setting_wgLogHideCritics_text': 'WG Günlüğünü Gizleme Eleştirmenleri',
-                  'UI_setting_wgLogHideCritics_tooltip': 'Standart WG savaş günlüğünde kritik vuruş '
-                                                         'mesajlarını gizler.'},
- 'main_gun': {'UI_description': 'MainGun',
+ 'game_log_manager': {'UI_description': 'Savaş hasar kaydı',
+ 'UI_setting_logSwapper_text': 'Ters Günlüğü Etkinleştir.',
+ 'UI_setting_logSwapper_tooltip': 'Savaş arayüzündeki hasar günlüğünün konumunu tersine çevirir.',
+ 'UI_setting_wgLogHideAssist_text': 'WG Günlüğünü Gizleme Yardımı',
+ 'UI_setting_wgLogHideAssist_tooltip': 'Standart WG savaş günlüğündeki hasar destek mesajlarını gizler.',
+ 'UI_setting_wgLogHideBlock_text': 'WG Günlüğü Gizleme Bloğu',
+ 'UI_setting_wgLogHideBlock_tooltip': 'Standart WG savaş günlüğünde engellenen hasar mesajlarını gizler.',
+ 'UI_setting_wgLogHideCritics_text': 'WG Günlüğünü Gizleme Eleştirmenleri',
+ 'UI_setting_wgLogHideCritics_tooltip': 'Standart WG savaş günlüğünde kritik vuruş mesajlarını gizler.'},
+ 'high_caliber_progress': {'UI_description': 'Yüksek Kalibre ilerlemesi',
               'UI_setting_backGroundEnabled_text': 'Arka Plan',
               'UI_setting_backGroundEnabled_tooltip': '',
               'UI_setting_textLock_text': 'Metin Kilidi',
               'UI_setting_textLock_tooltip': ''},
- 'marks_on_gun_battle': {'NaN': '[<b>NaN</b>]',
-                         'UI_HangarStatsEnd': '{c_damageToMark65}, {c_damageToMark85}\n'
-                                              '{c_damageToMark95}, {c_damageToMark100}',
-                         'UI_HangarStatsStart': '<b>{currentPercent}<font size="14">[{currentDamage}]</font> '
-                                                '</b>',
-                         'UI_description': 'MarksOnGunBattle',
-                         'UI_marks_assist': 'Assist',
-                         'UI_marks_combined': 'Combined',
-                         'UI_marks_compact': 'Compact',
-                         'UI_marks_current': 'Mevcut MEB',
-                         'UI_marks_damage': 'Damage',
-                         'UI_marks_detailed': 'Detailed',
-                         'UI_marks_legacy': 'Eski (12 ön ayar / özel format)',
-                         'UI_marks_normal': 'Normal',
-                         'UI_menu_UIConfig': 'Yapılandırma',
-                         'UI_menu_UIMyp': '<font color="#D042F3">@Myp</font> seçim [<font '
-                                          'color="#D042F3">twitch.tv/myp_</font>]',
-                         'UI_menu_UIReplay': 'Tekrarlar için',
-                         'UI_menu_UIReplayColor': 'Tekrarlar için Renkli',
-                         'UI_menu_UIReplayColorDamage': 'Hasarlı Tekrarlar için Renklendirildi',
-                         'UI_menu_UIReplayDamage': 'Hasarlı tekrarlar için',
-                         'UI_menu_UIcircon': '<font color="#02C9B3">@Circon</font> seçim [<font '
-                                             'color="#02C9B3">twitch.tv/circon</font>]',
-                         'UI_menu_UIkorbenDallasNoMercy': '<font color="#e3256b">@KorbenDallasNoMercy</font> '
-                                                          'seçim [<font '
-                                                          'color="#e3256b">youtube.com/c/KorbenDallasNoMercy</font>]',
-                         'UI_menu_UIoldskool': '<font color="#FFD700">@Oldskool</font> seçim [<font '
-                                               'color="#FFD700">twitch.tv/oldskool</font>]',
-                         'UI_menu_UIskill4ltu': '<font color="#60FF00">@beceri</font> seçim [<font '
-                                                'color="#60FF00">twitch.tv/skill4ltu</font>]',
-                         'UI_menu_UIspoter': '<font color="#6595EE">@gözcü</font> seçim [<font '
-                                             'color="#6595EE">github.com/spoter</font>]',
-                         'UI_menu_UIspoterNew': 'yeni <font color="#6595EE">@gözcü</font> seçim [<font '
-                                                'color="#6595EE">github.com/spoter</font>]',
-                         'UI_message': 'MEB görsel değişikliği %s',
-                         'UI_setting_UI_text': 'Savaşta kullanıcı arayüzü',
-                         'UI_setting_UI_tooltip': 'Savaşta kullanıcı arayüzü Genişletilmiş:\n'
-                                                  '<img src="img://objects/ui_extended.png"></img>\n'
-                                                  'Simple:\n'
-                                                  '<img src="img://objects/ui_simple.png"></img>\n'
-                                                  'Config:\n'
-                                                  '/mods/configs/Driftkings/MarksOnGunExtended/MarksOnGunExtended.json\n',
-                         'UI_setting_background_text': 'Savaş: arka planı göster',
-                         'UI_setting_background_tooltip': '',
-                         'UI_setting_buttonReset_text': 'Düğme: Ayarları Sıfırla',
-                         'UI_setting_buttonReset_tooltip': '',
-                         'UI_setting_buttonShow_text': 'Düğme: Stili Değiştir',
-                         'UI_setting_buttonShow_tooltip': '',
-                         'UI_setting_buttonSizeDown_text': 'Düğme: Boyut -%10',
-                         'UI_setting_buttonSizeDown_tooltip': '',
-                         'UI_setting_buttonSizeUp_text': 'Düğme: Boyut +%10',
-                         'UI_setting_buttonSizeUp_tooltip': '',
-                         'UI_setting_colorRating_text': 'Renk tablosu',
-                         'UI_setting_colorRating_tooltip': 'Mükemmellik işaretleri için renk ölçeği.',
-                         'UI_setting_displayMode_text': 'Presentation',
-                         'UI_setting_showDamage_text': 'Hasarı göster',
-                         'UI_setting_showDelta_text': 'Tahmini deltayı göster',
-                         'UI_setting_showInBattleHalfPercents_text': "Savaş: +%0,5'e kadar hasar göster",
-                         'UI_setting_showInBattleHalfPercents_tooltip': '',
-                         'UI_setting_showInBattle_text': 'Savaş: Merhaba mesajı',
-                         'UI_setting_showInBattle_tooltip': '',
-                         'UI_setting_showInHangar_text': 'Hangar: MoE modunu göster',
-                         'UI_setting_showInHangar_tooltip': '',
-                         'UI_setting_showInReplay_text': 'Tekrar oynatma: etkin',
-                         'UI_setting_showInReplay_tooltip': 'İyi değil ama testler için faydalı',
-                         'UI_setting_showInStatistic_text': 'İstatistik: etkin',
-                         'UI_setting_showInStatistic_tooltip': '',
-                         'UI_setting_showMarks_text': 'İşaretleri göster',
-                         'UI_setting_showProgress_text': 'İlerlemeyi göster',
-                         'UI_setting_showTargets_text': 'Hedefleri göster',
-                         'UI_setting_techTreeMarkOfGunPercentSize_value': '',
-                         'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} mevcut '
-                                        'hareketli ortalama hasar</font>\n'
-                                        '<font color="#FFFFFF" size="12">{currentDamage} mevcut özet '
-                                        'hasar</font>\n'
-                                        'Kime <font color="#FFFFFF" size="12">{nextPercent}% </font>   '
-                                        'ihtiyaç <font color="#FFFFFF" size="12">{needDamage}</font> '
-                                        'hareketli ortalama hasar\n'
-                                        'Bu istatistik bu araçtaki son savaşta mevcut\n'
-                                        'Kime <font color="#FFFFFF" size="12">20% </font>   ihtiyaç <font '
-                                        'color="{c20}" size="12">~{_20}</font> hareketli ortalama hasar\n'
-                                        'Kime <font color="#FFFFFF" size="12">40% </font>   ihtiyaç <font '
-                                        'color="{c40}" size="12">~{_40}</font> hareketli ortalama hasar\n'
-                                        'Kime <font color="#FFFFFF" size="12">55% </font>   ihtiyaç <font '
-                                        'color="{c55}" size="12">~{_55}</font> hareketli ortalama hasar\n'
-                                        'Kime <font color="#FFFFFF" size="12">65% </font>   ihtiyaç <font '
-                                        'color="{c65}" size="12">~{_65}</font> hareketli ortalama hasar\n'
-                                        'Kime <font color="#FFFFFF" size="12">85% </font>   ihtiyaç <font '
-                                        'color="{c85}" size="12">~{_85}</font> hareketli ortalama hasar\n'
-                                        'Kime <font color="#FFFFFF" size="12">95% </font>   ihtiyaç <font '
-                                        'color="{c95}" size="12">~{_95}</font> hareketli ortalama hasar\n'
-                                        'Kime <font color="#FFFFFF" size="12">100% </font>  ihtiyaç <font '
-                                        'color="{c100}" size="12">~{_100}</font> hareketli ortalama hasar',
-                         'battleMessageSizeDown': 'MoE modu: Boyut <b>-10%</b>',
-                         'battleMessageSizeLimitMax': 'MoE modu: Ulaşıldı <b>maksimum[%1000]</b>',
-                         'battleMessageSizeLimitMin': 'MoE modu: Ulaşıldı <b>minimum[10%]</b>',
-                         'battleMessageSizeReset': 'MoE modu: Ayarları Sıfırla</b>',
-                         'battleMessageSizeUp': 'MoE modu: Boyut <b>+10%</b>'},
- 'marks_on_gun_hangar': {'UI_description': 'MarksOnGunHangar',
-                         'UI_panel_achieved': 'Başarıldı',
-                         'UI_panel_additionalGoal': 'Ek hedef',
-                         'UI_panel_automatic': 'Otomatik',
-                         'UI_panel_average': 'Birleşik EMA',
-                         'UI_panel_battles': 'savaşlar',
-                         'UI_panel_chooseVehicle': 'Bir tank seçin',
-                         'UI_panel_drag': 'SÜRÜKLEYİN',
-                         'UI_panel_estimate': 'Hedef tahmini',
-                         'UI_panel_estimateNote': 'Yalnızca tahmin; bir sonraki savaşta gereken hasar değil.',
-                         'UI_panel_goal1': '1. not (%65)',
-                         'UI_panel_goal2': '2. not (%85)',
-                         'UI_panel_goal3': '3. not (%95)',
-                         'UI_panel_header': 'MÜKEMMELLİK İŞARETLERİ',
-                         'UI_panel_historyWaiting': 'Tarih: Bir sonraki savaşı bekliyorum',
-                         'UI_panel_locked': 'KİLİTLİ',
-                         'UI_panel_mark': 'işaret',
-                         'UI_panel_mastery0': 'Ustalık yok',
-                         'UI_panel_mastery1': '3. sınıf',
-                         'UI_panel_mastery2': '2. sınıf',
-                         'UI_panel_mastery3': '1. sınıf',
-                         'UI_panel_mastery4': 'As Tankçı',
-                         'UI_panel_noDossier': 'Araç dosyası mevcut değil.',
-                         'UI_panel_noStats': 'İstatistik yüklenmedi',
-                         'UI_panel_observedBattles': 'gözlemlenen savaşlar',
-                         'UI_panel_remaining': 'kişi başı kalan',
-                         'UI_panel_selectVehicle': 'Hangarda bir araç seçin.',
-                         'UI_panel_thirdAchieved': '3. PUAN ALINDI',
-                         'UI_panel_tierLimit': "Seviye V'ten itibaren mevcut işaretler",
-                         'UI_panel_trend': 'Gözlemlenen eğilim',
-                         'UI_panel_winRate': 'KAZANMA ORANI',
-                         'UI_setting_colorRating_NoobMeter': 'NoobMeter',
-                         'UI_setting_colorRating_WotLabs': 'WotLabs',
-                         'UI_setting_colorRating_XVM': 'XVM',
-                         'UI_setting_colorRating_text': 'Renk Derecelendirmesini Seçin',
-                         'UI_setting_colorRating_tooltip': 'MoE, WN8 ve kazanma oranı için renk şemasını '
-                                                           'seçin',
-                         'UI_setting_compactMode_text': 'Kompakt panel',
-                         'UI_setting_compactMode_tooltip': 'İkincil araç istatistiklerini gizleyin.',
-                         'UI_setting_goalSelection_text': 'Hedefi işaretle',
-                         'UI_setting_goalSelection_tooltip': 'Otomatik, bir sonraki kazanılmamış puanı '
-                                                             'seçer. Hasar orantılı bir tahmindir, sunucu '
-                                                             'eşiği veya bir sonraki savaş tahmini değildir.',
-                         'UI_setting_historyBattles_text': 'Tarihteki son savaşlar',
-                         'UI_setting_historyBattles_tooltip': 'Güncellemeler birkaç savaşı gruplandırabilir. '
-                                                              'Bu sürüm yüklendiğinde geçmiş başlar.',
-                         'UI_setting_positionX_text': 'Yatay konum (X)',
-                         'UI_setting_positionX_tooltip': 'Daha küçük: sol. Daha büyük: doğru.',
-                         'UI_setting_positionY_text': 'Dikey konum (Y)',
-                         'UI_setting_positionY_tooltip': 'Daha küçük: yukarı. Daha büyük: aşağı.',
-                         'UI_setting_showInHangar_text': 'Hangar: etkin',
-                         'UI_setting_showInHangar_tooltip': '',
-                         'UI_setting_showInStatistic_text': 'Araç ipucu: etkin',
-                         'UI_setting_showInStatistic_tooltip': '',
-                         'UI_setting_showTooltipTargets_text': 'İpucu: hedef seviyeleri göster',
-                         'UI_setting_showTooltipTargets_tooltip': '',
-                         'UI_setting_textLock_text': 'Hangar: kilit paneli konumu',
-                         'UI_setting_textLock_tooltip': '',
-                         'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} mevcut '
-                                        'hareketli ortalama hasar</font>\n'
-                                        '<font color="#FFFFFF" size="12">{currentDamage} mevcut özet '
-                                        'hasar</font>\n'
-                                        'Kime <font color="#FFFFFF" size="12">{nextPercent}% </font> ihtiyaç '
-                                        '<font color="#FFFFFF" size="12">{needDamage}</font> hareketli '
-                                        'ortalama hasar\n'
-                                        '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
-                                        'color="#FFFFFF" size="12">WN8: {wn8}</font>   <font color="#FFFFFF" '
-                                        'size="12">WR: {winRate}</font>',
-                         'UI_tooltipsFull': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} mevcut '
-                                            'hareketli ortalama hasar</font>\n'
-                                            '<font color="#FFFFFF" size="12">{currentDamage} mevcut özet '
-                                            'hasar</font>\n'
-                                            'Kime <font color="#FFFFFF" size="12">{nextPercent}% </font> '
-                                            'ihtiyaç <font color="#FFFFFF" size="12">{needDamage}</font> '
-                                            'hareketli ortalama hasar\n'
-                                            '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
-                                            'color="#FFFFFF" size="12">WN8: {wn8}</font>   <font '
-                                            'color="#FFFFFF" size="12">WR: {winRate}</font>\n'
-                                            'Bu istatistik bu araçtaki son savaşa aittir\n'
-                                            'Kime <font color="#FFFFFF" size="12">20% </font> ihtiyaç <font '
-                                            'color="#FF6347" size="12">~{_20}</font>\n'
-                                            'Kime <font color="#FFFFFF" size="12">40% </font> ihtiyaç <font '
-                                            'color="#FE7903" size="12">~{_40}</font>\n'
-                                            'Kime <font color="#FFFFFF" size="12">55% </font> ihtiyaç <font '
-                                            'color="#F8F400" size="12">~{_55}</font>\n'
-                                            'Kime <font color="#FFFFFF" size="12">65% </font> ihtiyaç <font '
-                                            'color="#60FF00" size="12">~{_65}</font>\n'
-                                            'Kime <font color="#FFFFFF" size="12">85% </font> ihtiyaç <font '
-                                            'color="#02C9B3" size="12">~{_85}</font>\n'
-                                            'Kime <font color="#FFFFFF" size="12">95% </font> ihtiyaç <font '
-                                            'color="#D042F3" size="12">~{_95}</font>\n'
-                                            'Kime <font color="#FFFFFF" size="12">100% </font> ihtiyaç <font '
-                                            'color="#D042F3" size="12">~{_100}</font>'},
- 'marks_on_gun_tech_tree': {'UI_description': 'MarksOnGunTechTree (Oyun Yüzü)',
+ 'battle_marks_of_excellence': {'NaN': '[<b>NaN</b>]',
+ 'UI_HangarStatsEnd': '{c_damageToMark65}, {c_damageToMark85}\n{c_damageToMark95}, {c_damageToMark100}',
+ 'UI_HangarStatsStart': '<b>{currentPercent}<font size="14">[{currentDamage}]</font> </b>',
+ 'UI_description': 'Savaşta Üstünlük İşaretleri',
+ 'UI_marks_assist': 'Assist',
+ 'UI_marks_combined': 'Combined',
+ 'UI_marks_compact': 'Compact',
+ 'UI_marks_current': 'Mevcut MEB',
+ 'UI_marks_damage': 'Damage',
+ 'UI_marks_detailed': 'Detailed',
+ 'UI_marks_legacy': 'Eski (12 ön ayar / özel format)',
+ 'UI_marks_normal': 'Normal',
+ 'UI_menu_UIConfig': 'Yapılandırma',
+ 'UI_menu_UIMyp': '<font color="#D042F3">@Myp</font> seçim [<font color="#D042F3">twitch.tv/myp_</font>]',
+ 'UI_menu_UIReplay': 'Tekrarlar için',
+ 'UI_menu_UIReplayColor': 'Tekrarlar için Renkli',
+ 'UI_menu_UIReplayColorDamage': 'Hasarlı Tekrarlar için Renklendirildi',
+ 'UI_menu_UIReplayDamage': 'Hasarlı tekrarlar için',
+ 'UI_menu_UIcircon': '<font color="#02C9B3">@Circon</font> seçim [<font '
+                     'color="#02C9B3">twitch.tv/circon</font>]',
+ 'UI_menu_UIkorbenDallasNoMercy': '<font color="#e3256b">@KorbenDallasNoMercy</font> seçim [<font '
+                                  'color="#e3256b">youtube.com/c/KorbenDallasNoMercy</font>]',
+ 'UI_menu_UIoldskool': '<font color="#FFD700">@Oldskool</font> seçim [<font '
+                       'color="#FFD700">twitch.tv/oldskool</font>]',
+ 'UI_menu_UIskill4ltu': '<font color="#60FF00">@beceri</font> seçim [<font '
+                        'color="#60FF00">twitch.tv/skill4ltu</font>]',
+ 'UI_menu_UIspoter': '<font color="#6595EE">@gözcü</font> seçim [<font '
+                     'color="#6595EE">github.com/spoter</font>]',
+ 'UI_menu_UIspoterNew': 'yeni <font color="#6595EE">@gözcü</font> seçim [<font '
+                        'color="#6595EE">github.com/spoter</font>]',
+ 'UI_message': 'MEB görsel değişikliği %s',
+ 'UI_setting_UI_text': 'Savaşta kullanıcı arayüzü',
+ 'UI_setting_UI_tooltip': 'Savaşta kullanıcı arayüzü Genişletilmiş:\n'
+                          '<img src="img://objects/ui_extended.png"></img>\n'
+                          'Simple:\n'
+                          '<img src="img://objects/ui_simple.png"></img>\n'
+                          'Config:\n'
+                          '/mods/configs/Driftkings/MarksOnGunExtended/MarksOnGunExtended.json\n',
+ 'UI_setting_background_text': 'Savaş: arka planı göster',
+ 'UI_setting_background_tooltip': 'Enable the panel background. Opacity is configured separately.',
+ 'UI_setting_buttonReset_text': 'Düğme: Ayarları Sıfırla',
+ 'UI_setting_buttonReset_tooltip': '',
+ 'UI_setting_buttonShow_text': 'Düğme: Stili Değiştir',
+ 'UI_setting_buttonShow_tooltip': '',
+ 'UI_setting_buttonSizeDown_text': 'Düğme: Boyut -%10',
+ 'UI_setting_buttonSizeDown_tooltip': '',
+ 'UI_setting_buttonSizeUp_text': 'Düğme: Boyut +%10',
+ 'UI_setting_buttonSizeUp_tooltip': '',
+ 'UI_setting_colorRating_text': 'Renk tablosu',
+ 'UI_setting_colorRating_tooltip': 'Mükemmellik işaretleri için renk ölçeği.',
+ 'UI_setting_displayMode_text': 'Presentation',
+ 'UI_setting_showDamage_text': 'Hasarı göster',
+ 'UI_setting_showDelta_text': 'Tahmini deltayı göster',
+ 'UI_setting_showInBattleHalfPercents_text': "Savaş: +%0,5'e kadar hasar göster",
+ 'UI_setting_showInBattleHalfPercents_tooltip': '',
+ 'UI_setting_showInBattle_text': 'Savaş: Merhaba mesajı',
+ 'UI_setting_showInBattle_tooltip': 'Show a message at battle start. This does not control panel visibility.',
+ 'UI_setting_showInHangar_text': 'Hangar: MoE modunu göster',
+ 'UI_setting_showInHangar_tooltip': '',
+ 'UI_setting_showInReplay_text': 'Tekrar oynatma: etkin',
+ 'UI_setting_showInReplay_tooltip': 'İyi değil ama testler için faydalı',
+ 'UI_setting_showInStatistic_text': 'İstatistik: etkin',
+ 'UI_setting_showInStatistic_tooltip': '',
+ 'UI_setting_showMarks_text': 'İşaretleri göster',
+ 'UI_setting_showProgress_text': 'İlerlemeyi göster',
+ 'UI_setting_showTargets_text': 'Hedefleri göster',
+ 'UI_setting_techTreeMarkOfGunPercentSize_value': '',
+ 'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} mevcut hareketli ortalama '
+                'hasar</font>\n'
+                '<font color="#FFFFFF" size="12">{currentDamage} mevcut özet hasar</font>\n'
+                'Kime <font color="#FFFFFF" size="12">{nextPercent}% </font>   ihtiyaç <font color="#FFFFFF" '
+                'size="12">{needDamage}</font> hareketli ortalama hasar\n'
+                'Bu istatistik bu araçtaki son savaşta mevcut\n'
+                'Kime <font color="#FFFFFF" size="12">20% </font>   ihtiyaç <font color="{c20}" '
+                'size="12">~{_20}</font> hareketli ortalama hasar\n'
+                'Kime <font color="#FFFFFF" size="12">40% </font>   ihtiyaç <font color="{c40}" '
+                'size="12">~{_40}</font> hareketli ortalama hasar\n'
+                'Kime <font color="#FFFFFF" size="12">55% </font>   ihtiyaç <font color="{c55}" '
+                'size="12">~{_55}</font> hareketli ortalama hasar\n'
+                'Kime <font color="#FFFFFF" size="12">65% </font>   ihtiyaç <font color="{c65}" '
+                'size="12">~{_65}</font> hareketli ortalama hasar\n'
+                'Kime <font color="#FFFFFF" size="12">85% </font>   ihtiyaç <font color="{c85}" '
+                'size="12">~{_85}</font> hareketli ortalama hasar\n'
+                'Kime <font color="#FFFFFF" size="12">95% </font>   ihtiyaç <font color="{c95}" '
+                'size="12">~{_95}</font> hareketli ortalama hasar\n'
+                'Kime <font color="#FFFFFF" size="12">100% </font>  ihtiyaç <font color="{c100}" '
+                'size="12">~{_100}</font> hareketli ortalama hasar',
+ 'battleMessageSizeDown': 'MoE modu: Boyut <b>-10%</b>',
+ 'battleMessageSizeLimitMax': 'MoE modu: Ulaşıldı <b>maksimum[%1000]</b>',
+ 'battleMessageSizeLimitMin': 'MoE modu: Ulaşıldı <b>minimum[10%]</b>',
+ 'battleMessageSizeReset': 'MoE modu: Ayarları Sıfırla</b>',
+ 'battleMessageSizeUp': 'MoE modu: Boyut <b>+10%</b>'},
+ 'hangar_marks_of_excellence': {'UI_description': 'Garajda Üstünlük İşaretleri',
+ 'UI_panel_achieved': 'Başarıldı',
+ 'UI_panel_additionalGoal': 'Ek hedef',
+ 'UI_panel_automatic': 'Otomatik',
+ 'UI_panel_average': 'Birleşik EMA',
+ 'UI_panel_battles': 'savaşlar',
+ 'UI_panel_chooseVehicle': 'Bir tank seçin',
+ 'UI_panel_drag': 'SÜRÜKLEYİN',
+ 'UI_panel_estimate': 'Hedef tahmini',
+ 'UI_panel_estimateNote': 'Yalnızca tahmin; bir sonraki savaşta gereken hasar değil.',
+ 'UI_panel_goal1': '1. not (%65)',
+ 'UI_panel_goal2': '2. not (%85)',
+ 'UI_panel_goal3': '3. not (%95)',
+ 'UI_panel_header': 'MÜKEMMELLİK İŞARETLERİ',
+ 'UI_panel_historyWaiting': 'Tarih: Bir sonraki savaşı bekliyorum',
+ 'UI_panel_locked': 'KİLİTLİ',
+ 'UI_panel_mark': 'işaret',
+ 'UI_panel_mastery0': 'Ustalık yok',
+ 'UI_panel_mastery1': '3. sınıf',
+ 'UI_panel_mastery2': '2. sınıf',
+ 'UI_panel_mastery3': '1. sınıf',
+ 'UI_panel_mastery4': 'As Tankçı',
+ 'UI_panel_noDossier': 'Araç dosyası mevcut değil.',
+ 'UI_panel_noStats': 'İstatistik yüklenmedi',
+ 'UI_panel_observedBattles': 'gözlemlenen savaşlar',
+ 'UI_panel_remaining': 'kişi başı kalan',
+ 'UI_panel_selectVehicle': 'Hangarda bir araç seçin.',
+ 'UI_panel_thirdAchieved': '3. PUAN ALINDI',
+ 'UI_panel_tierLimit': "Seviye V'ten itibaren mevcut işaretler",
+ 'UI_panel_trend': 'Gözlemlenen eğilim',
+ 'UI_panel_winRate': 'KAZANMA ORANI',
+ 'UI_setting_colorRating_NoobMeter': 'NoobMeter',
+ 'UI_setting_colorRating_WotLabs': 'WotLabs',
+ 'UI_setting_colorRating_XVM': 'XVM',
+ 'UI_setting_colorRating_text': 'Renk Derecelendirmesini Seçin',
+ 'UI_setting_colorRating_tooltip': 'MoE, WN8 ve kazanma oranı için renk şemasını seçin',
+ 'UI_setting_compactMode_text': 'Kompakt panel',
+ 'UI_setting_compactMode_tooltip': 'İkincil araç istatistiklerini gizleyin.',
+ 'UI_setting_goalSelection_text': 'Hedefi işaretle',
+ 'UI_setting_goalSelection_tooltip': 'Otomatik, bir sonraki kazanılmamış puanı seçer. Hasar orantılı bir '
+                                     'tahmindir, sunucu eşiği veya bir sonraki savaş tahmini değildir.',
+ 'UI_setting_historyBattles_text': 'Tarihteki son savaşlar',
+ 'UI_setting_historyBattles_tooltip': 'Güncellemeler birkaç savaşı gruplandırabilir. Bu sürüm yüklendiğinde '
+                                      'geçmiş başlar.',
+ 'UI_setting_positionX_text': 'Yatay konum (X)',
+ 'UI_setting_positionX_tooltip': 'Daha küçük: sol. Daha büyük: doğru.',
+ 'UI_setting_positionY_text': 'Dikey konum (Y)',
+ 'UI_setting_positionY_tooltip': 'Daha küçük: yukarı. Daha büyük: aşağı.',
+ 'UI_setting_showInHangar_text': 'Hangar: etkin',
+ 'UI_setting_showInHangar_tooltip': '',
+ 'UI_setting_showInStatistic_text': 'Araç ipucu: etkin',
+ 'UI_setting_showInStatistic_tooltip': '',
+ 'UI_setting_showTooltipTargets_text': 'İpucu: hedef seviyeleri göster',
+ 'UI_setting_showTooltipTargets_tooltip': '',
+ 'UI_setting_textLock_text': 'Hangar: kilit paneli konumu',
+ 'UI_setting_textLock_tooltip': 'Prevent header dragging. When unlocked, drag with the left mouse button; '
+                                'the position is saved.',
+ 'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} mevcut hareketli ortalama '
+                'hasar</font>\n'
+                '<font color="#FFFFFF" size="12">{currentDamage} mevcut özet hasar</font>\n'
+                'Kime <font color="#FFFFFF" size="12">{nextPercent}% </font> ihtiyaç <font color="#FFFFFF" '
+                'size="12">{needDamage}</font> hareketli ortalama hasar\n'
+                '<font color="#FFFFFF" size="12">{mastery}</font>   <font color="#FFFFFF" size="12">WN8: '
+                '{wn8}</font>   <font color="#FFFFFF" size="12">WR: {winRate}</font>',
+ 'UI_tooltipsFull': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} mevcut hareketli ortalama '
+                    'hasar</font>\n'
+                    '<font color="#FFFFFF" size="12">{currentDamage} mevcut özet hasar</font>\n'
+                    'Kime <font color="#FFFFFF" size="12">{nextPercent}% </font> ihtiyaç <font '
+                    'color="#FFFFFF" size="12">{needDamage}</font> hareketli ortalama hasar\n'
+                    '<font color="#FFFFFF" size="12">{mastery}</font>   <font color="#FFFFFF" size="12">WN8: '
+                    '{wn8}</font>   <font color="#FFFFFF" size="12">WR: {winRate}</font>\n'
+                    'Bu istatistik bu araçtaki son savaşa aittir\n'
+                    'Kime <font color="#FFFFFF" size="12">20% </font> ihtiyaç <font color="#FF6347" '
+                    'size="12">~{_20}</font>\n'
+                    'Kime <font color="#FFFFFF" size="12">40% </font> ihtiyaç <font color="#FE7903" '
+                    'size="12">~{_40}</font>\n'
+                    'Kime <font color="#FFFFFF" size="12">55% </font> ihtiyaç <font color="#F8F400" '
+                    'size="12">~{_55}</font>\n'
+                    'Kime <font color="#FFFFFF" size="12">65% </font> ihtiyaç <font color="#60FF00" '
+                    'size="12">~{_65}</font>\n'
+                    'Kime <font color="#FFFFFF" size="12">85% </font> ihtiyaç <font color="#02C9B3" '
+                    'size="12">~{_85}</font>\n'
+                    'Kime <font color="#FFFFFF" size="12">95% </font> ihtiyaç <font color="#D042F3" '
+                    'size="12">~{_95}</font>\n'
+                    'Kime <font color="#FFFFFF" size="12">100% </font> ihtiyaç <font color="#D042F3" '
+                    'size="12">~{_100}</font>'},
+ 'tech_tree_marks_of_excellence': {'UI_description': 'Teknoloji ağacında Üstünlük İşaretleri',
                             'UI_setting_badgeOffsetX_text': 'X konumu (sol / sağ)',
                             'UI_setting_badgeOffsetX_tooltip': 'Olumsuz: sol. Olumlu: doğru.',
                             'UI_setting_badgeOffsetY_text': 'Y Konumu (yukarı/aşağı)',
@@ -754,7 +811,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_showInTechTreeMastery_tooltip': '',
                             'UI_setting_showInTechTree_text': 'TechTree: etkin',
                             'UI_setting_showInTechTree_tooltip': ''},
- 'minimap_plugins': {'UI_description': 'MinimapPlugins',
+ 'minimap_enhancements': {'UI_description': 'Mini harita iyileştirmeleri',
                      'UI_field_alpha': 'Opacity',
                      'UI_field_mode': 'Visibility',
                      'UI_minimapAim_0': 'Orijinal sarı',
@@ -889,12 +946,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_zoomFactorMax_tooltip': 'Mini harita için maksimum yakınlaştırma düzeyi '
                                                          '(1.0-3.0)',
                      'UI_setting_zoomFactor_text': 'Yakınlaştırma ölçeği'},
- 'own_health': {'UI_description': 'OwnHealth',
+ 'vehicle_health': {'UI_description': 'Araç can puanı',
                 'UI_setting_x_text': 'Konum X',
                 'UI_setting_x_tooltip': '',
                 'UI_setting_y_text': 'Y Konumu',
                 'UI_setting_y_tooltip': ''},
- 'player_panel_pro': {'UI_description': 'PlayerPanelPro',
+ 'team_panels': {'UI_description': 'Takım panelleri ve savaş yükleme',
                       'UI_panel_alpha': 'Panel arka planı opaklığı',
                       'UI_panel_altMode': 'ALT basılı tutulurken panel modu',
                       'UI_panel_bindToIcon': 'Araç simgesine sabitle',
@@ -976,9 +1033,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                       'UI_setting_toggleKey_text': 'Kısayol tuşunu aç/kapat',
                       'UI_setting_toggleKey_tooltip': 'Savaş sırasında bu düğmeye basmak, HP işaretlerinin '
                                                       'görüntülenmesini değiştirir.'},
- 'repair_extended': {'UI_description': 'RepairExtended',
-                     'UI_setting_autoRepair_text': 'Otomatik kullanım',
-                     'UI_setting_autoRepair_tooltip': '',
+ 'repair_controls': {'UI_description': 'Onarım kontrolleri',
                      'UI_setting_buttonChassis_text': 'Düğme: Kasayı Geri Yükle',
                      'UI_setting_buttonChassis_tooltip': '',
                      'UI_setting_buttonRepair_text': 'Düğme: Akıllı Onarım',
@@ -993,70 +1048,19 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_repairDevices_tooltip': '',
                      'UI_setting_restoreChassis_text': 'Şasiyi geri yükle',
                      'UI_setting_restoreChassis_tooltip': '',
-                     'UI_setting_timerMax_format': ' sn.',
-                     'UI_setting_timerMax_text': 'Maksimum gecikme otomatik kullanımı',
-                     'UI_setting_timerMin_format': ' sn.',
-                     'UI_setting_timerMin_text': 'Min gecikmeli otomatik kullanım',
                      'UI_setting_useGoldKits_text': 'Altın Kitleri Kullan',
                      'UI_setting_useGoldKits_tooltip': ''},
- 'safe_shot': {'UI_battle_activateMessage': 'SafeShot: Etkinleştirildi!',
-               'UI_description': 'SafeShot',
-               'UI_setting_activateMessage_text': 'Mesajı Etkinleştir',
-               'UI_setting_activateMessage_tooltip': 'Savaşa girerken bildirim mesajını göster',
-               'UI_setting_chatMessages_text': 'Mesajı Biçimlendir',
-               'UI_setting_chatMessages_tooltip': 'Takım atışlarını engellerken özel mesaj formatı. Kullanım '
-                                                  '{name} ve {vehicle} yer tutucular olarak',
-               'UI_setting_deadShotBlockTimeOut_text': 'Ölü Atış Bloğu Zaman Aşımı',
-               'UI_setting_deadShotBlockTimeOut_tooltip': 'Araç yok edildikten sonra atışların engellenmesi '
-                                                          'için saniye cinsinden süre',
-               'UI_setting_deadShotBlock_text': 'Ölü Atış Bloğu',
-               'UI_setting_deadShotBlock_tooltip': 'Halihazırda yok edilmiş araçlara ateş açılmasını önler',
-               'UI_setting_disableKey_text': 'Anahtarı Devre Dışı Bırak',
-               'UI_setting_disableKey_tooltip': 'Modu geçici olarak etkinleştirmek/devre dışı bırakmak için '
-                                                'kısayol tuşu',
-               'UI_setting_teamKillerShotUnblock_text': 'Takım Öldürücü Vuruşu Engellemeyi Kaldır',
-               'UI_setting_teamKillerShotUnblock_tooltip': 'Takım katillerine ateş edilmesini sağlar',
-               'UI_setting_teamShotBlock_text': 'Takım Şut Bloğu',
-               'UI_setting_teamShotBlock_tooltip': 'Takım arkadaşlarına ateş etmeyi önler',
-               'UI_setting_triggerMessage_text': 'Mesajı Devre Dışı Bırak',
-               'UI_setting_triggerMessage_tooltip': 'Şutlar engellendiğinde bildirim mesajlarını '
-                                                    'göster/gizle',
-               'UI_setting_wasteShotBlock_text': 'Atık Atış Bloğu',
-               'UI_setting_wasteShotBlock_tooltip': 'Hiçbir hedef seçilmediğinde çekimi önler',
-               'UI_triggerText_disabled': 'SafeShot: Devre dışı!',
-               'UI_triggerText_enabled': 'SafeShot: Etkin!'},
- 'server_turret_extended': {'UI_battle_OFF': 'KAPALI',
+ 'server_turret_sync': {'UI_battle_OFF': 'KAPALI',
                             'UI_battle_ON': 'AÇIK',
                             'UI_battle_activateMessage': "'Sunucu Taret Genişletilmiş': Etkinleştirildi",
-                            'UI_description': 'ServerTurretExtended',
+                            'UI_description': 'Sunucuyla kule eşitleme',
                             'UI_setting_activateMessage_text': 'Etkinleştirme Mesajını Göster',
                             'UI_setting_activateMessage_tooltip': 'Savaşta Etkinleştirme Mesajını Göster',
-                            'UI_setting_autoActivateWheelMode_text': 'Tekerlekler: Otomatik hız modu',
-                            'UI_setting_autoActivateWheelMode_tooltip': 'Hız veya manevra modunu otomatik '
-                                                                        'olarak açar',
-                            'UI_setting_buttonAutoMode_text': 'Düğme: Tekerlekler otomatik hız modu',
-                            'UI_setting_buttonAutoMode_tooltip': '',
-                            'UI_setting_buttonMaxMode_text': 'Düğme: Tekerlekler maksimum hızı korur',
-                            'UI_setting_buttonMaxMode_tooltip': '',
-                            'UI_setting_fixAccuracyInMove_text': 'Doğruluğu Düzelt',
-                            'UI_setting_fixAccuracyInMove_tooltip': 'Tankı hareket ettirip sonra '
-                                                                    'durdurduğunuzda, nişan almayı '
-                                                                    'kaybetmemek için düzeltme doğruluğu '
-                                                                    'kullanıldı',
-                            'UI_setting_fixWheelCruiseControl_text': 'Tekerleklerdeki Hız Sabitleyiciyi '
-                                                                     'Düzeltme',
-                            'UI_setting_fixWheelCruiseControl_tooltip': 'Hız Sabitleyici ile Tekerlek modunu '
-                                                                        'etkinleştirdiğinizde araç '
-                                                                        'durdurulur, bu ayar bu özelliği '
-                                                                        'devre dışı bırakır.',
-                            'UI_setting_maxWheelMode_text': 'Tekerlekler: Maksimum hızı koruyun',
-                            'UI_setting_maxWheelMode_tooltip': 'Maksimum hıza ulaşıldığında manevra yaparken '
-                                                               'hız modunu devre dışı bırakmaz',
                             'UI_setting_serverTurret_text': 'Sunucu Taret',
                             'UI_setting_serverTurret_tooltip': "Taret'i Sunucu Hedefi koordinatlarına "
                                                                "taşıyın (oyun ayarlarında Sunucu Görüşü'nün "
                                                                'etkinleştirilmesi gerekir)'},
- 'sixth_sense': {'UI_description': 'SixthSense',
+ 'sixth_sense_alert': {'UI_description': 'Altıncı His uyarısı',
                  'UI_setting_defaultIconName_text': 'Varsayılan Simge Adı',
                  'UI_setting_defaultIconName_tooltip': 'Gömülü bir görüntü seçin.',
                  'UI_setting_defaultIcon_text': 'Varsayılan Simge',
@@ -1108,7 +1112,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_sound_SixthSense_08': 'Süper Mario',
                  'UI_sound_SixthSense_09': 'Trap',
                  'UI_sound_SixthSense_10': 'X-Files'},
- 'spotted_extended_light': {'UI_description': 'SpottedExtendedLight',
+ 'enemy_spotting_status': {'UI_description': 'Düşman tespit durumu',
                             'UI_macros_help': 'Bildirimleri özelleştirmek için mesaj formatlarınızda bu '
                                               'makroları kullanın:\n'
                                               '• {icons} - Araç simgelerini gösterir\n'
@@ -1190,7 +1194,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_sound_text': 'Savaş seslerini etkinleştir',
                             'UI_setting_sound_tooltip': 'Tespit edilen düşmanlar ve yardım hasarı için sesli '
                                                         'bildirimleri açın/kapatın'},
- 'zoom_extended': {'UI_description': 'ZoomExtended',
+ 'sniper_camera': {'UI_description': 'Keskin nişancı kamerası',
                    'UI_setting_zoomSteps_enabled_text': u'Özel yakınlaştırma seviyeleri',
                    'UI_setting_zoomSteps_steps_text': u'Yakınlaştırma seviyeleri (JSON listesi)',
                    'UI_setting_zoomSteps_steps_tooltip': u'2 veya üzeri en az dört farklı sayı girin, örneğin [4, 6, 8, 12, 16, 25, 30]. Sonraki savaşta uygulanır.',
@@ -1294,6 +1298,7 @@ PANEL = {'actionFailed': "Eylem başarısız oldu. game.log'ye bakın.",
  'profileName': 'Profil adı',
  'profileRename': 'Yeniden adlandır',
  'profiles': 'Profiller',
+ 'resetOption': 'Reset this option to default',
  'reset': 'Varsayılanları geri yükle',
  'resetDone': 'Varsayılanlar geri yüklendi. Bunları kullanmak için başvurun.',
  'resetTheme': 'Temayı sıfırla',

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from Driftkings.interface_catalog import gameface_spec
-from Driftkings._constants import GLOBAL, PLAYER_PANEL_PRO
+from Driftkings._constants import GLOBAL, TEAM_PANELS
 from Driftkings.settings.service import settings_service
 """Gameface roster bridge for the current random TAB and White Tiger loading."""
 import json
@@ -77,7 +77,7 @@ class GamefaceLoading(object):
 
     def reportPerformance(self, args):
         if (not self.owner.active or not settings_service.getComponentDict(self.owner.config).get(GLOBAL.ENABLED, True)
-                or not settings_service.getComponentDict(self.owner.config)[PLAYER_PANEL_PRO.PERFORMANCE].get('diagnostics', False)
+                or not settings_service.getComponentDict(self.owner.config)[TEAM_PANELS.PERFORMANCE].get('diagnostics', False)
                 or not isinstance(args, dict)):
             return
         try:
@@ -117,7 +117,7 @@ class GamefaceLoading(object):
                 order={'left':[p.getVehicleId() for p in players.getAllies()],
                        'right':[p.getVehicleId() for p in players.getEnemies()]}
                 data={'enabled':enabled,'screen':screen,'rows':result,'order':order,
-                      'diagnostics':settings_service.getComponentDict(self.owner.config)[PLAYER_PANEL_PRO.PERFORMANCE].get('diagnostics',False)}
+                      'diagnostics':settings_service.getComponentDict(self.owner.config)[TEAM_PANELS.PERFORMANCE].get('diagnostics',False)}
             else:
                 result=[]
                 for row in rows:

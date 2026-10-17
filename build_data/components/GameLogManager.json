@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "GameLogManager",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "components.game_log_manager",
+  "config_files": [
+    "default/game_log_manager.json"
+  ],
+  "assets": []
+}

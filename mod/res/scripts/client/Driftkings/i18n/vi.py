@@ -25,7 +25,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_save': 'Cứu',
                      'UI_setting_server': 'Máy chủ:',
                      'UI_setting_showPassword': 'Hiển thị mật khẩu'},
- 'aiming_angles': {'UI_description': 'AimingAngles',
+ 'gun_traverse_limits': {'UI_description': 'Giới hạn xoay pháo',
                    'UI_setting_horizontal_0': 'Tàn tật',
                    'UI_setting_horizontal_1': 'Góc',
                    'UI_setting_horizontal_2': 'Dấu ngoặc vuông',
@@ -66,7 +66,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                   "src='img://gui/AimingAngles/4/Bottom.png'>\t<img "
                                                   "src='img://gui/AimingAngles/5/Bottom.png'>\t<img "
                                                   "src='img://gui/AimingAngles/6/Bottom.png'>"},
- 'arcade_zoom': {'UI_description': 'ArcadeZoom',
+ 'third_person_zoom': {'UI_description': 'Thu phóng góc nhìn ngoài',
                  'UI_setting_max_text': 'Thu nhỏ tối đa',
                  'UI_setting_max_tooltip': 'Khoảng cách camera tối đa từ xe',
                  'UI_setting_min_text': 'Thu nhỏ tối thiểu',
@@ -76,22 +76,22 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_setting_startDeadDist_text': 'Bắt đầu khoảng cách chết',
                  'UI_setting_startDeadDist_tooltip': 'Khoảng cách camera ban đầu ở chế độ khám nghiệm tử '
                                                      'thi'},
- 'armor_calculator': {'UI_colors': {'green': '#60CB00',
+ 'penetration_indicator': {'UI_colors': {'green': '#60CB00',
                                     'orange': '#FF9900',
                                     'purple': '#6F6CD3',
                                     'red': '#ED070A',
                                     'yellow': '#FFC900'},
-                      'UI_description': 'ArmorCalculator',
+                      'UI_description': 'Chỉ báo xuyên giáp',
                       'UI_noDamage': 'Đòn chí mạng, không gây sát thương.',
                       'UI_ricochet': 'Ricochet',
                       'UI_setting_displayOnAllies_text': 'Hiển thị trên đồng minh',
                       'UI_setting_displayOnAllies_tooltip': ''},
- 'arty_splash': {'UI_artySplash_messageDotOff': 'HE Splash: Ẩn dấu chấm',
+ 'artillery_blast_radius': {'UI_artySplash_messageDotOff': 'HE Splash: Ẩn dấu chấm',
                  'UI_artySplash_messageDotOn': 'HE Splash: Hiển thị dấu chấm',
                  'UI_artySplash_messageSplashOff': 'HE Splash: Ẩn Splash',
                  'UI_artySplash_messageSplashOn': 'HE Splash: Hiển thị Splash',
                  'UI_artySplash_name': 'Bán kính vụ nổ cao',
-                 'UI_description': 'ArtySplash',
+                 'UI_description': 'Bán kính nổ của pháo tự hành',
                  'UI_setting_buttonShowDot_text': 'Nút: hiển thị|ẩn Dấu chấm',
                  'UI_setting_buttonShowDot_tooltip': '',
                  'UI_setting_buttonShowSplash_text': 'Nút: hiển thị|ẩn Splash',
@@ -106,17 +106,17 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_setting_showModeSniper_tooltip': '',
                  'UI_setting_showSplashOnDefault_text': 'Hiển thị Splash theo mặc định',
                  'UI_setting_showSplashOnDefault_tooltip': ''},
- 'auto_aim_optimize': {'UI_description': 'AutoAimOptimize',
+ 'autoaim_target_indicator': {'UI_description': 'Chỉ báo mục tiêu tự ngắm',
                        'UI_setting_angle_text': 'Đặt góc để bắt mục tiêu',
                        'UI_setting_angle_value': 'x',
                        'UI_setting_catchHiddenTarget_text': 'Bắt mục tiêu ẩn sau chướng ngại vật',
                        'UI_setting_catchHiddenTarget_tooltip': '',
                        'UI_setting_disableArtyMode_text': 'Tắt ở chế độ Arty',
                        'UI_setting_disableArtyMode_tooltip': ''},
- 'auto_claim_clan': {'UI_description': 'AutoClaimClan',
+ 'clan_reward_collection': {'UI_description': 'Nhận phần thưởng bang hội',
                      'UI_setting_enabled_text': 'Đã bật',
                      'UI_setting_enabled_tooltip': 'Bật/tắt chế độ.'},
- 'banks_loader': {'UI_description': 'BanksLoader',
+ 'sound_bank_loader': {'UI_description': 'Tải gói âm thanh',
                   'UI_restart_button_close': 'Tiếp tục',
                   'UI_restart_button_restart': 'Khởi động lại',
                   'UI_restart_button_shutdown': 'Tắt máy',
@@ -140,7 +140,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                      'Điều này sẽ <b>không</b> được yêu cầu sau này.\n'
                                      'Bạn có muốn khởi động lại trò chơi ngay bây giờ không?',
                   'UI_restart_wotmod': ' • cấu hình <b>LOẠI BỎ</b> từ các gói: '},
- 'battle_efficiency': {'UI_description': 'BattleEfficiency',
+ 'battle_performance': {'UI_description': 'Hiệu suất chiến đấu',
                        'UI_setting_battleResultsFormat_text': 'Sửa đổi cửa sổ kết quả trận chiến',
                        'UI_setting_battleResultsFormat_tooltip': 'Macro có sẵn:\n'
                                                                  "WN8:'{wn8}', Màu sắc: '{c:wn8}'\n"
@@ -170,7 +170,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                     "XTE:'{xte}', Màu sắc:'{c:x}'",
                        'UI_setting_textLock_text': 'Khóa văn bản',
                        'UI_setting_textLock_tooltip': 'Kéo văn bản trong trận chiến'},
- 'battle_options': {'UI_description': 'BattleOptions',
+ 'battle_preferences': {'UI_setting_removeFog_text': 'Remove fog',
+                      'UI_setting_removeFog_tooltip': 'Generates a separate package from this installation’s maps. Installation or removal happens after closing the game. Requires a restart. Disabling this module also removes the package.',
+                      'UI_fog_restart_on': 'Fog removal scheduled. Close and reopen the game to apply.',
+                      'UI_fog_restart_off': 'Fog package removal scheduled. Close and reopen the game to restore fog.',
+                      'UI_fog_error': 'Could not apply fog removal. Check game.log and try again in Battle preferences.',
+                      'UI_description': 'Tùy chọn chiến đấu',
                     'UI_setting_addEnemyName_text': 'Thêm tên kẻ thù',
                     'UI_setting_addEnemyName_tooltip': 'Thêm tên xe địch vào nhật ký thiệt hại.',
                     'UI_setting_clipLoad_text': 'Trạng thái tải lại',
@@ -221,7 +226,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                                'chó.',
                     'UI_setting_stunSound_text': 'Âm thanh choáng váng',
                     'UI_setting_stunSound_tooltip': 'Tắt hiệu ứng âm thanh choáng.'},
- 'battle_stat': {'UI_description': 'BattleStat',
+ 'battle_statistics': {'UI_description': 'Thống kê chiến đấu',
                  'UI_setting_colorRating_text': 'Bảng màu',
                  'UI_setting_colorRating_tooltip': 'Thang màu cho số liệu thống kê.',
                  'UI_setting_format_text': 'Định dạng văn bản',
@@ -229,9 +234,77 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_setting_teamChances_text': 'Hiển thị cơ hội của đội',
                  'UI_setting_teamChances_tooltip': 'Hiển thị tỷ lệ phần trăm cơ hội chiến thắng cho mỗi đội '
                                                    'trong trận chiến'},
- 'carousel_stats': {'UI_description': 'CarouselStats',
-                    'UI_setting_colorRating_text': 'Bảng màu',
-                    'UI_setting_showIcons_text': 'Hiển thị biểu tượng'},
+ 'vehicle_carousel': {
+ 'UI_carousel_params': 'Vehicle parameters',
+ 'UI_carousel_bonus': 'Experience bonus',
+ 'UI_carousel_filterFavorite': 'Favourite vehicles',
+'UI_description': 'Danh sách xe',
+ 'UI_setting_colorRating_text': 'Bảng màu',
+ 'UI_setting_showIcons_text': 'Hiển thị biểu tượng',
+ 'UI_carousel_layout': 'Layout',
+ 'UI_carousel_rows': 'Rows (0 = game default)',
+ 'UI_carousel_auto': 'Automatic',
+ 'UI_carousel_normal': 'Standard layout',
+ 'UI_carousel_small': 'Compact layout',
+ 'UI_carousel_backgroundAlpha': 'Background opacity',
+ 'UI_carousel_slotBackgroundAlpha': 'Slot background opacity',
+ 'UI_carousel_slotBorderAlpha': 'Slot border opacity',
+ 'UI_carousel_slotSelectedBorderAlpha': 'Selected slot border opacity',
+ 'UI_carousel_edgeFadeAlpha': 'Edge fade opacity',
+ 'UI_carousel_scrollingSpeed': 'Scrolling speed',
+ 'UI_carousel_hideBuyTank': 'Hide vehicle purchase slot',
+ 'UI_carousel_hideBuySlot': 'Hide garage slot purchase',
+ 'UI_carousel_hideRestoreTank': 'Hide vehicle recovery slot',
+ 'UI_carousel_showTotalSlots': 'Show total garage slots',
+ 'UI_carousel_showUsedSlots': 'Show occupied garage slots',
+ 'UI_carousel_enableLockBackground': 'Show unavailable vehicle background',
+ 'UI_carousel_suppressCarouselTooltips': 'Hide carousel tooltips',
+ 'UI_carousel_filter': 'Filter',
+ 'UI_carousel_filterSpacing': 'Filter spacing',
+ 'UI_carousel_horizontal': 'Horizontal',
+ 'UI_carousel_vertical': 'Vertical',
+ 'UI_carousel_sortingCriteria': 'Sorting (comma-separated; - = descending)',
+ 'UI_carousel_nationsOrder': 'Nation order (comma-separated)',
+ 'UI_carousel_typesOrder': 'Vehicle type order (comma-separated)',
+ 'UI_carousel_width': 'Width',
+ 'UI_carousel_height': 'Height',
+ 'UI_carousel_gap': 'Spacing between slots',
+ 'UI_carousel_show': 'Show',
+ 'UI_carousel_flag': 'National flag',
+ 'UI_carousel_tankIcon': 'Vehicle image',
+ 'UI_carousel_tankType': 'Vehicle type',
+ 'UI_carousel_level': 'Vehicle tier',
+ 'UI_carousel_xp': 'Experience',
+ 'UI_carousel_tankName': 'Vehicle name',
+ 'UI_carousel_info': 'Additional information',
+ 'UI_carousel_favorite': 'Favourite indicator',
+ 'UI_carousel_progressionPoints': 'Progression points',
+ 'UI_carousel_dx': 'Horizontal offset',
+ 'UI_carousel_dy': 'Vertical offset',
+ 'UI_carousel_alpha': 'Opacity',
+ 'UI_carousel_scale': 'Scale',
+ 'UI_carousel_extraField': 'Custom field',
+ 'UI_carousel_enabled': 'Enabled',
+ 'UI_carousel_format': 'Text template',
+ 'UI_carousel_color': 'Text color',
+ 'UI_carousel_bgColor': 'Background color',
+ 'UI_carousel_src': 'Image resource path',
+ 'UI_carousel_x': 'Horizontal position',
+ 'UI_carousel_y': 'Vertical position',
+ 'UI_carousel_fontSize': 'Font size',
+ 'UI_carousel_iconSize': 'Icon size',
+ 'UI_carousel_align': 'Alignment',
+ 'UI_carousel_layer': 'Display layer',
+ 'UI_carousel_left': 'Left',
+ 'UI_carousel_center': 'Center',
+ 'UI_carousel_right': 'Right',
+ 'UI_carousel_background': 'Background',
+ 'UI_carousel_foreground': 'Foreground',
+ 'UI_carousel_premium': 'Premium vehicles',
+ 'UI_carousel_elite': 'Elite vehicles',
+ 'UI_carousel_favoriteVehicle': 'Favourite vehicles',
+ 'UI_carousel_nation': 'Nation',
+ 'UI_carousel_vehicleType': 'Vehicle type'},
  'common': {'UI_native_close': 'Đóng',
             'UI_mog_lockPosition': 'Lock panel position',
  'UI_mog_enableBattle': u'Enable battle panel',
@@ -277,7 +350,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
             'UI_native_press': 'Nhấn một phím (Esc để hủy)',
             'UI_native_save': 'Lưu và áp dụng',
             'UI_native_saved': 'Đã lưu cài đặt.'},
- 'crew_settings': {'UI_description': 'Cấu hình phi hành đoàn',
+ 'crew_management': {'UI_description': 'Quản lý kíp lái',
                    'UI_message_crewNotAvailable': 'Phi hành đoàn không có sẵn để trở về',
                    'UI_message_crewReturned': 'Phi hành đoàn đã được đưa trở lại phương tiện',
                    'UI_setting_autoReturnDelay_text': 'Độ trễ trả lại tự động (giây)',
@@ -293,7 +366,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_showNotifications_text': 'Hiển thị thông báo',
                    'UI_setting_showNotifications_tooltip': 'Hiển thị thông báo hệ thống khi phi hành đoàn '
                                                            'quay trở lại'},
- 'dispersion_circle': {'UI_description': 'Reticle',
+ 'aiming_reticles': {'UI_description': 'Vòng ngắm',
                        'UI_setting_gunMarkerMinimumSize_text': 'Kích thước tối thiểu của điểm đánh dấu súng',
                        'UI_setting_gunMarkerMinimumSize_tooltip': 'Kích thước tối thiểu của điểm đánh dấu '
                                                                   'súng tính bằng pixel',
@@ -318,7 +391,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                        'UI_setting_showServerSpgStrategicReticle_text': 'Kẻ ô chiến lược SPG',
                        'UI_setting_showServerSpgStrategicReticle_tooltip': 'Kích hoạt ô máy chủ cho chế độ '
                                                                            'chiến lược SPG'},
- 'dispersion_timer': {'UI_description': 'DispersionTimer',
+ 'aiming_countdown': {'UI_description': 'Thời gian ngắm',
                       'UI_setting_blue_text': "<font color='#%(blue)s'>Màu hiện tại: #%(blue)s</font>",
                       'UI_setting_blue_tooltip': '',
                       'UI_setting_colorBlue_text': 'Chọn màu cho bộ đếm thời gian phân tán rất tốt:',
@@ -343,7 +416,8 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                       'UI_setting_y_tooltip': '',
                       'UI_setting_yellow_text': "<font color='#%(yellow)s'>Màu hiện tại: #%(yellow)s</font>",
                       'UI_setting_yellow_tooltip': ''},
- 'distance_marker': {'UI_setting_anchorHorizontalOffset_text': 'Bù ngang',
+ 'target_distance': {'UI_description': 'Khoảng cách mục tiêu',
+                    'UI_setting_anchorHorizontalOffset_text': 'Bù ngang',
                      'UI_setting_anchorHorizontalOffset_tooltip': 'Điều chỉnh vị trí nằm ngang của điểm đánh '
                                                                   'dấu',
                      'UI_setting_anchorPosition_tankBottom': 'Đáy bể',
@@ -384,7 +458,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                 'UI_profile_copy': 'Tạo bản sao của hồ sơ đang hoạt động (tùy chọn)',
                 'UI_profile_restart': 'Khởi động lại trò chơi để áp dụng một cấu hình khác.',
                 'UI_profile_select': 'Hồ sơ cho trận đấu tiếp theo bắt đầu'},
- 'flight_timer': {'UI_description': 'FlightTimer',
+ 'shell_flight_time': {'UI_description': 'Thời gian bay của đạn',
                   'UI_setting_spgOnly_text': 'Chỉ dành cho SPG?',
                   'UI_setting_spgOnly_tooltip': 'Nếu được chọn, bộ đếm thời gian sẽ chỉ hiển thị đối với '
                                                 'SPG.',
@@ -394,12 +468,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                   'UI_setting_x_tooltip': '',
                   'UI_setting_y_text': 'Vị trí Y',
                   'UI_setting_y_tooltip': ''},
- 'hangar_options': {'UI_clock_analog': 'Tương tự',
+ 'hangar_preferences': {'UI_clock_analog': 'Tương tự',
                     'UI_clock_digital': 'Điện tử',
                     'UI_clock_flip': 'Lật',
                     'UI_clock_minimal': 'Tối thiểu',
                     'UI_clock_panel': 'Trang tổng quan',
-                    'UI_description': 'HangarOptions',
+                    'UI_description': 'Tùy chọn xưởng xe',
                     'UI_setting_allowChannelButtonBlinking_text': 'Cho phép nhấp nháy nút kênh',
                     'UI_setting_allowChannelButtonBlinking_tooltip': 'Cho phép nhấp nháy nút kênh thanh tin '
                                                                      'nhắn (bang hội hoặc trò chuyện riêng '
@@ -490,8 +564,8 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                     'UI_setting_showWotPlusButton_text': 'Hiển thị nút WoT Plus',
                     'UI_setting_showXpToUnlockVeh_text': 'Yêu cầu về XP của xe',
                     'UI_setting_showXpToUnlockVeh_tooltip': 'Hiển thị XP cần thiết để mở khóa xe'},
- 'info_panel': {'UI_delay_format': 'giây.',
-                'UI_description': 'InfoPanel',
+ 'target_information': {'UI_delay_format': 'giây.',
+                'UI_description': 'Thông tin mục tiêu',
                 'UI_setting_aliveOnly_text': 'Chỉ còn sống',
                 'UI_setting_aliveOnly_tooltip': 'Chỉ hiển thị cho người chơi còn sống.',
                 'UI_setting_altKey_text': 'thay thế. Chìa khóa',
@@ -527,224 +601,203 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                 'armor_piercing_he': 'HESH',
                 'high_explosive': 'ANH TA',
                 'hollow_charge': 'NHIỆT'},
- 'logs_swapper': {'UI_description': 'LogsSwapper',
-                  'UI_setting_logSwapper_text': 'Kích hoạt nhật ký đảo ngược.',
-                  'UI_setting_logSwapper_tooltip': 'Đảo ngược vị trí của nhật ký sát thương trong giao diện '
-                                                   'chiến đấu.',
-                  'UI_setting_wgLogHideAssist_text': 'Hỗ trợ ẩn nhật ký WG',
-                  'UI_setting_wgLogHideAssist_tooltip': 'Ẩn thông báo hỗ trợ sát thương trong nhật ký chiến '
-                                                        'đấu WG tiêu chuẩn.',
-                  'UI_setting_wgLogHideBlock_text': 'Khối ẩn nhật ký WG',
-                  'UI_setting_wgLogHideBlock_tooltip': 'Ẩn các thông báo thiệt hại bị chặn trong nhật ký '
-                                                       'chiến đấu WG tiêu chuẩn.',
-                  'UI_setting_wgLogHideCritics_text': 'Nhật ký WG Ẩn các nhà phê bình',
-                  'UI_setting_wgLogHideCritics_tooltip': 'Ẩn các thông báo tấn công quan trọng trong nhật ký '
-                                                         'chiến đấu WG tiêu chuẩn.'},
- 'main_gun': {'UI_description': 'MainGun',
+ 'game_log_manager': {'UI_description': 'Nhật ký sát thương trong trận',
+ 'UI_setting_logSwapper_text': 'Kích hoạt nhật ký đảo ngược.',
+ 'UI_setting_logSwapper_tooltip': 'Đảo ngược vị trí của nhật ký sát thương trong giao diện chiến đấu.',
+ 'UI_setting_wgLogHideAssist_text': 'Hỗ trợ ẩn nhật ký WG',
+ 'UI_setting_wgLogHideAssist_tooltip': 'Ẩn thông báo hỗ trợ sát thương trong nhật ký chiến đấu WG tiêu '
+                                       'chuẩn.',
+ 'UI_setting_wgLogHideBlock_text': 'Khối ẩn nhật ký WG',
+ 'UI_setting_wgLogHideBlock_tooltip': 'Ẩn các thông báo thiệt hại bị chặn trong nhật ký chiến đấu WG tiêu '
+                                      'chuẩn.',
+ 'UI_setting_wgLogHideCritics_text': 'Nhật ký WG Ẩn các nhà phê bình',
+ 'UI_setting_wgLogHideCritics_tooltip': 'Ẩn các thông báo tấn công quan trọng trong nhật ký chiến đấu WG '
+                                        'tiêu chuẩn.'},
+ 'high_caliber_progress': {'UI_description': 'Tiến độ Cỡ nòng lớn',
               'UI_setting_backGroundEnabled_text': 'Lý lịch',
               'UI_setting_backGroundEnabled_tooltip': '',
               'UI_setting_textLock_text': 'Khóa văn bản',
               'UI_setting_textLock_tooltip': ''},
- 'marks_on_gun_battle': {'NaN': '[<b>NaN</b>]',
-                         'UI_HangarStatsEnd': '{c_damageToMark65}, {c_damageToMark85}\n'
-                                              '{c_damageToMark95}, {c_damageToMark100}',
-                         'UI_HangarStatsStart': '<b>{currentPercent}<font size="14">[{currentDamage}]</font> '
-                                                '</b>',
-                         'UI_description': 'MarksOnGunBattle',
-                         'UI_marks_assist': 'Hỗ trợ',
-                         'UI_marks_combined': 'kết hợp',
-                         'UI_marks_compact': 'Nhỏ gọn',
-                         'UI_marks_current': 'MoE hiện tại',
-                         'UI_marks_damage': 'Hư hại',
-                         'UI_marks_detailed': 'Chi tiết',
-                         'UI_marks_legacy': 'Kế thừa (12 cài đặt trước / định dạng tùy chỉnh)',
-                         'UI_marks_normal': 'Bình thường',
-                         'UI_menu_UIConfig': 'Cấu hình',
-                         'UI_menu_UIMyp': '<font color="#D042F3">@Myp</font> sự lựa chọn [<font '
-                                          'color="#D042F3">co giật.tv/myp_</font>]',
-                         'UI_menu_UIReplay': 'cho các Replay',
-                         'UI_menu_UIReplayColor': 'Màu cho phát lại',
-                         'UI_menu_UIReplayColorDamage': 'Tô màu cho các Replay có sát thương',
-                         'UI_menu_UIReplayDamage': 'cho các Replay có sát thương',
-                         'UI_menu_UIcircon': '<font color="#02C9B3">@Circon</font> sự lựa chọn [<font '
-                                             'color="#02C9B3">co giật.tv/circon</font>]',
-                         'UI_menu_UIkorbenDallasNoMercy': '<font color="#e3256b">@KorbenDallasNoMercy</font> '
-                                                          'sự lựa chọn [<font '
-                                                          'color="#e3256b">youtube.com/c/KorbenDallasNoMercy</font>]',
-                         'UI_menu_UIoldskool': '<font color="#FFD700">@Oldskool</font> sự lựa chọn [<font '
-                                               'color="#FFD700">co giật.tv/oldskool</font>]',
-                         'UI_menu_UIskill4ltu': '<font color="#60FF00">@kỹ năng</font> sự lựa chọn [<font '
-                                                'color="#60FF00">co giật.tv/skill4ltu</font>]',
-                         'UI_menu_UIspoter': '<font color="#6595EE">@spoter</font> sự lựa chọn [<font '
-                                             'color="#6595EE">github.com/spoter</font>]',
-                         'UI_menu_UIspoterNew': 'mới <font color="#6595EE">@spoter</font> sự lựa chọn [<font '
-                                                'color="#6595EE">github.com/spoter</font>]',
-                         'UI_message': 'MoE thay đổi hình ảnh %s',
-                         'UI_setting_UI_text': 'Giao diện người dùng trong trận chiến',
-                         'UI_setting_UI_tooltip': 'Giao diện người dùng trong trận chiến mở rộng:\n'
-                                                  '<img src="img://objects/ui_extended.png"></img>\n'
-                                                  'Đơn giản:\n'
-                                                  '<img src="img://objects/ui_simple.png"></img>\n'
-                                                  'Cấu hình:\n'
-                                                  '/mods/configs/Driftkings/MarksOnGunExtended/MarksOnGunExtended.json\n',
-                         'UI_setting_background_text': 'Trận chiến: hiển thị nền',
-                         'UI_setting_background_tooltip': '',
-                         'UI_setting_buttonReset_text': 'Nút: Đặt lại cài đặt',
-                         'UI_setting_buttonReset_tooltip': '',
-                         'UI_setting_buttonShow_text': 'Nút: Thay đổi kiểu',
-                         'UI_setting_buttonShow_tooltip': '',
-                         'UI_setting_buttonSizeDown_text': 'Nút: Kích thước -10%',
-                         'UI_setting_buttonSizeDown_tooltip': '',
-                         'UI_setting_buttonSizeUp_text': 'Nút: Kích thước +10%',
-                         'UI_setting_buttonSizeUp_tooltip': '',
-                         'UI_setting_colorRating_text': 'Bảng màu',
-                         'UI_setting_colorRating_tooltip': 'Thang màu cho điểm xuất sắc.',
-                         'UI_setting_displayMode_text': 'Bài thuyết trình',
-                         'UI_setting_showDamage_text': 'Hiển thị thiệt hại',
-                         'UI_setting_showDelta_text': 'Hiển thị delta ước tính',
-                         'UI_setting_showInBattleHalfPercents_text': 'Trận chiến: hiển thị sát thương lên '
-                                                                     '+0,5%',
-                         'UI_setting_showInBattleHalfPercents_tooltip': '',
-                         'UI_setting_showInBattle_text': 'Trận chiến: Tin nhắn xin chào',
-                         'UI_setting_showInBattle_tooltip': '',
-                         'UI_setting_showInHangar_text': 'Nhà chứa máy bay: Hiển thị mod MoE',
-                         'UI_setting_showInHangar_tooltip': '',
-                         'UI_setting_showInReplay_text': 'Phát lại: đã bật',
-                         'UI_setting_showInReplay_tooltip': 'Không tốt, nhưng hữu ích cho các bài kiểm tra',
-                         'UI_setting_showInStatistic_text': 'Thống kê: đã bật',
-                         'UI_setting_showInStatistic_tooltip': '',
-                         'UI_setting_showMarks_text': 'Hiển thị dấu',
-                         'UI_setting_showProgress_text': 'Hiển thị tiến trình',
-                         'UI_setting_showTargets_text': 'Hiển thị mục tiêu',
-                         'UI_setting_techTreeMarkOfGunPercentSize_value': '',
-                         'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} thiệt hại '
-                                        'trung bình di chuyển hiện tại</font>\n'
-                                        '<font color="#FFFFFF" size="12">{currentDamage} thiệt hại tóm tắt '
-                                        'hiện tại</font>\n'
-                                        'ĐẾN <font color="#FFFFFF" size="12">{nextPercent}% </font>   nhu '
-                                        'cầu <font color="#FFFFFF" size="12">{needDamage}</font> sát thương '
-                                        'trung bình di chuyển\n'
-                                        'Thống kê này có sẵn cho trận chiến cuối cùng trên chiếc xe này\n'
-                                        'ĐẾN <font color="#FFFFFF" size="12">20% </font>   nhu cầu <font '
-                                        'color="{c20}" size="12">~{_20}</font> sát thương trung bình di '
-                                        'chuyển\n'
-                                        'ĐẾN <font color="#FFFFFF" size="12">40% </font>   nhu cầu <font '
-                                        'color="{c40}" size="12">~{_40}</font> sát thương trung bình di '
-                                        'chuyển\n'
-                                        'ĐẾN <font color="#FFFFFF" size="12">55% </font>   nhu cầu <font '
-                                        'color="{c55}" size="12">~{_55}</font> sát thương trung bình di '
-                                        'chuyển\n'
-                                        'ĐẾN <font color="#FFFFFF" size="12">65% </font>   nhu cầu <font '
-                                        'color="{c65}" size="12">~{_65}</font> sát thương trung bình di '
-                                        'chuyển\n'
-                                        'ĐẾN <font color="#FFFFFF" size="12">85% </font>   nhu cầu <font '
-                                        'color="{c85}" size="12">~{_85}</font> sát thương trung bình di '
-                                        'chuyển\n'
-                                        'ĐẾN <font color="#FFFFFF" size="12">95% </font>   nhu cầu <font '
-                                        'color="{c95}" size="12">~{_95}</font> sát thương trung bình di '
-                                        'chuyển\n'
-                                        'ĐẾN <font color="#FFFFFF" size="12">100% </font>  nhu cầu <font '
-                                        'color="{c100}" size="12">~{_100}</font> sát thương trung bình di '
-                                        'chuyển',
-                         'battleMessageSizeDown': 'Mod MoE: Kích thước <b>-10%</b>',
-                         'battleMessageSizeLimitMax': 'Mod MoE: Đã đạt <b>tối đa [1000%]</b>',
-                         'battleMessageSizeLimitMin': 'Mod MoE: Đã đạt <b>tối thiểu [10%]</b>',
-                         'battleMessageSizeReset': 'Mod MoE: Đặt lại cài đặt</b>',
-                         'battleMessageSizeUp': 'Mod MoE: Kích thước <b>+10%</b>'},
- 'marks_on_gun_hangar': {'UI_description': 'MarksOnGunHangar',
-                         'UI_panel_achieved': 'Đạt được',
-                         'UI_panel_additionalGoal': 'Mục tiêu bổ sung',
-                         'UI_panel_automatic': 'Tự động',
-                         'UI_panel_average': 'EMA kết hợp',
-                         'UI_panel_battles': 'trận chiến',
-                         'UI_panel_chooseVehicle': 'Chọn một chiếc xe tăng',
-                         'UI_panel_drag': 'LÔI KÉO',
-                         'UI_panel_estimate': 'ước tính mục tiêu',
-                         'UI_panel_estimateNote': 'Chỉ ước tính; không phải là thiệt hại cần thiết trong '
-                                                  'trận chiến tiếp theo.',
-                         'UI_panel_goal1': 'Điểm thứ nhất (65%)',
-                         'UI_panel_goal2': 'Điểm thứ 2 (85%)',
-                         'UI_panel_goal3': 'Điểm thứ 3 (95%)',
-                         'UI_panel_header': 'DẤU HIỆU XUẤT SẮC',
-                         'UI_panel_historyWaiting': 'Lịch sử: chờ đợi trận chiến tiếp theo',
-                         'UI_panel_locked': 'ĐÃ KHÓA',
-                         'UI_panel_mark': 'Đánh dấu',
-                         'UI_panel_mastery0': 'Không làm chủ được',
-                         'UI_panel_mastery1': 'lớp 3',
-                         'UI_panel_mastery2': 'hạng 2',
-                         'UI_panel_mastery3': 'lớp 1',
-                         'UI_panel_mastery4': 'Ace tàu chở dầu',
-                         'UI_panel_noDossier': 'Hồ sơ xe không có.',
-                         'UI_panel_noStats': 'Không có số liệu thống kê nào được tải',
-                         'UI_panel_observedBattles': 'trận chiến quan sát',
-                         'UI_panel_remaining': 'trang còn lại',
-                         'UI_panel_selectVehicle': 'Chọn một chiếc xe trong nhà chứa máy bay.',
-                         'UI_panel_thirdAchieved': 'ĐẠT ĐƯỢC DẤU THỨ 3',
-                         'UI_panel_tierLimit': 'Điểm có sẵn từ cấp V',
-                         'UI_panel_trend': 'Xu hướng quan sát được',
-                         'UI_panel_winRate': 'TỶ LỆ THẮNG',
-                         'UI_setting_colorRating_NoobMeter': 'NoobMeter',
-                         'UI_setting_colorRating_WotLabs': 'WotLabs',
-                         'UI_setting_colorRating_XVM': 'XVM',
-                         'UI_setting_colorRating_text': 'Chọn đánh giá màu',
-                         'UI_setting_colorRating_tooltip': 'Chọn bảng màu cho MoE, WN8 và winrate',
-                         'UI_setting_compactMode_text': 'Bảng nhỏ gọn',
-                         'UI_setting_compactMode_tooltip': 'Ẩn số liệu thống kê xe thứ cấp.',
-                         'UI_setting_goalSelection_text': 'Đánh dấu mục tiêu',
-                         'UI_setting_goalSelection_tooltip': 'Tự động chọn điểm chưa học tiếp theo. Thiệt '
-                                                             'hại là ước tính tỷ lệ, không phải ngưỡng máy '
-                                                             'chủ hay dự đoán trận chiến tiếp theo.',
-                         'UI_setting_historyBattles_text': 'Những trận chiến gần đây trong lịch sử',
-                         'UI_setting_historyBattles_tooltip': 'Cập nhật có thể nhóm một số trận chiến. Lịch '
-                                                              'sử bắt đầu khi phiên bản này được cài đặt.',
-                         'UI_setting_positionX_text': 'Vị trí nằm ngang (X)',
-                         'UI_setting_positionX_tooltip': 'Nhỏ hơn: trái. Lớn hơn: đúng.',
-                         'UI_setting_positionY_text': 'Vị trí dọc (Y)',
-                         'UI_setting_positionY_tooltip': 'Nhỏ hơn: lên. Lớn hơn: xuống.',
-                         'UI_setting_showInHangar_text': 'Nhà chứa máy bay: đã bật',
-                         'UI_setting_showInHangar_tooltip': '',
-                         'UI_setting_showInStatistic_text': 'Chú giải công cụ: đã bật',
-                         'UI_setting_showInStatistic_tooltip': '',
-                         'UI_setting_showTooltipTargets_text': 'Chú giải công cụ: hiển thị cấp độ mục tiêu',
-                         'UI_setting_showTooltipTargets_tooltip': '',
-                         'UI_setting_textLock_text': 'Hangar: vị trí bảng khóa',
-                         'UI_setting_textLock_tooltip': '',
-                         'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} thiệt hại '
-                                        'trung bình di chuyển hiện tại</font>\n'
-                                        '<font color="#FFFFFF" size="12">{currentDamage} thiệt hại tóm tắt '
-                                        'hiện tại</font>\n'
-                                        'ĐẾN <font color="#FFFFFF" size="12">{nextPercent}% </font> nhu cầu '
-                                        '<font color="#FFFFFF" size="12">{needDamage}</font> sát thương '
-                                        'trung bình di chuyển\n'
-                                        '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
-                                        'color="#FFFFFF" size="12">WN8: {wn8}</font>   <font color="#FFFFFF" '
-                                        'size="12">WR: {winRate}</font>',
-                         'UI_tooltipsFull': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} thiệt '
-                                            'hại trung bình di chuyển hiện tại</font>\n'
-                                            '<font color="#FFFFFF" size="12">{currentDamage} thiệt hại tóm '
-                                            'tắt hiện tại</font>\n'
-                                            'ĐẾN <font color="#FFFFFF" size="12">{nextPercent}% </font> nhu '
-                                            'cầu <font color="#FFFFFF" size="12">{needDamage}</font> sát '
-                                            'thương trung bình di chuyển\n'
-                                            '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
-                                            'color="#FFFFFF" size="12">WN8: {wn8}</font>   <font '
-                                            'color="#FFFFFF" size="12">WR: {winRate}</font>\n'
-                                            'Thống kê này có sẵn từ trận chiến cuối cùng trên chiếc xe này\n'
-                                            'ĐẾN <font color="#FFFFFF" size="12">20% </font> nhu cầu <font '
-                                            'color="#FF6347" size="12">~{_20}</font>\n'
-                                            'ĐẾN <font color="#FFFFFF" size="12">40% </font> nhu cầu <font '
-                                            'color="#FE7903" size="12">~{_40}</font>\n'
-                                            'ĐẾN <font color="#FFFFFF" size="12">55% </font> nhu cầu <font '
-                                            'color="#F8F400" size="12">~{_55}</font>\n'
-                                            'ĐẾN <font color="#FFFFFF" size="12">65% </font> nhu cầu <font '
-                                            'color="#60FF00" size="12">~{_65}</font>\n'
-                                            'ĐẾN <font color="#FFFFFF" size="12">85% </font> nhu cầu <font '
-                                            'color="#02C9B3" size="12">~{_85}</font>\n'
-                                            'ĐẾN <font color="#FFFFFF" size="12">95% </font> nhu cầu <font '
-                                            'color="#D042F3" size="12">~{_95}</font>\n'
-                                            'ĐẾN <font color="#FFFFFF" size="12">100% </font> nhu cầu <font '
-                                            'color="#D042F3" size="12">~{_100}</font>'},
- 'marks_on_gun_tech_tree': {'UI_description': 'MarksOnGunTechTree (Gameface)',
+ 'battle_marks_of_excellence': {'NaN': '[<b>NaN</b>]',
+ 'UI_HangarStatsEnd': '{c_damageToMark65}, {c_damageToMark85}\n{c_damageToMark95}, {c_damageToMark100}',
+ 'UI_HangarStatsStart': '<b>{currentPercent}<font size="14">[{currentDamage}]</font> </b>',
+ 'UI_description': 'Dấu xuất sắc trong trận',
+ 'UI_marks_assist': 'Hỗ trợ',
+ 'UI_marks_combined': 'kết hợp',
+ 'UI_marks_compact': 'Nhỏ gọn',
+ 'UI_marks_current': 'MoE hiện tại',
+ 'UI_marks_damage': 'Hư hại',
+ 'UI_marks_detailed': 'Chi tiết',
+ 'UI_marks_legacy': 'Kế thừa (12 cài đặt trước / định dạng tùy chỉnh)',
+ 'UI_marks_normal': 'Bình thường',
+ 'UI_menu_UIConfig': 'Cấu hình',
+ 'UI_menu_UIMyp': '<font color="#D042F3">@Myp</font> sự lựa chọn [<font color="#D042F3">co '
+                  'giật.tv/myp_</font>]',
+ 'UI_menu_UIReplay': 'cho các Replay',
+ 'UI_menu_UIReplayColor': 'Màu cho phát lại',
+ 'UI_menu_UIReplayColorDamage': 'Tô màu cho các Replay có sát thương',
+ 'UI_menu_UIReplayDamage': 'cho các Replay có sát thương',
+ 'UI_menu_UIcircon': '<font color="#02C9B3">@Circon</font> sự lựa chọn [<font color="#02C9B3">co '
+                     'giật.tv/circon</font>]',
+ 'UI_menu_UIkorbenDallasNoMercy': '<font color="#e3256b">@KorbenDallasNoMercy</font> sự lựa chọn [<font '
+                                  'color="#e3256b">youtube.com/c/KorbenDallasNoMercy</font>]',
+ 'UI_menu_UIoldskool': '<font color="#FFD700">@Oldskool</font> sự lựa chọn [<font color="#FFD700">co '
+                       'giật.tv/oldskool</font>]',
+ 'UI_menu_UIskill4ltu': '<font color="#60FF00">@kỹ năng</font> sự lựa chọn [<font color="#60FF00">co '
+                        'giật.tv/skill4ltu</font>]',
+ 'UI_menu_UIspoter': '<font color="#6595EE">@spoter</font> sự lựa chọn [<font '
+                     'color="#6595EE">github.com/spoter</font>]',
+ 'UI_menu_UIspoterNew': 'mới <font color="#6595EE">@spoter</font> sự lựa chọn [<font '
+                        'color="#6595EE">github.com/spoter</font>]',
+ 'UI_message': 'MoE thay đổi hình ảnh %s',
+ 'UI_setting_UI_text': 'Giao diện người dùng trong trận chiến',
+ 'UI_setting_UI_tooltip': 'Giao diện người dùng trong trận chiến mở rộng:\n'
+                          '<img src="img://objects/ui_extended.png"></img>\n'
+                          'Đơn giản:\n'
+                          '<img src="img://objects/ui_simple.png"></img>\n'
+                          'Cấu hình:\n'
+                          '/mods/configs/Driftkings/MarksOnGunExtended/MarksOnGunExtended.json\n',
+ 'UI_setting_background_text': 'Trận chiến: hiển thị nền',
+ 'UI_setting_background_tooltip': 'Enable the panel background. Opacity is configured separately.',
+ 'UI_setting_buttonReset_text': 'Nút: Đặt lại cài đặt',
+ 'UI_setting_buttonReset_tooltip': '',
+ 'UI_setting_buttonShow_text': 'Nút: Thay đổi kiểu',
+ 'UI_setting_buttonShow_tooltip': '',
+ 'UI_setting_buttonSizeDown_text': 'Nút: Kích thước -10%',
+ 'UI_setting_buttonSizeDown_tooltip': '',
+ 'UI_setting_buttonSizeUp_text': 'Nút: Kích thước +10%',
+ 'UI_setting_buttonSizeUp_tooltip': '',
+ 'UI_setting_colorRating_text': 'Bảng màu',
+ 'UI_setting_colorRating_tooltip': 'Thang màu cho điểm xuất sắc.',
+ 'UI_setting_displayMode_text': 'Bài thuyết trình',
+ 'UI_setting_showDamage_text': 'Hiển thị thiệt hại',
+ 'UI_setting_showDelta_text': 'Hiển thị delta ước tính',
+ 'UI_setting_showInBattleHalfPercents_text': 'Trận chiến: hiển thị sát thương lên +0,5%',
+ 'UI_setting_showInBattleHalfPercents_tooltip': '',
+ 'UI_setting_showInBattle_text': 'Trận chiến: Tin nhắn xin chào',
+ 'UI_setting_showInBattle_tooltip': 'Show a message at battle start. This does not control panel visibility.',
+ 'UI_setting_showInHangar_text': 'Nhà chứa máy bay: Hiển thị mod MoE',
+ 'UI_setting_showInHangar_tooltip': '',
+ 'UI_setting_showInReplay_text': 'Phát lại: đã bật',
+ 'UI_setting_showInReplay_tooltip': 'Không tốt, nhưng hữu ích cho các bài kiểm tra',
+ 'UI_setting_showInStatistic_text': 'Thống kê: đã bật',
+ 'UI_setting_showInStatistic_tooltip': '',
+ 'UI_setting_showMarks_text': 'Hiển thị dấu',
+ 'UI_setting_showProgress_text': 'Hiển thị tiến trình',
+ 'UI_setting_showTargets_text': 'Hiển thị mục tiêu',
+ 'UI_setting_techTreeMarkOfGunPercentSize_value': '',
+ 'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} thiệt hại trung bình di chuyển '
+                'hiện tại</font>\n'
+                '<font color="#FFFFFF" size="12">{currentDamage} thiệt hại tóm tắt hiện tại</font>\n'
+                'ĐẾN <font color="#FFFFFF" size="12">{nextPercent}% </font>   nhu cầu <font color="#FFFFFF" '
+                'size="12">{needDamage}</font> sát thương trung bình di chuyển\n'
+                'Thống kê này có sẵn cho trận chiến cuối cùng trên chiếc xe này\n'
+                'ĐẾN <font color="#FFFFFF" size="12">20% </font>   nhu cầu <font color="{c20}" '
+                'size="12">~{_20}</font> sát thương trung bình di chuyển\n'
+                'ĐẾN <font color="#FFFFFF" size="12">40% </font>   nhu cầu <font color="{c40}" '
+                'size="12">~{_40}</font> sát thương trung bình di chuyển\n'
+                'ĐẾN <font color="#FFFFFF" size="12">55% </font>   nhu cầu <font color="{c55}" '
+                'size="12">~{_55}</font> sát thương trung bình di chuyển\n'
+                'ĐẾN <font color="#FFFFFF" size="12">65% </font>   nhu cầu <font color="{c65}" '
+                'size="12">~{_65}</font> sát thương trung bình di chuyển\n'
+                'ĐẾN <font color="#FFFFFF" size="12">85% </font>   nhu cầu <font color="{c85}" '
+                'size="12">~{_85}</font> sát thương trung bình di chuyển\n'
+                'ĐẾN <font color="#FFFFFF" size="12">95% </font>   nhu cầu <font color="{c95}" '
+                'size="12">~{_95}</font> sát thương trung bình di chuyển\n'
+                'ĐẾN <font color="#FFFFFF" size="12">100% </font>  nhu cầu <font color="{c100}" '
+                'size="12">~{_100}</font> sát thương trung bình di chuyển',
+ 'battleMessageSizeDown': 'Mod MoE: Kích thước <b>-10%</b>',
+ 'battleMessageSizeLimitMax': 'Mod MoE: Đã đạt <b>tối đa [1000%]</b>',
+ 'battleMessageSizeLimitMin': 'Mod MoE: Đã đạt <b>tối thiểu [10%]</b>',
+ 'battleMessageSizeReset': 'Mod MoE: Đặt lại cài đặt</b>',
+ 'battleMessageSizeUp': 'Mod MoE: Kích thước <b>+10%</b>'},
+ 'hangar_marks_of_excellence': {'UI_description': 'Dấu xuất sắc trong xưởng xe',
+ 'UI_panel_achieved': 'Đạt được',
+ 'UI_panel_additionalGoal': 'Mục tiêu bổ sung',
+ 'UI_panel_automatic': 'Tự động',
+ 'UI_panel_average': 'EMA kết hợp',
+ 'UI_panel_battles': 'trận chiến',
+ 'UI_panel_chooseVehicle': 'Chọn một chiếc xe tăng',
+ 'UI_panel_drag': 'LÔI KÉO',
+ 'UI_panel_estimate': 'ước tính mục tiêu',
+ 'UI_panel_estimateNote': 'Chỉ ước tính; không phải là thiệt hại cần thiết trong trận chiến tiếp theo.',
+ 'UI_panel_goal1': 'Điểm thứ nhất (65%)',
+ 'UI_panel_goal2': 'Điểm thứ 2 (85%)',
+ 'UI_panel_goal3': 'Điểm thứ 3 (95%)',
+ 'UI_panel_header': 'DẤU HIỆU XUẤT SẮC',
+ 'UI_panel_historyWaiting': 'Lịch sử: chờ đợi trận chiến tiếp theo',
+ 'UI_panel_locked': 'ĐÃ KHÓA',
+ 'UI_panel_mark': 'Đánh dấu',
+ 'UI_panel_mastery0': 'Không làm chủ được',
+ 'UI_panel_mastery1': 'lớp 3',
+ 'UI_panel_mastery2': 'hạng 2',
+ 'UI_panel_mastery3': 'lớp 1',
+ 'UI_panel_mastery4': 'Ace tàu chở dầu',
+ 'UI_panel_noDossier': 'Hồ sơ xe không có.',
+ 'UI_panel_noStats': 'Không có số liệu thống kê nào được tải',
+ 'UI_panel_observedBattles': 'trận chiến quan sát',
+ 'UI_panel_remaining': 'trang còn lại',
+ 'UI_panel_selectVehicle': 'Chọn một chiếc xe trong nhà chứa máy bay.',
+ 'UI_panel_thirdAchieved': 'ĐẠT ĐƯỢC DẤU THỨ 3',
+ 'UI_panel_tierLimit': 'Điểm có sẵn từ cấp V',
+ 'UI_panel_trend': 'Xu hướng quan sát được',
+ 'UI_panel_winRate': 'TỶ LỆ THẮNG',
+ 'UI_setting_colorRating_NoobMeter': 'NoobMeter',
+ 'UI_setting_colorRating_WotLabs': 'WotLabs',
+ 'UI_setting_colorRating_XVM': 'XVM',
+ 'UI_setting_colorRating_text': 'Chọn đánh giá màu',
+ 'UI_setting_colorRating_tooltip': 'Chọn bảng màu cho MoE, WN8 và winrate',
+ 'UI_setting_compactMode_text': 'Bảng nhỏ gọn',
+ 'UI_setting_compactMode_tooltip': 'Ẩn số liệu thống kê xe thứ cấp.',
+ 'UI_setting_goalSelection_text': 'Đánh dấu mục tiêu',
+ 'UI_setting_goalSelection_tooltip': 'Tự động chọn điểm chưa học tiếp theo. Thiệt hại là ước tính tỷ lệ, '
+                                     'không phải ngưỡng máy chủ hay dự đoán trận chiến tiếp theo.',
+ 'UI_setting_historyBattles_text': 'Những trận chiến gần đây trong lịch sử',
+ 'UI_setting_historyBattles_tooltip': 'Cập nhật có thể nhóm một số trận chiến. Lịch sử bắt đầu khi phiên bản '
+                                      'này được cài đặt.',
+ 'UI_setting_positionX_text': 'Vị trí nằm ngang (X)',
+ 'UI_setting_positionX_tooltip': 'Nhỏ hơn: trái. Lớn hơn: đúng.',
+ 'UI_setting_positionY_text': 'Vị trí dọc (Y)',
+ 'UI_setting_positionY_tooltip': 'Nhỏ hơn: lên. Lớn hơn: xuống.',
+ 'UI_setting_showInHangar_text': 'Nhà chứa máy bay: đã bật',
+ 'UI_setting_showInHangar_tooltip': '',
+ 'UI_setting_showInStatistic_text': 'Chú giải công cụ: đã bật',
+ 'UI_setting_showInStatistic_tooltip': '',
+ 'UI_setting_showTooltipTargets_text': 'Chú giải công cụ: hiển thị cấp độ mục tiêu',
+ 'UI_setting_showTooltipTargets_tooltip': '',
+ 'UI_setting_textLock_text': 'Hangar: vị trí bảng khóa',
+ 'UI_setting_textLock_tooltip': 'Prevent header dragging. When unlocked, drag with the left mouse button; '
+                                'the position is saved.',
+ 'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} thiệt hại trung bình di chuyển '
+                'hiện tại</font>\n'
+                '<font color="#FFFFFF" size="12">{currentDamage} thiệt hại tóm tắt hiện tại</font>\n'
+                'ĐẾN <font color="#FFFFFF" size="12">{nextPercent}% </font> nhu cầu <font color="#FFFFFF" '
+                'size="12">{needDamage}</font> sát thương trung bình di chuyển\n'
+                '<font color="#FFFFFF" size="12">{mastery}</font>   <font color="#FFFFFF" size="12">WN8: '
+                '{wn8}</font>   <font color="#FFFFFF" size="12">WR: {winRate}</font>',
+ 'UI_tooltipsFull': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} thiệt hại trung bình di chuyển '
+                    'hiện tại</font>\n'
+                    '<font color="#FFFFFF" size="12">{currentDamage} thiệt hại tóm tắt hiện tại</font>\n'
+                    'ĐẾN <font color="#FFFFFF" size="12">{nextPercent}% </font> nhu cầu <font '
+                    'color="#FFFFFF" size="12">{needDamage}</font> sát thương trung bình di chuyển\n'
+                    '<font color="#FFFFFF" size="12">{mastery}</font>   <font color="#FFFFFF" size="12">WN8: '
+                    '{wn8}</font>   <font color="#FFFFFF" size="12">WR: {winRate}</font>\n'
+                    'Thống kê này có sẵn từ trận chiến cuối cùng trên chiếc xe này\n'
+                    'ĐẾN <font color="#FFFFFF" size="12">20% </font> nhu cầu <font color="#FF6347" '
+                    'size="12">~{_20}</font>\n'
+                    'ĐẾN <font color="#FFFFFF" size="12">40% </font> nhu cầu <font color="#FE7903" '
+                    'size="12">~{_40}</font>\n'
+                    'ĐẾN <font color="#FFFFFF" size="12">55% </font> nhu cầu <font color="#F8F400" '
+                    'size="12">~{_55}</font>\n'
+                    'ĐẾN <font color="#FFFFFF" size="12">65% </font> nhu cầu <font color="#60FF00" '
+                    'size="12">~{_65}</font>\n'
+                    'ĐẾN <font color="#FFFFFF" size="12">85% </font> nhu cầu <font color="#02C9B3" '
+                    'size="12">~{_85}</font>\n'
+                    'ĐẾN <font color="#FFFFFF" size="12">95% </font> nhu cầu <font color="#D042F3" '
+                    'size="12">~{_95}</font>\n'
+                    'ĐẾN <font color="#FFFFFF" size="12">100% </font> nhu cầu <font color="#D042F3" '
+                    'size="12">~{_100}</font>'},
+ 'tech_tree_marks_of_excellence': {'UI_description': 'Dấu xuất sắc trên cây công nghệ',
                             'UI_setting_badgeOffsetX_text': 'Vị trí X (trái / phải)',
                             'UI_setting_badgeOffsetX_tooltip': 'Tiêu cực: trái. Tích cực: đúng.',
                             'UI_setting_badgeOffsetY_text': 'Vị trí Y (lên/xuống)',
@@ -760,7 +813,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_showInTechTreeMastery_tooltip': '',
                             'UI_setting_showInTechTree_text': 'TechTree: đã bật',
                             'UI_setting_showInTechTree_tooltip': ''},
- 'minimap_plugins': {'UI_description': 'MinimapPlugins',
+ 'minimap_enhancements': {'UI_description': 'Cải tiến bản đồ nhỏ',
                      'UI_field_alpha': 'Độ mờ',
                      'UI_field_mode': 'Khả năng hiển thị',
                      'UI_minimapAim_0': 'Màu vàng nguyên bản',
@@ -895,12 +948,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_zoomFactorMax_text': 'Hệ số thu phóng tối đa',
                      'UI_setting_zoomFactorMax_tooltip': 'Mức thu phóng tối đa cho bản đồ nhỏ (1.0-3.0)',
                      'UI_setting_zoomFactor_text': 'Tỷ lệ thu phóng'},
- 'own_health': {'UI_description': 'OwnHealth',
+ 'vehicle_health': {'UI_description': 'Máu của xe',
                 'UI_setting_x_text': 'Vị trí X',
                 'UI_setting_x_tooltip': '',
                 'UI_setting_y_text': 'Vị trí Y',
                 'UI_setting_y_tooltip': ''},
- 'player_panel_pro': {'UI_description': 'PlayerPanelPro',
+ 'team_panels': {'UI_description': 'Bảng đội và tải trận',
                       'UI_panel_alpha': 'Độ mờ nền của bảng điều khiển',
                       'UI_panel_altMode': 'Chế độ bảng điều khiển trong khi giữ ALT',
                       'UI_panel_bindToIcon': 'Neo vào biểu tượng xe',
@@ -981,9 +1034,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                       'UI_setting_toggleKey_text': 'Chuyển đổi phím nóng',
                       'UI_setting_toggleKey_tooltip': 'Nhấn nút này trong trận chiến sẽ hiển thị các điểm '
                                                       'đánh dấu HP.'},
- 'repair_extended': {'UI_description': 'RepairExtended',
-                     'UI_setting_autoRepair_text': 'Tự động sử dụng',
-                     'UI_setting_autoRepair_tooltip': '',
+ 'repair_controls': {'UI_description': 'Điều khiển sửa chữa',
                      'UI_setting_buttonChassis_text': 'Nút: Khôi phục khung gầm',
                      'UI_setting_buttonChassis_tooltip': '',
                      'UI_setting_buttonRepair_text': 'Nút: Sửa chữa thông minh',
@@ -998,67 +1049,20 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_repairDevices_tooltip': '',
                      'UI_setting_restoreChassis_text': 'Khôi phục khung gầm',
                      'UI_setting_restoreChassis_tooltip': '',
-                     'UI_setting_timerMax_format': 'giây.',
-                     'UI_setting_timerMax_text': 'Sử dụng tự động độ trễ tối đa',
-                     'UI_setting_timerMin_format': 'giây.',
-                     'UI_setting_timerMin_text': 'Tự động sử dụng độ trễ tối thiểu',
                      'UI_setting_useGoldKits_text': 'Sử dụng bộ dụng cụ vàng',
                      'UI_setting_useGoldKits_tooltip': ''},
- 'safe_shot': {'UI_battle_activateMessage': 'SafeShot: Đã kích hoạt!',
-               'UI_description': 'SafeShot',
-               'UI_setting_activateMessage_text': 'Kích hoạt tin nhắn',
-               'UI_setting_activateMessage_tooltip': 'Hiển thị tin nhắn thông báo khi vào trận',
-               'UI_setting_chatMessages_text': 'Định dạng tin nhắn',
-               'UI_setting_chatMessages_tooltip': 'Định dạng tin nhắn tùy chỉnh khi chặn ảnh của đội. Sử '
-                                                  'dụng {name} và {vehicle} làm phần giữ chỗ',
-               'UI_setting_deadShotBlockTimeOut_text': 'Hết thời gian chặn bắn chết',
-               'UI_setting_deadShotBlockTimeOut_tooltip': 'Thời gian tính bằng giây để chặn phát bắn sau khi '
-                                                          'xe bị phá hủy',
-               'UI_setting_deadShotBlock_text': 'Khối bắn chết',
-               'UI_setting_deadShotBlock_tooltip': 'Ngăn chặn bắn vào các phương tiện đã bị phá hủy',
-               'UI_setting_disableKey_text': 'Tắt khóa',
-               'UI_setting_disableKey_tooltip': 'Phím nóng để tạm thời bật/tắt mod',
-               'UI_setting_teamKillerShotUnblock_text': 'Đội Killer Shot Bỏ chặn',
-               'UI_setting_teamKillerShotUnblock_tooltip': 'Cho phép bắn vào kẻ giết đội',
-               'UI_setting_teamShotBlock_text': 'Khối bắn đồng đội',
-               'UI_setting_teamShotBlock_tooltip': 'Ngăn chặn việc bắn vào đồng đội',
-               'UI_setting_triggerMessage_text': 'Tắt tin nhắn',
-               'UI_setting_triggerMessage_tooltip': 'Hiển thị/ẩn tin nhắn thông báo khi ảnh bị chặn',
-               'UI_setting_wasteShotBlock_text': 'Khối bắn thải',
-               'UI_setting_wasteShotBlock_tooltip': 'Ngăn chặn việc bắn khi không có mục tiêu được chọn',
-               'UI_triggerText_disabled': 'SafeShot: Đã tắt!',
-               'UI_triggerText_enabled': 'SafeShot: Đã bật!'},
- 'server_turret_extended': {'UI_battle_OFF': 'TẮT',
+ 'server_turret_sync': {'UI_battle_OFF': 'TẮT',
                             'UI_battle_ON': 'TRÊN',
                             'UI_battle_activateMessage': "'Tháp máy chủ được mở rộng': Đã kích hoạt",
-                            'UI_description': 'ServerTurretExtended',
+                            'UI_description': 'Đồng bộ tháp pháo với máy chủ',
                             'UI_setting_activateMessage_text': 'Hiển thị thông báo kích hoạt',
                             'UI_setting_activateMessage_tooltip': 'Hiển thị thông báo kích hoạt trong trận '
                                                                   'chiến',
-                            'UI_setting_autoActivateWheelMode_text': 'Bánh xe: Chế độ tốc độ tự động',
-                            'UI_setting_autoActivateWheelMode_tooltip': 'Tự động bật tốc độ hoặc chế độ vận '
-                                                                        'động',
-                            'UI_setting_buttonAutoMode_text': 'Nút: Chế độ tốc độ tự động của bánh xe',
-                            'UI_setting_buttonAutoMode_tooltip': '',
-                            'UI_setting_buttonMaxMode_text': 'Nút bấm: Bánh xe giữ tốc độ tối đa',
-                            'UI_setting_buttonMaxMode_tooltip': '',
-                            'UI_setting_fixAccuracyInMove_text': 'Sửa độ chính xác',
-                            'UI_setting_fixAccuracyInMove_tooltip': 'Khi xe tăng di chuyển rồi dừng lại, hãy '
-                                                                    'sử dụng tính năng sửa độ chính xác để '
-                                                                    'không bị mất mục tiêu',
-                            'UI_setting_fixWheelCruiseControl_text': 'Sửa chữa Kiểm soát hành trình trên '
-                                                                     'bánh xe',
-                            'UI_setting_fixWheelCruiseControl_tooltip': 'Khi bạn kích hoạt chế độ Bánh xe '
-                                                                        'với Cruise Control, xe đã dừng lại, '
-                                                                        'cài đặt này sẽ tắt tính năng đó',
-                            'UI_setting_maxWheelMode_text': 'Bánh xe: Giữ tốc độ tối đa',
-                            'UI_setting_maxWheelMode_tooltip': 'Khi đạt tốc độ tối đa, không tắt chế độ tốc '
-                                                               'độ khi di chuyển',
                             'UI_setting_serverTurret_text': 'Tháp pháo máy chủ',
                             'UI_setting_serverTurret_tooltip': 'Di chuyển Tháp pháo sang tọa độ Server Aim '
                                                                '(cần bật Server Sight trong cài đặt trò '
                                                                'chơi)'},
- 'sixth_sense': {'UI_description': 'SixthSense',
+ 'sixth_sense_alert': {'UI_description': 'Cảnh báo Giác quan thứ sáu',
                  'UI_setting_defaultIconName_text': 'Tên biểu tượng mặc định',
                  'UI_setting_defaultIconName_tooltip': 'Chọn một hình ảnh được nhúng.',
                  'UI_setting_defaultIcon_text': 'Biểu tượng mặc định',
@@ -1109,7 +1113,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_sound_SixthSense_08': 'siêu mario',
                  'UI_sound_SixthSense_09': 'Cạm bẫy',
                  'UI_sound_SixthSense_10': 'Tệp X'},
- 'spotted_extended_light': {'UI_description': 'SpottedExtendedLight',
+ 'enemy_spotting_status': {'UI_description': 'Trạng thái phát hiện địch',
                             'UI_macros_help': 'Sử dụng các macro này trong định dạng tin nhắn của bạn để tùy '
                                               'chỉnh thông báo:\n'
                                               '• {icons} - Hiển thị biểu tượng xe\n'
@@ -1189,7 +1193,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_sound_text': 'Kích hoạt âm thanh chiến đấu',
                             'UI_setting_sound_tooltip': 'Chuyển đổi thông báo âm thanh cho kẻ thù được phát '
                                                         'hiện và hỗ trợ sát thương'},
- 'zoom_extended': {'UI_description': 'ZoomExtended',
+ 'sniper_camera': {'UI_description': 'Góc nhìn bắn tỉa',
                    'UI_setting_zoomSteps_enabled_text': u'Các mức thu phóng tùy chỉnh',
                    'UI_setting_zoomSteps_steps_text': u'Các mức thu phóng (danh sách JSON)',
                    'UI_setting_zoomSteps_steps_tooltip': u'Nhập ít nhất bốn số khác nhau từ 2 trở lên, ví dụ [4, 6, 8, 12, 16, 25, 30]. Áp dụng từ trận tiếp theo.',
@@ -1285,6 +1289,7 @@ PANEL = {'actionFailed': 'Hành động này không thành công. Xem game.log.'
  'profileName': 'Tên hồ sơ',
  'profileRename': 'Đổi tên',
  'profiles': 'Hồ sơ',
+ 'resetOption': 'Reset this option to default',
  'reset': 'Khôi phục mặc định',
  'resetDone': 'Mặc định được khôi phục. Áp dụng để sử dụng chúng.',
  'resetTheme': 'Đặt lại chủ đề',

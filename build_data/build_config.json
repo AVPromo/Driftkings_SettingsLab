@@ -97,7 +97,10 @@
     "updater_helper": {
       "kind": "csharp",
       "source": "installer/source/Installer.cs",
-      "additional_sources": ["installer/source/ModpackInstaller.cs"],
+      "additional_sources": [
+        "installer/source/ModpackInstaller.cs",
+        "installer/source/ExitWork.cs"
+      ],
       "output": "build/native/updater/Driftkings.UpdateInstaller.exe",
       "metadata": "build/native/updater/helper.json",
       "references": [
@@ -111,6 +114,18 @@
       "output": "build/native/windows-files/Driftkings.WindowsFiles.exe",
       "metadata": "build/native/windows-files/helper.json",
       "references": []
+    },
+    "fog_package_helper": {
+      "kind": "csharp",
+      "source": "installer/source/FogPackage.cs",
+      "output": "build/native/fog/Driftkings.FogPackage.exe",
+      "metadata": "build/native/fog/helper.json",
+      "references": [
+        "System.IO.Compression.dll"
+      ],
+      "additional_sources": [
+        "installer/source/ExitWork.cs"
+      ]
     }
   }
 }

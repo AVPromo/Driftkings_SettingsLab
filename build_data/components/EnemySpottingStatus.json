@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "EnemySpottingStatus",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.enemy_spotting_status",
+  "config_files": [
+    "default/enemy_spotting_status.json"
+  ],
+  "assets": []
+}

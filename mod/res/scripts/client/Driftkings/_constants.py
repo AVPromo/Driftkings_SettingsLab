@@ -65,30 +65,30 @@ class GLOBAL(object):
     BLUR = 'blur'
 
 
-class AIMING_ANGLES(object):
-    NAME = 'aiming_angles'
+class GUN_TRAVERSE_LIMITS(object):
+    NAME = 'gun_traverse_limits'
     VERTICAL = 'vertical'
     HORIZONTAL = 'horizontal'
 
 
-class ARCADE_ZOOM(object):
-    NAME = 'arcade_zoom'
+class THIRD_PERSON_ZOOM(object):
+    NAME = 'third_person_zoom'
     MAX = 'max'
     MIN = 'min'
     SCROLL_SENSITIVITY = 'scrollSensitivity'
     START_DEAD_DIST = 'startDeadDist'
 
 
-class ARMOR_CALCULATOR(object):
-    NAME = 'armor_calculator'
+class PENETRATION_INDICATOR(object):
+    NAME = 'penetration_indicator'
     DISPLAY_ON_ALLIES = 'displayOnAllies'
     MESSAGES = 'messages'
     POSITION = 'position'
     TEMPLATE = 'template'
 
 
-class ARTY_SPLASH(object):
-    NAME = 'arty_splash'
+class ARTILLERY_BLAST_RADIUS(object):
+    NAME = 'artillery_blast_radius'
     BUTTON_SHOW_DOT = 'buttonShowDot'
     BUTTON_SHOW_SPLASH = 'buttonShowSplash'
     SHOW_SPLASH_ON_DEFAULT = 'showSplashOnDefault'
@@ -100,15 +100,15 @@ class ARTY_SPLASH(object):
     MODEL_PATH_DOT = 'modelPathDot'
 
 
-class AUTO_AIM_OPTIMIZE(object):
-    NAME = 'auto_aim_optimize'
+class AUTOAIM_TARGET_INDICATOR(object):
+    NAME = 'autoaim_target_indicator'
     ANGLE = 'angle'
     CATCH_HIDDEN_TARGET = 'catchHiddenTarget'
     DISABLE_ARTY_MODE = 'disableArtyMode'
 
 
-class BATTLE_EFFICIENCY(object):
-    NAME = 'battle_efficiency'
+class BATTLE_PERFORMANCE(object):
+    NAME = 'battle_performance'
     COLOR_RATTING = 'colorRatting'
     FORMAT = 'format'
     TEXT_STYLE = 'textStyle'
@@ -119,8 +119,9 @@ class BATTLE_EFFICIENCY(object):
     BATTLE_RESULTS_FORMAT = 'battleResultsFormat'
 
 
-class BATTLE_OPTIONS(object):
-    NAME = 'battle_options'
+class BATTLE_PREFERENCES(object):
+    NAME = 'battle_preferences'
+    REMOVE_FOG = 'removeFog'
     CLIP_LOAD = 'clipLoad'
     DIRECTIVES_ONLY_FROM_STORAGE = 'directivesOnlyFromStorage'
     DISABLE_SOUND_COMMANDER = 'disableSoundCommander'
@@ -143,8 +144,8 @@ class BATTLE_OPTIONS(object):
     HIDE_HINT = 'hideHint'
 
 
-class BATTLE_STAT(object):
-    NAME = 'battle_stat'
+class BATTLE_STATISTICS(object):
+    NAME = 'battle_statistics'
     COLOR_RATING = 'colorRating'
     FORMAT = 'format'
     TEXT_LOCK = 'textLock'
@@ -153,8 +154,8 @@ class BATTLE_STAT(object):
     TEXT_FORMAT = 'textFormat'
 
 
-class DISPERSION_CIRCLE(object):
-    NAME = 'dispersion_circle'
+class AIMING_RETICLES(object):
+    NAME = 'aiming_reticles'
     SHOW_CLIENT_AND_SERVER_RETICLE = 'showClientAndServerReticle'
     GUN_MARKER_MINIMUM_SIZE = 'gunMarkerMinimumSize'
     PERCENT_CORRECTION = 'percentCorrection'
@@ -166,8 +167,8 @@ class DISPERSION_CIRCLE(object):
     SERVER_RETICLE_GUN_MARKER_OPACITY = 'serverReticleGunMarkerOpacity'
 
 
-class DISPERSION_TIMER(object):
-    NAME = 'dispersion_timer'
+class AIMING_COUNTDOWN(object):
+    NAME = 'aiming_countdown'
     RED = 'red'
     ORANGE = 'orange'
     YELLOW = 'yellow'
@@ -177,8 +178,8 @@ class DISPERSION_TIMER(object):
     TEMPLATE = 'template'
 
 
-class DISTANCE_MARKER(object):
-    NAME = 'distance_marker'
+class TARGET_DISTANCE(object):
+    NAME = 'target_distance'
     DISPLAY_MODE = 'displayMode'
     MARKER_TARGET = 'markerTarget'
     ANCHOR_POSITION = 'anchorPosition'
@@ -192,14 +193,14 @@ class DISTANCE_MARKER(object):
     DRAW_TEXT_SHADOW = 'drawTextShadow'
 
 
-class FLIGHT_TIMER(object):
-    NAME = 'flight_timer'
+class SHELL_FLIGHT_TIME(object):
+    NAME = 'shell_flight_time'
     SPG_ONLY = 'spgOnly'
     TEMPLATE = 'template'
 
 
-class INFO_PANEL(object):
-    NAME = 'info_panel'
+class TARGET_INFORMATION(object):
+    NAME = 'target_information'
     ALIVE_ONLY = 'aliveOnly'
     ALT_KEY = 'altKey'
     COMPARE_VALUES = 'compareValues'
@@ -215,19 +216,19 @@ class INFO_PANEL(object):
     BACKGROUND_ALPHA = 'backgroundAlpha'
 
 
-class MAIN_GUN(object):
-    NAME = 'main_gun'
+class HIGH_CALIBER_PROGRESS(object):
+    NAME = 'high_caliber_progress'
     BACK_GROUND_ENABLED = 'backGroundEnabled'
     TEXT_LOCK = 'textLock'
     FORMAT = 'format'
     BACKGROUND = 'background'
-    MAIN_GUN = 'mainGun'
+    HIGH_CALIBER_PROGRESS = 'mainGun'
     SHADOW = 'shadow'
     TEXT_POSITION = 'textPosition'
 
 
-class MARKS_ON_GUN_BATTLE(object):
-    NAME = 'marks_on_gun_battle'
+class BATTLE_MARKS_OF_EXCELLENCE(object):
+    NAME = 'battle_marks_of_excellence'
     COLOR_RATING = 'colorRating'
     BUTTON_SHOW = 'buttonShow'
     BUTTON_SIZE_UP = 'buttonSizeUp'
@@ -280,8 +281,8 @@ class MARKS_ON_GUN_BATTLE(object):
     UI = 'UI'
 
 
-class MINIMAP_PLUGINS(object):
-    NAME = 'minimap_plugins'
+class MINIMAP_ENHANCEMENTS(object):
+    NAME = 'minimap_enhancements'
     MINIMAP_SCHEMA = 'minimapSchema'
     PERMANENT_MINIMAP_DEATH = 'permanentMinimapDeath'
     YAW = 'yaw'
@@ -310,14 +311,14 @@ class MINIMAP_PLUGINS(object):
     BUTTON = 'button'
 
 
-class OWN_HEALTH(object):
-    NAME = 'own_health'
+class VEHICLE_HEALTH(object):
+    NAME = 'vehicle_health'
     AVG_COLOR = 'avgColor'
     COLORS = 'colors'
 
 
-class PLAYER_PANEL_PRO(object):
-    NAME = 'player_panel_pro'
+class TEAM_PANELS(object):
+    NAME = 'team_panels'
     STATS_ENABLED = 'statsEnabled'
     COLOR_SCALE = 'colorScale'
     RATING = 'rating'
@@ -334,50 +335,27 @@ class PLAYER_PANEL_PRO(object):
     TAB = 'tab'
 
 
-class REPAIR_EXTENDED(object):
-    NAME = 'repair_extended'
+class REPAIR_CONTROLS(object):
+    NAME = 'repair_controls'
     BUTTON_CHASSIS = 'buttonChassis'
     BUTTON_REPAIR = 'buttonRepair'
-    AUTO_REPAIR = 'autoRepair'
     REMOVE_STUN = 'removeStun'
     EXTINGUISH_FIRE = 'extinguishFire'
     HEAL_CREW = 'healCrew'
     REPAIR_DEVICES = 'repairDevices'
     RESTORE_CHASSIS = 'restoreChassis'
     USE_GOLD_KITS = 'useGoldKits'
-    TIMER_MIN = 'timerMin'
-    TIMER_MAX = 'timerMax'
     REPAIR_PRIORITY = 'repairPriority'
 
 
-class SAFE_SHOT(object):
-    NAME = 'safe_shot'
-    WASTE_SHOT_BLOCK = 'wasteShotBlock'
-    TEAM_SHOT_BLOCK = 'teamShotBlock'
-    TEAM_KILLER_SHOT_UNBLOCK = 'teamKillerShotUnblock'
-    DEAD_SHOT_BLOCK = 'deadShotBlock'
-    DEAD_SHOT_BLOCK_TIME_OUT = 'deadShotBlockTimeOut'
-    DISABLE_KEY = 'disableKey'
+class SERVER_TURRET_SYNC(object):
+    NAME = 'server_turret_sync'
     ACTIVATE_MESSAGE = 'activateMessage'
-    TRIGGER_MESSAGE = 'triggerMessage'
-    CLIENT_MESSAGES = 'clientMessages'
-    CHAT_MESSAGES = 'chatMessages'
-
-
-class SERVER_TURRET_EXTENDED(object):
-    NAME = 'server_turret_extended'
-    ACTIVATE_MESSAGE = 'activateMessage'
-    FIX_ACCURACY_IN_MOVE = 'fixAccuracyInMove'
     SERVER_TURRET = 'serverTurret'
-    FIX_WHEEL_CRUISE_CONTROL = 'fixWheelCruiseControl'
-    AUTO_ACTIVATE_WHEEL_MODE = 'autoActivateWheelMode'
-    MAX_WHEEL_MODE = 'maxWheelMode'
-    BUTTON_AUTO_MODE = 'buttonAutoMode'
-    BUTTON_MAX_MODE = 'buttonMaxMode'
 
 
-class SIXTH_SENSE(object):
-    NAME = 'sixth_sense'
+class SIXTH_SENSE_ALERT(object):
+    NAME = 'sixth_sense_alert'
     DEFAULT_ICON = 'defaultIcon'
     USER_ICON = 'userIcon'
     LAMP_SHOW_TIME = 'lampShowTime'
@@ -396,8 +374,8 @@ class SIXTH_SENSE(object):
     DELAY = 'delay'
 
 
-class SPOTTED_EXTENDED_LIGHT(object):
-    NAME = 'spotted_extended_light'
+class ENEMY_SPOTTING_STATUS(object):
+    NAME = 'enemy_spotting_status'
     SOUND = 'sound'
     ICON_SIZE_X = 'iconSizeX'
     ICON_SIZE_Y = 'iconSizeY'
@@ -413,8 +391,8 @@ class SPOTTED_EXTENDED_LIGHT(object):
     ASSIST_STUN = 'AssistStun'
 
 
-class ZOOM_EXTENDED(object):
-    NAME = 'zoom_extended'
+class SNIPER_CAMERA(object):
+    NAME = 'sniper_camera'
     NO_BINOCULARS = 'noBinoculars'
     NO_FLASH_BANG = 'noFlashBang'
     NO_SHOCK_WAVE = 'noShockWave'
@@ -430,12 +408,12 @@ class ACCOUNT_MANAGER(object):
     NAME = 'account_manager'
 
 
-class AUTO_CLAIM_CLAN(object):
-    NAME = 'auto_claim_clan'
+class CLAN_REWARD_COLLECTION(object):
+    NAME = 'clan_reward_collection'
 
 
-class CAROUSEL_STATS(object):
-    NAME = 'carousel_stats'
+class VEHICLE_CAROUSEL(object):
+    NAME = 'vehicle_carousel'
     SORTING_CRITERIA = 'sortingCriteria'
     NATIONS_ORDER = 'nationsOrder'
     TYPES_ORDER = 'typesOrder'
@@ -444,8 +422,8 @@ class CAROUSEL_STATS(object):
     CAROUSEL = 'carousel'
 
 
-class CREW_SETTINGS(object):
-    NAME = 'crew_settings'
+class CREW_MANAGEMENT(object):
+    NAME = 'crew_management'
     CREW_AUTO_RETURN = 'crewAutoReturn'
     CREW_RETURN_BY_DEFAULT = 'crewReturnByDefault'
     AUTO_RETURN_DELAY = 'autoReturnDelay'
@@ -453,8 +431,8 @@ class CREW_SETTINGS(object):
     EXCLUDE_PREMIUM_VEHICLES = 'excludePremiumVehicles'
 
 
-class HANGAR_OPTIONS(object):
-    NAME = 'hangar_options'
+class HANGAR_PREFERENCES(object):
+    NAME = 'hangar_preferences'
     AUTO_LOGIN = 'autoLogin'
     SHOW_XP_TO_UNLOCK_VEH = 'showXpToUnlockVeh'
     SHOW_GENERAL_CHAT_BUTTON = 'showGeneralChatButton'
@@ -494,8 +472,8 @@ class HANGAR_OPTIONS(object):
     PANEL = 'panel'
 
 
-class MARKS_ON_GUN_HANGAR(object):
-    NAME = 'marks_on_gun_hangar'
+class HANGAR_MARKS_OF_EXCELLENCE(object):
+    NAME = 'hangar_marks_of_excellence'
     SHOW_IN_HANGAR = 'showInHangar'
     SHOW_IN_STATISTIC = 'showInStatistic'
     TEXT_LOCK = 'textLock'
@@ -509,8 +487,8 @@ class MARKS_ON_GUN_HANGAR(object):
     CARD = 'card'
 
 
-class MARKS_ON_GUN_TECH_TREE(object):
-    NAME = 'marks_on_gun_tech_tree'
+class TECH_TREE_MARKS_OF_EXCELLENCE(object):
+    NAME = 'tech_tree_marks_of_excellence'
     COLOR_RATING = 'colorRating'
     SHOW_IN_TECH_TREE = 'showInTechTree'
     SHOW_IN_TECH_TREE_MARK_OF_GUN_PERCENT = 'showInTechTreeMarkOfGunPercent'
@@ -521,8 +499,8 @@ class MARKS_ON_GUN_TECH_TREE(object):
     BADGE_FONT_SIZE = 'badgeFontSize'
 
 
-class BANKS_LOADER(object):
-    NAME = 'banks_loader'
+class SOUND_BANK_LOADER(object):
+    NAME = 'sound_bank_loader'
     DEFAULT_POOL = 'defaultPool'
     LOW_ENGINE_POOL = 'lowEnginePool'
     MEMORY_LIMIT = 'memoryLimit'
@@ -532,8 +510,8 @@ class BANKS_LOADER(object):
     DEBUG = 'debug'
 
 
-class LOGS_SWAPPER(object):
-    NAME = 'logs_swapper'
+class GAME_LOG_MANAGER(object):
+    NAME = 'game_log_manager'
     LOG_SWAPPER = 'logSwapper'
     WG_LOG_HIDE_CRITICS = 'wgLogHideCritics'
     WG_LOG_HIDE_BLOCK = 'wgLogHideBlock'
@@ -542,118 +520,113 @@ class LOGS_SWAPPER(object):
 
 # Activation is owned by component_list.py; this is the settings catalogue.
 CONFIG_SECTIONS = (
-    AIMING_ANGLES,
-    ARCADE_ZOOM,
-    ARMOR_CALCULATOR,
-    ARTY_SPLASH,
-    AUTO_AIM_OPTIMIZE,
-    BATTLE_EFFICIENCY,
-    BATTLE_OPTIONS,
-    BATTLE_STAT,
-    DISPERSION_CIRCLE,
-    DISPERSION_TIMER,
-    DISTANCE_MARKER,
-    FLIGHT_TIMER,
-    INFO_PANEL,
-    MAIN_GUN,
-    MARKS_ON_GUN_BATTLE,
-    MINIMAP_PLUGINS,
-    OWN_HEALTH,
-    PLAYER_PANEL_PRO,
-    REPAIR_EXTENDED,
-    SAFE_SHOT,
-    SERVER_TURRET_EXTENDED,
-    SIXTH_SENSE,
-    SPOTTED_EXTENDED_LIGHT,
-    ZOOM_EXTENDED,
+    GUN_TRAVERSE_LIMITS,
+    THIRD_PERSON_ZOOM,
+    PENETRATION_INDICATOR,
+    ARTILLERY_BLAST_RADIUS,
+    AUTOAIM_TARGET_INDICATOR,
+    BATTLE_PERFORMANCE,
+    BATTLE_PREFERENCES,
+    BATTLE_STATISTICS,
+    AIMING_RETICLES,
+    AIMING_COUNTDOWN,
+    TARGET_DISTANCE,
+    SHELL_FLIGHT_TIME,
+    TARGET_INFORMATION,
+    HIGH_CALIBER_PROGRESS,
+    BATTLE_MARKS_OF_EXCELLENCE,
+    MINIMAP_ENHANCEMENTS,
+    VEHICLE_HEALTH,
+    TEAM_PANELS,
+    REPAIR_CONTROLS,
+    SERVER_TURRET_SYNC,
+    SIXTH_SENSE_ALERT,
+    ENEMY_SPOTTING_STATUS,
+    SNIPER_CAMERA,
     ACCOUNT_MANAGER,
-    AUTO_CLAIM_CLAN,
-    CAROUSEL_STATS,
-    CREW_SETTINGS,
-    HANGAR_OPTIONS,
-    MARKS_ON_GUN_HANGAR,
-    MARKS_ON_GUN_TECH_TREE,
-    BANKS_LOADER,
-    LOGS_SWAPPER,
+    CLAN_REWARD_COLLECTION,
+    VEHICLE_CAROUSEL,
+    CREW_MANAGEMENT,
+    HANGAR_PREFERENCES,
+    HANGAR_MARKS_OF_EXCELLENCE,
+    TECH_TREE_MARKS_OF_EXCELLENCE,
+    SOUND_BANK_LOADER,
+    GAME_LOG_MANAGER,
 )
 CONFIG_BY_NAME = dict((section.NAME, section) for section in CONFIG_SECTIONS)
 
 
 # Parent switch -> controls available only while it is enabled.
 HANDLER_VALUES = {
-    SIXTH_SENSE.NAME: {
-        SIXTH_SENSE.DEFAULT_ICON: {SIXTH_SENSE.DEFAULT_ICON_NAME: (True,), SIXTH_SENSE.USER_ICON: (False,)},
-        SIXTH_SENSE.USER_SOUND: (SIXTH_SENSE.SIXTH_SENSE_SOUND,),
-        SIXTH_SENSE.PLAY_TICK_SOUND: {SIXTH_SENSE.SIXTH_SENSE_SOUND: (False,)},
-        SIXTH_SENSE.SHOW_TIMER_GRAPHICS: (SIXTH_SENSE.SHOW_TIMER_GRAPHICS_COLOR,
-                                        SIXTH_SENSE.SHOW_TIMER_GRAPHICS_RADIUS),
-        SIXTH_SENSE.SPOTTED_MESSAGE: (SIXTH_SENSE.SPOTTED_TEXT,),
+    SIXTH_SENSE_ALERT.NAME: {
+        SIXTH_SENSE_ALERT.DEFAULT_ICON: {SIXTH_SENSE_ALERT.DEFAULT_ICON_NAME: (True,), SIXTH_SENSE_ALERT.USER_ICON: (False,)},
+        SIXTH_SENSE_ALERT.USER_SOUND: (SIXTH_SENSE_ALERT.SIXTH_SENSE_SOUND,),
+        SIXTH_SENSE_ALERT.PLAY_TICK_SOUND: {SIXTH_SENSE_ALERT.SIXTH_SENSE_SOUND: (False,)},
+        SIXTH_SENSE_ALERT.SHOW_TIMER_GRAPHICS: (SIXTH_SENSE_ALERT.SHOW_TIMER_GRAPHICS_COLOR,
+                                        SIXTH_SENSE_ALERT.SHOW_TIMER_GRAPHICS_RADIUS),
+        SIXTH_SENSE_ALERT.SPOTTED_MESSAGE: (SIXTH_SENSE_ALERT.SPOTTED_TEXT,),
     },
-    SAFE_SHOT.NAME: {
-        SAFE_SHOT.DEAD_SHOT_BLOCK: (SAFE_SHOT.DEAD_SHOT_BLOCK_TIME_OUT,),
-        SAFE_SHOT.TEAM_SHOT_BLOCK: (SAFE_SHOT.TEAM_KILLER_SHOT_UNBLOCK,)},
-    INFO_PANEL.NAME: {INFO_PANEL.BACKGROUND_ENABLED: (INFO_PANEL.BACKGROUND_ALPHA,)},
-    REPAIR_EXTENDED.NAME: {REPAIR_EXTENDED.AUTO_REPAIR: (REPAIR_EXTENDED.TIMER_MIN, REPAIR_EXTENDED.TIMER_MAX)},
-    CREW_SETTINGS.NAME: {CREW_SETTINGS.CREW_AUTO_RETURN: (
-        CREW_SETTINGS.CREW_RETURN_BY_DEFAULT, CREW_SETTINGS.AUTO_RETURN_DELAY,
-        CREW_SETTINGS.EXCLUDE_PREMIUM_VEHICLES)},
-    HANGAR_OPTIONS.NAME: {
-        HANGAR_OPTIONS.CLOCK: (HANGAR_OPTIONS.CLOCK_X, HANGAR_OPTIONS.CLOCK_Y,
-                              HANGAR_OPTIONS.CLOCK_SCALE, HANGAR_OPTIONS.CUSTOM_CLOCK_TEXT),
-        HANGAR_OPTIONS.BLOCK_VEHICLE_IF_LOW_AMMO: (HANGAR_OPTIONS.LOW_AMMO_PERCENTAGE,)},
-    MINIMAP_PLUGINS.NAME: {
-        MINIMAP_PLUGINS.SHOW_LAST_POSITIONS: (MINIMAP_PLUGINS.LAST_POSITION_DURATION,
-            MINIMAP_PLUGINS.LOST_MARKER + '.showSeconds', MINIMAP_PLUGINS.LOST_MARKER + '.fade',
-            MINIMAP_PLUGINS.LOST_MARKER + '.minimumAlpha'),
-        MINIMAP_PLUGINS.CHANGE_COLOR_CIRCLES: (
-            MINIMAP_PLUGINS.COLOR_DRAW_CIRCLE, MINIMAP_PLUGINS.COLOR_MAX_VIEW_CIRCLE,
-            MINIMAP_PLUGINS.COLOR_MIN_SPOTTING_CIRCLE, MINIMAP_PLUGINS.COLOR_VIEW_CIRCLE),
-        MINIMAP_PLUGINS.LABELS + '.customColors': tuple(MINIMAP_PLUGINS.LABELS + '.' + key
+    BATTLE_MARKS_OF_EXCELLENCE.NAME: {
+        'showTargets': ('gameface.showTargetDamage', 'gameface.showRequiredDamage'),
+        BATTLE_MARKS_OF_EXCELLENCE.BACKGROUND: ('gameface.backgroundOpacity',)},
+    TARGET_INFORMATION.NAME: {TARGET_INFORMATION.BACKGROUND_ENABLED: (TARGET_INFORMATION.BACKGROUND_ALPHA,)},
+    CREW_MANAGEMENT.NAME: {CREW_MANAGEMENT.CREW_AUTO_RETURN: (
+        CREW_MANAGEMENT.CREW_RETURN_BY_DEFAULT, CREW_MANAGEMENT.AUTO_RETURN_DELAY,
+        CREW_MANAGEMENT.EXCLUDE_PREMIUM_VEHICLES)},
+    HANGAR_PREFERENCES.NAME: {
+        HANGAR_PREFERENCES.CLOCK: (HANGAR_PREFERENCES.CLOCK_X, HANGAR_PREFERENCES.CLOCK_Y,
+                              HANGAR_PREFERENCES.CLOCK_SCALE, HANGAR_PREFERENCES.CUSTOM_CLOCK_TEXT),
+        HANGAR_PREFERENCES.BLOCK_VEHICLE_IF_LOW_AMMO: (HANGAR_PREFERENCES.LOW_AMMO_PERCENTAGE,)},
+    MINIMAP_ENHANCEMENTS.NAME: {
+        MINIMAP_ENHANCEMENTS.SHOW_LAST_POSITIONS: (MINIMAP_ENHANCEMENTS.LAST_POSITION_DURATION,
+            MINIMAP_ENHANCEMENTS.LOST_MARKER + '.showSeconds', MINIMAP_ENHANCEMENTS.LOST_MARKER + '.fade',
+            MINIMAP_ENHANCEMENTS.LOST_MARKER + '.minimumAlpha'),
+        MINIMAP_ENHANCEMENTS.CHANGE_COLOR_CIRCLES: (
+            MINIMAP_ENHANCEMENTS.COLOR_DRAW_CIRCLE, MINIMAP_ENHANCEMENTS.COLOR_MAX_VIEW_CIRCLE,
+            MINIMAP_ENHANCEMENTS.COLOR_MIN_SPOTTING_CIRCLE, MINIMAP_ENHANCEMENTS.COLOR_VIEW_CIRCLE),
+        MINIMAP_ENHANCEMENTS.LABELS + '.customColors': tuple(MINIMAP_ENHANCEMENTS.LABELS + '.' + key
             for key in ('allyColor', 'enemyColor', 'squadColor', 'deadColor')),
-        MINIMAP_PLUGINS.LABELS + '.avoidOverlap': (MINIMAP_PLUGINS.LABELS + '.compactLength',),
-        MINIMAP_PLUGINS.LOST_MARKER + '.fade': (MINIMAP_PLUGINS.LOST_MARKER + '.minimumAlpha',),
-        MINIMAP_PLUGINS.LINES + '.customStyle': tuple(MINIMAP_PLUGINS.LINES + '.' + key
+        MINIMAP_ENHANCEMENTS.LABELS + '.avoidOverlap': (MINIMAP_ENHANCEMENTS.LABELS + '.compactLength',),
+        MINIMAP_ENHANCEMENTS.LOST_MARKER + '.fade': (MINIMAP_ENHANCEMENTS.LOST_MARKER + '.minimumAlpha',),
+        MINIMAP_ENHANCEMENTS.LINES + '.customStyle': tuple(MINIMAP_ENHANCEMENTS.LINES + '.' + key
             for key in ('directionColor', 'sectorColor', 'alpha', 'geometry', 'length', 'thickness', 'dash', 'gap')),
-        MINIMAP_PLUGINS.LINES + '.geometry': tuple(MINIMAP_PLUGINS.LINES + '.' + key
+        MINIMAP_ENHANCEMENTS.LINES + '.geometry': tuple(MINIMAP_ENHANCEMENTS.LINES + '.' + key
             for key in ('length', 'thickness', 'dash', 'gap')),
-        MINIMAP_PLUGINS.PRESENTATION + '.alternativeEnabled': (
-            MINIMAP_PLUGINS.BUTTON, MINIMAP_PLUGINS.ZOOM_FACTOR, MINIMAP_PLUGINS.ZOOM_FACTOR_MAX,
-            MINIMAP_PLUGINS.PRESENTATION + '.zoom', MINIMAP_PLUGINS.PRESENTATION + '.center',
-            MINIMAP_PLUGINS.PRESENTATION + '.alternativeAlpha', MINIMAP_PLUGINS.PRESENTATION + '.sizeIndex'),
-        MINIMAP_PLUGINS.PRESENTATION + '.zoom': (MINIMAP_PLUGINS.ZOOM_FACTOR, MINIMAP_PLUGINS.ZOOM_FACTOR_MAX,
-            MINIMAP_PLUGINS.PRESENTATION + '.center', MINIMAP_PLUGINS.PRESENTATION + '.sizeIndex'),
-        MINIMAP_PLUGINS.HEALTH + '.visibility': dict((MINIMAP_PLUGINS.HEALTH + '.' + key, ('key', 'always'))
+        MINIMAP_ENHANCEMENTS.PRESENTATION + '.alternativeEnabled': (
+            MINIMAP_ENHANCEMENTS.BUTTON, MINIMAP_ENHANCEMENTS.ZOOM_FACTOR, MINIMAP_ENHANCEMENTS.ZOOM_FACTOR_MAX,
+            MINIMAP_ENHANCEMENTS.PRESENTATION + '.zoom', MINIMAP_ENHANCEMENTS.PRESENTATION + '.center',
+            MINIMAP_ENHANCEMENTS.PRESENTATION + '.alternativeAlpha', MINIMAP_ENHANCEMENTS.PRESENTATION + '.sizeIndex'),
+        MINIMAP_ENHANCEMENTS.PRESENTATION + '.zoom': (MINIMAP_ENHANCEMENTS.ZOOM_FACTOR, MINIMAP_ENHANCEMENTS.ZOOM_FACTOR_MAX,
+            MINIMAP_ENHANCEMENTS.PRESENTATION + '.center', MINIMAP_ENHANCEMENTS.PRESENTATION + '.sizeIndex'),
+        MINIMAP_ENHANCEMENTS.HEALTH + '.visibility': dict((MINIMAP_ENHANCEMENTS.HEALTH + '.' + key, ('key', 'always'))
             for key in ('mode', 'x', 'y', 'width', 'height', 'fontSize')),
-        MINIMAP_PLUGINS.HEALTH + '.mode': {
-            MINIMAP_PLUGINS.HEALTH + '.width': ('bar',), MINIMAP_PLUGINS.HEALTH + '.height': ('bar',),
-            MINIMAP_PLUGINS.HEALTH + '.fontSize': ('value', 'percent')}},
-    PLAYER_PANEL_PRO.NAME: {
-        PLAYER_PANEL_PRO.STATS_ENABLED: (PLAYER_PANEL_PRO.RATING, PLAYER_PANEL_PRO.COLOR_SCALE),
-        PLAYER_PANEL_PRO.HP_VISIBILITY: {PLAYER_PANEL_PRO.HP_KEY: ('hold',)}},
-    SERVER_TURRET_EXTENDED.NAME: {SERVER_TURRET_EXTENDED.FIX_WHEEL_CRUISE_CONTROL: (
-        SERVER_TURRET_EXTENDED.BUTTON_AUTO_MODE, SERVER_TURRET_EXTENDED.BUTTON_MAX_MODE,
-        SERVER_TURRET_EXTENDED.MAX_WHEEL_MODE, SERVER_TURRET_EXTENDED.AUTO_ACTIVATE_WHEEL_MODE)},
-    DISPERSION_CIRCLE.NAME: {DISPERSION_CIRCLE.SHOW_CLIENT_AND_SERVER_RETICLE_BETA: (
-        DISPERSION_CIRCLE.SERVER_RETICLE_AIMING_CIRCLE_SHAPE, DISPERSION_CIRCLE.SERVER_RETICLE_AIMING_CIRCLE_OPACITY,
-        DISPERSION_CIRCLE.SERVER_RETICLE_GUN_MARKER_SHAPE, DISPERSION_CIRCLE.SERVER_RETICLE_GUN_MARKER_OPACITY)},
-    MARKS_ON_GUN_TECH_TREE.NAME: {MARKS_ON_GUN_TECH_TREE.SHOW_IN_TECH_TREE: (
-        MARKS_ON_GUN_TECH_TREE.SHOW_IN_TECH_TREE_MARK_OF_GUN_PERCENT,
-        MARKS_ON_GUN_TECH_TREE.SHOW_IN_TECH_TREE_MASTERY,
-        MARKS_ON_GUN_TECH_TREE.SHOW_IN_TECH_TREE_MARK_OF_GUN_TANK_NAME_COLORED,
-        MARKS_ON_GUN_TECH_TREE.BADGE_OFFSET_X, MARKS_ON_GUN_TECH_TREE.BADGE_OFFSET_Y)},
-    ZOOM_EXTENDED.NAME: {ZOOM_EXTENDED.DISABLE_CAM_AFTER_SHOT: (
-        ZOOM_EXTENDED.DISABLE_CAM_AFTER_SHOT_LATENCY, ZOOM_EXTENDED.DISABLE_CAM_AFTER_SHOT_SKIP_CLIP)},
-    BATTLE_EFFICIENCY.NAME: {BATTLE_EFFICIENCY.BATTLE_RESULTS_WINDOW: (BATTLE_EFFICIENCY.BATTLE_RESULTS_FORMAT,)},
+        MINIMAP_ENHANCEMENTS.HEALTH + '.mode': {
+            MINIMAP_ENHANCEMENTS.HEALTH + '.width': ('bar',), MINIMAP_ENHANCEMENTS.HEALTH + '.height': ('bar',),
+            MINIMAP_ENHANCEMENTS.HEALTH + '.fontSize': ('value', 'percent')}},
+    TEAM_PANELS.NAME: {
+        TEAM_PANELS.STATS_ENABLED: (TEAM_PANELS.RATING, TEAM_PANELS.COLOR_SCALE),
+        TEAM_PANELS.HP_VISIBILITY: {TEAM_PANELS.HP_KEY: ('hold',)}},
+    AIMING_RETICLES.NAME: {AIMING_RETICLES.SHOW_CLIENT_AND_SERVER_RETICLE_BETA: (
+        AIMING_RETICLES.SERVER_RETICLE_AIMING_CIRCLE_SHAPE, AIMING_RETICLES.SERVER_RETICLE_AIMING_CIRCLE_OPACITY,
+        AIMING_RETICLES.SERVER_RETICLE_GUN_MARKER_SHAPE, AIMING_RETICLES.SERVER_RETICLE_GUN_MARKER_OPACITY)},
+    TECH_TREE_MARKS_OF_EXCELLENCE.NAME: {TECH_TREE_MARKS_OF_EXCELLENCE.SHOW_IN_TECH_TREE: (
+        TECH_TREE_MARKS_OF_EXCELLENCE.SHOW_IN_TECH_TREE_MARK_OF_GUN_PERCENT,
+        TECH_TREE_MARKS_OF_EXCELLENCE.SHOW_IN_TECH_TREE_MASTERY,
+        TECH_TREE_MARKS_OF_EXCELLENCE.SHOW_IN_TECH_TREE_MARK_OF_GUN_TANK_NAME_COLORED,
+        TECH_TREE_MARKS_OF_EXCELLENCE.BADGE_OFFSET_X, TECH_TREE_MARKS_OF_EXCELLENCE.BADGE_OFFSET_Y)},
+    SNIPER_CAMERA.NAME: {SNIPER_CAMERA.DISABLE_CAM_AFTER_SHOT: (
+        SNIPER_CAMERA.DISABLE_CAM_AFTER_SHOT_LATENCY, SNIPER_CAMERA.DISABLE_CAM_AFTER_SHOT_SKIP_CLIP)},
+    BATTLE_PERFORMANCE.NAME: {BATTLE_PERFORMANCE.BATTLE_RESULTS_WINDOW: (BATTLE_PERFORMANCE.BATTLE_RESULTS_FORMAT,)},
 }
 
 
 class BATTLE_ALIASES(object):
-    ARMOR_CALCULATOR = 'ArmorCalculatorView'
-    DISPERSION_TIMER = 'DispersionTimerView'
-    DISTANCE_MARKER = 'DistanceMarkerView'
-    FLIGHT_TIMER = 'FlightTimerView'
-    OWN_HEALTH = 'OwnHealthView'
-    SIXTH_SENSE = 'SixthSenseView'
+    PENETRATION_INDICATOR = 'ArmorCalculatorView'
+    AIMING_COUNTDOWN = 'DispersionTimerView'
+    TARGET_DISTANCE = 'DistanceMarkerView'
+    SHELL_FLIGHT_TIME = 'FlightTimerView'
+    VEHICLE_HEALTH = 'OwnHealthView'
+    SIXTH_SENSE_ALERT = 'SixthSenseView'
     MINIMAP = 'MinimapCentredView'
     PLAYERS_PANEL = 'DriftkingsRatingScreens'
     OVERLAY = 'DriftkingsOverlay'

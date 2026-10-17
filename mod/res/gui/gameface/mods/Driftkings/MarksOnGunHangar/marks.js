@@ -2,7 +2,7 @@
     'use strict';
     var K = window.__dkMarksKit, root = K.node('div', 'dk-mog dk-mog--full', document.body);
     var header = K.node('div', 'dk-mog__header', root), brand = K.node('div', 'dk-mog__brand', header);
-    K.node('span', 'dk-mog__logo', brand, '///'); K.node('span', '', brand, 'MarksOnGun');
+    K.node('span', 'dk-mog__logo', brand, '///'); var title=K.node('span', '', brand, '');
     var context = K.node('span', 'dk-mog__context', header, 'HANGAR');
     var vehicle = K.node('div', 'dk-mog__vehicle', root);
     var hero = K.node('div', 'dk-mog__hero', root), main = K.node('div', '', hero);
@@ -31,6 +31,7 @@
         K.style(root,'pointerEvents','auto');
         K.style(header,'cursor',cfg.locked?'default':'move');
         var accent=K.theme(root,cfg,false);
+        K.text(title,K.label(data,'title','Marks of Excellence'));
         K.text(context, K.label(data,'hangar','HANGAR'));
         K.text(currentLabel,K.label(data,'current','Consolidated mark'));
         K.text(vehicle,(data.vehicle||'\u2014')+(data.tier?' · '+data.tier:'')+(data.nation?' · '+data.nation:''));

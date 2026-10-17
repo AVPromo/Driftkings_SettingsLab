@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from Driftkings._constants import GLOBAL, PLAYER_PANEL_PRO
+from Driftkings._constants import GLOBAL, TEAM_PANELS
 from Driftkings.settings.service import settings_service, SettingsChanges, changed_paths, affects
 """Native roster bridge; all three screens share identity, health and macros."""
 from Driftkings._constants import BATTLE_ALIASES
@@ -62,7 +62,7 @@ class RatingViews(object):
                 owner.visibleScreens=set(name for name,visible in (('panel',panel),('loading',loading),('tab',tab)) if visible)
                 owner.refresh()
             def reportPerformance(self,message):
-                if settings_service.getComponentDict(owner.config)[PLAYER_PANEL_PRO.PERFORMANCE].get('diagnostics',False): LOG.info('Performance Flash: %s',message)
+                if settings_service.getComponentDict(owner.config)[TEAM_PANELS.PERFORMANCE].get('diagnostics',False): LOG.info('Performance Flash: %s',message)
             def _dispose(self):
                 if owner.view is self: owner.view=None
                 super(RosterView,self)._dispose()
@@ -74,7 +74,7 @@ class RatingViews(object):
     def start(self):
         if self.active: return
         self.active=True
-        settings_service.onModSettingsChanged.connect(self.onSettingsChanged, PLAYER_PANEL_PRO)
+        settings_service.onModSettingsChanged.connect(self.onSettingsChanged, TEAM_PANELS)
         self.subscriptions=((battleEvents.started,self.refresh),(battleEvents.loaded,self.refresh),
             (battleEvents.ended,self.end),(battleEvents.health,self.health),
             (battleEvents.appeared,self.appeared),(battleEvents.visibility,self.visibility),
@@ -106,9 +106,9 @@ class RatingViews(object):
         # Native page owns component destruction; end() clears its presentation.
 
     def onSettingsChanged(self, component, settings):
-        if affects(settings, PLAYER_PANEL_PRO.COLOR_SCALE):
+        if affects(settings, TEAM_PANELS.COLOR_SCALE):
             self.stats._appliedCache.clear()
-        if affects(settings, GLOBAL.ENABLED, PLAYER_PANEL_PRO.STATS_ENABLED, PLAYER_PANEL_PRO.COLOR_SCALE):
+        if affects(settings, GLOBAL.ENABLED, TEAM_PANELS.STATS_ENABLED, TEAM_PANELS.COLOR_SCALE):
             self.lastRequest = 0
         self.refresh()
 
@@ -193,7 +193,7 @@ class RatingViews(object):
         # ArenaPeriodController calls this on entry to BATTLE, after countdown.
         # Before that the client uses setLargeMode; later manual modes stay free.
         result=original(panel)
-        settings=settings_service.getComponentDict(self.config)[PLAYER_PANEL_PRO.PLAYERS_PANEL]
+        settings=settings_service.getComponentDict(self.config)[TEAM_PANELS.PLAYERS_PANEL]
         selected=settings.get('startMode')
         if self.active and settings_service.getComponentDict(self.config)[GLOBAL.ENABLED] and settings[GLOBAL.ENABLED] and selected in PROFILES:
             panel._mode=PROFILES.index(selected)
@@ -201,7 +201,7 @@ class RatingViews(object):
         return result
 
     def nativeHover(self,original,panel,mode):
-        if not self.active or not settings_service.getComponentDict(self.config)[GLOBAL.ENABLED] or not settings_service.getComponentDict(self.config)[PLAYER_PANEL_PRO.PLAYERS_PANEL][GLOBAL.ENABLED]:
+        if not self.active or not settings_service.getComponentDict(self.config)[GLOBAL.ENABLED] or not settings_service.getComponentDict(self.config)[TEAM_PANELS.PLAYERS_PANEL][GLOBAL.ENABLED]:
             return original(panel,mode)
         # Our Flash hit region owns expansion; native rollover would race it.
 
@@ -217,7 +217,7 @@ class RatingViews(object):
     def key(self,event):
         down=event.isKeyDown()
         self.model.key(event.key,down)
-        selected=settings_service.getComponentDict(self.config)[PLAYER_PANEL_PRO.PLAYERS_PANEL].get('altMode')
+        selected=settings_service.getComponentDict(self.config)[TEAM_PANELS.PLAYERS_PANEL].get('altMode')
         if event.key in (56,184) and selected in PROFILES:
             self.alt=any(code in self.model.keys for code in (56,184))
             self.setMode(PROFILES.index(selected) if self.alt else self.baseMode)
@@ -237,7 +237,7 @@ class RatingViews(object):
         result=self.model.screen(settings,values,data,side,dependencies)
         cache[key]={'values':deepcopy(dict((name,values.get(name)) for name in dependencies)),
                     'hotkeys':hotkeys,'side':side,'result':result}
-        if data[PLAYER_PANEL_PRO.PERFORMANCE].get('diagnostics',False):
+        if data[TEAM_PANELS.PERFORMANCE].get('diagnostics',False):
             for name in changed:
                 self.invalidationCauses[name]=self.invalidationCauses.get(name,0)+1
         return result,True
@@ -247,33 +247,33 @@ class RatingViews(object):
         arena=getattr(player,'arena',None)
         if arena is None: return []
         data=settings_service.getComponentDict(self.config)
-        if not data[PLAYER_PANEL_PRO.PERFORMANCE].get('diagnostics',False): self.invalidationCauses.clear()
+        if not data[TEAM_PANELS.PERFORMANCE].get('diagnostics',False): self.invalidationCauses.clear()
         if arena is not self.cacheArena or data!=self.cacheConfig:
             changes = SettingsChanges(data, changed_paths(self.cacheConfig or {}, data))
             new_arena = arena is not self.cacheArena
-            context_changed = new_arena or affects(changes, PLAYER_PANEL_PRO.STATS_ENABLED,
-                PLAYER_PANEL_PRO.RATING, PLAYER_PANEL_PRO.COLOR_SCALE, PLAYER_PANEL_PRO.SPOTTED_ENABLED,
-                (PLAYER_PANEL_PRO.PERFORMANCE, 'minBattlesToShow'))
-            shared_fields = affects(changes, PLAYER_PANEL_PRO.TEMPLATES, PLAYER_PANEL_PRO.HP_ENABLED,
-                PLAYER_PANEL_PRO.HP_VISIBILITY, PLAYER_PANEL_PRO.HP_KEY)
+            context_changed = new_arena or affects(changes, TEAM_PANELS.STATS_ENABLED,
+                TEAM_PANELS.RATING, TEAM_PANELS.COLOR_SCALE, TEAM_PANELS.SPOTTED_ENABLED,
+                (TEAM_PANELS.PERFORMANCE, 'minBattlesToShow'))
+            shared_fields = affects(changes, TEAM_PANELS.TEMPLATES, TEAM_PANELS.HP_ENABLED,
+                TEAM_PANELS.HP_VISIBILITY, TEAM_PANELS.HP_KEY)
             if new_arena:
                 self.screenCache.clear()
             # Keep rendered screens whose formats and macro inputs did not change.
             for cache in self.screenCache.values():
                 for key in list(cache):
-                    section = (PLAYER_PANEL_PRO.PROFILES, key[1]) if isinstance(key, tuple) else key
+                    section = (TEAM_PANELS.PROFILES, key[1]) if isinstance(key, tuple) else key
                     if context_changed or shared_fields or affects(changes, section):
                         del cache[key]
             if context_changed:
                 self.contextCache.clear()
-            if context_changed or shared_fields or affects(changes, PLAYER_PANEL_PRO.PROFILES,
-                                                           PLAYER_PANEL_PRO.LOADING, PLAYER_PANEL_PRO.TAB):
+            if context_changed or shared_fields or affects(changes, TEAM_PANELS.PROFILES,
+                                                           TEAM_PANELS.LOADING, TEAM_PANELS.TAB):
                 self.rowCache.clear()
             self.cacheArena=arena
             self.cacheConfig=deepcopy(data)
-            tracked=set((56,184)) if data[PLAYER_PANEL_PRO.PLAYERS_PANEL].get('altMode') else set()
-            if data.get(PLAYER_PANEL_PRO.HP_VISIBILITY)=='hold':
-                tracked.update(code for group in data[PLAYER_PANEL_PRO.HP_KEY] for code in group)
+            tracked=set((56,184)) if data[TEAM_PANELS.PLAYERS_PANEL].get('altMode') else set()
+            if data.get(TEAM_PANELS.HP_VISIBILITY)=='hold':
+                tracked.update(code for group in data[TEAM_PANELS.HP_KEY] for code in group)
             dynamic=[False]
             def track(value):
                 if isinstance(value,dict):
@@ -311,7 +311,7 @@ class RatingViews(object):
         own=dict(('my-'+key,value) for key,value in contexts.get(ownID,{}).items())
         rows=[]
         hotkeys=tuple(frozenset(keys if self.trackedKeys is None else keys.intersection(self.trackedKeys)) for keys in (self.model.keys,self.model.toggled))
-        profiles=data[PLAYER_PANEL_PRO.PROFILES] if mode is None else {mode:data[PLAYER_PANEL_PRO.PROFILES][mode]}
+        profiles=data[TEAM_PANELS.PROFILES] if mode is None else {mode:data[TEAM_PANELS.PROFILES][mode]}
         active=frozenset(('panel','loading','tab') if screens is None else screens)
         for cache in (self.rowCache,self.contextCache,self.screenCache):
             for ident in set(cache)-set(contexts): cache.pop(ident,None)
@@ -372,12 +372,12 @@ class RatingViews(object):
             if hasattr(self,'gameface'): self.gameface.update(settings_service.getComponentDict(self.config)[GLOBAL.ENABLED],rows)
             if self.view and self.view._isDAAPIInited():
                 payload={'enabled':enabled,
-                    'rows':rows,'panel':deepcopy(settings_service.getComponentDict(self.config)[PLAYER_PANEL_PRO.PLAYERS_PANEL]), 'mode':self.model.mode,
-                    'loadingClock':{'enabled':settings_service.getComponentDict(self.config)[PLAYER_PANEL_PRO.LOADING][GLOBAL.ENABLED],
-                                    'format':settings_service.getComponentDict(self.config)[PLAYER_PANEL_PRO.LOADING].get('clockFormat','')},
-                    'diagnostics':settings_service.getComponentDict(self.config)[PLAYER_PANEL_PRO.PERFORMANCE].get('diagnostics',False),
+                    'rows':rows,'panel':deepcopy(settings_service.getComponentDict(self.config)[TEAM_PANELS.PLAYERS_PANEL]), 'mode':self.model.mode,
+                    'loadingClock':{'enabled':settings_service.getComponentDict(self.config)[TEAM_PANELS.LOADING][GLOBAL.ENABLED],
+                                    'format':settings_service.getComponentDict(self.config)[TEAM_PANELS.LOADING].get('clockFormat','')},
+                    'diagnostics':settings_service.getComponentDict(self.config)[TEAM_PANELS.PERFORMANCE].get('diagnostics',False),
                     'hoverMode':profile_for_mode(self.baseMode),'hovered':self.hovered,
-                    'hoverAreaWidth':settings_service.getComponentDict(self.config)[PLAYER_PANEL_PRO.PROFILES][profile_for_mode(self.baseMode)].get('expandAreaWidth',230),
+                    'hoverAreaWidth':settings_service.getComponentDict(self.config)[TEAM_PANELS.PROFILES][profile_for_mode(self.baseMode)].get('expandAreaWidth',230),
                     'time':{'H':time.strftime('%H'),'i':time.strftime('%M'),'s':time.strftime('%S')}}
                 if payload!=self.lastPayload:
                     wire=dict(payload)
@@ -393,7 +393,7 @@ class RatingViews(object):
                     self.lastPayload=payload
         except Exception:
             LOG.exception('Roster update failed')
-        if settings_service.getComponentDict(self.config)[PLAYER_PANEL_PRO.PERFORMANCE].get('diagnostics',False):
+        if settings_service.getComponentDict(self.config)[TEAM_PANELS.PERFORMANCE].get('diagnostics',False):
             elapsed=(time.time()-started)*1000; metrics=self.metrics
             metrics['ticks']+=1; metrics['ms']+=elapsed; metrics['max']=max(metrics['max'],elapsed)
             metrics['resolved']+=self.resolvedRows

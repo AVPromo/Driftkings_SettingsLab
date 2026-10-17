@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "BattleStatistics",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.battle_statistics",
+  "config_files": [
+    "default/battle_statistics.json"
+  ],
+  "assets": []
+}

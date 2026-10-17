@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "TargetInformation",
+  "kind": "feature",
+  "enabled": true,
+  "entrypoint": "battle.target_information",
+  "config_files": [
+    "default/target_information.json"
+  ],
+  "assets": []
+}

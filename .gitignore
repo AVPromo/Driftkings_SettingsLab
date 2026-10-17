@@ -94,3 +94,6 @@ test/
 .ruff_cache/
 .coverage
 htmlcov/
+
+# Local project documentation
+/docs/

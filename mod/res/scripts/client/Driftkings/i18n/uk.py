@@ -25,7 +25,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_save': 'зберегти',
                      'UI_setting_server': 'сервер:',
                      'UI_setting_showPassword': 'Показати пароль'},
- 'aiming_angles': {'UI_description': 'AimingAngles',
+ 'gun_traverse_limits': {'UI_description': 'Кути наведення гармати',
                    'UI_setting_horizontal_0': 'Вимкнено',
                    'UI_setting_horizontal_1': 'Кути',
                    'UI_setting_horizontal_2': 'Квадратні дужки',
@@ -67,7 +67,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                   "src='img://gui/AimingAngles/4/Bottom.png'>\t<img "
                                                   "src='img://gui/AimingAngles/5/Bottom.png'>\t<img "
                                                   "src='img://gui/AimingAngles/6/Bottom.png'>"},
- 'arcade_zoom': {'UI_description': 'ArcadeZoom',
+ 'third_person_zoom': {'UI_description': 'Масштаб зовнішньої камери',
                  'UI_setting_max_text': 'Максимальне зменшення',
                  'UI_setting_max_tooltip': 'Максимальна відстань камери від автомобіля',
                  'UI_setting_min_text': 'Мінімальне зменшення',
@@ -77,22 +77,22 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                          'миші',
                  'UI_setting_startDeadDist_text': 'Початок мертвої дистанції',
                  'UI_setting_startDeadDist_tooltip': 'Початкова відстань камери в посмертному режимі'},
- 'armor_calculator': {'UI_colors': {'green': '#60CB00',
+ 'penetration_indicator': {'UI_colors': {'green': '#60CB00',
                                     'orange': '#FF9900',
                                     'purple': '#6F6CD3',
                                     'red': '#ED070A',
                                     'yellow': '#FFC900'},
-                      'UI_description': 'ArmorCalculator',
+                      'UI_description': 'Індикатор пробиття',
                       'UI_noDamage': 'Критичний удар, без пошкоджень.',
                       'UI_ricochet': 'Рикошет',
                       'UI_setting_displayOnAllies_text': 'Відображення на союзниках',
                       'UI_setting_displayOnAllies_tooltip': ''},
- 'arty_splash': {'UI_artySplash_messageDotOff': 'Осколково-фугасний вибух: приховайте центральну точку',
+ 'artillery_blast_radius': {'UI_artySplash_messageDotOff': 'Осколково-фугасний вибух: приховайте центральну точку',
                  'UI_artySplash_messageDotOn': 'Осколково-фугасний вибух: покажіть центральну точку',
                  'UI_artySplash_messageSplashOff': 'HE Splash: Приховати Splash',
                  'UI_artySplash_messageSplashOn': 'HE Splash: Показати Splash',
                  'UI_artySplash_name': 'ВІН Сплеск',
-                 'UI_description': 'ArtySplash',
+                 'UI_description': 'Радіус вибуху артилерії',
                  'UI_setting_buttonShowDot_text': 'Кнопка: показати|сховати крапку',
                  'UI_setting_buttonShowDot_tooltip': '',
                  'UI_setting_buttonShowSplash_text': 'Кнопка: показати|сховати Splash',
@@ -107,17 +107,17 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_setting_showModeSniper_tooltip': '',
                  'UI_setting_showSplashOnDefault_text': 'Показувати сплеск за умовчанням',
                  'UI_setting_showSplashOnDefault_tooltip': ''},
- 'auto_aim_optimize': {'UI_description': 'AutoAimOptimize',
+ 'autoaim_target_indicator': {'UI_description': 'Індикатор цілі автоприцілу',
                        'UI_setting_angle_text': 'Встановіть кут для лову цілі',
                        'UI_setting_angle_value': 'x',
                        'UI_setting_catchHiddenTarget_text': 'Спіймати ціль, приховану за перешкодою',
                        'UI_setting_catchHiddenTarget_tooltip': '',
                        'UI_setting_disableArtyMode_text': 'Вимкнути в режимі Arty',
                        'UI_setting_disableArtyMode_tooltip': ''},
- 'auto_claim_clan': {'UI_description': 'AutoClaimClan',
+ 'clan_reward_collection': {'UI_description': 'Отримання кланових нагород',
                      'UI_setting_enabled_text': 'Увімкнено',
                      'UI_setting_enabled_tooltip': 'Увімкнути/вимкнути мод.'},
- 'banks_loader': {'UI_description': 'BanksLoader',
+ 'sound_bank_loader': {'UI_description': 'Завантаження звукових банків',
                   'UI_restart_button_close': 'Продовжити',
                   'UI_restart_button_restart': 'Перезапустіть',
                   'UI_restart_button_shutdown': 'Вимкнення',
@@ -140,7 +140,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                      'Це буде <b>ні</b> буде потрібно пізніше.\n'
                                      'Ви хочете перезапустити гру зараз?',
                   'UI_restart_wotmod': ' • конфігурації <b>видалено</b> з пакетів: '},
- 'battle_efficiency': {'UI_description': 'BattleEfficiency',
+ 'battle_performance': {'UI_description': 'Ефективність у бою',
                        'UI_setting_battleResultsFormat_text': 'Модифікація вікна результатів битви',
                        'UI_setting_battleResultsFormat_tooltip': 'Доступні макроси:\n'
                                                                  "WN8:'{wn8}', Колір: '{c:wn8}'\n"
@@ -170,7 +170,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                     "XTE:'{xte}', Колір:'{c:x}'",
                        'UI_setting_textLock_text': 'Блокування тексту',
                        'UI_setting_textLock_tooltip': 'Перетягніть текст у бою'},
- 'battle_options': {'UI_description': 'BattleOptions',
+ 'battle_preferences': {'UI_setting_removeFog_text': 'Remove fog',
+                      'UI_setting_removeFog_tooltip': 'Generates a separate package from this installation’s maps. Installation or removal happens after closing the game. Requires a restart. Disabling this module also removes the package.',
+                      'UI_fog_restart_on': 'Fog removal scheduled. Close and reopen the game to apply.',
+                      'UI_fog_restart_off': 'Fog package removal scheduled. Close and reopen the game to restore fog.',
+                      'UI_fog_error': 'Could not apply fog removal. Check game.log and try again in Battle preferences.',
+                      'UI_description': 'Налаштування бою',
                     'UI_setting_addEnemyName_text': "Додайте ім'я ворога",
                     'UI_setting_addEnemyName_tooltip': 'Додає назву ворожої машини до журналу пошкоджень.',
                     'UI_setting_clipLoad_text': 'Статус перезавантаження',
@@ -218,7 +223,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                                'собаки.',
                     'UI_setting_stunSound_text': 'Звук приголомшення',
                     'UI_setting_stunSound_tooltip': 'Вимкнути звуковий ефект приголомшення.'},
- 'battle_stat': {'UI_description': 'BattleStat',
+ 'battle_statistics': {'UI_description': 'Бойова статистика',
                  'UI_setting_colorRating_text': 'Таблиця кольорів',
                  'UI_setting_colorRating_tooltip': 'Кольорова шкала статистики.',
                  'UI_setting_format_text': 'Текстовий формат',
@@ -226,9 +231,77 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_setting_teamChances_text': 'Покажіть командні шанси',
                  'UI_setting_teamChances_tooltip': 'Відображає відсоток шансів перемоги для кожної команди '
                                                    'під час битви'},
- 'carousel_stats': {'UI_description': 'CarouselStats',
-                    'UI_setting_colorRating_text': 'Таблиця кольорів',
-                    'UI_setting_showIcons_text': 'Показувати значки'},
+ 'vehicle_carousel': {
+ 'UI_carousel_params': 'Vehicle parameters',
+ 'UI_carousel_bonus': 'Experience bonus',
+ 'UI_carousel_filterFavorite': 'Favourite vehicles',
+'UI_description': 'Карусель техніки',
+ 'UI_setting_colorRating_text': 'Таблиця кольорів',
+ 'UI_setting_showIcons_text': 'Показувати значки',
+ 'UI_carousel_layout': 'Layout',
+ 'UI_carousel_rows': 'Rows (0 = game default)',
+ 'UI_carousel_auto': 'Automatic',
+ 'UI_carousel_normal': 'Standard layout',
+ 'UI_carousel_small': 'Compact layout',
+ 'UI_carousel_backgroundAlpha': 'Background opacity',
+ 'UI_carousel_slotBackgroundAlpha': 'Slot background opacity',
+ 'UI_carousel_slotBorderAlpha': 'Slot border opacity',
+ 'UI_carousel_slotSelectedBorderAlpha': 'Selected slot border opacity',
+ 'UI_carousel_edgeFadeAlpha': 'Edge fade opacity',
+ 'UI_carousel_scrollingSpeed': 'Scrolling speed',
+ 'UI_carousel_hideBuyTank': 'Hide vehicle purchase slot',
+ 'UI_carousel_hideBuySlot': 'Hide garage slot purchase',
+ 'UI_carousel_hideRestoreTank': 'Hide vehicle recovery slot',
+ 'UI_carousel_showTotalSlots': 'Show total garage slots',
+ 'UI_carousel_showUsedSlots': 'Show occupied garage slots',
+ 'UI_carousel_enableLockBackground': 'Show unavailable vehicle background',
+ 'UI_carousel_suppressCarouselTooltips': 'Hide carousel tooltips',
+ 'UI_carousel_filter': 'Filter',
+ 'UI_carousel_filterSpacing': 'Filter spacing',
+ 'UI_carousel_horizontal': 'Horizontal',
+ 'UI_carousel_vertical': 'Vertical',
+ 'UI_carousel_sortingCriteria': 'Sorting (comma-separated; - = descending)',
+ 'UI_carousel_nationsOrder': 'Nation order (comma-separated)',
+ 'UI_carousel_typesOrder': 'Vehicle type order (comma-separated)',
+ 'UI_carousel_width': 'Width',
+ 'UI_carousel_height': 'Height',
+ 'UI_carousel_gap': 'Spacing between slots',
+ 'UI_carousel_show': 'Show',
+ 'UI_carousel_flag': 'National flag',
+ 'UI_carousel_tankIcon': 'Vehicle image',
+ 'UI_carousel_tankType': 'Vehicle type',
+ 'UI_carousel_level': 'Vehicle tier',
+ 'UI_carousel_xp': 'Experience',
+ 'UI_carousel_tankName': 'Vehicle name',
+ 'UI_carousel_info': 'Additional information',
+ 'UI_carousel_favorite': 'Favourite indicator',
+ 'UI_carousel_progressionPoints': 'Progression points',
+ 'UI_carousel_dx': 'Horizontal offset',
+ 'UI_carousel_dy': 'Vertical offset',
+ 'UI_carousel_alpha': 'Opacity',
+ 'UI_carousel_scale': 'Scale',
+ 'UI_carousel_extraField': 'Custom field',
+ 'UI_carousel_enabled': 'Enabled',
+ 'UI_carousel_format': 'Text template',
+ 'UI_carousel_color': 'Text color',
+ 'UI_carousel_bgColor': 'Background color',
+ 'UI_carousel_src': 'Image resource path',
+ 'UI_carousel_x': 'Horizontal position',
+ 'UI_carousel_y': 'Vertical position',
+ 'UI_carousel_fontSize': 'Font size',
+ 'UI_carousel_iconSize': 'Icon size',
+ 'UI_carousel_align': 'Alignment',
+ 'UI_carousel_layer': 'Display layer',
+ 'UI_carousel_left': 'Left',
+ 'UI_carousel_center': 'Center',
+ 'UI_carousel_right': 'Right',
+ 'UI_carousel_background': 'Background',
+ 'UI_carousel_foreground': 'Foreground',
+ 'UI_carousel_premium': 'Premium vehicles',
+ 'UI_carousel_elite': 'Elite vehicles',
+ 'UI_carousel_favoriteVehicle': 'Favourite vehicles',
+ 'UI_carousel_nation': 'Nation',
+ 'UI_carousel_vehicleType': 'Vehicle type'},
  'common': {'UI_native_close': 'Закрити',
             'UI_mog_lockPosition': 'Lock panel position',
  'UI_mog_enableBattle': u'Enable battle panel',
@@ -274,7 +347,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
             'UI_native_press': 'Натисніть клавішу...',
             'UI_native_save': 'Зберегти',
             'UI_native_saved': 'Налаштування збережено'},
- 'crew_settings': {'UI_description': 'Налаштування команди',
+ 'crew_management': {'UI_description': 'Керування екіпажем',
                    'UI_message_crewNotAvailable': 'Екіпаж не доступний для повернення',
                    'UI_message_crewReturned': 'Екіпаж повернуто в машину',
                    'UI_setting_autoReturnDelay_text': 'Затримка автоматичного повернення (секунди)',
@@ -291,7 +364,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_showNotifications_text': 'Показати сповіщення',
                    'UI_setting_showNotifications_tooltip': 'Показувати системні сповіщення, коли екіпаж '
                                                            'повертається'},
- 'dispersion_circle': {'UI_description': 'Reticle',
+ 'aiming_reticles': {'UI_description': 'Кола зведення',
                        'UI_setting_gunMarkerMinimumSize_text': 'Мінімальний розмір маркера зброї',
                        'UI_setting_gunMarkerMinimumSize_tooltip': 'Мінімальний розмір маркера гармати в '
                                                                   'пікселях',
@@ -318,7 +391,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                        'UI_setting_showServerSpgStrategicReticle_tooltip': 'Увімкнути прицільну сітку '
                                                                            'сервера для стратегічного режиму '
                                                                            'SPG'},
- 'dispersion_timer': {'UI_description': 'DispersionTimer',
+ 'aiming_countdown': {'UI_description': 'Час зведення',
                       'UI_setting_blue_text': "<font color='#%(blue)s'>Поточний колір: #%(blue)s</font>",
                       'UI_setting_blue_tooltip': '',
                       'UI_setting_colorBlue_text': 'Виберіть колір для дисперсійного таймера дуже добре:',
@@ -346,7 +419,8 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                       'UI_setting_yellow_text': "<font color='#%(yellow)s'>Поточний колір: "
                                                 '#%(yellow)s</font>',
                       'UI_setting_yellow_tooltip': ''},
- 'distance_marker': {'UI_setting_anchorHorizontalOffset_text': 'Горизонтальний зсув',
+ 'target_distance': {'UI_description': 'Відстань до цілі',
+                    'UI_setting_anchorHorizontalOffset_text': 'Горизонтальний зсув',
                      'UI_setting_anchorHorizontalOffset_tooltip': 'Регулює горизонтальне положення маркера',
                      'UI_setting_anchorPosition_tankBottom': 'Дно бака',
                      'UI_setting_anchorPosition_tankCenter': 'Танковий центр',
@@ -384,7 +458,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                 'UI_profile_copy': "Створіть копію активного профілю (необов'язково)",
                 'UI_profile_restart': 'Перезапустіть гру, щоб застосувати інший профіль.',
                 'UI_profile_select': 'Профіль для наступного початку гри'},
- 'flight_timer': {'UI_description': 'FlightTimer',
+ 'shell_flight_time': {'UI_description': 'Час польоту снаряда',
                   'UI_setting_spgOnly_text': 'Тільки для САУ?',
                   'UI_setting_spgOnly_tooltip': 'Якщо позначено, таймер буде видно лише для SPG.',
                   'UI_setting_template_text': 'Шаблон',
@@ -393,12 +467,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                   'UI_setting_x_tooltip': '',
                   'UI_setting_y_text': 'Позиція Y',
                   'UI_setting_y_tooltip': ''},
- 'hangar_options': {'UI_clock_analog': 'Аналоговий',
+ 'hangar_preferences': {'UI_clock_analog': 'Аналоговий',
                     'UI_clock_digital': 'Цифровий',
                     'UI_clock_flip': 'Перекидний',
                     'UI_clock_minimal': 'Мінімалізм',
                     'UI_clock_panel': 'Панель',
-                    'UI_description': 'HangarOptions',
+                    'UI_description': 'Налаштування гаража',
                     'UI_setting_allowChannelButtonBlinking_text': 'Дозволити блимання кнопки каналу',
                     'UI_setting_allowChannelButtonBlinking_tooltip': 'Дозволити блимання кнопки каналу '
                                                                      'панелі повідомлень (клановий або '
@@ -492,8 +566,8 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                     'UI_setting_showXpToUnlockVeh_text': 'Вимоги до досвіду автомобіля',
                     'UI_setting_showXpToUnlockVeh_tooltip': 'Показати необхідні XP для розблокування '
                                                             'транспортних засобів'},
- 'info_panel': {'UI_delay_format': ' сек.',
-                'UI_description': 'InfoPanel',
+ 'target_information': {'UI_delay_format': ' сек.',
+                'UI_description': 'Інформація про ціль',
                 'UI_setting_aliveOnly_text': 'Лише живий',
                 'UI_setting_aliveOnly_tooltip': 'Показувати тільки для живих гравців.',
                 'UI_setting_altKey_text': 'Альт. ключ',
@@ -529,223 +603,203 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                 'armor_piercing_he': 'ХЕШ',
                 'high_explosive': 'ВІН',
                 'hollow_charge': 'ТЕПЛО'},
- 'logs_swapper': {'UI_description': 'LogsSwapper',
-                  'UI_setting_logSwapper_text': 'Увімкнути зворотний журнал.',
-                  'UI_setting_logSwapper_tooltip': 'Змінює положення журналу пошкоджень в інтерфейсі бою.',
-                  'UI_setting_wgLogHideAssist_text': 'Приховати журнал допомоги Wargaming',
-                  'UI_setting_wgLogHideAssist_tooltip': 'Приховує допоміжні повідомлення про пошкодження в '
-                                                        'стандартному журналі битв WG.',
-                  'UI_setting_wgLogHideBlock_text': 'Приховати журнал заблокованих пошкоджень Wargaming',
-                  'UI_setting_wgLogHideBlock_tooltip': 'Приховує заблоковані повідомлення про пошкодження в '
-                                                       'стандартному журналі битв WG.',
-                  'UI_setting_wgLogHideCritics_text': 'Приховати журнал критичних пошкоджень Wargaming',
-                  'UI_setting_wgLogHideCritics_tooltip': 'Приховує повідомлення про критичні удари в '
-                                                         'стандартному журналі битв WG.'},
- 'main_gun': {'UI_description': 'MainGun',
+ 'game_log_manager': {'UI_description': 'Журнал шкоди в бою',
+ 'UI_setting_logSwapper_text': 'Увімкнути зворотний журнал.',
+ 'UI_setting_logSwapper_tooltip': 'Змінює положення журналу пошкоджень в інтерфейсі бою.',
+ 'UI_setting_wgLogHideAssist_text': 'Приховати журнал допомоги Wargaming',
+ 'UI_setting_wgLogHideAssist_tooltip': 'Приховує допоміжні повідомлення про пошкодження в стандартному '
+                                       'журналі битв WG.',
+ 'UI_setting_wgLogHideBlock_text': 'Приховати журнал заблокованих пошкоджень Wargaming',
+ 'UI_setting_wgLogHideBlock_tooltip': 'Приховує заблоковані повідомлення про пошкодження в стандартному '
+                                      'журналі битв WG.',
+ 'UI_setting_wgLogHideCritics_text': 'Приховати журнал критичних пошкоджень Wargaming',
+ 'UI_setting_wgLogHideCritics_tooltip': 'Приховує повідомлення про критичні удари в стандартному журналі '
+                                        'битв WG.'},
+ 'high_caliber_progress': {'UI_description': 'Прогрес Основного калібру',
               'UI_setting_backGroundEnabled_text': 'Фон',
               'UI_setting_backGroundEnabled_tooltip': '',
               'UI_setting_textLock_text': 'TextLock',
               'UI_setting_textLock_tooltip': ''},
- 'marks_on_gun_battle': {'NaN': '[<b>NaN</b>]',
-                         'UI_HangarStatsEnd': '{c_damageToMark65}, {c_damageToMark85}\n'
-                                              '{c_damageToMark95}, {c_damageToMark100}',
-                         'UI_HangarStatsStart': '<b>{currentPercent}<font size="14">[{currentDamage}]</font> '
-                                                '</b>',
-                         'UI_description': 'MarksOnGunBattle',
-                         'UI_marks_assist': 'Assist',
-                         'UI_marks_combined': 'Combined',
-                         'UI_marks_compact': 'Compact',
-                         'UI_marks_current': 'Поточне МО',
-                         'UI_marks_damage': 'Damage',
-                         'UI_marks_detailed': 'Detailed',
-                         'UI_marks_legacy': 'Legacy (12 попередніх налаштувань / спеціальний формат)',
-                         'UI_marks_normal': 'Normal',
-                         'UI_menu_UIConfig': 'Конфігурація',
-                         'UI_menu_UIMyp': '<font color="#D042F3">@Myp</font> вибір [<font '
-                                          'color="#D042F3">twitch.tv/myp_</font>]',
-                         'UI_menu_UIReplay': 'для повторів',
-                         'UI_menu_UIReplayColor': 'Кольорове для повторів',
-                         'UI_menu_UIReplayColorDamage': 'Кольори для повторів із пошкодженнями',
-                         'UI_menu_UIReplayDamage': 'для повторів з ушкодженнями',
-                         'UI_menu_UIcircon': '<font color="#02C9B3">@Circon</font> вибір [<font '
-                                             'color="#02C9B3">twitch.tv/circon</font>]',
-                         'UI_menu_UIkorbenDallasNoMercy': '<font color="#e3256b">@KorbenDallasNoMercy</font> '
-                                                          'вибір [<font '
-                                                          'color="#e3256b">youtube.com/c/KorbenDallasNoMercy</font>]',
-                         'UI_menu_UIoldskool': '<font color="#FFD700">@Oldskool</font> вибір [<font '
-                                               'color="#FFD700">twitch.tv/oldskool</font>]',
-                         'UI_menu_UIskill4ltu': '<font color="#60FF00">@skill</font> вибір [<font '
-                                                'color="#60FF00">twitch.tv/skill4ltu</font>]',
-                         'UI_menu_UIspoter': '<font color="#6595EE">@spoter</font> вибір [<font '
-                                             'color="#6595EE">github.com/spoter</font>]',
-                         'UI_menu_UIspoterNew': 'новий <font color="#6595EE">@spoter</font> вибір [<font '
-                                                'color="#6595EE">github.com/spoter</font>]',
-                         'UI_message': 'Візуальна зміна МО %s',
-                         'UI_setting_UI_text': 'Інтерфейс користувача в бою',
-                         'UI_setting_UI_tooltip': 'Розширений інтерфейс користувача в бою:\n'
-                                                  '<img src="img://objects/ui_extended.png"></img>\n'
-                                                  'Простий:\n'
-                                                  '<img src="img://objects/ui_simple.png"></img>\n'
-                                                  'Конфігурація:\n'
-                                                  '/mods/configs/Driftkings/MarksOnGunExtended/MarksOnGunExtended.json\n',
-                         'UI_setting_background_text': 'Битва: показати фон',
-                         'UI_setting_background_tooltip': '',
-                         'UI_setting_buttonReset_text': 'Кнопка: Скинути налаштування',
-                         'UI_setting_buttonReset_tooltip': '',
-                         'UI_setting_buttonShow_text': 'Кнопка: змінити стиль',
-                         'UI_setting_buttonShow_tooltip': '',
-                         'UI_setting_buttonSizeDown_text': 'Кнопка: Розмір -10%',
-                         'UI_setting_buttonSizeDown_tooltip': '',
-                         'UI_setting_buttonSizeUp_text': 'Кнопка: розмір +10%',
-                         'UI_setting_buttonSizeUp_tooltip': '',
-                         'UI_setting_colorRating_text': 'Таблиця кольорів',
-                         'UI_setting_colorRating_tooltip': 'Кольорова шкала відміток на гарматі.',
-                         'UI_setting_displayMode_text': 'Presentation',
-                         'UI_setting_showDamage_text': 'Показати пошкодження',
-                         'UI_setting_showDelta_text': 'Показати приблизну дельту',
-                         'UI_setting_showInBattleHalfPercents_text': 'Битва: показати шкоду до +0,5%',
-                         'UI_setting_showInBattleHalfPercents_tooltip': '',
-                         'UI_setting_showInBattle_text': 'Битва: повідомлення привіт',
-                         'UI_setting_showInBattle_tooltip': '',
-                         'UI_setting_showInHangar_text': 'Ангар: Показати мод MoE',
-                         'UI_setting_showInHangar_tooltip': '',
-                         'UI_setting_showInReplay_text': 'Повтор: увімкнено',
-                         'UI_setting_showInReplay_tooltip': 'Не добре, але корисно для тестів',
-                         'UI_setting_showInStatistic_text': 'Статистика: включено',
-                         'UI_setting_showInStatistic_tooltip': '',
-                         'UI_setting_showMarks_text': 'Показати позначки',
-                         'UI_setting_showProgress_text': 'Показати прогрес',
-                         'UI_setting_showTargets_text': 'Показати цілі',
-                         'UI_setting_techTreeMarkOfGunPercentSize_value': '',
-                         'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} '
-                                        'пошкодження поточного ковзного середнього</font>\n'
-                                        '<font color="#FFFFFF" size="12">{currentDamage} поточний загальний '
-                                        'збиток</font>\n'
-                                        'до <font color="#FFFFFF" size="12">{nextPercent}% </font>   потреба '
-                                        '<font color="#FFFFFF" size="12">{needDamage}</font> пошкодження '
-                                        'ковзного середнього\n'
-                                        'Ця статистика доступна для останнього бою на цій машині\n'
-                                        'до <font color="#FFFFFF" size="12">20% </font>   потреба <font '
-                                        'color="{c20}" size="12">~{_20}</font> пошкодження ковзного '
-                                        'середнього\n'
-                                        'до <font color="#FFFFFF" size="12">40% </font>   потреба <font '
-                                        'color="{c40}" size="12">~{_40}</font> пошкодження ковзного '
-                                        'середнього\n'
-                                        'до <font color="#FFFFFF" size="12">55% </font>   потреба <font '
-                                        'color="{c55}" size="12">~{_55}</font> пошкодження ковзного '
-                                        'середнього\n'
-                                        'до <font color="#FFFFFF" size="12">65% </font>   потреба <font '
-                                        'color="{c65}" size="12">~{_65}</font> пошкодження ковзного '
-                                        'середнього\n'
-                                        'до <font color="#FFFFFF" size="12">85% </font>   потреба <font '
-                                        'color="{c85}" size="12">~{_85}</font> пошкодження ковзного '
-                                        'середнього\n'
-                                        'до <font color="#FFFFFF" size="12">95% </font>   потреба <font '
-                                        'color="{c95}" size="12">~{_95}</font> пошкодження ковзного '
-                                        'середнього\n'
-                                        'до <font color="#FFFFFF" size="12">100% </font>  потреба <font '
-                                        'color="{c100}" size="12">~{_100}</font> пошкодження ковзного '
-                                        'середнього',
-                         'battleMessageSizeDown': 'MoE mod: розмір <b>-10%</b>',
-                         'battleMessageSizeLimitMax': 'Мод MoE: досягнуто <b>максимум[1000%]</b>',
-                         'battleMessageSizeLimitMin': 'Мод MoE: досягнуто <b>мінімум[10%]</b>',
-                         'battleMessageSizeReset': 'Мод MoE: скинути налаштування</b>',
-                         'battleMessageSizeUp': 'MoE mod: розмір <b>+10%</b>'},
- 'marks_on_gun_hangar': {'UI_description': 'MarksOnGunHangar',
-                         'UI_panel_achieved': 'Досягнуто',
-                         'UI_panel_additionalGoal': 'Додатковий гол',
-                         'UI_panel_automatic': 'Автоматичний',
-                         'UI_panel_average': 'Комбінована EMA',
-                         'UI_panel_battles': 'битви',
-                         'UI_panel_chooseVehicle': 'Виберіть танк',
-                         'UI_panel_drag': 'ПЕРЕТЕГНІТЬ',
-                         'UI_panel_estimate': 'Цільова оцінка',
-                         'UI_panel_estimateNote': 'Тільки кошторис; не та шкода, яка потрібна в наступному '
-                                                  'бою.',
-                         'UI_panel_goal1': '1 бал (65%)',
-                         'UI_panel_goal2': '2 бал (85%)',
-                         'UI_panel_goal3': '3 бал (95%)',
-                         'UI_panel_header': 'ВІДМІННІ ЗНАКИ',
-                         'UI_panel_historyWaiting': 'Історія: в очікуванні наступного бою',
-                         'UI_panel_locked': 'ЗАБЛОКУВАНО',
-                         'UI_panel_mark': 'Марк',
-                         'UI_panel_mastery0': 'Ніякої майстерності',
-                         'UI_panel_mastery1': '3 клас',
-                         'UI_panel_mastery2': '2 клас',
-                         'UI_panel_mastery3': '1 клас',
-                         'UI_panel_mastery4': 'Майстер',
-                         'UI_panel_noDossier': 'Досьє транспортного засобу недоступне.',
-                         'UI_panel_noStats': 'Статистика не завантажена',
-                         'UI_panel_observedBattles': 'бої спостер',
-                         'UI_panel_remaining': 'pp залишилося',
-                         'UI_panel_selectVehicle': 'Виберіть автомобіль в ангарі.',
-                         'UI_panel_thirdAchieved': 'ОТРИМАНО 3-Ю ОЦІНКУ',
-                         'UI_panel_tierLimit': 'Ознаки доступні з рівня V',
-                         'UI_panel_trend': 'Спостережувана тенденція',
-                         'UI_panel_winRate': 'РЕЙТИН ПЕРЕМОГ',
-                         'UI_setting_colorRating_NoobMeter': 'NoobMeter',
-                         'UI_setting_colorRating_WotLabs': 'WotLabs',
-                         'UI_setting_colorRating_XVM': 'XVM',
-                         'UI_setting_colorRating_text': 'Виберіть рейтинг кольорів',
-                         'UI_setting_colorRating_tooltip': 'Виберіть колірну схему для MoE, WN8 і winrate',
-                         'UI_setting_compactMode_text': 'Компактна панель',
-                         'UI_setting_compactMode_tooltip': 'Приховати вторинну статистику автомобіля.',
-                         'UI_setting_goalSelection_text': 'Позначте мету',
-                         'UI_setting_goalSelection_tooltip': 'Автоматичний вибір наступної незаробленої '
-                                                             'позначки. Збиток – це пропорційна оцінка, а не '
-                                                             'поріг сервера чи передбачення наступної битви.',
-                         'UI_setting_historyBattles_text': 'Останні битви в історії',
-                         'UI_setting_historyBattles_tooltip': 'Оновлення можуть групувати кілька боїв. '
-                                                              'Історія починається після встановлення цієї '
-                                                              'версії.',
-                         'UI_setting_positionX_text': 'Горизонтальне положення (X)',
-                         'UI_setting_positionX_tooltip': 'Менший: ліворуч. Більше: справа.',
-                         'UI_setting_positionY_text': 'Вертикальне положення (Y)',
-                         'UI_setting_positionY_tooltip': 'Менший: вгору. Більше: вниз.',
-                         'UI_setting_showInHangar_text': 'Ангар: включено',
-                         'UI_setting_showInHangar_tooltip': '',
-                         'UI_setting_showInStatistic_text': 'Підказка: увімкнено',
-                         'UI_setting_showInStatistic_tooltip': '',
-                         'UI_setting_showTooltipTargets_text': 'Підказка: показати цільові рівні',
-                         'UI_setting_showTooltipTargets_tooltip': '',
-                         'UI_setting_textLock_text': 'Ангар: заблокувати положення панелі',
-                         'UI_setting_textLock_tooltip': '',
-                         'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} '
-                                        'пошкодження поточного ковзного середнього</font>\n'
-                                        '<font color="#FFFFFF" size="12">{currentDamage} поточний загальний '
-                                        'збиток</font>\n'
-                                        'до <font color="#FFFFFF" size="12">{nextPercent}% </font> потреба '
-                                        '<font color="#FFFFFF" size="12">{needDamage}</font> пошкодження '
-                                        'ковзного середнього\n'
-                                        '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
-                                        'color="#FFFFFF" size="12">WN8: {wn8}</font>   <font color="#FFFFFF" '
-                                        'size="12">WR: {winRate}</font>',
-                         'UI_tooltipsFull': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} '
-                                            'пошкодження поточного ковзного середнього</font>\n'
-                                            '<font color="#FFFFFF" size="12">{currentDamage} поточний '
-                                            'загальний збиток</font>\n'
-                                            'до <font color="#FFFFFF" size="12">{nextPercent}% </font> '
-                                            'потреба <font color="#FFFFFF" size="12">{needDamage}</font> '
-                                            'пошкодження ковзного середнього\n'
-                                            '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
-                                            'color="#FFFFFF" size="12">WN8: {wn8}</font>   <font '
-                                            'color="#FFFFFF" size="12">WR: {winRate}</font>\n'
-                                            'Ця статистика доступна з останнього бою на цій машині\n'
-                                            'до <font color="#FFFFFF" size="12">20% </font> потреба <font '
-                                            'color="#FF6347" size="12">~{_20}</font>\n'
-                                            'до <font color="#FFFFFF" size="12">40% </font> потреба <font '
-                                            'color="#FE7903" size="12">~{_40}</font>\n'
-                                            'до <font color="#FFFFFF" size="12">55% </font> потреба <font '
-                                            'color="#F8F400" size="12">~{_55}</font>\n'
-                                            'до <font color="#FFFFFF" size="12">65% </font> потреба <font '
-                                            'color="#60FF00" size="12">~{_65}</font>\n'
-                                            'до <font color="#FFFFFF" size="12">85% </font> потреба <font '
-                                            'color="#02C9B3" size="12">~{_85}</font>\n'
-                                            'до <font color="#FFFFFF" size="12">95% </font> потреба <font '
-                                            'color="#D042F3" size="12">~{_95}</font>\n'
-                                            'до <font color="#FFFFFF" size="12">100% </font> потреба <font '
-                                            'color="#D042F3" size="12">~{_100}</font>'},
- 'marks_on_gun_tech_tree': {'UI_description': 'MarksOnGunTechTree (Gameface)',
+ 'battle_marks_of_excellence': {'NaN': '[<b>NaN</b>]',
+ 'UI_HangarStatsEnd': '{c_damageToMark65}, {c_damageToMark85}\n{c_damageToMark95}, {c_damageToMark100}',
+ 'UI_HangarStatsStart': '<b>{currentPercent}<font size="14">[{currentDamage}]</font> </b>',
+ 'UI_description': 'Позначки на стволі в бою',
+ 'UI_marks_assist': 'Assist',
+ 'UI_marks_combined': 'Combined',
+ 'UI_marks_compact': 'Compact',
+ 'UI_marks_current': 'Поточне МО',
+ 'UI_marks_damage': 'Damage',
+ 'UI_marks_detailed': 'Detailed',
+ 'UI_marks_legacy': 'Legacy (12 попередніх налаштувань / спеціальний формат)',
+ 'UI_marks_normal': 'Normal',
+ 'UI_menu_UIConfig': 'Конфігурація',
+ 'UI_menu_UIMyp': '<font color="#D042F3">@Myp</font> вибір [<font color="#D042F3">twitch.tv/myp_</font>]',
+ 'UI_menu_UIReplay': 'для повторів',
+ 'UI_menu_UIReplayColor': 'Кольорове для повторів',
+ 'UI_menu_UIReplayColorDamage': 'Кольори для повторів із пошкодженнями',
+ 'UI_menu_UIReplayDamage': 'для повторів з ушкодженнями',
+ 'UI_menu_UIcircon': '<font color="#02C9B3">@Circon</font> вибір [<font '
+                     'color="#02C9B3">twitch.tv/circon</font>]',
+ 'UI_menu_UIkorbenDallasNoMercy': '<font color="#e3256b">@KorbenDallasNoMercy</font> вибір [<font '
+                                  'color="#e3256b">youtube.com/c/KorbenDallasNoMercy</font>]',
+ 'UI_menu_UIoldskool': '<font color="#FFD700">@Oldskool</font> вибір [<font '
+                       'color="#FFD700">twitch.tv/oldskool</font>]',
+ 'UI_menu_UIskill4ltu': '<font color="#60FF00">@skill</font> вибір [<font '
+                        'color="#60FF00">twitch.tv/skill4ltu</font>]',
+ 'UI_menu_UIspoter': '<font color="#6595EE">@spoter</font> вибір [<font '
+                     'color="#6595EE">github.com/spoter</font>]',
+ 'UI_menu_UIspoterNew': 'новий <font color="#6595EE">@spoter</font> вибір [<font '
+                        'color="#6595EE">github.com/spoter</font>]',
+ 'UI_message': 'Візуальна зміна МО %s',
+ 'UI_setting_UI_text': 'Інтерфейс користувача в бою',
+ 'UI_setting_UI_tooltip': 'Розширений інтерфейс користувача в бою:\n'
+                          '<img src="img://objects/ui_extended.png"></img>\n'
+                          'Простий:\n'
+                          '<img src="img://objects/ui_simple.png"></img>\n'
+                          'Конфігурація:\n'
+                          '/mods/configs/Driftkings/MarksOnGunExtended/MarksOnGunExtended.json\n',
+ 'UI_setting_background_text': 'Битва: показати фон',
+ 'UI_setting_background_tooltip': 'Enable the panel background. Opacity is configured separately.',
+ 'UI_setting_buttonReset_text': 'Кнопка: Скинути налаштування',
+ 'UI_setting_buttonReset_tooltip': '',
+ 'UI_setting_buttonShow_text': 'Кнопка: змінити стиль',
+ 'UI_setting_buttonShow_tooltip': '',
+ 'UI_setting_buttonSizeDown_text': 'Кнопка: Розмір -10%',
+ 'UI_setting_buttonSizeDown_tooltip': '',
+ 'UI_setting_buttonSizeUp_text': 'Кнопка: розмір +10%',
+ 'UI_setting_buttonSizeUp_tooltip': '',
+ 'UI_setting_colorRating_text': 'Таблиця кольорів',
+ 'UI_setting_colorRating_tooltip': 'Кольорова шкала відміток на гарматі.',
+ 'UI_setting_displayMode_text': 'Presentation',
+ 'UI_setting_showDamage_text': 'Показати пошкодження',
+ 'UI_setting_showDelta_text': 'Показати приблизну дельту',
+ 'UI_setting_showInBattleHalfPercents_text': 'Битва: показати шкоду до +0,5%',
+ 'UI_setting_showInBattleHalfPercents_tooltip': '',
+ 'UI_setting_showInBattle_text': 'Битва: повідомлення привіт',
+ 'UI_setting_showInBattle_tooltip': 'Show a message at battle start. This does not control panel visibility.',
+ 'UI_setting_showInHangar_text': 'Ангар: Показати мод MoE',
+ 'UI_setting_showInHangar_tooltip': '',
+ 'UI_setting_showInReplay_text': 'Повтор: увімкнено',
+ 'UI_setting_showInReplay_tooltip': 'Не добре, але корисно для тестів',
+ 'UI_setting_showInStatistic_text': 'Статистика: включено',
+ 'UI_setting_showInStatistic_tooltip': '',
+ 'UI_setting_showMarks_text': 'Показати позначки',
+ 'UI_setting_showProgress_text': 'Показати прогрес',
+ 'UI_setting_showTargets_text': 'Показати цілі',
+ 'UI_setting_techTreeMarkOfGunPercentSize_value': '',
+ 'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} пошкодження поточного ковзного '
+                'середнього</font>\n'
+                '<font color="#FFFFFF" size="12">{currentDamage} поточний загальний збиток</font>\n'
+                'до <font color="#FFFFFF" size="12">{nextPercent}% </font>   потреба <font color="#FFFFFF" '
+                'size="12">{needDamage}</font> пошкодження ковзного середнього\n'
+                'Ця статистика доступна для останнього бою на цій машині\n'
+                'до <font color="#FFFFFF" size="12">20% </font>   потреба <font color="{c20}" '
+                'size="12">~{_20}</font> пошкодження ковзного середнього\n'
+                'до <font color="#FFFFFF" size="12">40% </font>   потреба <font color="{c40}" '
+                'size="12">~{_40}</font> пошкодження ковзного середнього\n'
+                'до <font color="#FFFFFF" size="12">55% </font>   потреба <font color="{c55}" '
+                'size="12">~{_55}</font> пошкодження ковзного середнього\n'
+                'до <font color="#FFFFFF" size="12">65% </font>   потреба <font color="{c65}" '
+                'size="12">~{_65}</font> пошкодження ковзного середнього\n'
+                'до <font color="#FFFFFF" size="12">85% </font>   потреба <font color="{c85}" '
+                'size="12">~{_85}</font> пошкодження ковзного середнього\n'
+                'до <font color="#FFFFFF" size="12">95% </font>   потреба <font color="{c95}" '
+                'size="12">~{_95}</font> пошкодження ковзного середнього\n'
+                'до <font color="#FFFFFF" size="12">100% </font>  потреба <font color="{c100}" '
+                'size="12">~{_100}</font> пошкодження ковзного середнього',
+ 'battleMessageSizeDown': 'MoE mod: розмір <b>-10%</b>',
+ 'battleMessageSizeLimitMax': 'Мод MoE: досягнуто <b>максимум[1000%]</b>',
+ 'battleMessageSizeLimitMin': 'Мод MoE: досягнуто <b>мінімум[10%]</b>',
+ 'battleMessageSizeReset': 'Мод MoE: скинути налаштування</b>',
+ 'battleMessageSizeUp': 'MoE mod: розмір <b>+10%</b>'},
+ 'hangar_marks_of_excellence': {'UI_description': 'Позначки на стволі в гаражі',
+ 'UI_panel_achieved': 'Досягнуто',
+ 'UI_panel_additionalGoal': 'Додатковий гол',
+ 'UI_panel_automatic': 'Автоматичний',
+ 'UI_panel_average': 'Комбінована EMA',
+ 'UI_panel_battles': 'битви',
+ 'UI_panel_chooseVehicle': 'Виберіть танк',
+ 'UI_panel_drag': 'ПЕРЕТЕГНІТЬ',
+ 'UI_panel_estimate': 'Цільова оцінка',
+ 'UI_panel_estimateNote': 'Тільки кошторис; не та шкода, яка потрібна в наступному бою.',
+ 'UI_panel_goal1': '1 бал (65%)',
+ 'UI_panel_goal2': '2 бал (85%)',
+ 'UI_panel_goal3': '3 бал (95%)',
+ 'UI_panel_header': 'ВІДМІННІ ЗНАКИ',
+ 'UI_panel_historyWaiting': 'Історія: в очікуванні наступного бою',
+ 'UI_panel_locked': 'ЗАБЛОКУВАНО',
+ 'UI_panel_mark': 'Марк',
+ 'UI_panel_mastery0': 'Ніякої майстерності',
+ 'UI_panel_mastery1': '3 клас',
+ 'UI_panel_mastery2': '2 клас',
+ 'UI_panel_mastery3': '1 клас',
+ 'UI_panel_mastery4': 'Майстер',
+ 'UI_panel_noDossier': 'Досьє транспортного засобу недоступне.',
+ 'UI_panel_noStats': 'Статистика не завантажена',
+ 'UI_panel_observedBattles': 'бої спостер',
+ 'UI_panel_remaining': 'pp залишилося',
+ 'UI_panel_selectVehicle': 'Виберіть автомобіль в ангарі.',
+ 'UI_panel_thirdAchieved': 'ОТРИМАНО 3-Ю ОЦІНКУ',
+ 'UI_panel_tierLimit': 'Ознаки доступні з рівня V',
+ 'UI_panel_trend': 'Спостережувана тенденція',
+ 'UI_panel_winRate': 'РЕЙТИН ПЕРЕМОГ',
+ 'UI_setting_colorRating_NoobMeter': 'NoobMeter',
+ 'UI_setting_colorRating_WotLabs': 'WotLabs',
+ 'UI_setting_colorRating_XVM': 'XVM',
+ 'UI_setting_colorRating_text': 'Виберіть рейтинг кольорів',
+ 'UI_setting_colorRating_tooltip': 'Виберіть колірну схему для MoE, WN8 і winrate',
+ 'UI_setting_compactMode_text': 'Компактна панель',
+ 'UI_setting_compactMode_tooltip': 'Приховати вторинну статистику автомобіля.',
+ 'UI_setting_goalSelection_text': 'Позначте мету',
+ 'UI_setting_goalSelection_tooltip': 'Автоматичний вибір наступної незаробленої позначки. Збиток – це '
+                                     'пропорційна оцінка, а не поріг сервера чи передбачення наступної '
+                                     'битви.',
+ 'UI_setting_historyBattles_text': 'Останні битви в історії',
+ 'UI_setting_historyBattles_tooltip': 'Оновлення можуть групувати кілька боїв. Історія починається після '
+                                      'встановлення цієї версії.',
+ 'UI_setting_positionX_text': 'Горизонтальне положення (X)',
+ 'UI_setting_positionX_tooltip': 'Менший: ліворуч. Більше: справа.',
+ 'UI_setting_positionY_text': 'Вертикальне положення (Y)',
+ 'UI_setting_positionY_tooltip': 'Менший: вгору. Більше: вниз.',
+ 'UI_setting_showInHangar_text': 'Ангар: включено',
+ 'UI_setting_showInHangar_tooltip': '',
+ 'UI_setting_showInStatistic_text': 'Підказка: увімкнено',
+ 'UI_setting_showInStatistic_tooltip': '',
+ 'UI_setting_showTooltipTargets_text': 'Підказка: показати цільові рівні',
+ 'UI_setting_showTooltipTargets_tooltip': '',
+ 'UI_setting_textLock_text': 'Ангар: заблокувати положення панелі',
+ 'UI_setting_textLock_tooltip': 'Prevent header dragging. When unlocked, drag with the left mouse button; '
+                                'the position is saved.',
+ 'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} пошкодження поточного ковзного '
+                'середнього</font>\n'
+                '<font color="#FFFFFF" size="12">{currentDamage} поточний загальний збиток</font>\n'
+                'до <font color="#FFFFFF" size="12">{nextPercent}% </font> потреба <font color="#FFFFFF" '
+                'size="12">{needDamage}</font> пошкодження ковзного середнього\n'
+                '<font color="#FFFFFF" size="12">{mastery}</font>   <font color="#FFFFFF" size="12">WN8: '
+                '{wn8}</font>   <font color="#FFFFFF" size="12">WR: {winRate}</font>',
+ 'UI_tooltipsFull': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} пошкодження поточного ковзного '
+                    'середнього</font>\n'
+                    '<font color="#FFFFFF" size="12">{currentDamage} поточний загальний збиток</font>\n'
+                    'до <font color="#FFFFFF" size="12">{nextPercent}% </font> потреба <font color="#FFFFFF" '
+                    'size="12">{needDamage}</font> пошкодження ковзного середнього\n'
+                    '<font color="#FFFFFF" size="12">{mastery}</font>   <font color="#FFFFFF" size="12">WN8: '
+                    '{wn8}</font>   <font color="#FFFFFF" size="12">WR: {winRate}</font>\n'
+                    'Ця статистика доступна з останнього бою на цій машині\n'
+                    'до <font color="#FFFFFF" size="12">20% </font> потреба <font color="#FF6347" '
+                    'size="12">~{_20}</font>\n'
+                    'до <font color="#FFFFFF" size="12">40% </font> потреба <font color="#FE7903" '
+                    'size="12">~{_40}</font>\n'
+                    'до <font color="#FFFFFF" size="12">55% </font> потреба <font color="#F8F400" '
+                    'size="12">~{_55}</font>\n'
+                    'до <font color="#FFFFFF" size="12">65% </font> потреба <font color="#60FF00" '
+                    'size="12">~{_65}</font>\n'
+                    'до <font color="#FFFFFF" size="12">85% </font> потреба <font color="#02C9B3" '
+                    'size="12">~{_85}</font>\n'
+                    'до <font color="#FFFFFF" size="12">95% </font> потреба <font color="#D042F3" '
+                    'size="12">~{_95}</font>\n'
+                    'до <font color="#FFFFFF" size="12">100% </font> потреба <font color="#D042F3" '
+                    'size="12">~{_100}</font>'},
+ 'tech_tree_marks_of_excellence': {'UI_description': 'Позначки на стволі в дереві досліджень',
                             'UI_setting_badgeOffsetX_text': 'Положення X (ліворуч/праворуч)',
                             'UI_setting_badgeOffsetX_tooltip': 'Негатив: зліва. Позитивно: правильно.',
                             'UI_setting_badgeOffsetY_text': 'Позиція Y (вгору/вниз)',
@@ -763,7 +817,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_showInTechTreeMastery_tooltip': '',
                             'UI_setting_showInTechTree_text': 'TechTree: увімкнено',
                             'UI_setting_showInTechTree_tooltip': ''},
- 'minimap_plugins': {'UI_description': 'MinimapPlugins',
+ 'minimap_enhancements': {'UI_description': 'Покращення мінімапи',
                      'UI_field_alpha': 'Opacity',
                      'UI_field_mode': 'Visibility',
                      'UI_minimapAim_0': 'Оригінальний жовтий',
@@ -901,12 +955,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_zoomFactorMax_tooltip': 'Максимальний рівень масштабування для міні-карти '
                                                          '(1,0-3,0)',
                      'UI_setting_zoomFactor_text': 'Масштаб масштабування'},
- 'own_health': {'UI_description': 'OwnHealth',
+ 'vehicle_health': {'UI_description': 'Міцність техніки',
                 'UI_setting_x_text': 'Позиція X',
                 'UI_setting_x_tooltip': '',
                 'UI_setting_y_text': 'Позиція Y',
                 'UI_setting_y_tooltip': ''},
- 'player_panel_pro': {'UI_description': 'PlayerPanelPro',
+ 'team_panels': {'UI_description': 'Панелі команд і завантаження бою',
                       'UI_panel_alpha': 'Непрозорість фону панелі',
                       'UI_panel_altMode': 'Режим панелі при утриманні ALT',
                       'UI_panel_bindToIcon': 'Прив’язати до значка техніки',
@@ -987,9 +1041,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                       'UI_setting_toggleKey_text': 'Перемкнути гарячу клавішу',
                       'UI_setting_toggleKey_tooltip': 'Натискання цієї кнопки під час бою вмикає '
                                                       'відображення маркерів HP.'},
- 'repair_extended': {'UI_description': 'RepairExtended',
-                     'UI_setting_autoRepair_text': 'Автоматичне використання',
-                     'UI_setting_autoRepair_tooltip': '',
+ 'repair_controls': {'UI_description': 'Керування ремонтом',
                      'UI_setting_buttonChassis_text': 'Кнопка: Відновити шасі',
                      'UI_setting_buttonChassis_tooltip': '',
                      'UI_setting_buttonRepair_text': 'Кнопка: Розумний ремонт',
@@ -1004,68 +1056,19 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_repairDevices_tooltip': '',
                      'UI_setting_restoreChassis_text': 'Відновити шасі',
                      'UI_setting_restoreChassis_tooltip': '',
-                     'UI_setting_timerMax_format': ' сек.',
-                     'UI_setting_timerMax_text': 'Максимальна затримка автоматичного використання',
-                     'UI_setting_timerMin_format': ' сек.',
-                     'UI_setting_timerMin_text': 'Автоматичне використання з мінімальною затримкою',
                      'UI_setting_useGoldKits_text': 'Використовуйте золоті набори',
                      'UI_setting_useGoldKits_tooltip': ''},
- 'safe_shot': {'UI_battle_activateMessage': 'SafeShot: активовано!',
-               'UI_description': 'SafeShot',
-               'UI_setting_activateMessage_text': 'Активувати повідомлення',
-               'UI_setting_activateMessage_tooltip': 'Показувати сповіщення під час вступу в бій',
-               'UI_setting_chatMessages_text': 'Формат повідомлення',
-               'UI_setting_chatMessages_tooltip': 'Спеціальний формат повідомлення під час блокування '
-                                                  'командних ударів. використання {name} і {vehicle} як '
-                                                  'заповнювачі',
-               'UI_setting_deadShotBlockTimeOut_text': 'Тайм-аут блоку Dead Shot',
-               'UI_setting_deadShotBlockTimeOut_tooltip': 'Час у секундах для блокування пострілів після '
-                                                          'знищення автомобіля',
-               'UI_setting_deadShotBlock_text': 'Блок мертвих пострілів',
-               'UI_setting_deadShotBlock_tooltip': 'Запобігає стрільбі по вже знищеній техніці',
-               'UI_setting_disableKey_text': 'Вимкнути ключ',
-               'UI_setting_disableKey_tooltip': 'Гаряча клавіша для тимчасового ввімкнення/вимкнення мода',
-               'UI_setting_teamKillerShotUnblock_text': 'Розблокувати Team Killer Shot',
-               'UI_setting_teamKillerShotUnblock_tooltip': 'Дозволяє стріляти в командних вбивць',
-               'UI_setting_teamShotBlock_text': 'Блок командного удару',
-               'UI_setting_teamShotBlock_tooltip': 'Запобігає стрілянині по товаришам по команді',
-               'UI_setting_triggerMessage_text': 'Вимкнути повідомлення',
-               'UI_setting_triggerMessage_tooltip': 'Показувати/приховувати сповіщення, коли удари '
-                                                    'заблоковано',
-               'UI_setting_wasteShotBlock_text': 'Блок відходів',
-               'UI_setting_wasteShotBlock_tooltip': 'Запобігає стрільбі, якщо ціль не вибрана',
-               'UI_triggerText_disabled': 'SafeShot: вимкнено!',
-               'UI_triggerText_enabled': 'SafeShot: увімкнено!'},
- 'server_turret_extended': {'UI_battle_OFF': 'ВИМКНЕНО',
+ 'server_turret_sync': {'UI_battle_OFF': 'ВИМКНЕНО',
                             'UI_battle_ON': 'УВІМКНЕНО',
                             'UI_battle_activateMessage': '«Server Turret Extended»: активовано',
-                            'UI_description': 'ServerTurretExtended',
+                            'UI_description': 'Синхронізація башти із сервером',
                             'UI_setting_activateMessage_text': 'Показати повідомлення про активацію',
                             'UI_setting_activateMessage_tooltip': 'Показати повідомлення про активацію в бою',
-                            'UI_setting_autoActivateWheelMode_text': 'Колеса: Автоматичний швидкісний режим',
-                            'UI_setting_autoActivateWheelMode_tooltip': 'Автоматично вмикає швидкісний або '
-                                                                        'маневровий режим',
-                            'UI_setting_buttonAutoMode_text': 'Кнопка: режим автоматичної швидкості коліс',
-                            'UI_setting_buttonAutoMode_tooltip': '',
-                            'UI_setting_buttonMaxMode_text': 'Кнопка: Колеса зберігають максимальну '
-                                                             'швидкість',
-                            'UI_setting_buttonMaxMode_tooltip': '',
-                            'UI_setting_fixAccuracyInMove_text': 'Виправити точність',
-                            'UI_setting_fixAccuracyInMove_tooltip': 'Коли ви рухаєтеся танком, а потім '
-                                                                    'зупиняєтеся, використовується точність '
-                                                                    'фіксації, щоб не втратити прицілювання',
-                            'UI_setting_fixWheelCruiseControl_text': 'Виправити круїз-контроль на колесах',
-                            'UI_setting_fixWheelCruiseControl_tooltip': 'Коли ви активуєте режим колеса з '
-                                                                        'круїз-контролем, автомобіль '
-                                                                        'зупинився, цей параметр вимикає це',
-                            'UI_setting_maxWheelMode_text': 'Колеса: зберігайте максимальну швидкість',
-                            'UI_setting_maxWheelMode_tooltip': 'При досягненні максимальної швидкості не '
-                                                               'відключає швидкісний режим при маневруванні',
                             'UI_setting_serverTurret_text': 'Серверна турель',
                             'UI_setting_serverTurret_tooltip': 'Перемістіть турель до координат сервера '
                                                                '(потрібно ввімкнути Server Sight у '
                                                                'налаштуваннях гри)'},
- 'sixth_sense': {'UI_description': 'SixthSense',
+ 'sixth_sense_alert': {'UI_description': 'Сигнал Шостого чуття',
                  'UI_setting_defaultIconName_text': 'Назва значка за замовчуванням',
                  'UI_setting_defaultIconName_tooltip': 'Виберіть вбудоване зображення.',
                  'UI_setting_defaultIcon_text': 'Значок за умовчанням',
@@ -1117,7 +1120,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_sound_SixthSense_08': 'Супер Маріо',
                  'UI_sound_SixthSense_09': 'Trap',
                  'UI_sound_SixthSense_10': 'X-Files'},
- 'spotted_extended_light': {'UI_description': 'SpottedExtendedLight',
+ 'enemy_spotting_status': {'UI_description': 'Стан виявлення супротивників',
                             'UI_macros_help': 'Використовуйте ці макроси у форматах повідомлень, щоб '
                                               'налаштувати сповіщення:\n'
                                               '• {icons} - Показує значки транспортних засобів\n'
@@ -1209,7 +1212,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_sound_text': 'Увімкнути звуки битви',
                             'UI_setting_sound_tooltip': 'Перемикання звукових сповіщень для помічених '
                                                         'ворогів і допоміжної шкоди'},
- 'zoom_extended': {'UI_description': 'ZoomExtended',
+ 'sniper_camera': {'UI_description': 'Снайперська камера',
                    'UI_setting_zoomSteps_enabled_text': u'Власні рівні наближення',
                    'UI_setting_zoomSteps_steps_text': u'Рівні наближення (список JSON)',
                    'UI_setting_zoomSteps_steps_tooltip': u'Введіть щонайменше чотири різні числа від 2, наприклад [4, 6, 8, 12, 16, 25, 30]. Застосовується з наступного бою.',
@@ -1307,6 +1310,7 @@ PANEL = {'actionFailed': 'Дія не вдалася. Див. game.log.',
  'profileName': 'Назва профілю',
  'profileRename': 'Перейменувати',
  'profiles': 'Профілі',
+ 'resetOption': 'Reset this option to default',
  'reset': 'Відновити типові',
  'resetDone': 'Стандартні параметри відновлені. Подайте заявку на їх використання.',
  'resetTheme': 'Скинути тему',

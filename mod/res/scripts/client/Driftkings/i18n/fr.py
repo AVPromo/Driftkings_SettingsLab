@@ -25,7 +25,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_save': 'Enregistrer',
                      'UI_setting_server': 'Serveur\xa0:',
                      'UI_setting_showPassword': 'Afficher le mot de passe'},
- 'aiming_angles': {'UI_description': 'AimingAngles',
+ 'gun_traverse_limits': {'UI_description': 'Limites de pointage du canon',
                    'UI_setting_horizontal_0': 'Désactivé',
                    'UI_setting_horizontal_1': 'Coins',
                    'UI_setting_horizontal_2': 'Crochets',
@@ -68,7 +68,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                   "src='img://gui/AimingAngles/4/Bottom.png'>\t<img "
                                                   "src='img://gui/AimingAngles/5/Bottom.png'>\t<img "
                                                   "src='img://gui/AimingAngles/6/Bottom.png'>"},
- 'arcade_zoom': {'UI_description': 'ArcadeZoom',
+ 'third_person_zoom': {'UI_description': 'Zoom de la caméra extérieure',
                  'UI_setting_max_text': 'Zoom arrière maximum',
                  'UI_setting_max_tooltip': 'Distance maximale de la caméra par rapport au véhicule',
                  'UI_setting_min_text': 'Zoom arrière minimum',
@@ -78,22 +78,22 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                          'souris',
                  'UI_setting_startDeadDist_text': 'Distance morte de départ',
                  'UI_setting_startDeadDist_tooltip': 'Distance initiale de la caméra en mode post-mortem'},
- 'armor_calculator': {'UI_colors': {'green': '#60CB00',
+ 'penetration_indicator': {'UI_colors': {'green': '#60CB00',
                                     'orange': '#FF9900',
                                     'purple': '#6F6CD3',
                                     'red': '#ED070A',
                                     'yellow': '#FFC900'},
-                      'UI_description': 'ArmorCalculator',
+                      'UI_description': 'Indicateur de pénétration',
                       'UI_noDamage': 'Coup critique, aucun dégât.',
                       'UI_ricochet': 'Ricochet',
                       'UI_setting_displayOnAllies_text': 'Affichage sur les alliés',
                       'UI_setting_displayOnAllies_tooltip': ''},
- 'arty_splash': {'UI_artySplash_messageDotOff': 'HE Splash\xa0:\xa0Masquer le point',
+ 'artillery_blast_radius': {'UI_artySplash_messageDotOff': 'HE Splash\xa0:\xa0Masquer le point',
                  'UI_artySplash_messageDotOn': 'HE Splash\xa0: Afficher le point',
                  'UI_artySplash_messageSplashOff': 'HE Splash\xa0:\xa0Masquer les éclaboussures',
                  'UI_artySplash_messageSplashOn': 'HE Splash\xa0: Afficher Splash',
                  'UI_artySplash_name': 'IL Splash',
-                 'UI_description': 'ArtySplash',
+                 'UI_description': 'Rayon d’explosion de l’artillerie',
                  'UI_setting_buttonShowDot_text': 'Bouton\xa0: afficher|masquer le point',
                  'UI_setting_buttonShowDot_tooltip': '',
                  'UI_setting_buttonShowSplash_text': 'Bouton\xa0: afficher|masquer Splash',
@@ -108,17 +108,17 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_setting_showModeSniper_tooltip': '',
                  'UI_setting_showSplashOnDefault_text': 'Afficher Splash par défaut',
                  'UI_setting_showSplashOnDefault_tooltip': ''},
- 'auto_aim_optimize': {'UI_description': 'AutoAimOptimize',
+ 'autoaim_target_indicator': {'UI_description': 'Indicateur de cible de visée automatique',
                        'UI_setting_angle_text': "Définir l'angle pour attraper la cible",
                        'UI_setting_angle_value': 'x',
                        'UI_setting_catchHiddenTarget_text': 'Attraper la cible cachée derrière un obstacle',
                        'UI_setting_catchHiddenTarget_tooltip': '',
                        'UI_setting_disableArtyMode_text': 'Désactiver en mode Arty',
                        'UI_setting_disableArtyMode_tooltip': ''},
- 'auto_claim_clan': {'UI_description': 'AutoClaimClan',
+ 'clan_reward_collection': {'UI_description': 'Collecte des récompenses de clan',
                      'UI_setting_enabled_text': 'Activé',
                      'UI_setting_enabled_tooltip': 'Activer/désactiver le mod.'},
- 'banks_loader': {'UI_description': 'BanksLoader',
+ 'sound_bank_loader': {'UI_description': 'Chargement des banques de sons',
                   'UI_restart_button_close': 'Continuer',
                   'UI_restart_button_restart': 'Redémarrer',
                   'UI_restart_button_shutdown': 'Arrêt',
@@ -143,7 +143,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                      'Cela va <b>pas</b> être requis plus tard.\n'
                                      'Voulez-vous redémarrer le jeu maintenant\xa0?',
                   'UI_restart_wotmod': ' • configurations <b>supprimé</b> à partir des forfaits\xa0: '},
- 'battle_efficiency': {'UI_description': 'BattleEfficiency',
+ 'battle_performance': {'UI_description': 'Performances en bataille',
                        'UI_setting_battleResultsFormat_text': 'Modification de la fenêtre des résultats de '
                                                               'bataille',
                        'UI_setting_battleResultsFormat_tooltip': 'Macros disponibles\xa0:\n'
@@ -176,7 +176,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                     "XTE\xa0:\xa0»{xte}', Couleur :'{c:x}'",
                        'UI_setting_textLock_text': 'Verrouillage du texte',
                        'UI_setting_textLock_tooltip': 'Faites glisser le texte au combat'},
- 'battle_options': {'UI_description': 'BattleOptions',
+ 'battle_preferences': {'UI_setting_removeFog_text': 'Remove fog',
+                      'UI_setting_removeFog_tooltip': 'Generates a separate package from this installation’s maps. Installation or removal happens after closing the game. Requires a restart. Disabling this module also removes the package.',
+                      'UI_fog_restart_on': 'Fog removal scheduled. Close and reopen the game to apply.',
+                      'UI_fog_restart_off': 'Fog package removal scheduled. Close and reopen the game to restore fog.',
+                      'UI_fog_error': 'Could not apply fog removal. Check game.log and try again in Battle preferences.',
+                      'UI_description': 'Options de bataille',
                     'UI_setting_addEnemyName_text': "Ajouter le nom de l'ennemi",
                     'UI_setting_addEnemyName_tooltip': 'Ajoute le nom du véhicule ennemi au journal des '
                                                        'dégâts.',
@@ -233,7 +238,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                                "plaque d'identité.",
                     'UI_setting_stunSound_text': 'Son étourdissant',
                     'UI_setting_stunSound_tooltip': "Désactivez l'effet sonore d'étourdissement."},
- 'battle_stat': {'UI_description': 'BattleStat',
+ 'battle_statistics': {'UI_description': 'Statistiques de bataille',
                  'UI_setting_colorRating_text': 'Table de couleurs',
                  'UI_setting_colorRating_tooltip': 'Échelle de couleurs pour les statistiques.',
                  'UI_setting_format_text': 'Format du texte',
@@ -241,9 +246,77 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_setting_teamChances_text': "Afficher les chances de l'équipe",
                  'UI_setting_teamChances_tooltip': 'Affiche le pourcentage de chances de victoire pour '
                                                    'chaque équipe pendant la bataille'},
- 'carousel_stats': {'UI_description': 'CarouselStats',
-                    'UI_setting_colorRating_text': 'Table de couleurs',
-                    'UI_setting_showIcons_text': 'Afficher les icônes'},
+ 'vehicle_carousel': {
+ 'UI_carousel_params': 'Vehicle parameters',
+ 'UI_carousel_bonus': 'Experience bonus',
+ 'UI_carousel_filterFavorite': 'Favourite vehicles',
+'UI_carousel_layout': 'Layout',
+ 'UI_carousel_rows': 'Rows (0 = game default)',
+ 'UI_carousel_auto': 'Automatic',
+ 'UI_carousel_normal': 'Standard layout',
+ 'UI_carousel_small': 'Compact layout',
+ 'UI_carousel_backgroundAlpha': 'Background opacity',
+ 'UI_carousel_slotBackgroundAlpha': 'Slot background opacity',
+ 'UI_carousel_slotBorderAlpha': 'Slot border opacity',
+ 'UI_carousel_slotSelectedBorderAlpha': 'Selected slot border opacity',
+ 'UI_carousel_edgeFadeAlpha': 'Edge fade opacity',
+ 'UI_carousel_scrollingSpeed': 'Scrolling speed',
+ 'UI_carousel_hideBuyTank': 'Hide vehicle purchase slot',
+ 'UI_carousel_hideBuySlot': 'Hide garage slot purchase',
+ 'UI_carousel_hideRestoreTank': 'Hide vehicle recovery slot',
+ 'UI_carousel_showTotalSlots': 'Show total garage slots',
+ 'UI_carousel_showUsedSlots': 'Show occupied garage slots',
+ 'UI_carousel_enableLockBackground': 'Show unavailable vehicle background',
+ 'UI_carousel_suppressCarouselTooltips': 'Hide carousel tooltips',
+ 'UI_carousel_filter': 'Filter',
+ 'UI_carousel_filterSpacing': 'Filter spacing',
+ 'UI_carousel_horizontal': 'Horizontal',
+ 'UI_carousel_vertical': 'Vertical',
+ 'UI_carousel_sortingCriteria': 'Sorting (comma-separated; - = descending)',
+ 'UI_carousel_nationsOrder': 'Nation order (comma-separated)',
+ 'UI_carousel_typesOrder': 'Vehicle type order (comma-separated)',
+ 'UI_carousel_width': 'Width',
+ 'UI_carousel_height': 'Height',
+ 'UI_carousel_gap': 'Spacing between slots',
+ 'UI_carousel_show': 'Show',
+ 'UI_carousel_flag': 'National flag',
+ 'UI_carousel_tankIcon': 'Vehicle image',
+ 'UI_carousel_tankType': 'Vehicle type',
+ 'UI_carousel_level': 'Vehicle tier',
+ 'UI_carousel_xp': 'Experience',
+ 'UI_carousel_tankName': 'Vehicle name',
+ 'UI_carousel_info': 'Additional information',
+ 'UI_carousel_favorite': 'Favourite indicator',
+ 'UI_carousel_progressionPoints': 'Progression points',
+ 'UI_carousel_dx': 'Horizontal offset',
+ 'UI_carousel_dy': 'Vertical offset',
+ 'UI_carousel_alpha': 'Opacity',
+ 'UI_carousel_scale': 'Scale',
+ 'UI_carousel_extraField': 'Custom field',
+ 'UI_carousel_enabled': 'Enabled',
+ 'UI_carousel_format': 'Text template',
+ 'UI_carousel_color': 'Text color',
+ 'UI_carousel_bgColor': 'Background color',
+ 'UI_carousel_src': 'Image resource path',
+ 'UI_carousel_x': 'Horizontal position',
+ 'UI_carousel_y': 'Vertical position',
+ 'UI_carousel_fontSize': 'Font size',
+ 'UI_carousel_iconSize': 'Icon size',
+ 'UI_carousel_align': 'Alignment',
+ 'UI_carousel_layer': 'Display layer',
+ 'UI_carousel_left': 'Left',
+ 'UI_carousel_center': 'Center',
+ 'UI_carousel_right': 'Right',
+ 'UI_carousel_background': 'Background',
+ 'UI_carousel_foreground': 'Foreground',
+ 'UI_carousel_premium': 'Premium vehicles',
+ 'UI_carousel_elite': 'Elite vehicles',
+ 'UI_carousel_favoriteVehicle': 'Favourite vehicles',
+ 'UI_carousel_nation': 'Nation',
+ 'UI_carousel_vehicleType': 'Vehicle type',
+ 'UI_description': 'Carrousel des véhicules',
+ 'UI_setting_colorRating_text': 'Table de couleurs',
+ 'UI_setting_showIcons_text': 'Afficher les icônes'},
  'common': {'UI_native_close': 'Fermer',
             'UI_mog_lockPosition': 'Lock panel position',
  'UI_mog_enableBattle': u'Enable battle panel',
@@ -289,7 +362,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
             'UI_native_press': 'Appuyez sur une touche...',
             'UI_native_save': 'Enregistrer',
             'UI_native_saved': 'Paramètres enregistrés'},
- 'crew_settings': {'UI_description': "Paramètres de l'équipage",
+ 'crew_management': {'UI_description': 'Gestion de l’équipage',
                    'UI_message_crewNotAvailable': "L'équipage n'est pas disponible pour le retour",
                    'UI_message_crewReturned': "L'équipage a été ramené au véhicule",
                    'UI_setting_autoReturnDelay_text': 'Délai de retour automatique (secondes)',
@@ -305,7 +378,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_showNotifications_text': 'Afficher les notifications',
                    'UI_setting_showNotifications_tooltip': 'Afficher les notifications du système lorsque '
                                                            "l'équipage est de retour"},
- 'dispersion_circle': {'UI_description': 'Reticle',
+ 'aiming_reticles': {'UI_description': 'Cercles de visée',
                        'UI_setting_gunMarkerMinimumSize_text': 'Taille minimale du marqueur de pistolet',
                        'UI_setting_gunMarkerMinimumSize_tooltip': "Taille minimale du marqueur d'arme en "
                                                                   'pixels',
@@ -329,7 +402,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                        'UI_setting_showServerSpgStrategicReticle_text': 'Réticule stratégique SPG',
                        'UI_setting_showServerSpgStrategicReticle_tooltip': 'Activer le réticule du serveur '
                                                                            'pour le mode stratégique SPG'},
- 'dispersion_timer': {'UI_description': 'DispersionTimer',
+ 'aiming_countdown': {'UI_description': 'Temps de visée',
                       'UI_setting_blue_text': "<font color='#%(blue)s'>Couleur actuelle\xa0:\xa0"
                                               '#%(blue)s</font>',
                       'UI_setting_blue_tooltip': '',
@@ -366,7 +439,8 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                       'UI_setting_yellow_text': "<font color='#%(yellow)s'>Couleur actuelle\xa0:\xa0"
                                                 '#%(yellow)s</font>',
                       'UI_setting_yellow_tooltip': ''},
- 'distance_marker': {'UI_setting_anchorHorizontalOffset_text': 'Décalage horizontal',
+ 'target_distance': {'UI_description': 'Distance de la cible',
+                    'UI_setting_anchorHorizontalOffset_text': 'Décalage horizontal',
                      'UI_setting_anchorHorizontalOffset_tooltip': 'Ajuste la position horizontale du '
                                                                   'marqueur',
                      'UI_setting_anchorPosition_tankBottom': 'Fond de réservoir',
@@ -407,7 +481,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                 'UI_profile_copy': 'Créer une copie du profil actif (facultatif)',
                 'UI_profile_restart': 'Redémarrez le jeu pour appliquer un profil différent.',
                 'UI_profile_select': 'Profil pour le prochain début de jeu'},
- 'flight_timer': {'UI_description': 'FlightTimer',
+ 'shell_flight_time': {'UI_description': 'Temps de vol de l’obus',
                   'UI_setting_spgOnly_text': 'Juste pour le SPG ?',
                   'UI_setting_spgOnly_tooltip': 'Si cette case est cochée, la minuterie ne sera visible que '
                                                 'pour SPG.',
@@ -417,12 +491,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                   'UI_setting_x_tooltip': '',
                   'UI_setting_y_text': 'Poste Y',
                   'UI_setting_y_tooltip': ''},
- 'hangar_options': {'UI_clock_analog': 'Analogique',
+ 'hangar_preferences': {'UI_clock_analog': 'Analogique',
                     'UI_clock_digital': 'Numérique',
                     'UI_clock_flip': 'À volets',
                     'UI_clock_minimal': 'Minimaliste',
                     'UI_clock_panel': 'Tableau de bord',
-                    'UI_description': 'HangarOptions',
+                    'UI_description': 'Options du garage',
                     'UI_setting_allowChannelButtonBlinking_text': 'Autoriser le clignotement du bouton de '
                                                                   'chaîne',
                     'UI_setting_allowChannelButtonBlinking_tooltip': 'Autoriser le bouton du canal de la '
@@ -522,8 +596,8 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                     'UI_setting_showXpToUnlockVeh_text': "Exigences d'XP du véhicule",
                     'UI_setting_showXpToUnlockVeh_tooltip': "Afficher l'XP requis pour débloquer des "
                                                             'véhicules'},
- 'info_panel': {'UI_delay_format': ' sec.',
-                'UI_description': 'InfoPanel',
+ 'target_information': {'UI_delay_format': ' sec.',
+                'UI_description': 'Informations sur la cible',
                 'UI_setting_aliveOnly_text': 'Vivant seulement',
                 'UI_setting_aliveOnly_tooltip': 'Afficher uniquement pour les joueurs vivants.',
                 'UI_setting_altKey_text': 'Alt. Clé',
@@ -561,7 +635,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                 'armor_piercing_he': 'HÉSH',
                 'high_explosive': 'IL',
                 'hollow_charge': 'CHALEUR'},
- 'logs_swapper': {'UI_description': 'LogsSwapper',
+ 'game_log_manager': {'UI_description': 'Journal des dégâts en bataille',
                   'UI_setting_logSwapper_text': 'Activez le journal inversé.',
                   'UI_setting_logSwapper_tooltip': 'Inverse la position du journal des dégâts dans '
                                                    "l'interface de combat.",
@@ -574,214 +648,193 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                   'UI_setting_wgLogHideCritics_text': 'Journal WG Masquer les critiques',
                   'UI_setting_wgLogHideCritics_tooltip': 'Masque les messages de coups critiques dans le '
                                                          'journal de combat standard de WG.'},
- 'main_gun': {'UI_description': 'MainGun',
+ 'high_caliber_progress': {'UI_description': 'Progression de Gros calibre',
               'UI_setting_backGroundEnabled_text': 'Contexte',
               'UI_setting_backGroundEnabled_tooltip': '',
               'UI_setting_textLock_text': 'Verrouillage de texte',
               'UI_setting_textLock_tooltip': ''},
- 'marks_on_gun_battle': {'NaN': '[<b>NaN</b>]',
-                         'UI_HangarStatsEnd': '{c_damageToMark65}, {c_damageToMark85}\n'
-                                              '{c_damageToMark95}, {c_damageToMark100}',
-                         'UI_HangarStatsStart': '<b>{currentPercent}<font size="14">[{currentDamage}]</font> '
-                                                '</b>',
-                         'UI_description': 'MarksOnGunBattle',
-                         'UI_marks_assist': 'Assist',
-                         'UI_marks_combined': 'Combined',
-                         'UI_marks_compact': 'Compact',
-                         'UI_marks_current': "Ministère de l'Environnement actuel",
-                         'UI_marks_damage': 'Damage',
-                         'UI_marks_detailed': 'Detailed',
-                         'UI_marks_legacy': 'Legacy (12 préréglages / format personnalisé)',
-                         'UI_marks_normal': 'Normal',
-                         'UI_menu_UIConfig': 'Configuration',
-                         'UI_menu_UIMyp': '<font color="#D042F3">@Myp</font> choix [<font '
-                                          'color="#D042F3">twitch.tv/myp_</font>]',
-                         'UI_menu_UIReplay': 'pour les rediffusions',
-                         'UI_menu_UIReplayColor': 'Coloré pour les rediffusions',
-                         'UI_menu_UIReplayColorDamage': 'Coloré pour les replays avec dégâts',
-                         'UI_menu_UIReplayDamage': 'pour les replays avec dégâts',
-                         'UI_menu_UIcircon': '<font color="#02C9B3">@Circon</font> choix [<font '
-                                             'color="#02C9B3">twitch.tv/circon</font>]',
-                         'UI_menu_UIkorbenDallasNoMercy': '<font color="#e3256b">@KorbenDallasNoMercy</font> '
-                                                          'choix [<font '
-                                                          'color="#e3256b">youtube.com/c/KorbenDallasNoMercy</font>]',
-                         'UI_menu_UIoldskool': '<font color="#FFD700">@Oldskool</font> choix [<font '
-                                               'color="#FFD700">twitch.tv/oldskool</font>]',
-                         'UI_menu_UIskill4ltu': '<font color="#60FF00">@compétence</font> choix [<font '
-                                                'color="#60FF00">twitch.tv/skill4ltu</font>]',
-                         'UI_menu_UIspoter': '<font color="#6595EE">@spoter</font> choix [<font '
-                                             'color="#6595EE">github.com/spoter</font>]',
-                         'UI_menu_UIspoterNew': 'nouveau <font color="#6595EE">@spoter</font> choix [<font '
-                                                'color="#6595EE">github.com/spoter</font>]',
-                         'UI_message': 'Visuel du changement du MoE %s',
-                         'UI_setting_UI_text': 'Interface utilisateur au combat',
-                         'UI_setting_UI_tooltip': 'Interface utilisateur en combat étendue\xa0:\n'
-                                                  '<img src="img://objects/ui_extended.png"></img>\n'
-                                                  'Simple\xa0:\n'
-                                                  '<img src="img://objects/ui_simple.png"></img>\n'
-                                                  'Configuration\xa0:\n'
-                                                  '/mods/configs/Driftkings/MarksOnGunExtended/MarksOnGunExtended.json\n',
-                         'UI_setting_background_text': "Bataille\xa0: afficher l'arrière-plan",
-                         'UI_setting_background_tooltip': '',
-                         'UI_setting_buttonReset_text': 'Bouton\xa0:\xa0Réinitialiser les paramètres',
-                         'UI_setting_buttonReset_tooltip': '',
-                         'UI_setting_buttonShow_text': 'Bouton\xa0:\xa0Changer de style',
-                         'UI_setting_buttonShow_tooltip': '',
-                         'UI_setting_buttonSizeDown_text': 'Bouton : Taille -10%',
-                         'UI_setting_buttonSizeDown_tooltip': '',
-                         'UI_setting_buttonSizeUp_text': 'Bouton : Taille +10%',
-                         'UI_setting_buttonSizeUp_tooltip': '',
-                         'UI_setting_colorRating_text': 'Table de couleurs',
-                         'UI_setting_colorRating_tooltip': 'Échelle de couleurs pour les marques '
-                                                           'd’excellence.',
-                         'UI_setting_displayMode_text': 'Presentation',
-                         'UI_setting_showDamage_text': 'Afficher les dégâts',
-                         'UI_setting_showDelta_text': 'Afficher le delta estimé',
-                         'UI_setting_showInBattleHalfPercents_text': 'Bataille\xa0: afficher les dégâts à '
-                                                                     '+0,5\xa0%',
-                         'UI_setting_showInBattleHalfPercents_tooltip': '',
-                         'UI_setting_showInBattle_text': 'Bataille\xa0: Bonjour message',
-                         'UI_setting_showInBattle_tooltip': '',
-                         'UI_setting_showInHangar_text': 'Hangar\xa0: Afficher le mod du MoE',
-                         'UI_setting_showInHangar_tooltip': '',
-                         'UI_setting_showInReplay_text': 'Relecture\xa0: activé',
-                         'UI_setting_showInReplay_tooltip': 'Pas bon, mais utile pour les tests',
-                         'UI_setting_showInStatistic_text': 'Statistique\xa0: activé',
-                         'UI_setting_showInStatistic_tooltip': '',
-                         'UI_setting_showMarks_text': 'Afficher les marques',
-                         'UI_setting_showProgress_text': 'Afficher les progrès',
-                         'UI_setting_showTargets_text': 'Afficher les cibles',
-                         'UI_setting_techTreeMarkOfGunPercentSize_value': '',
-                         'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} dégâts '
-                                        'moyens mobiles actuels</font>\n'
-                                        '<font color="#FFFFFF" size="12">{currentDamage} récapitulatif '
-                                        'actuel des dommages</font>\n'
-                                        'À <font color="#FFFFFF" size="12">{nextPercent}% </font>   besoin '
-                                        '<font color="#FFFFFF" size="12">{needDamage}</font> dégâts moyens '
-                                        'mobiles\n'
-                                        'Cette statistique disponible pour la dernière bataille sur ce '
-                                        'véhicule\n'
-                                        'À <font color="#FFFFFF" size="12">20% </font>   besoin <font '
-                                        'color="{c20}" size="12">~{_20}</font> dégâts moyens mobiles\n'
-                                        'À <font color="#FFFFFF" size="12">40% </font>   besoin <font '
-                                        'color="{c40}" size="12">~{_40}</font> dégâts moyens mobiles\n'
-                                        'À <font color="#FFFFFF" size="12">55% </font>   besoin <font '
-                                        'color="{c55}" size="12">~{_55}</font> dégâts moyens mobiles\n'
-                                        'À <font color="#FFFFFF" size="12">65% </font>   besoin <font '
-                                        'color="{c65}" size="12">~{_65}</font> dégâts moyens mobiles\n'
-                                        'À <font color="#FFFFFF" size="12">85% </font>   besoin <font '
-                                        'color="{c85}" size="12">~{_85}</font> dégâts moyens mobiles\n'
-                                        'À <font color="#FFFFFF" size="12">95% </font>   besoin <font '
-                                        'color="{c95}" size="12">~{_95}</font> dégâts moyens mobiles\n'
-                                        'À <font color="#FFFFFF" size="12">100% </font>  besoin <font '
-                                        'color="{c100}" size="12">~{_100}</font> dégâts moyens mobiles',
-                         'battleMessageSizeDown': "Mod du ministère de l'Environnement\xa0: taille "
-                                                  '<b>-10%</b>',
-                         'battleMessageSizeLimitMax': 'Mod MoE\xa0: atteint <b>maximum[1000%]</b>',
-                         'battleMessageSizeLimitMin': 'Mod MoE\xa0: atteint <b>minimum[10%]</b>',
-                         'battleMessageSizeReset': 'Mod MoE\xa0: réinitialiser les paramètres</b>',
-                         'battleMessageSizeUp': "Mod du ministère de l'Environnement\xa0: taille "
-                                                '<b>+10%</b>'},
- 'marks_on_gun_hangar': {'UI_description': 'MarksOnGunHangar',
-                         'UI_panel_achieved': 'Réalisé',
-                         'UI_panel_additionalGoal': 'Objectif supplémentaire',
-                         'UI_panel_automatic': 'Automatique',
-                         'UI_panel_average': 'EMA combinée',
-                         'UI_panel_battles': 'batailles',
-                         'UI_panel_chooseVehicle': 'Choisissez un réservoir',
-                         'UI_panel_drag': 'GLISSER',
-                         'UI_panel_estimate': "Estimation de l'objectif",
-                         'UI_panel_estimateNote': 'Estimation seulement\xa0; pas les dégâts requis lors de '
-                                                  'la prochaine bataille.',
-                         'UI_panel_goal1': '1ère note (65%)',
-                         'UI_panel_goal2': '2ème note (85%)',
-                         'UI_panel_goal3': '3ème note (95%)',
-                         'UI_panel_header': "MARQUES D'EXCELLENCE",
-                         'UI_panel_historyWaiting': 'Histoire : en attendant la prochaine bataille',
-                         'UI_panel_locked': 'VERROUILLÉ',
-                         'UI_panel_mark': 'Marque',
-                         'UI_panel_mastery0': 'Aucune maîtrise',
-                         'UI_panel_mastery1': '3ème classe',
-                         'UI_panel_mastery2': '2ème classe',
-                         'UI_panel_mastery3': '1ère classe',
-                         'UI_panel_mastery4': 'As pétrolier',
-                         'UI_panel_noDossier': 'Dossier véhicule non disponible.',
-                         'UI_panel_noStats': 'Aucune statistique chargée',
-                         'UI_panel_observedBattles': 'batailles observées',
-                         'UI_panel_remaining': 'pp restants',
-                         'UI_panel_selectVehicle': 'Sélectionnez un véhicule dans le hangar.',
-                         'UI_panel_thirdAchieved': '3ème NOTE OBTENUE',
-                         'UI_panel_tierLimit': 'Marques disponibles à partir du niveau V',
-                         'UI_panel_trend': 'Tendance observée',
-                         'UI_panel_winRate': 'TAUX DE GAGNANTS',
-                         'UI_setting_colorRating_NoobMeter': 'NoobMeter',
-                         'UI_setting_colorRating_WotLabs': 'WotLabs',
-                         'UI_setting_colorRating_XVM': 'XVM',
-                         'UI_setting_colorRating_text': "Choisissez l'évaluation des couleurs",
-                         'UI_setting_colorRating_tooltip': 'Sélectionnez la palette de couleurs pour MoE, '
-                                                           'WN8 et winrate',
-                         'UI_setting_compactMode_text': 'Panneau compact',
-                         'UI_setting_compactMode_tooltip': 'Masquer les statistiques secondaires des '
-                                                           'véhicules.',
-                         'UI_setting_goalSelection_text': "Marquer l'objectif",
-                         'UI_setting_goalSelection_tooltip': 'Automatique sélectionne la prochaine note non '
-                                                             'gagnée. Les dégâts sont une estimation '
-                                                             'proportionnelle, pas un seuil de serveur ou '
-                                                             'une prédiction de la prochaine bataille.',
-                         'UI_setting_historyBattles_text': "Batailles récentes dans l'histoire",
-                         'UI_setting_historyBattles_tooltip': 'Les mises à jour peuvent regrouper plusieurs '
-                                                              "batailles. L'historique commence lorsque "
-                                                              'cette version est installée.',
-                         'UI_setting_positionX_text': 'Position horizontale (X)',
-                         'UI_setting_positionX_tooltip': 'Plus petit : à gauche. Plus grand : à droite.',
-                         'UI_setting_positionY_text': 'Position verticale (Y)',
-                         'UI_setting_positionY_tooltip': 'Plus petit : vers le haut. Plus grand : vers le '
-                                                         'bas.',
-                         'UI_setting_showInHangar_text': 'Hangar\xa0: activé',
-                         'UI_setting_showInHangar_tooltip': '',
-                         'UI_setting_showInStatistic_text': 'Info-bulle\xa0: activé',
-                         'UI_setting_showInStatistic_tooltip': '',
-                         'UI_setting_showTooltipTargets_text': 'Info-bulle\xa0: afficher les niveaux cibles',
-                         'UI_setting_showTooltipTargets_tooltip': '',
-                         'UI_setting_textLock_text': 'Hangar : position du panneau de verrouillage',
-                         'UI_setting_textLock_tooltip': '',
-                         'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} dégâts '
-                                        'moyens mobiles actuels</font>\n'
-                                        '<font color="#FFFFFF" size="12">{currentDamage} récapitulatif '
-                                        'actuel des dommages</font>\n'
-                                        'À <font color="#FFFFFF" size="12">{nextPercent}% </font> besoin '
-                                        '<font color="#FFFFFF" size="12">{needDamage}</font> dégâts moyens '
-                                        'mobiles\n'
-                                        '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
-                                        'color="#FFFFFF" size="12">WN8\xa0: {wn8}</font>   <font '
-                                        'color="#FFFFFF" size="12">WR\xa0: {winRate}</font>',
-                         'UI_tooltipsFull': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} dégâts '
-                                            'moyens mobiles actuels</font>\n'
-                                            '<font color="#FFFFFF" size="12">{currentDamage} récapitulatif '
-                                            'actuel des dommages</font>\n'
-                                            'À <font color="#FFFFFF" size="12">{nextPercent}% </font> besoin '
-                                            '<font color="#FFFFFF" size="12">{needDamage}</font> dégâts '
-                                            'moyens mobiles\n'
-                                            '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
-                                            'color="#FFFFFF" size="12">WN8\xa0: {wn8}</font>   <font '
-                                            'color="#FFFFFF" size="12">WR\xa0: {winRate}</font>\n'
-                                            'Cette statistique est disponible lors de la dernière bataille '
-                                            'sur ce véhicule\n'
-                                            'À <font color="#FFFFFF" size="12">20% </font> besoin <font '
-                                            'color="#FF6347" size="12">~{_20}</font>\n'
-                                            'À <font color="#FFFFFF" size="12">40% </font> besoin <font '
-                                            'color="#FE7903" size="12">~{_40}</font>\n'
-                                            'À <font color="#FFFFFF" size="12">55% </font> besoin <font '
-                                            'color="#F8F400" size="12">~{_55}</font>\n'
-                                            'À <font color="#FFFFFF" size="12">65% </font> besoin <font '
-                                            'color="#60FF00" size="12">~{_65}</font>\n'
-                                            'À <font color="#FFFFFF" size="12">85% </font> besoin <font '
-                                            'color="#02C9B3" size="12">~{_85}</font>\n'
-                                            'À <font color="#FFFFFF" size="12">95% </font> besoin <font '
-                                            'color="#D042F3" size="12">~{_95}</font>\n'
-                                            'À <font color="#FFFFFF" size="12">100% </font> besoin <font '
-                                            'color="#D042F3" size="12">~{_100}</font>'},
- 'marks_on_gun_tech_tree': {'UI_description': 'MarksOnGunTechTree (face de jeu)',
+ 'battle_marks_of_excellence': {'NaN': '[<b>NaN</b>]',
+ 'UI_HangarStatsEnd': '{c_damageToMark65}, {c_damageToMark85}\n{c_damageToMark95}, {c_damageToMark100}',
+ 'UI_HangarStatsStart': '<b>{currentPercent}<font size="14">[{currentDamage}]</font> </b>',
+ 'UI_description': 'Marques d’excellence en bataille',
+ 'UI_marks_assist': 'Assist',
+ 'UI_marks_combined': 'Combined',
+ 'UI_marks_compact': 'Compact',
+ 'UI_marks_current': "Ministère de l'Environnement actuel",
+ 'UI_marks_damage': 'Damage',
+ 'UI_marks_detailed': 'Detailed',
+ 'UI_marks_legacy': 'Legacy (12 préréglages / format personnalisé)',
+ 'UI_marks_normal': 'Normal',
+ 'UI_menu_UIConfig': 'Configuration',
+ 'UI_menu_UIMyp': '<font color="#D042F3">@Myp</font> choix [<font color="#D042F3">twitch.tv/myp_</font>]',
+ 'UI_menu_UIReplay': 'pour les rediffusions',
+ 'UI_menu_UIReplayColor': 'Coloré pour les rediffusions',
+ 'UI_menu_UIReplayColorDamage': 'Coloré pour les replays avec dégâts',
+ 'UI_menu_UIReplayDamage': 'pour les replays avec dégâts',
+ 'UI_menu_UIcircon': '<font color="#02C9B3">@Circon</font> choix [<font '
+                     'color="#02C9B3">twitch.tv/circon</font>]',
+ 'UI_menu_UIkorbenDallasNoMercy': '<font color="#e3256b">@KorbenDallasNoMercy</font> choix [<font '
+                                  'color="#e3256b">youtube.com/c/KorbenDallasNoMercy</font>]',
+ 'UI_menu_UIoldskool': '<font color="#FFD700">@Oldskool</font> choix [<font '
+                       'color="#FFD700">twitch.tv/oldskool</font>]',
+ 'UI_menu_UIskill4ltu': '<font color="#60FF00">@compétence</font> choix [<font '
+                        'color="#60FF00">twitch.tv/skill4ltu</font>]',
+ 'UI_menu_UIspoter': '<font color="#6595EE">@spoter</font> choix [<font '
+                     'color="#6595EE">github.com/spoter</font>]',
+ 'UI_menu_UIspoterNew': 'nouveau <font color="#6595EE">@spoter</font> choix [<font '
+                        'color="#6595EE">github.com/spoter</font>]',
+ 'UI_message': 'Visuel du changement du MoE %s',
+ 'UI_setting_UI_text': 'Interface utilisateur au combat',
+ 'UI_setting_UI_tooltip': 'Interface utilisateur en combat étendue\xa0:\n'
+                          '<img src="img://objects/ui_extended.png"></img>\n'
+                          'Simple\xa0:\n'
+                          '<img src="img://objects/ui_simple.png"></img>\n'
+                          'Configuration\xa0:\n'
+                          '/mods/configs/Driftkings/MarksOnGunExtended/MarksOnGunExtended.json\n',
+ 'UI_setting_background_text': "Bataille\xa0: afficher l'arrière-plan",
+ 'UI_setting_background_tooltip': 'Enable the panel background. Opacity is configured separately.',
+ 'UI_setting_buttonReset_text': 'Bouton\xa0:\xa0Réinitialiser les paramètres',
+ 'UI_setting_buttonReset_tooltip': '',
+ 'UI_setting_buttonShow_text': 'Bouton\xa0:\xa0Changer de style',
+ 'UI_setting_buttonShow_tooltip': '',
+ 'UI_setting_buttonSizeDown_text': 'Bouton : Taille -10%',
+ 'UI_setting_buttonSizeDown_tooltip': '',
+ 'UI_setting_buttonSizeUp_text': 'Bouton : Taille +10%',
+ 'UI_setting_buttonSizeUp_tooltip': '',
+ 'UI_setting_colorRating_text': 'Table de couleurs',
+ 'UI_setting_colorRating_tooltip': 'Échelle de couleurs pour les marques d’excellence.',
+ 'UI_setting_displayMode_text': 'Presentation',
+ 'UI_setting_showDamage_text': 'Afficher les dégâts',
+ 'UI_setting_showDelta_text': 'Afficher le delta estimé',
+ 'UI_setting_showInBattleHalfPercents_text': 'Bataille\xa0: afficher les dégâts à +0,5\xa0%',
+ 'UI_setting_showInBattleHalfPercents_tooltip': '',
+ 'UI_setting_showInBattle_text': 'Bataille\xa0: Bonjour message',
+ 'UI_setting_showInBattle_tooltip': 'Show a message at battle start. This does not control panel visibility.',
+ 'UI_setting_showInHangar_text': 'Hangar\xa0: Afficher le mod du MoE',
+ 'UI_setting_showInHangar_tooltip': '',
+ 'UI_setting_showInReplay_text': 'Relecture\xa0: activé',
+ 'UI_setting_showInReplay_tooltip': 'Pas bon, mais utile pour les tests',
+ 'UI_setting_showInStatistic_text': 'Statistique\xa0: activé',
+ 'UI_setting_showInStatistic_tooltip': '',
+ 'UI_setting_showMarks_text': 'Afficher les marques',
+ 'UI_setting_showProgress_text': 'Afficher les progrès',
+ 'UI_setting_showTargets_text': 'Afficher les cibles',
+ 'UI_setting_techTreeMarkOfGunPercentSize_value': '',
+ 'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} dégâts moyens mobiles '
+                'actuels</font>\n'
+                '<font color="#FFFFFF" size="12">{currentDamage} récapitulatif actuel des dommages</font>\n'
+                'À <font color="#FFFFFF" size="12">{nextPercent}% </font>   besoin <font color="#FFFFFF" '
+                'size="12">{needDamage}</font> dégâts moyens mobiles\n'
+                'Cette statistique disponible pour la dernière bataille sur ce véhicule\n'
+                'À <font color="#FFFFFF" size="12">20% </font>   besoin <font color="{c20}" '
+                'size="12">~{_20}</font> dégâts moyens mobiles\n'
+                'À <font color="#FFFFFF" size="12">40% </font>   besoin <font color="{c40}" '
+                'size="12">~{_40}</font> dégâts moyens mobiles\n'
+                'À <font color="#FFFFFF" size="12">55% </font>   besoin <font color="{c55}" '
+                'size="12">~{_55}</font> dégâts moyens mobiles\n'
+                'À <font color="#FFFFFF" size="12">65% </font>   besoin <font color="{c65}" '
+                'size="12">~{_65}</font> dégâts moyens mobiles\n'
+                'À <font color="#FFFFFF" size="12">85% </font>   besoin <font color="{c85}" '
+                'size="12">~{_85}</font> dégâts moyens mobiles\n'
+                'À <font color="#FFFFFF" size="12">95% </font>   besoin <font color="{c95}" '
+                'size="12">~{_95}</font> dégâts moyens mobiles\n'
+                'À <font color="#FFFFFF" size="12">100% </font>  besoin <font color="{c100}" '
+                'size="12">~{_100}</font> dégâts moyens mobiles',
+ 'battleMessageSizeDown': "Mod du ministère de l'Environnement\xa0: taille <b>-10%</b>",
+ 'battleMessageSizeLimitMax': 'Mod MoE\xa0: atteint <b>maximum[1000%]</b>',
+ 'battleMessageSizeLimitMin': 'Mod MoE\xa0: atteint <b>minimum[10%]</b>',
+ 'battleMessageSizeReset': 'Mod MoE\xa0: réinitialiser les paramètres</b>',
+ 'battleMessageSizeUp': "Mod du ministère de l'Environnement\xa0: taille <b>+10%</b>"},
+ 'hangar_marks_of_excellence': {'UI_description': 'Marques d’excellence au garage',
+ 'UI_panel_achieved': 'Réalisé',
+ 'UI_panel_additionalGoal': 'Objectif supplémentaire',
+ 'UI_panel_automatic': 'Automatique',
+ 'UI_panel_average': 'EMA combinée',
+ 'UI_panel_battles': 'batailles',
+ 'UI_panel_chooseVehicle': 'Choisissez un réservoir',
+ 'UI_panel_drag': 'GLISSER',
+ 'UI_panel_estimate': "Estimation de l'objectif",
+ 'UI_panel_estimateNote': 'Estimation seulement\xa0; pas les dégâts requis lors de la prochaine bataille.',
+ 'UI_panel_goal1': '1ère note (65%)',
+ 'UI_panel_goal2': '2ème note (85%)',
+ 'UI_panel_goal3': '3ème note (95%)',
+ 'UI_panel_header': "MARQUES D'EXCELLENCE",
+ 'UI_panel_historyWaiting': 'Histoire : en attendant la prochaine bataille',
+ 'UI_panel_locked': 'VERROUILLÉ',
+ 'UI_panel_mark': 'Marque',
+ 'UI_panel_mastery0': 'Aucune maîtrise',
+ 'UI_panel_mastery1': '3ème classe',
+ 'UI_panel_mastery2': '2ème classe',
+ 'UI_panel_mastery3': '1ère classe',
+ 'UI_panel_mastery4': 'As pétrolier',
+ 'UI_panel_noDossier': 'Dossier véhicule non disponible.',
+ 'UI_panel_noStats': 'Aucune statistique chargée',
+ 'UI_panel_observedBattles': 'batailles observées',
+ 'UI_panel_remaining': 'pp restants',
+ 'UI_panel_selectVehicle': 'Sélectionnez un véhicule dans le hangar.',
+ 'UI_panel_thirdAchieved': '3ème NOTE OBTENUE',
+ 'UI_panel_tierLimit': 'Marques disponibles à partir du niveau V',
+ 'UI_panel_trend': 'Tendance observée',
+ 'UI_panel_winRate': 'TAUX DE GAGNANTS',
+ 'UI_setting_colorRating_NoobMeter': 'NoobMeter',
+ 'UI_setting_colorRating_WotLabs': 'WotLabs',
+ 'UI_setting_colorRating_XVM': 'XVM',
+ 'UI_setting_colorRating_text': "Choisissez l'évaluation des couleurs",
+ 'UI_setting_colorRating_tooltip': 'Sélectionnez la palette de couleurs pour MoE, WN8 et winrate',
+ 'UI_setting_compactMode_text': 'Panneau compact',
+ 'UI_setting_compactMode_tooltip': 'Masquer les statistiques secondaires des véhicules.',
+ 'UI_setting_goalSelection_text': "Marquer l'objectif",
+ 'UI_setting_goalSelection_tooltip': 'Automatique sélectionne la prochaine note non gagnée. Les dégâts sont '
+                                     'une estimation proportionnelle, pas un seuil de serveur ou une '
+                                     'prédiction de la prochaine bataille.',
+ 'UI_setting_historyBattles_text': "Batailles récentes dans l'histoire",
+ 'UI_setting_historyBattles_tooltip': "Les mises à jour peuvent regrouper plusieurs batailles. L'historique "
+                                      'commence lorsque cette version est installée.',
+ 'UI_setting_positionX_text': 'Position horizontale (X)',
+ 'UI_setting_positionX_tooltip': 'Plus petit : à gauche. Plus grand : à droite.',
+ 'UI_setting_positionY_text': 'Position verticale (Y)',
+ 'UI_setting_positionY_tooltip': 'Plus petit : vers le haut. Plus grand : vers le bas.',
+ 'UI_setting_showInHangar_text': 'Hangar\xa0: activé',
+ 'UI_setting_showInHangar_tooltip': '',
+ 'UI_setting_showInStatistic_text': 'Info-bulle\xa0: activé',
+ 'UI_setting_showInStatistic_tooltip': '',
+ 'UI_setting_showTooltipTargets_text': 'Info-bulle\xa0: afficher les niveaux cibles',
+ 'UI_setting_showTooltipTargets_tooltip': '',
+ 'UI_setting_textLock_text': 'Hangar : position du panneau de verrouillage',
+ 'UI_setting_textLock_tooltip': 'Prevent header dragging. When unlocked, drag with the left mouse button; '
+                                'the position is saved.',
+ 'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} dégâts moyens mobiles '
+                'actuels</font>\n'
+                '<font color="#FFFFFF" size="12">{currentDamage} récapitulatif actuel des dommages</font>\n'
+                'À <font color="#FFFFFF" size="12">{nextPercent}% </font> besoin <font color="#FFFFFF" '
+                'size="12">{needDamage}</font> dégâts moyens mobiles\n'
+                '<font color="#FFFFFF" size="12">{mastery}</font>   <font color="#FFFFFF" size="12">WN8\xa0: '
+                '{wn8}</font>   <font color="#FFFFFF" size="12">WR\xa0: {winRate}</font>',
+ 'UI_tooltipsFull': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} dégâts moyens mobiles '
+                    'actuels</font>\n'
+                    '<font color="#FFFFFF" size="12">{currentDamage} récapitulatif actuel des '
+                    'dommages</font>\n'
+                    'À <font color="#FFFFFF" size="12">{nextPercent}% </font> besoin <font color="#FFFFFF" '
+                    'size="12">{needDamage}</font> dégâts moyens mobiles\n'
+                    '<font color="#FFFFFF" size="12">{mastery}</font>   <font color="#FFFFFF" '
+                    'size="12">WN8\xa0: {wn8}</font>   <font color="#FFFFFF" size="12">WR\xa0: '
+                    '{winRate}</font>\n'
+                    'Cette statistique est disponible lors de la dernière bataille sur ce véhicule\n'
+                    'À <font color="#FFFFFF" size="12">20% </font> besoin <font color="#FF6347" '
+                    'size="12">~{_20}</font>\n'
+                    'À <font color="#FFFFFF" size="12">40% </font> besoin <font color="#FE7903" '
+                    'size="12">~{_40}</font>\n'
+                    'À <font color="#FFFFFF" size="12">55% </font> besoin <font color="#F8F400" '
+                    'size="12">~{_55}</font>\n'
+                    'À <font color="#FFFFFF" size="12">65% </font> besoin <font color="#60FF00" '
+                    'size="12">~{_65}</font>\n'
+                    'À <font color="#FFFFFF" size="12">85% </font> besoin <font color="#02C9B3" '
+                    'size="12">~{_85}</font>\n'
+                    'À <font color="#FFFFFF" size="12">95% </font> besoin <font color="#D042F3" '
+                    'size="12">~{_95}</font>\n'
+                    'À <font color="#FFFFFF" size="12">100% </font> besoin <font color="#D042F3" '
+                    'size="12">~{_100}</font>'},
+ 'tech_tree_marks_of_excellence': {'UI_description': 'Marques d’excellence dans l’arbre technologique',
                             'UI_setting_badgeOffsetX_text': 'Position X (gauche / droite)',
                             'UI_setting_badgeOffsetX_tooltip': 'Négatif : à gauche. Positif : c’est vrai.',
                             'UI_setting_badgeOffsetY_text': 'Position Y (haut/bas)',
@@ -800,7 +853,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_showInTechTreeMastery_tooltip': '',
                             'UI_setting_showInTechTree_text': 'TechTree\xa0: activé',
                             'UI_setting_showInTechTree_tooltip': ''},
- 'minimap_plugins': {'UI_description': 'MinimapPlugins',
+ 'minimap_enhancements': {'UI_description': 'Améliorations de la minicarte',
                      'UI_field_alpha': 'Opacity',
                      'UI_field_mode': 'Visibility',
                      'UI_minimapAim_0': 'Original jaune',
@@ -939,12 +992,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_zoomFactorMax_tooltip': 'Niveau de zoom maximum pour la mini-carte '
                                                          '(1.0-3.0)',
                      'UI_setting_zoomFactor_text': 'Échelle de zoom'},
- 'own_health': {'UI_description': 'OwnHealth',
+ 'vehicle_health': {'UI_description': 'Points de structure du véhicule',
                 'UI_setting_x_text': 'Poste\xa0X',
                 'UI_setting_x_tooltip': '',
                 'UI_setting_y_text': 'Poste Y',
                 'UI_setting_y_tooltip': ''},
- 'player_panel_pro': {'UI_description': 'PlayerPanelPro',
+ 'team_panels': {'UI_description': 'Panneaux des équipes et chargement',
                       'UI_panel_alpha': 'Opacité du fond du panneau',
                       'UI_panel_altMode': 'Mode du panneau en maintenant ALT',
                       'UI_panel_bindToIcon': 'Ancrer à l’icône du véhicule',
@@ -1027,9 +1080,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                       'UI_setting_toggleKey_text': 'Activer/désactiver le raccourci clavier',
                       'UI_setting_toggleKey_tooltip': 'Appuyer sur ce bouton pendant le combat fait basculer '
                                                       "l'affichage des marqueurs HP."},
- 'repair_extended': {'UI_description': 'RepairExtended',
-                     'UI_setting_autoRepair_text': 'Utilisation automatique',
-                     'UI_setting_autoRepair_tooltip': '',
+ 'repair_controls': {'UI_description': 'Commandes de réparation',
                      'UI_setting_buttonChassis_text': 'Bouton\xa0:\xa0Restaurer le châssis',
                      'UI_setting_buttonChassis_tooltip': '',
                      'UI_setting_buttonRepair_text': 'Bouton\xa0: Réparation intelligente',
@@ -1044,74 +1095,20 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_repairDevices_tooltip': '',
                      'UI_setting_restoreChassis_text': 'Restaurer le châssis',
                      'UI_setting_restoreChassis_tooltip': '',
-                     'UI_setting_timerMax_format': ' sec.',
-                     'UI_setting_timerMax_text': 'Utilisation automatique du délai maximum',
-                     'UI_setting_timerMin_format': ' sec.',
-                     'UI_setting_timerMin_text': 'Utilisation automatique du délai minimum',
                      'UI_setting_useGoldKits_text': "Utiliser des kits d'or",
                      'UI_setting_useGoldKits_tooltip': ''},
- 'safe_shot': {'UI_battle_activateMessage': 'SafeShot\xa0: activé\xa0!',
-               'UI_description': 'SafeShot',
-               'UI_setting_activateMessage_text': 'Activer le message',
-               'UI_setting_activateMessage_tooltip': 'Afficher un message de notification lorsque vous '
-                                                     'entrez en bataille',
-               'UI_setting_chatMessages_text': 'Formater le message',
-               'UI_setting_chatMessages_tooltip': 'Format de message personnalisé lors du blocage des tirs '
-                                                  "d'équipe. Utiliser {name} et {vehicle} comme espaces "
-                                                  'réservés',
-               'UI_setting_deadShotBlockTimeOut_text': "Délai d'expiration du blocage des tirs morts",
-               'UI_setting_deadShotBlockTimeOut_tooltip': 'Temps en secondes pour bloquer les tirs après la '
-                                                          'destruction du véhicule',
-               'UI_setting_deadShotBlock_text': 'Bloc de tir mort',
-               'UI_setting_deadShotBlock_tooltip': 'Empêche de tirer sur des véhicules déjà détruits',
-               'UI_setting_disableKey_text': 'Désactiver la clé',
-               'UI_setting_disableKey_tooltip': 'Hotkey pour activer/désactiver temporairement le mod',
-               'UI_setting_teamKillerShotUnblock_text': 'Déblocage du Team Killer Shot',
-               'UI_setting_teamKillerShotUnblock_tooltip': "Permet de tirer sur les tueurs d'équipe",
-               'UI_setting_teamShotBlock_text': "Blocage des tirs d'équipe",
-               'UI_setting_teamShotBlock_tooltip': 'Empêche de tirer sur ses coéquipiers',
-               'UI_setting_triggerMessage_text': 'Désactiver les messages',
-               'UI_setting_triggerMessage_tooltip': 'Afficher/masquer les messages de notification lorsque '
-                                                    'les tirs sont bloqués',
-               'UI_setting_wasteShotBlock_text': 'Bloc de tir de déchets',
-               'UI_setting_wasteShotBlock_tooltip': "Empêche le tir lorsqu'aucune cible n'est sélectionnée",
-               'UI_triggerText_disabled': 'SafeShot\xa0:\xa0Désactivé\xa0!',
-               'UI_triggerText_enabled': 'SafeShot\xa0: activé\xa0!'},
- 'server_turret_extended': {'UI_battle_OFF': 'DÉSACTIVÉ',
+ 'server_turret_sync': {'UI_battle_OFF': 'DÉSACTIVÉ',
                             'UI_battle_ON': 'ACTIVÉ',
                             'UI_battle_activateMessage': '«\xa0Tourelle de serveur étendue\xa0»\xa0: activé',
-                            'UI_description': 'ServerTurretExtended',
+                            'UI_description': 'Synchronisation de la tourelle avec le serveur',
                             'UI_setting_activateMessage_text': "Afficher le message d'activation",
                             'UI_setting_activateMessage_tooltip': "Afficher le message d'activation en "
                                                                   'combat',
-                            'UI_setting_autoActivateWheelMode_text': 'Roues\xa0: mode vitesse automatique',
-                            'UI_setting_autoActivateWheelMode_tooltip': 'Active automatiquement le mode '
-                                                                        'vitesse ou manœuvre',
-                            'UI_setting_buttonAutoMode_text': 'Bouton\xa0: mode de vitesse automatique des '
-                                                              'roues',
-                            'UI_setting_buttonAutoMode_tooltip': '',
-                            'UI_setting_buttonMaxMode_text': 'Bouton\xa0: Les roues maintiennent la vitesse '
-                                                             'maximale',
-                            'UI_setting_buttonMaxMode_tooltip': '',
-                            'UI_setting_fixAccuracyInMove_text': 'Correction de la précision',
-                            'UI_setting_fixAccuracyInMove_tooltip': "Lorsque votre tank bouge puis s'arrête, "
-                                                                    'utilisez la précision fixe pour ne pas '
-                                                                    'perdre la visée',
-                            'UI_setting_fixWheelCruiseControl_text': 'Réparer le régulateur de vitesse sur '
-                                                                     'roues',
-                            'UI_setting_fixWheelCruiseControl_tooltip': 'Lorsque vous activez le mode Roue '
-                                                                        'avec le Régulateur de Vitesse, '
-                                                                        "véhicule à l'arrêt, ce paramètre "
-                                                                        'désactive celui-ci.',
-                            'UI_setting_maxWheelMode_text': 'Roues\xa0: Gardez la vitesse maximale',
-                            'UI_setting_maxWheelMode_tooltip': 'En atteignant la vitesse maximale, ne '
-                                                               'désactive pas le mode vitesse lors des '
-                                                               'manœuvres',
                             'UI_setting_serverTurret_text': 'Tourelle de serveur',
                             'UI_setting_serverTurret_tooltip': 'Déplacez la tourelle vers les coordonnées du '
                                                                "serveur (nécessité d'activer Server Sight "
                                                                'dans les paramètres du jeu)'},
- 'sixth_sense': {'UI_description': 'SixthSense',
+ 'sixth_sense_alert': {'UI_description': 'Alerte Sixième sens',
                  'UI_setting_defaultIconName_text': "Nom de l'icône par défaut",
                  'UI_setting_defaultIconName_tooltip': 'Sélectionnez une image intégrée.',
                  'UI_setting_defaultIcon_text': 'Icône par défaut',
@@ -1163,7 +1160,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_sound_SixthSense_08': 'Super Mario',
                  'UI_sound_SixthSense_09': 'Trap',
                  'UI_sound_SixthSense_10': 'X-Files'},
- 'spotted_extended_light': {'UI_description': 'SpottedExtendedLight',
+ 'enemy_spotting_status': {'UI_description': 'État de détection des ennemis',
                             'UI_macros_help': 'Utilisez ces macros dans vos formats de message pour '
                                               'personnaliser les notifications\xa0:\n'
                                               '• {icons} - Affiche les icônes du véhicule\n'
@@ -1254,7 +1251,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_sound_text': 'Activer les sons de combat',
                             'UI_setting_sound_tooltip': 'Activer les notifications sonores pour les ennemis '
                                                         'repérés et aider les dégâts'},
- 'zoom_extended': {'UI_description': 'ZoomExtended',
+ 'sniper_camera': {'UI_description': 'Caméra de visée de précision',
                    'UI_setting_zoomSteps_enabled_text': u'Niveaux de zoom personnalisés',
                    'UI_setting_zoomSteps_steps_text': u'Niveaux de zoom (liste JSON)',
                    'UI_setting_zoomSteps_steps_tooltip': u'Saisissez au moins quatre nombres distincts supérieurs ou égaux à 2, par exemple [4, 6, 8, 12, 16, 25, 30]. Appliqué à la prochaine bataille.',
@@ -1360,6 +1357,7 @@ PANEL = {'actionFailed': "L'action a échoué. Voir game.log.",
  'profileName': 'Nom du profil',
  'profileRename': 'Renommer',
  'profiles': 'Profils',
+ 'resetOption': 'Reset this option to default',
  'reset': 'Rétablir les valeurs par défaut',
  'resetDone': 'Paramètres par défaut restaurés. Postulez pour les utiliser.',
  'resetTheme': 'Réinitialiser le thème',

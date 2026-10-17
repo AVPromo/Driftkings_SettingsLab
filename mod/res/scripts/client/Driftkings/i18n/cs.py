@@ -25,7 +25,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_save': 'Uložit',
                      'UI_setting_server': 'Server:',
                      'UI_setting_showPassword': 'Zobrazit heslo'},
- 'aiming_angles': {'UI_description': 'AimingAngles',
+ 'gun_traverse_limits': {'UI_description': 'Meze otáčení děla',
                    'UI_setting_horizontal_0': 'Zakázáno',
                    'UI_setting_horizontal_1': 'Rohy',
                    'UI_setting_horizontal_2': 'Hranaté závorky',
@@ -66,7 +66,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                   "src='img://gui/AimingAngles/4/Bottom.png'>\t<img "
                                                   "src='img://gui/AimingAngles/5/Bottom.png'>\t<img "
                                                   "src='img://gui/AimingAngles/6/Bottom.png'>"},
- 'arcade_zoom': {'UI_description': 'ArcadeZoom',
+ 'third_person_zoom': {'UI_description': 'Přiblížení vnější kamery',
                  'UI_setting_max_text': 'Maximální oddálení',
                  'UI_setting_max_tooltip': 'Maximální vzdálenost kamery od vozidla',
                  'UI_setting_min_text': 'Minimální oddálení',
@@ -75,22 +75,22 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_setting_scrollSensitivity_tooltip': 'Nastavení citlivosti zoomu kolečka myši',
                  'UI_setting_startDeadDist_text': 'Počáteční vzdálenost kamery po zničení',
                  'UI_setting_startDeadDist_tooltip': 'Počáteční vzdálenost kamery v posmrtném režimu'},
- 'armor_calculator': {'UI_colors': {'green': '#60CB00',
+ 'penetration_indicator': {'UI_colors': {'green': '#60CB00',
                                     'orange': '#FF9900',
                                     'purple': '#6F6CD3',
                                     'red': '#ED070A',
                                     'yellow': '#FFC900'},
-                      'UI_description': 'ArmorCalculator',
+                      'UI_description': 'Ukazatel průbojnosti',
                       'UI_noDamage': 'Kritický zásah, žádné poškození.',
                       'UI_ricochet': 'Ricochet',
                       'UI_setting_displayOnAllies_text': 'Zobrazit na spojencích',
                       'UI_setting_displayOnAllies_tooltip': ''},
- 'arty_splash': {'UI_artySplash_messageDotOff': 'HE Splash: Skryjte tečku',
+ 'artillery_blast_radius': {'UI_artySplash_messageDotOff': 'HE Splash: Skryjte tečku',
                  'UI_artySplash_messageDotOn': 'HE Splash: Zobrazit tečku',
                  'UI_artySplash_messageSplashOff': 'HE Splash: Skryjte Splash',
                  'UI_artySplash_messageSplashOn': 'HE Splash: Zobrazit Splash',
                  'UI_artySplash_name': 'ON Splash',
-                 'UI_description': 'ArtySplash',
+                 'UI_description': 'Poloměr výbuchu dělostřelectva',
                  'UI_setting_buttonShowDot_text': 'Tlačítko: zobrazit|skrýt tečku',
                  'UI_setting_buttonShowDot_tooltip': '',
                  'UI_setting_buttonShowSplash_text': 'Tlačítko: zobrazit|skrýt Splash',
@@ -105,17 +105,17 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_setting_showModeSniper_tooltip': '',
                  'UI_setting_showSplashOnDefault_text': 'Ve výchozím nastavení zobrazit Splash',
                  'UI_setting_showSplashOnDefault_tooltip': ''},
- 'auto_aim_optimize': {'UI_description': 'AutoAimOptimize',
+ 'autoaim_target_indicator': {'UI_description': 'Ukazatel cíle automatického zaměřování',
                        'UI_setting_angle_text': 'Nastavte úhel pro zachycení cíle',
                        'UI_setting_angle_value': 'x',
                        'UI_setting_catchHiddenTarget_text': 'Chytit cíl skrytý za překážkou',
                        'UI_setting_catchHiddenTarget_tooltip': '',
                        'UI_setting_disableArtyMode_text': 'Zakázat v režimu Arty',
                        'UI_setting_disableArtyMode_tooltip': ''},
- 'auto_claim_clan': {'UI_description': 'AutoClaimClan',
+ 'clan_reward_collection': {'UI_description': 'Vyzvedávání klanových odměn',
                      'UI_setting_enabled_text': 'Povoleno',
                      'UI_setting_enabled_tooltip': 'Povolit/zakázat mod.'},
- 'banks_loader': {'UI_description': 'BanksLoader',
+ 'sound_bank_loader': {'UI_description': 'Načítání zvukových bank',
                   'UI_restart_button_close': 'Pokračovat',
                   'UI_restart_button_restart': 'Restartujte',
                   'UI_restart_button_shutdown': 'Vypnutí',
@@ -138,7 +138,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                      'Toto bude <b>ne</b> být vyžadován později.\n'
                                      'Chcete hru restartovat nyní?',
                   'UI_restart_wotmod': ' • konfigurace <b>odstraněno</b> z balíčků: '},
- 'battle_efficiency': {'UI_description': 'BattleEfficiency',
+ 'battle_performance': {'UI_description': 'Výkon v bitvě',
                        'UI_setting_battleResultsFormat_text': 'Úprava okna výsledků bitvy',
                        'UI_setting_battleResultsFormat_tooltip': 'Dostupná makra:\n'
                                                                  "WN8:'{wn8}', Barva: '{c:wn8}'\n"
@@ -168,7 +168,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                     "XTE:'{xte}', Barva:'{c:x}'",
                        'UI_setting_textLock_text': 'Textový zámek',
                        'UI_setting_textLock_tooltip': 'Přetáhněte text v bitvě'},
- 'battle_options': {'UI_description': 'BattleOptions',
+ 'battle_preferences': {'UI_setting_removeFog_text': 'Remove fog',
+                      'UI_setting_removeFog_tooltip': 'Generates a separate package from this installation’s maps. Installation or removal happens after closing the game. Requires a restart. Disabling this module also removes the package.',
+                      'UI_fog_restart_on': 'Fog removal scheduled. Close and reopen the game to apply.',
+                      'UI_fog_restart_off': 'Fog package removal scheduled. Close and reopen the game to restore fog.',
+                      'UI_fog_error': 'Could not apply fog removal. Check game.log and try again in Battle preferences.',
+                      'UI_description': 'Možnosti bitvy',
                     'UI_setting_addEnemyName_text': 'Přidat jméno nepřítele',
                     'UI_setting_addEnemyName_tooltip': 'Přidá jméno nepřátelského vozidla do protokolu '
                                                        'poškození.',
@@ -217,7 +222,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                     'UI_setting_showPostmortemDogTag_tooltip': 'Deaktivujte vyskakovací panel s psí známkou.',
                     'UI_setting_stunSound_text': 'Omračující zvukový efekt',
                     'UI_setting_stunSound_tooltip': 'Zakázat efekt omračování.'},
- 'battle_stat': {'UI_description': 'BattleStat',
+ 'battle_statistics': {'UI_description': 'Statistiky bitvy',
                  'UI_setting_colorRating_text': 'Barevná tabulka',
                  'UI_setting_colorRating_tooltip': 'Barevná škála pro statistiky.',
                  'UI_setting_format_text': 'Textový formát',
@@ -225,9 +230,77 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_setting_teamChances_text': 'Ukázat týmové šance',
                  'UI_setting_teamChances_tooltip': 'Zobrazuje procento šance na výhru pro každý tým během '
                                                    'bitvy'},
- 'carousel_stats': {'UI_description': 'CarouselStats',
-                    'UI_setting_colorRating_text': 'Tabulka barev',
-                    'UI_setting_showIcons_text': 'Zobrazit ikony'},
+ 'vehicle_carousel': {
+ 'UI_carousel_params': 'Vehicle parameters',
+ 'UI_carousel_bonus': 'Experience bonus',
+ 'UI_carousel_filterFavorite': 'Favourite vehicles',
+'UI_carousel_layout': 'Layout',
+ 'UI_carousel_rows': 'Rows (0 = game default)',
+ 'UI_carousel_auto': 'Automatic',
+ 'UI_carousel_normal': 'Standard layout',
+ 'UI_carousel_small': 'Compact layout',
+ 'UI_carousel_backgroundAlpha': 'Background opacity',
+ 'UI_carousel_slotBackgroundAlpha': 'Slot background opacity',
+ 'UI_carousel_slotBorderAlpha': 'Slot border opacity',
+ 'UI_carousel_slotSelectedBorderAlpha': 'Selected slot border opacity',
+ 'UI_carousel_edgeFadeAlpha': 'Edge fade opacity',
+ 'UI_carousel_scrollingSpeed': 'Scrolling speed',
+ 'UI_carousel_hideBuyTank': 'Hide vehicle purchase slot',
+ 'UI_carousel_hideBuySlot': 'Hide garage slot purchase',
+ 'UI_carousel_hideRestoreTank': 'Hide vehicle recovery slot',
+ 'UI_carousel_showTotalSlots': 'Show total garage slots',
+ 'UI_carousel_showUsedSlots': 'Show occupied garage slots',
+ 'UI_carousel_enableLockBackground': 'Show unavailable vehicle background',
+ 'UI_carousel_suppressCarouselTooltips': 'Hide carousel tooltips',
+ 'UI_carousel_filter': 'Filter',
+ 'UI_carousel_filterSpacing': 'Filter spacing',
+ 'UI_carousel_horizontal': 'Horizontal',
+ 'UI_carousel_vertical': 'Vertical',
+ 'UI_carousel_sortingCriteria': 'Sorting (comma-separated; - = descending)',
+ 'UI_carousel_nationsOrder': 'Nation order (comma-separated)',
+ 'UI_carousel_typesOrder': 'Vehicle type order (comma-separated)',
+ 'UI_carousel_width': 'Width',
+ 'UI_carousel_height': 'Height',
+ 'UI_carousel_gap': 'Spacing between slots',
+ 'UI_carousel_show': 'Show',
+ 'UI_carousel_flag': 'National flag',
+ 'UI_carousel_tankIcon': 'Vehicle image',
+ 'UI_carousel_tankType': 'Vehicle type',
+ 'UI_carousel_level': 'Vehicle tier',
+ 'UI_carousel_xp': 'Experience',
+ 'UI_carousel_tankName': 'Vehicle name',
+ 'UI_carousel_info': 'Additional information',
+ 'UI_carousel_favorite': 'Favourite indicator',
+ 'UI_carousel_progressionPoints': 'Progression points',
+ 'UI_carousel_dx': 'Horizontal offset',
+ 'UI_carousel_dy': 'Vertical offset',
+ 'UI_carousel_alpha': 'Opacity',
+ 'UI_carousel_scale': 'Scale',
+ 'UI_carousel_extraField': 'Custom field',
+ 'UI_carousel_enabled': 'Enabled',
+ 'UI_carousel_format': 'Text template',
+ 'UI_carousel_color': 'Text color',
+ 'UI_carousel_bgColor': 'Background color',
+ 'UI_carousel_src': 'Image resource path',
+ 'UI_carousel_x': 'Horizontal position',
+ 'UI_carousel_y': 'Vertical position',
+ 'UI_carousel_fontSize': 'Font size',
+ 'UI_carousel_iconSize': 'Icon size',
+ 'UI_carousel_align': 'Alignment',
+ 'UI_carousel_layer': 'Display layer',
+ 'UI_carousel_left': 'Left',
+ 'UI_carousel_center': 'Center',
+ 'UI_carousel_right': 'Right',
+ 'UI_carousel_background': 'Background',
+ 'UI_carousel_foreground': 'Foreground',
+ 'UI_carousel_premium': 'Premium vehicles',
+ 'UI_carousel_elite': 'Elite vehicles',
+ 'UI_carousel_favoriteVehicle': 'Favourite vehicles',
+ 'UI_carousel_nation': 'Nation',
+ 'UI_carousel_vehicleType': 'Vehicle type',
+ 'UI_description': 'Kolotoč vozidel',
+ 'UI_setting_colorRating_text': 'Tabulka barev',
+ 'UI_setting_showIcons_text': 'Zobrazit ikony'},
  'common': {'UI_native_close': 'Zavřít',
             'UI_mog_lockPosition': 'Lock panel position',
  'UI_mog_enableBattle': u'Enable battle panel',
@@ -273,7 +346,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
             'UI_native_press': 'Stiskněte klávesu...',
             'UI_native_save': 'Uložit',
             'UI_native_saved': 'Nastavení uloženo'},
- 'crew_settings': {'UI_description': 'Nastavení posádky',
+ 'crew_management': {'UI_description': 'Správa posádky',
                    'UI_message_crewNotAvailable': 'Posádka není k dispozici pro vrácení',
                    'UI_message_crewReturned': 'Posádka byla vrácena do vozidla',
                    'UI_setting_autoReturnDelay_text': 'Zpoždění automatického návratu (sekundy)',
@@ -289,7 +362,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_showNotifications_text': 'Zobrazit oznámení',
                    'UI_setting_showNotifications_tooltip': 'Zobrazovat systémová upozornění, když se posádka '
                                                            'vrátí'},
- 'dispersion_circle': {'UI_description': 'Reticle',
+ 'aiming_reticles': {'UI_description': 'Zaměřovací kruhy',
                        'UI_setting_gunMarkerMinimumSize_text': 'Minimální velikost značkovače zbraní',
                        'UI_setting_gunMarkerMinimumSize_tooltip': 'Minimální velikost značky zbraně v '
                                                                   'pixelech',
@@ -314,7 +387,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                                         'zaměřovací záměrný kříž',
                        'UI_setting_showServerSpgStrategicReticle_tooltip': 'Povolit zaměřovač serveru pro '
                                                                            'strategický režim SPG'},
- 'dispersion_timer': {'UI_description': 'DispersionTimer',
+ 'aiming_countdown': {'UI_description': 'Čas zaměření',
                       'UI_setting_blue_text': "<font color='#%(blue)s'>Aktuální barva: #%(blue)s</font>",
                       'UI_setting_blue_tooltip': '',
                       'UI_setting_colorBlue_text': 'Vyberte barvu pro časovač disperze velmi dobrý:',
@@ -342,7 +415,8 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                       'UI_setting_yellow_text': "<font color='#%(yellow)s'>Aktuální barva: "
                                                 '#%(yellow)s</font>',
                       'UI_setting_yellow_tooltip': ''},
- 'distance_marker': {'UI_setting_anchorHorizontalOffset_text': 'Horizontální posun',
+ 'target_distance': {'UI_description': 'Vzdálenost k cíli',
+                    'UI_setting_anchorHorizontalOffset_text': 'Horizontální posun',
                      'UI_setting_anchorHorizontalOffset_tooltip': 'Upravuje vodorovnou polohu značky',
                      'UI_setting_anchorPosition_tankBottom': 'Dno nádrže',
                      'UI_setting_anchorPosition_tankCenter': 'Střed tanku',
@@ -379,7 +453,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                 'UI_profile_copy': 'Vytvořte kopii aktivního profilu (volitelné)',
                 'UI_profile_restart': 'Chcete-li použít jiný profil, restartujte hru.',
                 'UI_profile_select': 'Profil pro začátek příští hry'},
- 'flight_timer': {'UI_description': 'FlightTimer',
+ 'shell_flight_time': {'UI_description': 'Doba letu střely',
                   'UI_setting_spgOnly_text': 'Jen pro SPG?',
                   'UI_setting_spgOnly_tooltip': 'Pokud je zaškrtnuto, časovač bude viditelný pouze pro SPG.',
                   'UI_setting_template_text': 'Šablona',
@@ -388,12 +462,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                   'UI_setting_x_tooltip': '',
                   'UI_setting_y_text': 'Pozice Y',
                   'UI_setting_y_tooltip': ''},
- 'hangar_options': {'UI_clock_analog': 'Analogové',
+ 'hangar_preferences': {'UI_clock_analog': 'Analogové',
                     'UI_clock_digital': 'Digitální',
                     'UI_clock_flip': 'Překlápěcí',
                     'UI_clock_minimal': 'Minimalistické',
                     'UI_clock_panel': 'Panel',
-                    'UI_description': 'HangarOptions',
+                    'UI_description': 'Možnosti garáže',
                     'UI_setting_allowChannelButtonBlinking_text': 'Povolit blikání tlačítka kanálu',
                     'UI_setting_allowChannelButtonBlinking_tooltip': 'Povolit blikání tlačítka kanálu na '
                                                                      'liště messenger (klan nebo soukromý '
@@ -482,8 +556,8 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                     'UI_setting_showWotPlusButton_text': 'Zobrazit tlačítko WoT Plus',
                     'UI_setting_showXpToUnlockVeh_text': 'Požadavky na XP vozidla',
                     'UI_setting_showXpToUnlockVeh_tooltip': 'Ukaž požadované XP k odemknutí vozidel'},
- 'info_panel': {'UI_delay_format': ' sek.',
-                'UI_description': 'InfoPanel',
+ 'target_information': {'UI_delay_format': ' sek.',
+                'UI_description': 'Informace o cíli',
                 'UI_setting_aliveOnly_text': 'Pouze naživu',
                 'UI_setting_aliveOnly_tooltip': 'Zobrazit pouze pro živé hráče.',
                 'UI_setting_altKey_text': 'Alt. klíč',
@@ -519,7 +593,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                 'armor_piercing_he': 'HESH',
                 'high_explosive': 'ON',
                 'hollow_charge': 'TEPLO'},
- 'logs_swapper': {'UI_description': 'LogsSwapper',
+ 'game_log_manager': {'UI_description': 'Záznam poškození v bitvě',
                   'UI_setting_logSwapper_text': 'Povolit reverzní protokol.',
                   'UI_setting_logSwapper_tooltip': 'Obrátí polohu protokolu poškození v rozhraní bitvy.',
                   'UI_setting_wgLogHideAssist_text': 'Skryjte protokol pomoci Wargaming',
@@ -531,204 +605,191 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                   'UI_setting_wgLogHideCritics_text': 'WG Log skrýt kritiky',
                   'UI_setting_wgLogHideCritics_tooltip': 'Skryje zprávy o kritických zásahech ve standardním '
                                                          'protokolu bitvy WG.'},
- 'main_gun': {'UI_description': 'MainGun',
+ 'high_caliber_progress': {'UI_description': 'Postup Velké ráže',
               'UI_setting_backGroundEnabled_text': 'Pozadí',
               'UI_setting_backGroundEnabled_tooltip': '',
               'UI_setting_textLock_text': 'TextLock',
               'UI_setting_textLock_tooltip': ''},
- 'marks_on_gun_battle': {'NaN': '[<b>NaN</b>]',
-                         'UI_HangarStatsEnd': '{c_damageToMark65}, {c_damageToMark85}\n'
-                                              '{c_damageToMark95}, {c_damageToMark100}',
-                         'UI_HangarStatsStart': '<b>{currentPercent}<font size="14">[{currentDamage}]</font> '
-                                                '</b>',
-                         'UI_description': 'MarksOnGunBattle',
-                         'UI_marks_assist': 'Assist',
-                         'UI_marks_combined': 'Combined',
-                         'UI_marks_compact': 'Compact',
-                         'UI_marks_current': 'Současné MŽP',
-                         'UI_marks_damage': 'Damage',
-                         'UI_marks_detailed': 'Detailed',
-                         'UI_marks_legacy': 'Starší (12 předvoleb / vlastní formát)',
-                         'UI_marks_normal': 'Normal',
-                         'UI_menu_UIConfig': 'Konfigurace',
-                         'UI_menu_UIMyp': '<font color="#D042F3">@Myp</font> volba [<font '
-                                          'color="#D042F3">twitch.tv/myp_</font>]',
-                         'UI_menu_UIReplay': 'pro Replaye',
-                         'UI_menu_UIReplayColor': 'Barevné pro přehrávání',
-                         'UI_menu_UIReplayColorDamage': 'Barevné pro přehrání s poškozením',
-                         'UI_menu_UIReplayDamage': 'pro Přehrání s poškozením',
-                         'UI_menu_UIcircon': '<font color="#02C9B3">@Circon</font> volba [<font '
-                                             'color="#02C9B3">twitch.tv/circon</font>]',
-                         'UI_menu_UIkorbenDallasNoMercy': '<font color="#e3256b">@KorbenDallasNoMercy</font> '
-                                                          'volba [<font '
-                                                          'color="#e3256b">youtube.com/c/KorbenDallasNoMercy</font>]',
-                         'UI_menu_UIoldskool': '<font color="#FFD700">@Oldskool</font> volba [<font '
-                                               'color="#FFD700">twitch.tv/oldskool</font>]',
-                         'UI_menu_UIskill4ltu': '<font color="#60FF00">@dovednost</font> volba [<font '
-                                                'color="#60FF00">twitch.tv/skill4ltu</font>]',
-                         'UI_menu_UIspoter': '<font color="#6595EE">@spoter</font> volba [<font '
-                                             'color="#6595EE">github.com/spoter</font>]',
-                         'UI_menu_UIspoterNew': 'nové <font color="#6595EE">@spoter</font> volba [<font '
-                                                'color="#6595EE">github.com/spoter</font>]',
-                         'UI_message': 'MŽP změna vizuálu %s',
-                         'UI_setting_UI_text': 'UI v bitvě',
-                         'UI_setting_UI_tooltip': 'UI v bitvě Rozšířené:\n'
-                                                  '<img src="img://objects/ui_extended.png"></img>\n'
-                                                  'jednoduché:\n'
-                                                  '<img src="img://objects/ui_simple.png"></img>\n'
-                                                  'Konfigurace:\n'
-                                                  '/mods/configs/Driftkings/MarksOnGunExtended/MarksOnGunExtended.json\n',
-                         'UI_setting_background_text': 'Bitva: zobrazit pozadí',
-                         'UI_setting_background_tooltip': '',
-                         'UI_setting_buttonReset_text': 'Tlačítko: Obnovit nastavení',
-                         'UI_setting_buttonReset_tooltip': '',
-                         'UI_setting_buttonShow_text': 'Tlačítko: Změnit styl',
-                         'UI_setting_buttonShow_tooltip': '',
-                         'UI_setting_buttonSizeDown_text': 'Tlačítko: Velikost -10%',
-                         'UI_setting_buttonSizeDown_tooltip': '',
-                         'UI_setting_buttonSizeUp_text': 'Tlačítko: Velikost +10%',
-                         'UI_setting_buttonSizeUp_tooltip': '',
-                         'UI_setting_colorRating_text': 'Barevná tabulka',
-                         'UI_setting_colorRating_tooltip': 'Barevná škála pro znaky na děle.',
-                         'UI_setting_displayMode_text': 'Presentation',
-                         'UI_setting_showDamage_text': 'Ukaž poškození',
-                         'UI_setting_showDelta_text': 'Zobrazit odhadovanou deltu',
-                         'UI_setting_showInBattleHalfPercents_text': 'Bitva: ukaž poškození na +0,5 %',
-                         'UI_setting_showInBattleHalfPercents_tooltip': '',
-                         'UI_setting_showInBattle_text': 'Battle: Ahoj zpráva',
-                         'UI_setting_showInBattle_tooltip': '',
-                         'UI_setting_showInHangar_text': 'Hangár: Zobrazit MoE mod',
-                         'UI_setting_showInHangar_tooltip': '',
-                         'UI_setting_showInReplay_text': 'Přehrát: povoleno',
-                         'UI_setting_showInReplay_tooltip': 'Není to dobré, ale užitečné pro testy',
-                         'UI_setting_showInStatistic_text': 'Statistika: povoleno',
-                         'UI_setting_showInStatistic_tooltip': '',
-                         'UI_setting_showMarks_text': 'Zobrazit značky',
-                         'UI_setting_showProgress_text': 'Zobrazit pokrok',
-                         'UI_setting_showTargets_text': 'Zobrazit cíle',
-                         'UI_setting_techTreeMarkOfGunPercentSize_value': '',
-                         'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} aktuální '
-                                        'klouzavý průměr poškození</font>\n'
-                                        '<font color="#FFFFFF" size="12">{currentDamage} aktuální souhrnné '
-                                        'škody</font>\n'
-                                        'Komu <font color="#FFFFFF" size="12">{nextPercent}% </font>   '
-                                        'potřeba <font color="#FFFFFF" size="12">{needDamage}</font> '
-                                        'klouzavý průměr poškození\n'
-                                        'Tato statistika je k dispozici pro poslední bitvu na tomto vozidle\n'
-                                        'Komu <font color="#FFFFFF" size="12">20% </font>   potřeba <font '
-                                        'color="{c20}" size="12">~{_20}</font> klouzavý průměr poškození\n'
-                                        'Komu <font color="#FFFFFF" size="12">40% </font>   potřeba <font '
-                                        'color="{c40}" size="12">~{_40}</font> klouzavý průměr poškození\n'
-                                        'Komu <font color="#FFFFFF" size="12">55% </font>   potřeba <font '
-                                        'color="{c55}" size="12">~{_55}</font> klouzavý průměr poškození\n'
-                                        'Komu <font color="#FFFFFF" size="12">65% </font>   potřeba <font '
-                                        'color="{c65}" size="12">~{_65}</font> klouzavý průměr poškození\n'
-                                        'Komu <font color="#FFFFFF" size="12">85% </font>   potřeba <font '
-                                        'color="{c85}" size="12">~{_85}</font> klouzavý průměr poškození\n'
-                                        'Komu <font color="#FFFFFF" size="12">95% </font>   potřeba <font '
-                                        'color="{c95}" size="12">~{_95}</font> klouzavý průměr poškození\n'
-                                        'Komu <font color="#FFFFFF" size="12">100% </font>  potřeba <font '
-                                        'color="{c100}" size="12">~{_100}</font> klouzavý průměr poškození',
-                         'battleMessageSizeDown': 'MoE mod: Velikost <b>-10%</b>',
-                         'battleMessageSizeLimitMax': 'MoE mod: Dosaženo <b>maximum[1000 %]</b>',
-                         'battleMessageSizeLimitMin': 'MoE mod: Dosaženo <b>minimum[10%]</b>',
-                         'battleMessageSizeReset': 'MoE mod: Obnovení nastavení</b>',
-                         'battleMessageSizeUp': 'MoE mod: Velikost <b>+10%</b>'},
- 'marks_on_gun_hangar': {'UI_description': 'MarksOnGunHangar',
-                         'UI_panel_achieved': 'Dosaženo',
-                         'UI_panel_additionalGoal': 'Dodatečný cíl',
-                         'UI_panel_automatic': 'Automaticky',
-                         'UI_panel_average': 'Kombinovaná EMA',
-                         'UI_panel_battles': 'bitvy',
-                         'UI_panel_chooseVehicle': 'Vyberte tank',
-                         'UI_panel_drag': 'TAŽTE',
-                         'UI_panel_estimate': 'Odhad cíle',
-                         'UI_panel_estimateNote': 'Pouze odhad; ne poškození požadované v další bitvě.',
-                         'UI_panel_goal1': '1. známka (65 %)',
-                         'UI_panel_goal2': '2. známka (85 %)',
-                         'UI_panel_goal3': '3. známka (95 %)',
-                         'UI_panel_header': 'ZNÁMKY VÝBORNOSTI',
-                         'UI_panel_historyWaiting': 'Historie: čekání na další bitvu',
-                         'UI_panel_locked': 'ZAMKNUTO',
-                         'UI_panel_mark': 'Mark',
-                         'UI_panel_mastery0': 'Žádné mistrovství',
-                         'UI_panel_mastery1': '3. třída',
-                         'UI_panel_mastery2': '2. třída',
-                         'UI_panel_mastery3': '1. třída',
-                         'UI_panel_mastery4': 'Tankové eso',
-                         'UI_panel_noDossier': 'Dokumentace vozidla není k dispozici.',
-                         'UI_panel_noStats': 'Nebyly načteny žádné statistiky',
-                         'UI_panel_observedBattles': 'bitvy pozorovány',
-                         'UI_panel_remaining': 'zbývajících pp',
-                         'UI_panel_selectVehicle': 'Vyberte vozidlo v hangáru.',
-                         'UI_panel_thirdAchieved': 'DOSAŽENA 3. ZNÁMKA',
-                         'UI_panel_tierLimit': 'Známky dostupné od úrovně V',
-                         'UI_panel_trend': 'Pozorovaný trend',
-                         'UI_panel_winRate': 'MÍRA VÝHRY',
-                         'UI_setting_colorRating_NoobMeter': 'NoobMeter',
-                         'UI_setting_colorRating_WotLabs': 'WotLabs',
-                         'UI_setting_colorRating_XVM': 'XVM',
-                         'UI_setting_colorRating_text': 'Vyberte Hodnocení barev',
-                         'UI_setting_colorRating_tooltip': 'Vyberte barevné schéma pro MoE, WN8 a winrate',
-                         'UI_setting_compactMode_text': 'Kompaktní panel',
-                         'UI_setting_compactMode_tooltip': 'Skrýt sekundární statistiky vozidel.',
-                         'UI_setting_goalSelection_text': 'Označte cíl',
-                         'UI_setting_goalSelection_tooltip': 'Automaticky vybere další nezaslouženou známku. '
-                                                             'Poškození je proporcionální odhad, nikoli '
-                                                             'prahová hodnota serveru nebo předpověď příští '
-                                                             'bitvy.',
-                         'UI_setting_historyBattles_text': 'Nedávné bitvy v historii',
-                         'UI_setting_historyBattles_tooltip': 'Aktualizace mohou seskupit několik bitev. '
-                                                              'Historie začíná po instalaci této verze.',
-                         'UI_setting_positionX_text': 'Horizontální poloha (X)',
-                         'UI_setting_positionX_tooltip': 'Menší: vlevo. Větší: vpravo.',
-                         'UI_setting_positionY_text': 'Vertikální poloha (Y)',
-                         'UI_setting_positionY_tooltip': 'Menší: nahoru. Větší: dolů.',
-                         'UI_setting_showInHangar_text': 'Hangár: povoleno',
-                         'UI_setting_showInHangar_tooltip': '',
-                         'UI_setting_showInStatistic_text': 'Popisek: povoleno',
-                         'UI_setting_showInStatistic_tooltip': '',
-                         'UI_setting_showTooltipTargets_text': 'Popisek: zobrazit cílové úrovně',
-                         'UI_setting_showTooltipTargets_tooltip': '',
-                         'UI_setting_textLock_text': 'Hangár: poloha panelu zámku',
-                         'UI_setting_textLock_tooltip': '',
-                         'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} aktuální '
-                                        'klouzavý průměr poškození</font>\n'
-                                        '<font color="#FFFFFF" size="12">{currentDamage} aktuální souhrnné '
-                                        'škody</font>\n'
-                                        'Komu <font color="#FFFFFF" size="12">{nextPercent}% </font> potřeba '
-                                        '<font color="#FFFFFF" size="12">{needDamage}</font> klouzavý průměr '
-                                        'poškození\n'
-                                        '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
-                                        'color="#FFFFFF" size="12">WN8: {wn8}</font>   <font color="#FFFFFF" '
-                                        'size="12">WR: {winRate}</font>',
-                         'UI_tooltipsFull': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} '
-                                            'aktuální klouzavý průměr poškození</font>\n'
-                                            '<font color="#FFFFFF" size="12">{currentDamage} aktuální '
-                                            'souhrnné škody</font>\n'
-                                            'Komu <font color="#FFFFFF" size="12">{nextPercent}% </font> '
-                                            'potřeba <font color="#FFFFFF" size="12">{needDamage}</font> '
-                                            'klouzavý průměr poškození\n'
-                                            '<font color="#FFFFFF" size="12">{mastery}</font>   <font '
-                                            'color="#FFFFFF" size="12">WN8: {wn8}</font>   <font '
-                                            'color="#FFFFFF" size="12">WR: {winRate}</font>\n'
-                                            'Tato statistika je k dispozici z poslední bitvy na tomto '
-                                            'vozidle\n'
-                                            'Komu <font color="#FFFFFF" size="12">20% </font> potřeba <font '
-                                            'color="#FF6347" size="12">~{_20}</font>\n'
-                                            'Komu <font color="#FFFFFF" size="12">40% </font> potřeba <font '
-                                            'color="#FE7903" size="12">~{_40}</font>\n'
-                                            'Komu <font color="#FFFFFF" size="12">55% </font> potřeba <font '
-                                            'color="#F8F400" size="12">~{_55}</font>\n'
-                                            'Komu <font color="#FFFFFF" size="12">65% </font> potřeba <font '
-                                            'color="#60FF00" size="12">~{_65}</font>\n'
-                                            'Komu <font color="#FFFFFF" size="12">85% </font> potřeba <font '
-                                            'color="#02C9B3" size="12">~{_85}</font>\n'
-                                            'Komu <font color="#FFFFFF" size="12">95% </font> potřeba <font '
-                                            'color="#D042F3" size="12">~{_95}</font>\n'
-                                            'Komu <font color="#FFFFFF" size="12">100% </font> potřeba <font '
-                                            'color="#D042F3" size="12">~{_100}</font>'},
- 'marks_on_gun_tech_tree': {'UI_description': 'MarksOnGunTechTree (gameface)',
+ 'battle_marks_of_excellence': {'NaN': '[<b>NaN</b>]',
+ 'UI_HangarStatsEnd': '{c_damageToMark65}, {c_damageToMark85}\n{c_damageToMark95}, {c_damageToMark100}',
+ 'UI_HangarStatsStart': '<b>{currentPercent}<font size="14">[{currentDamage}]</font> </b>',
+ 'UI_description': 'Znaky mistrovství v bitvě',
+ 'UI_marks_assist': 'Assist',
+ 'UI_marks_combined': 'Combined',
+ 'UI_marks_compact': 'Compact',
+ 'UI_marks_current': 'Současné MŽP',
+ 'UI_marks_damage': 'Damage',
+ 'UI_marks_detailed': 'Detailed',
+ 'UI_marks_legacy': 'Starší (12 předvoleb / vlastní formát)',
+ 'UI_marks_normal': 'Normal',
+ 'UI_menu_UIConfig': 'Konfigurace',
+ 'UI_menu_UIMyp': '<font color="#D042F3">@Myp</font> volba [<font color="#D042F3">twitch.tv/myp_</font>]',
+ 'UI_menu_UIReplay': 'pro Replaye',
+ 'UI_menu_UIReplayColor': 'Barevné pro přehrávání',
+ 'UI_menu_UIReplayColorDamage': 'Barevné pro přehrání s poškozením',
+ 'UI_menu_UIReplayDamage': 'pro Přehrání s poškozením',
+ 'UI_menu_UIcircon': '<font color="#02C9B3">@Circon</font> volba [<font '
+                     'color="#02C9B3">twitch.tv/circon</font>]',
+ 'UI_menu_UIkorbenDallasNoMercy': '<font color="#e3256b">@KorbenDallasNoMercy</font> volba [<font '
+                                  'color="#e3256b">youtube.com/c/KorbenDallasNoMercy</font>]',
+ 'UI_menu_UIoldskool': '<font color="#FFD700">@Oldskool</font> volba [<font '
+                       'color="#FFD700">twitch.tv/oldskool</font>]',
+ 'UI_menu_UIskill4ltu': '<font color="#60FF00">@dovednost</font> volba [<font '
+                        'color="#60FF00">twitch.tv/skill4ltu</font>]',
+ 'UI_menu_UIspoter': '<font color="#6595EE">@spoter</font> volba [<font '
+                     'color="#6595EE">github.com/spoter</font>]',
+ 'UI_menu_UIspoterNew': 'nové <font color="#6595EE">@spoter</font> volba [<font '
+                        'color="#6595EE">github.com/spoter</font>]',
+ 'UI_message': 'MŽP změna vizuálu %s',
+ 'UI_setting_UI_text': 'UI v bitvě',
+ 'UI_setting_UI_tooltip': 'UI v bitvě Rozšířené:\n'
+                          '<img src="img://objects/ui_extended.png"></img>\n'
+                          'jednoduché:\n'
+                          '<img src="img://objects/ui_simple.png"></img>\n'
+                          'Konfigurace:\n'
+                          '/mods/configs/Driftkings/MarksOnGunExtended/MarksOnGunExtended.json\n',
+ 'UI_setting_background_text': 'Bitva: zobrazit pozadí',
+ 'UI_setting_background_tooltip': 'Enable the panel background. Opacity is configured separately.',
+ 'UI_setting_buttonReset_text': 'Tlačítko: Obnovit nastavení',
+ 'UI_setting_buttonReset_tooltip': '',
+ 'UI_setting_buttonShow_text': 'Tlačítko: Změnit styl',
+ 'UI_setting_buttonShow_tooltip': '',
+ 'UI_setting_buttonSizeDown_text': 'Tlačítko: Velikost -10%',
+ 'UI_setting_buttonSizeDown_tooltip': '',
+ 'UI_setting_buttonSizeUp_text': 'Tlačítko: Velikost +10%',
+ 'UI_setting_buttonSizeUp_tooltip': '',
+ 'UI_setting_colorRating_text': 'Barevná tabulka',
+ 'UI_setting_colorRating_tooltip': 'Barevná škála pro znaky na děle.',
+ 'UI_setting_displayMode_text': 'Presentation',
+ 'UI_setting_showDamage_text': 'Ukaž poškození',
+ 'UI_setting_showDelta_text': 'Zobrazit odhadovanou deltu',
+ 'UI_setting_showInBattleHalfPercents_text': 'Bitva: ukaž poškození na +0,5 %',
+ 'UI_setting_showInBattleHalfPercents_tooltip': '',
+ 'UI_setting_showInBattle_text': 'Battle: Ahoj zpráva',
+ 'UI_setting_showInBattle_tooltip': 'Show a message at battle start. This does not control panel visibility.',
+ 'UI_setting_showInHangar_text': 'Hangár: Zobrazit MoE mod',
+ 'UI_setting_showInHangar_tooltip': '',
+ 'UI_setting_showInReplay_text': 'Přehrát: povoleno',
+ 'UI_setting_showInReplay_tooltip': 'Není to dobré, ale užitečné pro testy',
+ 'UI_setting_showInStatistic_text': 'Statistika: povoleno',
+ 'UI_setting_showInStatistic_tooltip': '',
+ 'UI_setting_showMarks_text': 'Zobrazit značky',
+ 'UI_setting_showProgress_text': 'Zobrazit pokrok',
+ 'UI_setting_showTargets_text': 'Zobrazit cíle',
+ 'UI_setting_techTreeMarkOfGunPercentSize_value': '',
+ 'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} aktuální klouzavý průměr '
+                'poškození</font>\n'
+                '<font color="#FFFFFF" size="12">{currentDamage} aktuální souhrnné škody</font>\n'
+                'Komu <font color="#FFFFFF" size="12">{nextPercent}% </font>   potřeba <font color="#FFFFFF" '
+                'size="12">{needDamage}</font> klouzavý průměr poškození\n'
+                'Tato statistika je k dispozici pro poslední bitvu na tomto vozidle\n'
+                'Komu <font color="#FFFFFF" size="12">20% </font>   potřeba <font color="{c20}" '
+                'size="12">~{_20}</font> klouzavý průměr poškození\n'
+                'Komu <font color="#FFFFFF" size="12">40% </font>   potřeba <font color="{c40}" '
+                'size="12">~{_40}</font> klouzavý průměr poškození\n'
+                'Komu <font color="#FFFFFF" size="12">55% </font>   potřeba <font color="{c55}" '
+                'size="12">~{_55}</font> klouzavý průměr poškození\n'
+                'Komu <font color="#FFFFFF" size="12">65% </font>   potřeba <font color="{c65}" '
+                'size="12">~{_65}</font> klouzavý průměr poškození\n'
+                'Komu <font color="#FFFFFF" size="12">85% </font>   potřeba <font color="{c85}" '
+                'size="12">~{_85}</font> klouzavý průměr poškození\n'
+                'Komu <font color="#FFFFFF" size="12">95% </font>   potřeba <font color="{c95}" '
+                'size="12">~{_95}</font> klouzavý průměr poškození\n'
+                'Komu <font color="#FFFFFF" size="12">100% </font>  potřeba <font color="{c100}" '
+                'size="12">~{_100}</font> klouzavý průměr poškození',
+ 'battleMessageSizeDown': 'MoE mod: Velikost <b>-10%</b>',
+ 'battleMessageSizeLimitMax': 'MoE mod: Dosaženo <b>maximum[1000 %]</b>',
+ 'battleMessageSizeLimitMin': 'MoE mod: Dosaženo <b>minimum[10%]</b>',
+ 'battleMessageSizeReset': 'MoE mod: Obnovení nastavení</b>',
+ 'battleMessageSizeUp': 'MoE mod: Velikost <b>+10%</b>'},
+ 'hangar_marks_of_excellence': {'UI_description': 'Znaky mistrovství v garáži',
+ 'UI_panel_achieved': 'Dosaženo',
+ 'UI_panel_additionalGoal': 'Dodatečný cíl',
+ 'UI_panel_automatic': 'Automaticky',
+ 'UI_panel_average': 'Kombinovaná EMA',
+ 'UI_panel_battles': 'bitvy',
+ 'UI_panel_chooseVehicle': 'Vyberte tank',
+ 'UI_panel_drag': 'TAŽTE',
+ 'UI_panel_estimate': 'Odhad cíle',
+ 'UI_panel_estimateNote': 'Pouze odhad; ne poškození požadované v další bitvě.',
+ 'UI_panel_goal1': '1. známka (65 %)',
+ 'UI_panel_goal2': '2. známka (85 %)',
+ 'UI_panel_goal3': '3. známka (95 %)',
+ 'UI_panel_header': 'ZNÁMKY VÝBORNOSTI',
+ 'UI_panel_historyWaiting': 'Historie: čekání na další bitvu',
+ 'UI_panel_locked': 'ZAMKNUTO',
+ 'UI_panel_mark': 'Mark',
+ 'UI_panel_mastery0': 'Žádné mistrovství',
+ 'UI_panel_mastery1': '3. třída',
+ 'UI_panel_mastery2': '2. třída',
+ 'UI_panel_mastery3': '1. třída',
+ 'UI_panel_mastery4': 'Tankové eso',
+ 'UI_panel_noDossier': 'Dokumentace vozidla není k dispozici.',
+ 'UI_panel_noStats': 'Nebyly načteny žádné statistiky',
+ 'UI_panel_observedBattles': 'bitvy pozorovány',
+ 'UI_panel_remaining': 'zbývajících pp',
+ 'UI_panel_selectVehicle': 'Vyberte vozidlo v hangáru.',
+ 'UI_panel_thirdAchieved': 'DOSAŽENA 3. ZNÁMKA',
+ 'UI_panel_tierLimit': 'Známky dostupné od úrovně V',
+ 'UI_panel_trend': 'Pozorovaný trend',
+ 'UI_panel_winRate': 'MÍRA VÝHRY',
+ 'UI_setting_colorRating_NoobMeter': 'NoobMeter',
+ 'UI_setting_colorRating_WotLabs': 'WotLabs',
+ 'UI_setting_colorRating_XVM': 'XVM',
+ 'UI_setting_colorRating_text': 'Vyberte Hodnocení barev',
+ 'UI_setting_colorRating_tooltip': 'Vyberte barevné schéma pro MoE, WN8 a winrate',
+ 'UI_setting_compactMode_text': 'Kompaktní panel',
+ 'UI_setting_compactMode_tooltip': 'Skrýt sekundární statistiky vozidel.',
+ 'UI_setting_goalSelection_text': 'Označte cíl',
+ 'UI_setting_goalSelection_tooltip': 'Automaticky vybere další nezaslouženou známku. Poškození je '
+                                     'proporcionální odhad, nikoli prahová hodnota serveru nebo předpověď '
+                                     'příští bitvy.',
+ 'UI_setting_historyBattles_text': 'Nedávné bitvy v historii',
+ 'UI_setting_historyBattles_tooltip': 'Aktualizace mohou seskupit několik bitev. Historie začíná po '
+                                      'instalaci této verze.',
+ 'UI_setting_positionX_text': 'Horizontální poloha (X)',
+ 'UI_setting_positionX_tooltip': 'Menší: vlevo. Větší: vpravo.',
+ 'UI_setting_positionY_text': 'Vertikální poloha (Y)',
+ 'UI_setting_positionY_tooltip': 'Menší: nahoru. Větší: dolů.',
+ 'UI_setting_showInHangar_text': 'Hangár: povoleno',
+ 'UI_setting_showInHangar_tooltip': '',
+ 'UI_setting_showInStatistic_text': 'Popisek: povoleno',
+ 'UI_setting_showInStatistic_tooltip': '',
+ 'UI_setting_showTooltipTargets_text': 'Popisek: zobrazit cílové úrovně',
+ 'UI_setting_showTooltipTargets_tooltip': '',
+ 'UI_setting_textLock_text': 'Hangár: poloha panelu zámku',
+ 'UI_setting_textLock_tooltip': 'Prevent header dragging. When unlocked, drag with the left mouse button; '
+                                'the position is saved.',
+ 'UI_tooltips': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} aktuální klouzavý průměr '
+                'poškození</font>\n'
+                '<font color="#FFFFFF" size="12">{currentDamage} aktuální souhrnné škody</font>\n'
+                'Komu <font color="#FFFFFF" size="12">{nextPercent}% </font> potřeba <font color="#FFFFFF" '
+                'size="12">{needDamage}</font> klouzavý průměr poškození\n'
+                '<font color="#FFFFFF" size="12">{mastery}</font>   <font color="#FFFFFF" size="12">WN8: '
+                '{wn8}</font>   <font color="#FFFFFF" size="12">WR: {winRate}</font>',
+ 'UI_tooltipsFull': '<font color="#FFFFFF" size="12">{currentMovingAvgDamage} aktuální klouzavý průměr '
+                    'poškození</font>\n'
+                    '<font color="#FFFFFF" size="12">{currentDamage} aktuální souhrnné škody</font>\n'
+                    'Komu <font color="#FFFFFF" size="12">{nextPercent}% </font> potřeba <font '
+                    'color="#FFFFFF" size="12">{needDamage}</font> klouzavý průměr poškození\n'
+                    '<font color="#FFFFFF" size="12">{mastery}</font>   <font color="#FFFFFF" size="12">WN8: '
+                    '{wn8}</font>   <font color="#FFFFFF" size="12">WR: {winRate}</font>\n'
+                    'Tato statistika je k dispozici z poslední bitvy na tomto vozidle\n'
+                    'Komu <font color="#FFFFFF" size="12">20% </font> potřeba <font color="#FF6347" '
+                    'size="12">~{_20}</font>\n'
+                    'Komu <font color="#FFFFFF" size="12">40% </font> potřeba <font color="#FE7903" '
+                    'size="12">~{_40}</font>\n'
+                    'Komu <font color="#FFFFFF" size="12">55% </font> potřeba <font color="#F8F400" '
+                    'size="12">~{_55}</font>\n'
+                    'Komu <font color="#FFFFFF" size="12">65% </font> potřeba <font color="#60FF00" '
+                    'size="12">~{_65}</font>\n'
+                    'Komu <font color="#FFFFFF" size="12">85% </font> potřeba <font color="#02C9B3" '
+                    'size="12">~{_85}</font>\n'
+                    'Komu <font color="#FFFFFF" size="12">95% </font> potřeba <font color="#D042F3" '
+                    'size="12">~{_95}</font>\n'
+                    'Komu <font color="#FFFFFF" size="12">100% </font> potřeba <font color="#D042F3" '
+                    'size="12">~{_100}</font>'},
+ 'tech_tree_marks_of_excellence': {'UI_description': 'Znaky mistrovství ve výzkumu',
                             'UI_setting_badgeOffsetX_text': 'Pozice X (vlevo/vpravo)',
                             'UI_setting_badgeOffsetX_tooltip': 'Negativní: vlevo. Pozitivní: správně.',
                             'UI_setting_badgeOffsetY_text': 'Poloha Y (nahoru / dolů)',
@@ -745,7 +806,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_showInTechTreeMastery_tooltip': '',
                             'UI_setting_showInTechTree_text': 'TechTree: povoleno',
                             'UI_setting_showInTechTree_tooltip': ''},
- 'minimap_plugins': {'UI_description': 'MinimapPlugins',
+ 'minimap_enhancements': {'UI_description': 'Vylepšení minimapy',
                      'UI_field_alpha': 'Opacity',
                      'UI_field_mode': 'Visibility',
                      'UI_minimapAim_0': 'Původní žlutý',
@@ -877,12 +938,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_zoomFactorMax_text': 'Maximální faktor zoomu',
                      'UI_setting_zoomFactorMax_tooltip': 'Maximální úroveň přiblížení pro minimapu (1,0-3,0)',
                      'UI_setting_zoomFactor_text': 'Měřítko zoomu'},
- 'own_health': {'UI_description': 'OwnHealth',
+ 'vehicle_health': {'UI_description': 'Body výdrže vozidla',
                 'UI_setting_x_text': 'Pozice X',
                 'UI_setting_x_tooltip': '',
                 'UI_setting_y_text': 'Pozice Y',
                 'UI_setting_y_tooltip': ''},
- 'player_panel_pro': {'UI_description': 'PlayerPanelPro',
+ 'team_panels': {'UI_description': 'Panely týmů a načítání bitvy',
                       'UI_panel_alpha': 'Neprůhlednost pozadí panelu',
                       'UI_panel_altMode': 'Režim panelu při držení ALT',
                       'UI_panel_bindToIcon': 'Ukotvit k ikoně vozidla',
@@ -963,9 +1024,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                       'UI_setting_toggleKey_text': 'Přepnout klávesovou zkratku',
                       'UI_setting_toggleKey_tooltip': 'Stisknutím tohoto tlačítka v bitvě přepnete zobrazení '
                                                       'značek HP.'},
- 'repair_extended': {'UI_description': 'RepairExtended',
-                     'UI_setting_autoRepair_text': 'Automatické použití',
-                     'UI_setting_autoRepair_tooltip': '',
+ 'repair_controls': {'UI_description': 'Ovládání oprav',
                      'UI_setting_buttonChassis_text': 'Tlačítko: Obnovit podvozek',
                      'UI_setting_buttonChassis_tooltip': '',
                      'UI_setting_buttonRepair_text': 'Tlačítko: Chytrá oprava',
@@ -980,66 +1039,18 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_repairDevices_tooltip': '',
                      'UI_setting_restoreChassis_text': 'Obnovit podvozek',
                      'UI_setting_restoreChassis_tooltip': '',
-                     'UI_setting_timerMax_format': ' sek.',
-                     'UI_setting_timerMax_text': 'Maximální zpoždění automatického použití',
-                     'UI_setting_timerMin_format': ' sek.',
-                     'UI_setting_timerMin_text': 'Minimální zpoždění automatického použití',
                      'UI_setting_useGoldKits_text': 'Použijte zlaté sady',
                      'UI_setting_useGoldKits_tooltip': ''},
- 'safe_shot': {'UI_battle_activateMessage': 'SafeShot: Aktivováno!',
-               'UI_description': 'SafeShot',
-               'UI_setting_activateMessage_text': 'Aktivujte zprávu',
-               'UI_setting_activateMessage_tooltip': 'Zobrazit upozornění při vstupu do bitvy',
-               'UI_setting_chatMessages_text': 'Formát zprávy',
-               'UI_setting_chatMessages_tooltip': 'Vlastní formát zprávy při blokování týmových střel. '
-                                                  'Použijte {name} a {vehicle} jako zástupné symboly',
-               'UI_setting_deadShotBlockTimeOut_text': 'Časový limit pro blokování střel na zničená vozidla',
-               'UI_setting_deadShotBlockTimeOut_tooltip': 'Čas v sekundách na zablokování střel po zničení '
-                                                          'vozidla',
-               'UI_setting_deadShotBlock_text': 'Blok mrtvých výstřelů',
-               'UI_setting_deadShotBlock_tooltip': 'Zabraňuje střelbě na již zničená vozidla',
-               'UI_setting_disableKey_text': 'Zakázat klíč',
-               'UI_setting_disableKey_tooltip': 'Klávesová zkratka pro dočasné zapnutí/vypnutí modu',
-               'UI_setting_teamKillerShotUnblock_text': 'Odblokování Team Killer Shot',
-               'UI_setting_teamKillerShotUnblock_tooltip': 'Umožňuje střílet na týmové zabijáky',
-               'UI_setting_teamShotBlock_text': 'Týmová střela blok',
-               'UI_setting_teamShotBlock_tooltip': 'Zabraňuje střelbě na spoluhráče',
-               'UI_setting_triggerMessage_text': 'Zakázat zprávu',
-               'UI_setting_triggerMessage_tooltip': 'Zobrazit/skrýt oznamovací zprávy, když jsou záběry '
-                                                    'blokovány',
-               'UI_setting_wasteShotBlock_text': 'Odpadní výstřelový blok',
-               'UI_setting_wasteShotBlock_tooltip': 'Zabraňuje střelbě, když není vybrán žádný cíl',
-               'UI_triggerText_disabled': 'SafeShot: Zakázáno!',
-               'UI_triggerText_enabled': 'SafeShot: Povoleno!'},
- 'server_turret_extended': {'UI_battle_OFF': 'VYPNUTO',
+ 'server_turret_sync': {'UI_battle_OFF': 'VYPNUTO',
                             'UI_battle_ON': 'ON',
                             'UI_battle_activateMessage': "'Server Turret Extended': Aktivováno",
-                            'UI_description': 'ServerTurretExtended',
+                            'UI_description': 'Synchronizace věže se serverem',
                             'UI_setting_activateMessage_text': 'Zobrazit aktivační zprávu',
                             'UI_setting_activateMessage_tooltip': 'Zobrazit aktivační zprávu v bitvě',
-                            'UI_setting_autoActivateWheelMode_text': 'Kola: Režim automatické rychlosti',
-                            'UI_setting_autoActivateWheelMode_tooltip': 'Automaticky zapne režim rychlosti '
-                                                                        'nebo manévrování',
-                            'UI_setting_buttonAutoMode_text': 'Tlačítko: Kolečka v režimu automatické '
-                                                              'rychlosti',
-                            'UI_setting_buttonAutoMode_tooltip': '',
-                            'UI_setting_buttonMaxMode_text': 'Tlačítko: Kola udržují maximální rychlost',
-                            'UI_setting_buttonMaxMode_tooltip': '',
-                            'UI_setting_fixAccuracyInMove_text': 'Opravit přesnost',
-                            'UI_setting_fixAccuracyInMove_tooltip': 'Když se tank pohnete a poté zastavíte, '
-                                                                    'použijete fixní přesnost, abyste '
-                                                                    'neztratili míření',
-                            'UI_setting_fixWheelCruiseControl_text': 'Opravte tempomat na kolech',
-                            'UI_setting_fixWheelCruiseControl_tooltip': 'Když aktivujete režim kola s '
-                                                                        'tempomatem, vozidlo stojí, toto '
-                                                                        'nastavení to deaktivuje',
-                            'UI_setting_maxWheelMode_text': 'Kola: Udržujte maximální rychlost',
-                            'UI_setting_maxWheelMode_tooltip': 'Při dosažení maximální rychlosti '
-                                                               'nedeaktivuje režim rychlosti při manévrování',
                             'UI_setting_serverTurret_text': 'Serverová věž',
                             'UI_setting_serverTurret_tooltip': 'Přesunout věž na server Souřadnice cíle (je '
                                                                'třeba povolit Server Sight v nastavení hry)'},
- 'sixth_sense': {'UI_description': 'SixthSense',
+ 'sixth_sense_alert': {'UI_description': 'Upozornění Šestého smyslu',
                  'UI_setting_defaultIconName_text': 'Výchozí název ikony',
                  'UI_setting_defaultIconName_tooltip': 'Vyberte vložený obrázek.',
                  'UI_setting_defaultIcon_text': 'Výchozí ikona',
@@ -1088,7 +1099,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                  'UI_sound_SixthSense_08': 'Super Mario',
                  'UI_sound_SixthSense_09': 'Trap',
                  'UI_sound_SixthSense_10': 'X-Files'},
- 'spotted_extended_light': {'UI_description': 'SpottedExtendedLight',
+ 'enemy_spotting_status': {'UI_description': 'Stav odhalení nepřátel',
                             'UI_macros_help': 'K přizpůsobení oznámení použijte tato makra ve formátech '
                                               'zpráv:\n'
                                               '• {icons} - Zobrazuje ikony vozidel\n'
@@ -1170,7 +1181,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                             'UI_setting_sound_text': 'Povolit zvuky bitvy',
                             'UI_setting_sound_tooltip': 'Přepínejte zvuková upozornění na spatřené nepřátele '
                                                         'a asistujte poškození'},
- 'zoom_extended': {'UI_description': 'ZoomExtended',
+ 'sniper_camera': {'UI_description': 'Odstřelovací kamera',
                    'UI_setting_zoomSteps_enabled_text': u'Vlastní úrovně přiblížení',
                    'UI_setting_zoomSteps_steps_text': u'Úrovně přiblížení (seznam JSON)',
                    'UI_setting_zoomSteps_steps_tooltip': u'Zadejte alespoň čtyři různá čísla od 2, například [4, 6, 8, 12, 16, 25, 30]. Použije se v další bitvě.',
@@ -1269,6 +1280,7 @@ PANEL = {'actionFailed': 'Akce se nezdařila. Viz game.log.',
  'profileName': 'Název profilu',
  'profileRename': 'Přejmenovat',
  'profiles': 'Profily',
+ 'resetOption': 'Reset this option to default',
  'reset': 'Obnovit výchozí',
  'resetDone': 'Výchozí nastavení obnoveno. Požádejte o jejich použití.',
  'resetTheme': 'Obnovit motiv',
