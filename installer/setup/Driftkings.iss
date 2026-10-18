@@ -46,7 +46,7 @@ en.WrongClient=Select the World of Tanks {#GameVersion} game folder (supported r
 en.CloseGame=Close World of Tanks before installing.
 en.ProcessCheckFailed=Cannot verify whether World of Tanks is running. Installation stopped.
 en.PreserveSettings=An existing profile was found. All existing JSON settings will be preserved.
-//PT
+; PT
 pt.Recommended=Recomendado (predefinições do autor)
 pt.Customized=Personalizado
 pt.WrongClient=Seleciona a pasta do World of Tanks {#GameVersion} (realms suportados: {#SupportedRealmsText}).
