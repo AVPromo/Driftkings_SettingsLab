@@ -331,6 +331,8 @@ class MarksOnGunData(object):
             return result
         target = goal(data['damageRating'], data['movingAvgDamage'], data['tier'],
                       settings_service.getComponentDict(config)[HANGAR_MARKS_OF_EXCELLENCE.GOAL_SELECTION], data['earnedMarks'])
+        if not target['eligible']:
+            result['message'] = config.i18n['UI_panel_tierLimit']
         recent = g_history.observe(data) if target['eligible'] else {'delta': None, 'battles': 0}
         rank = data['masteryValue']
         mastery = int(rank) if rank in (1, 2, 3, 4) else 0
