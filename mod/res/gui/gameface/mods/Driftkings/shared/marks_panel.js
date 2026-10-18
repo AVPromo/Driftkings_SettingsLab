@@ -36,31 +36,32 @@
         });
     }
     function graph(parent) {
-        var area = node('div', 'dk-mog__graph', parent), segments = [], points = [], previous = null;
+        var area = node('div', 'dk-mog__graph', parent), segments = [], points = [], refs = [], previous = null;
+        var axisMax = node('span', 'dk-mog__axis dk-mog__axis--max', area), axisMin = node('span', 'dk-mog__axis dk-mog__axis--min', area);
+        function pool(list, tag, cls, count) { while (list.length < count) { list.push(node(tag, cls, area)); } }
         return {
             element: area,
             draw: function (samples) {
-                var signature = JSON.stringify(samples || []);
+                // The size is part of the signature: segments are laid out in pixels, so a width change must redraw.
+                var signature = JSON.stringify(samples || []) + '|' + area.clientWidth + 'x' + area.clientHeight;
                 if (signature === previous) { return; }
                 previous = signature;
-                var valid = (samples || []).filter(function (p) { return typeof p.battles === 'number' && typeof p.percent === 'number' && isFinite(p.percent); });
-                var width = 100, height = 100, min = 100, max = 0;
+                var valid = (samples || []).filter(function (p) { return typeof p.battles === 'number' && isFinite(p.battles) && typeof p.percent === 'number' && isFinite(p.percent); });
+                var width = 100, min = 100, max = 0;
                 valid.forEach(function (p) { min = Math.min(min, p.percent); max = Math.max(max, p.percent); });
                 var span = Math.max(.1, max - min), first = valid.length ? valid[0].battles : 0;
                 var duration = valid.length ? Math.max(1, valid[valid.length - 1].battles - first) : 1;
-                while (points.length < valid.length) { points.push(node('i', 'dk-mog__point', area)); }
-                while (segments.length < Math.max(0, valid.length - 1)) { segments.push(node('i', 'dk-mog__segment', area)); }
+                function yOf(value) { return 90 - (value - min) / span * 80; }
+                pool(points, 'i', 'dk-mog__point', valid.length);
+                pool(segments, 'i', 'dk-mog__segment', Math.max(0, valid.length - 1));
                 points.forEach(function (dot, i) {
                     show(dot, i < valid.length);
                     if (i >= valid.length) { return; }
-                    var x = (valid[i].battles - first) / duration * width;
-                    var y = 90 - (valid[i].percent - min) / span * 80;
+                    var x = (valid[i].battles - first) / duration * width, y = yOf(valid[i].percent);
                     style(dot, 'left', x + '%'); style(dot, 'top', y + '%');
                     dot.title = valid[i].battles + ': ' + percent(valid[i].percent);
                     if (i > 0) {
-                        // CSS segments use real observation counters on X, actual percent on Y.
-                        var px = (valid[i - 1].battles - first) / duration * width;
-                        var py = 90 - (valid[i - 1].percent - min) / span * 80;
+                        var px = (valid[i - 1].battles - first) / duration * width, py = yOf(valid[i - 1].percent);
                         var dx = (x - px) / 100 * area.clientWidth, dy = (y - py) / 100 * area.clientHeight;
                         style(segments[i - 1], 'left', px + '%'); style(segments[i - 1], 'top', py + '%');
                         style(segments[i - 1], 'width', Math.sqrt(dx * dx + dy * dy) + 'px');
@@ -68,6 +69,17 @@
                     }
                 });
                 segments.forEach(function (line, i) { show(line, i < valid.length - 1); });
+                // Reference lines for the excellence thresholds that fall inside the plotted range.
+                var visible = valid.length ? [65, 85, 95].filter(function (t) { return t > min && t < max; }) : [];
+                pool(refs, 'div', 'dk-mog__ref', visible.length);
+                refs.forEach(function (line, i) {
+                    show(line, i < visible.length);
+                    if (i >= visible.length) { return; }
+                    style(line, 'top', yOf(visible[i]) + '%');
+                    text(line, formatted(visible[i]) + '%');
+                });
+                text(axisMax, valid.length ? percent(max) : ''); text(axisMin, valid.length ? percent(min) : '');
+                show(axisMax, valid.length > 0); show(axisMin, valid.length > 0);
                 area.title = valid.length ? percent(min) + ' \u2014 ' + percent(max) : '';
             },
             invalidate: function () { previous = null; }

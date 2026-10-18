@@ -26,6 +26,10 @@
 .dk-mog__milestone .dk-mog__star { display:block; font-size:31rem; }
 .dk-mog__history { padding-top:8rem; }
 .dk-mog__graph { position:relative; height:95rem; margin:16rem 6rem 8rem; border-left:1rem solid #4c626d; border-bottom:1rem solid #4c626d; background-image:repeating-linear-gradient(0deg,transparent,transparent 23rem,rgba(62,95,103,.24) 24rem),repeating-linear-gradient(90deg,transparent,transparent 49rem,rgba(62,95,103,.24) 50rem); }
+.dk-mog__axis { position:absolute; left:6rem; margin-top:-8rem; font-size:12rem; line-height:16rem; color:#9aaeb8; pointer-events:none; }
+.dk-mog__axis--max { top:10%; }
+.dk-mog__axis--min { top:90%; }
+.dk-mog__ref { position:absolute; left:0; right:0; height:0; border-top:1rem dashed rgba(236,215,151,.45); font-size:12rem; line-height:16rem; color:#ecd797; text-align:right; padding-right:4rem; pointer-events:none; }
 .dk-mog__point { position:absolute; width:6rem; height:6rem; border-radius:50%; background:#a5ffcf; box-shadow:0 0 5rem #25d797; margin:-3rem; }
 .dk-mog__segment { position:absolute; height:2rem; background:#60eeb1; transform-origin:0 0; }
 .dk-mog__footer { display:flex; justify-content:space-between; margin-top:9rem; padding-top:8rem; border-top:1rem solid #34505a; color:#a8b7bf; font-size:12rem; }
