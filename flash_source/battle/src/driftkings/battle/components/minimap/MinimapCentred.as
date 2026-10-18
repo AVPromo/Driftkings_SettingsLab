@@ -33,7 +33,7 @@ package driftkings.battle.components.minimap
         private var sizeLabel:TextField;
         private var visibleLabels:Array;
         private var zoomed:Boolean = false;
-        private var original:Object;
+        private var original:MinimapZoomState;
         private var originalAlpha:Number = 1;
         private var lastWidth:Number = 0;
         private var lastHeight:Number = 0;
@@ -80,8 +80,7 @@ package driftkings.battle.components.minimap
             if (active)
             {
                 if (!zoomed)
-                    original = {x:minimap.x, y:minimap.y, sx:minimap.scaleX, sy:minimap.scaleY,
-                                size:minimap.currentSizeIndex, index:battlePage.getChildIndex(minimap)};
+                    original = new MinimapZoomState(minimap, battlePage.getChildIndex(minimap));
                 zoomed = true;
                 minimap.setAllowedSizeIndex(Number(options.sizeIndex));
                 var scale:Number = Math.max(1, Math.min(3, Number(options.scale)));

@@ -56,7 +56,7 @@ package driftkings.battle.components.ratings
         }
         private function childrenChanged(event:Event):void
         {
-            var cached:Object=itemCache[event.currentTarget];
+            var cached:PanelItemCache=itemCache[event.currentTarget];
             if (cached) cached.time=-1000;
         }
         private function watchList(list:DisplayObjectContainer):void
@@ -76,25 +76,25 @@ package driftkings.battle.components.ratings
             }
             watchedLists=new Dictionary(true);
         }
-        private function isStale(list:DisplayObjectContainer,cached:Object,mode:String,now:int):Boolean
+        private function isStale(list:DisplayObjectContainer,cached:PanelItemCache,mode:String,now:int):Boolean
         {
             if (!cached || cached.mode!==mode || now-cached.time>=1000) return true;
             for each (var item:DisplayObject in cached.items)
                 if (!item.stage || !list.contains(item)) return true;
             return false;
         }
-        private function discoverItems(list:DisplayObjectContainer,mode:String):Object
+        private function discoverItems(list:DisplayObjectContainer,mode:String):PanelItemCache
         {
             watchList(list);
             var items:Array=[];
             collect(list,items);
-            var cached:Object={items:items,mode:mode,time:getTimer()};
+            var cached:PanelItemCache=new PanelItemCache(items,mode,getTimer());
             itemCache[list]=cached;
             return cached;
         }
         private function cachedItems(list:DisplayObjectContainer,mode:String):Array
         {
-            var cached:Object=itemCache[list];
+            var cached:PanelItemCache=itemCache[list];
             // ADDED/REMOVED invalidate membership immediately, but native rows
             // may initialise their identifying fields without a display event.
             // Retain the one-second scan to discover those late-bound rows.
