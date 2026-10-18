@@ -108,6 +108,11 @@
         ui.close.title = text.close || '';
         ui.reset.textContent = text.reset; ui.cancel.textContent = text.cancel;
         ui.apply.textContent = text.apply; ui.save.textContent = text.saveApply;
+        ui.apply.title = text.applyHint || '';
+        ui.save.title = text.saveApplyHint || '';
+        ui.cancel.title = text.cancelHint || '';
+        ui.undo.title = text.undoHint || '';
+        ui.reset.title = text.resetHint || '';
         ui.dialogTitle.textContent = text.confirmTitle; ui.dialogText.textContent = text.confirmText;
         ui.confirmStay.textContent = text.confirmStay; ui.confirmDiscard.textContent = text.confirmDiscard;
         ui.confirmSave.textContent = text.confirmSave;

@@ -1111,7 +1111,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_noSniperDynamic_text': '狙击动态',
                    'UI_setting_noSniperDynamic_tooltip': '在狙击模式下禁用动态摄像头。'}}
 
-PANEL = {'actionFailed': '行动失败了。请参阅game.log。',
+PANEL = {'applyHint': '应用更改并保持面板打开。部分设置需要重新打开界面、进入下一场战斗或重启游戏。',
+ 'saveApplyHint': '应用并保存更改，然后关闭面板或提示重启。',
+ 'cancelHint': '放弃尚未应用的更改。',
+ 'undoHint': '撤销最后一次尚未应用的编辑。',
+ 'resetHint': '选择此模块的默认设置。应用或保存以确认。',
+ 'actionFailed': '行动失败了。请参阅game.log。',
  'all': '全部',
  'applied': '已应用更改。',
  'apply': '应用',

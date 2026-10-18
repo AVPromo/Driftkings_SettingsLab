@@ -1203,7 +1203,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_noSniperDynamic_text': 'Dynamická odstřelovací kamera',
                    'UI_setting_noSniperDynamic_tooltip': 'Zakázat dynamickou kameru v odstřelovacím režimu.'}}
 
-PANEL = {'actionFailed': 'Akce se nezdařila. Viz game.log.',
+PANEL = {'applyHint': 'Použije změny a ponechá panel otevřený. Některá nastavení vyžadují novou obrazovku, bitvu nebo restart.',
+ 'saveApplyHint': 'Použije a uloží změny, poté zavře panel nebo nabídne restart.',
+ 'cancelHint': 'Zahodí změny, které ještě nebyly použity.',
+ 'undoHint': 'Vrátí poslední úpravu, která ještě nebyla použita.',
+ 'resetHint': 'Vybere výchozí hodnoty tohoto modulu. Potvrďte použitím nebo uložením.',
+ 'actionFailed': 'Akce se nezdařila. Viz game.log.',
  'all': 'Vše',
  'applied': 'Změny byly použity.',
  'apply': 'Použít',

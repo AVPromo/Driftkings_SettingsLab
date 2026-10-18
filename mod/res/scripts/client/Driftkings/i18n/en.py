@@ -1199,7 +1199,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_noSniperDynamic_text': 'Sniper Dynamic',
                    'UI_setting_noSniperDynamic_tooltip': 'Disable dynamic camera in sniper mode.'}}
 
-PANEL = {'actionFailed': 'The action failed. See game.log.',
+PANEL = {'applyHint': 'Applies changes and keeps the panel open. Some settings require a new view, battle or restart.',
+ 'saveApplyHint': 'Applies and saves changes, then closes the panel or asks for a restart.',
+ 'cancelHint': 'Discards changes that have not yet been applied.',
+ 'undoHint': 'Undoes the last edit that has not yet been applied.',
+ 'resetHint': 'Selects the defaults for this module. Apply or save to confirm.',
+ 'actionFailed': 'The action failed. See game.log.',
  'all': 'All',
  'applied': 'Changes applied.',
  'apply': 'Apply',

@@ -1219,7 +1219,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_noSniperDynamic_tooltip': 'Keskin nişancı modunda dinamik kamerayı devre dışı '
                                                          'bırakın.'}}
 
-PANEL = {'actionFailed': "Eylem başarısız oldu. game.log'ye bakın.",
+PANEL = {'applyHint': 'Değişiklikleri uygular ve paneli açık tutar. Bazı ayarlar yeni bir görünüm, savaş veya yeniden başlatma gerektirir.',
+ 'saveApplyHint': 'Değişiklikleri uygular ve kaydeder, ardından paneli kapatır veya yeniden başlatma ister.',
+ 'cancelHint': 'Henüz uygulanmamış değişiklikleri iptal eder.',
+ 'undoHint': 'Henüz uygulanmamış son düzenlemeyi geri alır.',
+ 'resetHint': 'Bu modülün varsayılanlarını seçer. Onaylamak için uygulayın veya kaydedin.',
+ 'actionFailed': "Eylem başarısız oldu. game.log'ye bakın.",
  'all': 'Tümü',
  'applied': 'Değişiklikler uygulandı.',
  'apply': 'Uygula',

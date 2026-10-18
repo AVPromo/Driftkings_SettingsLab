@@ -1223,7 +1223,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_noSniperDynamic_text': 'Dynamika Snajpera',
                    'UI_setting_noSniperDynamic_tooltip': 'Wyłącz dynamiczną kamerę w trybie snajperskim.'}}
 
-PANEL = {'actionFailed': 'Akcja nie powiodła się. Patrz game.log.',
+PANEL = {'applyHint': 'Stosuje zmiany i pozostawia panel otwarty. Niektóre ustawienia wymagają nowego widoku, bitwy lub ponownego uruchomienia.',
+ 'saveApplyHint': 'Stosuje i zapisuje zmiany, następnie zamyka panel lub prosi o ponowne uruchomienie.',
+ 'cancelHint': 'Odrzuca zmiany, które nie zostały jeszcze zastosowane.',
+ 'undoHint': 'Cofa ostatnią edycję, która nie została jeszcze zastosowana.',
+ 'resetHint': 'Wybiera ustawienia domyślne tego modułu. Zastosuj lub zapisz, aby potwierdzić.',
+ 'actionFailed': 'Akcja nie powiodła się. Patrz game.log.',
  'all': 'Wszystkie',
  'applied': 'Zastosowano zmiany.',
  'apply': 'Zastosuj',

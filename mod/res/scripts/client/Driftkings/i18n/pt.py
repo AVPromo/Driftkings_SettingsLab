@@ -1224,7 +1224,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_noSniperDynamic_text': 'Atirador Dinâmico',
                    'UI_setting_noSniperDynamic_tooltip': 'Desative a câmara dinâmica no modo de atirador.'}}
 
-PANEL = {'actionFailed': 'A ação falhou. Consulte o game.log.',
+PANEL = {'applyHint': 'Aplica as alterações e mantém o painel aberto. Algumas opções requerem uma nova vista, batalha ou reinício.',
+ 'saveApplyHint': 'Aplica e guarda as alterações, depois fecha o painel ou pede um reinício.',
+ 'cancelHint': 'Descarta as alterações que ainda não foram aplicadas.',
+ 'undoHint': 'Desfaz a última edição que ainda não foi aplicada.',
+ 'resetHint': 'Seleciona as predefinições deste módulo. Aplica ou guarda para confirmar.',
+ 'actionFailed': 'A ação falhou. Consulte o game.log.',
  'all': 'Todos',
  'applied': 'Alterações aplicadas.',
  'apply': 'Aplicar',

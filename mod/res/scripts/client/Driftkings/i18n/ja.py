@@ -1114,7 +1114,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_noSniperDynamic_text': 'スナイパーダイナミック',
                    'UI_setting_noSniperDynamic_tooltip': 'スナイパーモードではダイナミックカメラを無効にします。'}}
 
-PANEL = {'actionFailed': 'アクションは失敗しました。 game.logを参照してください。',
+PANEL = {'applyHint': '変更を適用し、パネルを開いたままにします。一部の設定は画面の再表示、次の戦闘、または再起動が必要です。',
+ 'saveApplyHint': '変更を適用して保存し、パネルを閉じるか再起動を確認します。',
+ 'cancelHint': 'まだ適用されていない変更を破棄します。',
+ 'undoHint': 'まだ適用されていない最後の編集を元に戻します。',
+ 'resetHint': 'このモジュールの初期設定を選択します。適用または保存で確定します。',
+ 'actionFailed': 'アクションは失敗しました。 game.logを参照してください。',
  'all': 'すべて',
  'applied': '変更が適用されました。',
  'apply': '適用',

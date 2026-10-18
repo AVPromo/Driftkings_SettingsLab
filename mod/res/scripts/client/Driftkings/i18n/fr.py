@@ -1278,7 +1278,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_noSniperDynamic_tooltip': 'Désactivez la caméra dynamique en mode tireur '
                                                          "d'élite."}}
 
-PANEL = {'actionFailed': "L'action a échoué. Voir game.log.",
+PANEL = {'applyHint': 'Applique les modifications et garde le panneau ouvert. Certains réglages nécessitent une nouvelle vue, bataille ou un redémarrage.',
+ 'saveApplyHint': 'Applique et enregistre les modifications, puis ferme le panneau ou propose un redémarrage.',
+ 'cancelHint': 'Annule les modifications qui ne sont pas encore appliquées.',
+ 'undoHint': 'Annule la dernière modification qui n’a pas encore été appliquée.',
+ 'resetHint': 'Sélectionne les valeurs par défaut de ce module. Appliquez ou enregistrez pour confirmer.',
+ 'actionFailed': "L'action a échoué. Voir game.log.",
  'all': 'Tous',
  'applied': 'Modifications appliquées.',
  'apply': 'Appliquer',

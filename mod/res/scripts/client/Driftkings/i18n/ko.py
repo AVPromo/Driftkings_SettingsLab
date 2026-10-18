@@ -1120,7 +1120,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_noSniperDynamic_text': '스나이퍼 다이나믹',
                    'UI_setting_noSniperDynamic_tooltip': '스나이퍼 모드에서는 다이내믹 카메라를 비활성화합니다.'}}
 
-PANEL = {'actionFailed': '작업이 실패했습니다. game.log을 참조하세요.',
+PANEL = {'applyHint': '변경 사항을 적용하고 패널을 열어 둡니다. 일부 설정은 화면을 다시 열거나 다음 전투 또는 재시작이 필요합니다.',
+ 'saveApplyHint': '변경 사항을 적용하고 저장한 후 패널을 닫거나 재시작 여부를 확인합니다.',
+ 'cancelHint': '아직 적용되지 않은 변경 사항을 취소합니다.',
+ 'undoHint': '아직 적용되지 않은 마지막 편집을 되돌립니다.',
+ 'resetHint': '이 모듈의 기본값을 선택합니다. 적용하거나 저장하여 확정하세요.',
+ 'actionFailed': '작업이 실패했습니다. game.log을 참조하세요.',
  'all': '모두',
  'applied': '변경사항이 적용되었습니다.',
  'apply': '적용',

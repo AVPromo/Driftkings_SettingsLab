@@ -1261,7 +1261,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_noSniperDynamic_tooltip': 'Deaktivieren Sie die dynamische Kamera im '
                                                          'Scharfschützenmodus.'}}
 
-PANEL = {'actionFailed': 'Die Aktion ist fehlgeschlagen. Siehe game.log.',
+PANEL = {'applyHint': 'Übernimmt Änderungen und lässt das Fenster geöffnet. Manche Einstellungen erfordern eine neue Ansicht, ein neues Gefecht oder einen Neustart.',
+ 'saveApplyHint': 'Übernimmt und speichert Änderungen, schließt dann das Fenster oder fordert einen Neustart an.',
+ 'cancelHint': 'Verwirft Änderungen, die noch nicht übernommen wurden.',
+ 'undoHint': 'Macht die letzte noch nicht übernommene Bearbeitung rückgängig.',
+ 'resetHint': 'Wählt die Standardwerte für dieses Modul. Zum Bestätigen übernehmen oder speichern.',
+ 'actionFailed': 'Die Aktion ist fehlgeschlagen. Siehe game.log.',
  'all': 'Alle',
  'applied': 'Änderungen übernommen.',
  'apply': 'Anwenden',

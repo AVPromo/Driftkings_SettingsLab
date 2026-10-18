@@ -1110,7 +1110,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_noSniperDynamic_text': '狙擊動態',
                    'UI_setting_noSniperDynamic_tooltip': '在狙擊模式下停用動態攝影機。'}}
 
-PANEL = {'actionFailed': '行動失敗了。請參閱game.log。',
+PANEL = {'applyHint': '套用變更並保持面板開啟。部分設定需要重新開啟介面、進入下一場戰鬥或重新啟動遊戲。',
+ 'saveApplyHint': '套用並儲存變更，然後關閉面板或提示重新啟動。',
+ 'cancelHint': '捨棄尚未套用的變更。',
+ 'undoHint': '復原最後一次尚未套用的編輯。',
+ 'resetHint': '選擇此模組的預設設定。套用或儲存以確認。',
+ 'actionFailed': '行動失敗了。請參閱game.log。',
  'all': '全部',
  'applied': '已套用更改。',
  'apply': '套用',

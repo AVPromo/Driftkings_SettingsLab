@@ -1233,7 +1233,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_noSniperDynamic_text': 'Dinamikus mesterlövész kamera',
                    'UI_setting_noSniperDynamic_tooltip': 'A dinamikus kamera letiltása mesterlövész módban.'}}
 
-PANEL = {'actionFailed': 'Az akció meghiúsult. Lásd: game.log.',
+PANEL = {'applyHint': 'Alkalmazza a módosításokat, és nyitva hagyja a panelt. Egyes beállításokhoz új nézet, csata vagy újraindítás szükséges.',
+ 'saveApplyHint': 'Alkalmazza és menti a módosításokat, majd bezárja a panelt vagy újraindítást kér.',
+ 'cancelHint': 'Elveti a még nem alkalmazott módosításokat.',
+ 'undoHint': 'Visszavonja az utolsó, még nem alkalmazott szerkesztést.',
+ 'resetHint': 'Kiválasztja a modul alapértékeit. A megerősítéshez alkalmazd vagy mentsd őket.',
+ 'actionFailed': 'Az akció meghiúsult. Lásd: game.log.',
  'all': 'Összes',
  'applied': 'Változások alkalmazva.',
  'apply': 'Alkalmaz',

@@ -1213,7 +1213,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_noSniperDynamic_text': 'Bắn tỉa năng động',
                    'UI_setting_noSniperDynamic_tooltip': 'Tắt camera động ở chế độ bắn tỉa.'}}
 
-PANEL = {'actionFailed': 'Hành động này không thành công. Xem game.log.',
+PANEL = {'applyHint': 'Áp dụng thay đổi và giữ bảng mở. Một số thiết lập cần mở lại giao diện, vào trận mới hoặc khởi động lại.',
+ 'saveApplyHint': 'Áp dụng và lưu thay đổi, sau đó đóng bảng hoặc yêu cầu khởi động lại.',
+ 'cancelHint': 'Hủy các thay đổi chưa được áp dụng.',
+ 'undoHint': 'Hoàn tác lần chỉnh sửa cuối chưa được áp dụng.',
+ 'resetHint': 'Chọn thiết lập mặc định cho mô-đun này. Áp dụng hoặc lưu để xác nhận.',
+ 'actionFailed': 'Hành động này không thành công. Xem game.log.',
  'all': 'Tất cả',
  'applied': 'Các thay đổi đã được áp dụng.',
  'apply': 'Áp dụng',

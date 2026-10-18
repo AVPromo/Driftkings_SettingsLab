@@ -1262,7 +1262,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_noSniperDynamic_tooltip': 'Desactiva la cámara dinámica en modo '
                                                          'francotirador.'}}
 
-PANEL = {'actionFailed': 'La acción fracasó. Ver game.log.',
+PANEL = {'applyHint': 'Aplica los cambios y mantiene el panel abierto. Algunas opciones requieren una nueva vista, batalla o reinicio.',
+ 'saveApplyHint': 'Aplica y guarda los cambios; después cierra el panel o solicita un reinicio.',
+ 'cancelHint': 'Descarta los cambios que aún no se han aplicado.',
+ 'undoHint': 'Deshace la última edición que aún no se ha aplicado.',
+ 'resetHint': 'Selecciona los valores predeterminados de este módulo. Aplica o guarda para confirmar.',
+ 'actionFailed': 'La acción fracasó. Ver game.log.',
  'all': 'Todos',
  'applied': 'Se aplicaron cambios.',
  'apply': 'Aplicar',

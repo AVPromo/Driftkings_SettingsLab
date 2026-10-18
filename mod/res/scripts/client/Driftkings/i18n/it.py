@@ -1269,7 +1269,12 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                    'UI_setting_noSniperDynamic_tooltip': 'Disabilita la telecamera dinamica in modalità '
                                                          'cecchino.'}}
 
-PANEL = {'actionFailed': "L'azione è fallita. Vedi game.log.",
+PANEL = {'applyHint': 'Applica le modifiche e mantiene il pannello aperto. Alcune opzioni richiedono una nuova schermata, battaglia o un riavvio.',
+ 'saveApplyHint': 'Applica e salva le modifiche, poi chiude il pannello o richiede un riavvio.',
+ 'cancelHint': 'Annulla le modifiche non ancora applicate.',
+ 'undoHint': 'Annulla l’ultima modifica non ancora applicata.',
+ 'resetHint': 'Seleziona i valori predefiniti di questo modulo. Applica o salva per confermare.',
+ 'actionFailed': "L'azione è fallita. Vedi game.log.",
  'all': 'Tutti',
  'applied': 'Modifiche applicate.',
  'apply': 'Applica',
