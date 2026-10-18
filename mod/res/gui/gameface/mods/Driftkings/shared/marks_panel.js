@@ -16,11 +16,20 @@
     function style(element, key, value) { if (element.style[key] !== value) { element.style[key] = value; } }
     function show(element, visible) { style(element, 'display', visible ? '' : 'none'); }
     function number(value, fallback) { return typeof value === 'number' && isFinite(value) ? value : fallback; }
+    var locale = {decimal: '.', group: ','};
+    function setLocale(cfg) {
+        locale.decimal = cfg && typeof cfg.decimalSeparator === 'string' && cfg.decimalSeparator ? cfg.decimalSeparator : '.';
+        locale.group = cfg && typeof cfg.groupSeparator === 'string' ? cfg.groupSeparator : ',';
+    }
     function formatted(value, precision) {
         if (typeof value !== 'number' || !isFinite(value)) { return '\u2014'; }
-        return precision === undefined ? Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : value.toFixed(precision);
+        var parts = (precision === undefined ? Math.round(value).toString() : value.toFixed(precision)).split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, locale.group);
+        return parts.join(locale.decimal);
     }
-    function percent(value) { return typeof value === 'number' && isFinite(value) ? value.toFixed(2) + '%' : '\u2014'; }
+    function percent(value) {
+        return typeof value === 'number' && isFinite(value) ? value.toFixed(2).replace('.', locale.decimal) + '%' : '\u2014';
+    }
     function roman(value) {
         var n = number(value, 0), tiers = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
             'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX'];
@@ -48,7 +57,7 @@
             element: area,
             draw: function (samples) {
                 // The size is part of the signature: segments are laid out in pixels, so a width change must redraw.
-                var signature = JSON.stringify(samples || []) + '|' + area.clientWidth + 'x' + area.clientHeight;
+                var signature = JSON.stringify(samples || []) + '|' + area.clientWidth + 'x' + area.clientHeight + '|' + locale.decimal + '|' + locale.group;
                 if (signature === previous) { return; }
                 previous = signature;
                 var valid = (samples || []).filter(function (p) { return typeof p.battles === 'number' && isFinite(p.battles) && typeof p.percent === 'number' && isFinite(p.percent); });
@@ -255,6 +264,6 @@
         return accent;
     }
     window.__dkMarksKit = {node:node, text:text, style:style, show:show, number:number,
-        formatted:formatted, percent:percent, roman:roman, label:label, stars:stars, updateStars:updateStars,
+        setLocale:setLocale, formatted:formatted, percent:percent, roman:roman, label:label, stars:stars, updateStars:updateStars,
         graph:graph, scale:scale, connect:connect, position:position, savedPosition:savedPosition, theme:theme};
 }());

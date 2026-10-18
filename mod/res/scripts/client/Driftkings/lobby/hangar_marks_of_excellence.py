@@ -358,10 +358,10 @@ class MarksOnGunData(object):
             'estimate': '~' + self._format_int(target['estimate']) if target['estimate'] is not None else '--',
             'mastery': config.i18n['UI_panel_mastery%s' % mastery] if mastery else '--',
             'masteryIcon': 'coui://' + icon if icon else '',
-            'wn8': self._format_int(data['wn8']) if data['wn8'] else '--',
+            'wn8': self._format_int(data['wn8']).replace(' ', result['config']['groupSeparator']) if data['wn8'] else '--',
             'wn8Color': data['wn8Color'], 'winRateColor': data['winRateColor'],
-            'winRate': ('%.2f%%' % data['winRate']) if data['battles'] else '--',
-            'battles': self._format_int(data['battles'])
+            'winRate': ('%.2f%%' % data['winRate']).replace('.', result['config']['decimalSeparator']) if data['battles'] else '--',
+            'battles': self._format_int(data['battles']).replace(' ', result['config']['groupSeparator'])
         })
         result['milestone'] = milestone_model(data['damageRating'], data['earnedMarks'])
         if result['milestone']['completed']:

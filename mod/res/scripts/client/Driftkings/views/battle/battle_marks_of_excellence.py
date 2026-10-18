@@ -9,7 +9,7 @@ from Driftkings.core.marks_state import marks_state
 from Driftkings.core.hud_visibility import hudVisibility
 from Driftkings.settings.service import settings_service
 from Driftkings.views.hangar.common import publish_card
-from Driftkings.views.marks_model import finite
+from Driftkings.views.marks_model import finite, number_locale
 
 LOG = logging.getLogger('Driftkings.MarksOnGunBattle')
 FEATURE = 'DriftkingsMarksOnGunBattle'
@@ -209,9 +209,13 @@ class BattleMarksAdapter(object):
             config['backgroundOpacity'] = 0
         config['showTargetDamage'] = bool(config.get('showTargetDamage', True) and settings.get('showTargets', True))
         config['showRequiredDamage'] = bool(config.get('showRequiredDamage', True) and settings.get('showTargets', True))
+        config.update(number_locale(_component().config.lang))
         enabled = bool(self.active and self.visible and self.hudVisible and settings[GLOBAL.ENABLED]
                        and config.get('enabled', True) and config.get('visible', True))
         payload = marks_state.snapshot('battle')
+        if payload.get('trend'):
+            payload['trend'] = dict(payload['trend'])
+            payload['trend']['text'] = payload['trend']['text'].replace('.', config['decimalSeparator'])
         payload.update(config=config,
                        labels=dict((key[7:], value) for key, value in _component().config.i18n.items() if key.startswith('UI_mog_')))
         payload['labels']['title'] = _component().config.i18n['UI_description']

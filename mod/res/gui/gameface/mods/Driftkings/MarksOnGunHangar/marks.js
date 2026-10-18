@@ -23,6 +23,7 @@
     function render(data, resized) {
         var cfg=data.config||{}, milestone=data.milestone||{}, valid=data.state==='data' && (data.target||{}).eligible;
         root.className='dk-mog dk-mog--full'+(cfg.compactMode?' dk-mog--dense':'')+(valid?'':' dk-mog--empty');
+        K.setLocale(cfg);
         K.style(root,'zIndex','10000');
         K.style(root,'pointerEvents','auto');
         K.style(header,'cursor',cfg.locked?'default':'move');

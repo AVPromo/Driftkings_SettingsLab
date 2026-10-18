@@ -1,6 +1,19 @@
 # -*- coding: utf-8 -*-
 """Presentation only: receives calculated MoE values, never acquires game data."""
 import math
+from Driftkings.locale_support import language_code
+
+
+def number_locale(language):
+    """Number presentation for the same supported language as the panel labels."""
+    code = language_code(language)
+    if code in ('de', 'es', 'it', 'tr', 'vi'):
+        decimal, group = ',', '.'
+    elif code in ('cs', 'fr', 'hu', 'pl', 'pt', 'ru', 'uk'):
+        decimal, group = ',', u'\u00a0'
+    else:
+        decimal, group = '.', ','
+    return {'decimalSeparator': decimal, 'groupSeparator': group}
 
 def finite(value, default=None):
     try:

@@ -23,6 +23,7 @@
         var interactive=cfg.draggable===true && cfg.locked===false;
         root.className='dk-mog dk-mog--compact'+(mini?' dk-mog--mini':'')+(valid?'':' dk-mog--empty')+(interactive?' dk-mog--unlocked':'');
         var accent=K.theme(root,cfg,true,mini?400:650);
+        K.setLocale(cfg);
         K.style(root,'zIndex','10000');
         K.style(root,'pointerEvents',interactive?'auto':'none');
         K.style(root.firstChild,'pointerEvents',interactive?'auto':'none');

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from Driftkings._constants import GLOBAL, HANGAR_MARKS_OF_EXCELLENCE
 """Presentation adapter for MarksOnGunHangar; gameplay state stays in its component."""
+from Driftkings.views.marks_model import number_locale
 from Driftkings.settings.service import settings_service, affects
 from Driftkings.common import getStatisticColor
 import weakref
@@ -29,6 +30,7 @@ def get_view_config(config):
     scale = settings.get(HANGAR_MARKS_OF_EXCELLENCE.COLOR_RATING, 0)
     for level in (65, 85, 95):
         panel['starColor%s' % level] = getStatisticColor('mog', level, scale)
+    panel.update(number_locale(config.lang))
     return panel
 
 
