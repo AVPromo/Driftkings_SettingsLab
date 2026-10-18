@@ -1,0 +1,304 @@
+"""Pure build/contract tests. No game process, network, Inno or Windows required."""
+import builtins
+import copy
+import hashlib
+import io
+import json
+from pathlib import Path
+import shutil
+import struct
+import sys
+import tempfile
+import types
+import unittest
+import zipfile
+import zlib
+import binascii
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from build_tools.build_installer import definitions, generate_components, partial_choices, prepare_payload
+from build_tools.generate_ui_catalog import installer_catalog
+from build_tools.validate_build_data import build_plan
+from build_tools.validate_installer_assets import validate, validate_png, inventory_limit
+from build_tools.modpack import create as create_modpack
+
+
+def png():
+    def chunk(name, data):
+        return struct.pack('>I', len(data)) + name + data + struct.pack('>I', binascii.crc32(name + data) & 0xffffffff)
+    return (b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', 1, 1, 8, 6, 0, 0, 0)) +
+            chunk(b'IDAT', zlib.compress(b'\x00\xff\xff\xff\xff')) + chunk(b'IEND', b''))
+
+
+class GeneratorTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        for relative in ('res/configs/Driftkings', 'installer/setup'):
+            shutil.copytree(ROOT / relative, self.root / relative)
+        for relative in ('build_data/build_config.json', 'build_data/components.json',
+                         'mod/res/scripts/client/Driftkings/_constants.py',
+                         'mod/res/scripts/client/Driftkings/i18n/en.py', 'mod/res/scripts/client/Driftkings/i18n/pt.py'):
+            path = self.root / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(ROOT / relative, path)
+
+    def test_every_top_level_enabled_has_translated_labels_group_and_real_path(self):
+        choices = installer_catalog(self.root)
+        expected = {path.stem for path in (self.root / 'res/configs/Driftkings/default').glob('*.json')
+                    if 'enabled' in json.loads(path.read_text())}
+        self.assertEqual({entry['key'] for entry in choices}, expected)
+        self.assertNotIn('sound_bank_loader', expected)
+        for entry in choices:
+            self.assertTrue((self.root / 'res/configs/Driftkings' / entry['file']).is_file())
+            for lang in ('en', 'pt'):
+                self.assertTrue(entry['labels'][lang])
+                self.assertTrue(entry['descriptions'][lang])
+                self.assertTrue(entry['group_labels'][lang])
+
+    def test_missing_label_fails_instead_of_using_internal_name(self):
+        path = self.root / 'mod/res/scripts/client/Driftkings/i18n/pt.py'
+        text = path.read_text(encoding='utf-8')
+        # Remove the actual first description; leave a valid catalog document.
+        import re
+        text, count = re.subn(r"('UI_description':\s*)[^\n]+", r"\1'',", text, count=1)
+        self.assertEqual(count, 1)
+        path.write_text(text, encoding='utf-8')
+        # The first section may not be an enabled choice, so remove all descriptions.
+        text = re.sub(r"('UI_description':\s*)[^\n]+", r"\1'',", text)
+        path.write_text(text, encoding='utf-8')
+        with self.assertRaisesRegex(ValueError, 'Missing installer label'):
+            installer_catalog(self.root)
+
+    def test_generated_pascal_names_match_real_json_and_choices_are_not_payload_conditions(self):
+        out = self.root / 'generated'
+        components, options, presets = generate_components(self.root, out)
+        script = (out / 'components.generated.iss').read_text(encoding='utf-8-sig')
+        self.assertEqual(len(presets), 0)
+        self.assertEqual([(entry['component'], entry['key']) for entry in options], [('sixth_sense_alert', 'userSound')])
+        for entry in components:
+            self.assertIn('Name: "' + entry['group'] + '\\' + entry['key'] + '"', script)
+            self.assertIn("'" + entry['file'].replace('/', '\\') + "'", script)
+        self.assertIn('function ChoiceSelected', script)
+        self.assertIn('WizardIsTaskSelected', script)
+        self.assertNotIn('Source:', script)
+        self.assertNotIn('Source:', (out / 'previews.generated.iss').read_text(encoding='utf-8-sig'))
+        first = (out / 'components.generated.iss').read_bytes()
+        generate_components(self.root, out)
+        self.assertEqual((out / 'components.generated.iss').read_bytes(), first)
+
+    def test_recommended_and_two_disabled_choices_only_generate_minimal_differences(self):
+        components, options, _ = definitions(self.root)
+        selected = {entry['key'] for entry in components if entry['default']}
+        extras = {entry['component'] + '_' + entry['key'] for entry in options if entry['default']}
+        self.assertEqual(partial_choices(components, options, selected, extras), {})
+        selected.difference_update(('clan_reward_collection', 'game_log_manager'))
+        self.assertEqual(partial_choices(components, options, selected, extras), {
+            'default/clan_reward_collection.json': {'enabled': False}, 'default/game_log_manager.json': {'enabled': False}})
+        selected.add('sixth_sense_alert')
+        documents = partial_choices(components, options, selected, set())
+        self.assertEqual(documents['default/sixth_sense_alert.json'], {'userSound': False})
+
+    def test_optional_preview_and_branding_are_detected_without_a_second_component_list(self):
+        preview = self.root / 'installer/setup/assets/previews/clan_reward_collection.png'
+        preview.write_bytes(png())
+        branding = self.root / 'installer/setup/assets/branding/wizard-large.png'
+        branding.write_bytes(png())
+        out = self.root / 'generated'
+        generate_components(self.root, out)
+        self.assertIn('preview_clan_reward_collection.png', (out / 'previews.generated.iss').read_text(encoding='utf-8-sig'))
+        self.assertIn('WizardImageFile=', (out / 'branding.generated.iss').read_text(encoding='utf-8-sig'))
+        self.assertNotIn('SetupIconFile=', (out / 'branding.generated.iss').read_text(encoding='utf-8-sig'))
+
+    def test_declarative_options_and_presets_reject_unknown_or_non_boolean_keys(self):
+        path = self.root / 'installer/setup/options.json'
+        value = json.loads(path.read_text())
+        value['options'][0]['key'] = 'sixthSenseSound'
+        path.write_text(json.dumps(value))
+        with self.assertRaisesRegex(ValueError, 'not a boolean'):
+            definitions(self.root)
+        value['options'][0]['key'] = 'userSound'
+        path.write_text(json.dumps(value))
+        path = self.root / 'installer/setup/presets.json'
+        path.write_text(json.dumps({'presets': [{'key': 'owner_choice', 'labels': {'en': 'Owner choice', 'pt': 'Escolha do autor'},
+                                                'disabled': ['clan_reward_collection']}]}))
+        components, options, presets = generate_components(self.root, self.root / 'generated')
+        self.assertEqual(presets[0]['disabled'], ['clan_reward_collection'])
+        script = (self.root / 'generated/components.generated.iss').read_text(encoding='utf-8-sig')
+        line = next(line for line in script.splitlines() if 'Name: "hangar\\clan_reward_collection"' in line)
+        self.assertNotIn('owner_choice', line)
+        path.write_text(json.dumps({'presets': [{'key': 'bad', 'labels': {'en': 'Bad', 'pt': 'Inválido'}, 'disabled': ['unknown']}]}))
+        with self.assertRaisesRegex(ValueError, 'Unknown or duplicate disabled'):
+            definitions(self.root)
+
+    def test_missing_artifacts_never_produce_a_payload(self):
+        out = self.root / 'generated'
+        out.mkdir()
+        with self.assertRaises(OSError):
+            prepare_payload(self.root, self.root / 'missing', out)
+        self.assertFalse((out / 'payload.generated.iss').exists())
+
+    def test_payload_is_verified_fixed_and_independent_of_presets(self):
+        artifacts = self.root / 'artifacts'
+        artifacts.mkdir()
+        (artifacts / 'dependencies').mkdir()
+        config = json.loads((self.root / 'build_data/build_config.json').read_text())
+        game = config['game']['version']
+        version = '1.0.0'
+        names = ('Driftkings.wotmod', 'first.wotmod', 'second.wotmod')
+        defaults = io.BytesIO()
+        with zipfile.ZipFile(defaults, 'w') as archive:
+            archive.writestr('mods/configs/Driftkings/default/example.json', b'{}')
+        distribution = artifacts / ('Driftkings-%s-WoT-%s.zip' % (version, game))
+        with zipfile.ZipFile(distribution, 'w') as archive:
+            for name in names:
+                data = name.encode('ascii')
+                source = artifacts / ('' if name == names[0] else 'dependencies') / name
+                source.write_bytes(data)
+                archive.writestr('mods/' + game + '/' + name, data)
+            archive.writestr('INSTALL.txt', b'instructions')
+            archive.writestr('Driftkings-defaults.zip', defaults.getvalue())
+        modpack = create_modpack(artifacts, version, 'stable', game, {'mods/configs/Driftkings/default/example.json': b'{}'})
+        code = (artifacts / names[0]).read_bytes()
+        manifest = dict(version=version, channel='stable', gameVersion=game, size=len(code), sha256=hashlib.sha256(code).hexdigest(),
+                        schema=2, modpack=modpack)
+        (artifacts / 'release.json').write_text(json.dumps(manifest))
+        (artifacts / 'modpack.json').write_text(json.dumps(modpack))
+        inputs = {path.relative_to(self.root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+                  for path in (self.root / 'res/configs/Driftkings').rglob('*.json')}
+        (artifacts / 'build-report.json').write_text(json.dumps(dict(status='success', version=version, realm=config['game']['realm'], inputs=inputs)))
+        out = self.root / 'generated'
+        generate_components(self.root, out)
+        prepare_payload(self.root, artifacts, out)
+        payload = (out / 'payload.generated.iss').read_bytes()
+        script = payload.decode('utf-8-sig')
+        self.assertEqual(script.count('Source:'), 3)
+        self.assertNotIn('Components:', script)
+        self.assertNotIn('Tasks:', script)
+        self.assertIn('onlyifdoesntexist', script)
+        self.assertIn('ExistingDependenciesError', script)
+        self.assertIn('VerifyInstalledPayload', script)
+        self.assertNotIn('.bnk', script)
+        (self.root / 'installer/setup/presets.json').write_text(json.dumps({'presets': [{
+            'key': 'owner_choice', 'labels': {'en': 'Owner', 'pt': 'Autor'}, 'disabled': ['clan_reward_collection']}]}))
+        generate_components(self.root, out)
+        prepare_payload(self.root, artifacts, out)
+        self.assertEqual((out / 'payload.generated.iss').read_bytes(), payload)
+        (artifacts / 'dependencies/first.wotmod').write_bytes(b'changed')
+        with self.assertRaisesRegex(ValueError, 'Invalid installer payload'):
+            prepare_payload(self.root, artifacts, out)
+
+    def test_runtime_loader_merges_partial_file_without_rewriting_it(self):
+        client = ROOT / 'mod/res/scripts/client/Driftkings'
+        def load(relative, dependencies=None):
+            dependencies = dependencies or {}
+            def importing(name, globals=None, locals=None, fromlist=(), level=0):
+                return dependencies[name] if name in dependencies else builtins.__import__(name, globals, locals, fromlist, level)
+            namespace = {'__name__': '_installer_test', '__builtins__': dict(vars(builtins), __import__=importing)}
+            eval(compile((client / relative).read_bytes(), str(client / relative), 'exec'), namespace)
+            return types.SimpleNamespace(**{key: value for key, value in namespace.items() if not key.startswith('__')})
+        store = load('settings/store.py')
+        sections = load('settings/sections.py')
+        loader = load('settings/loader.py', {
+            'Driftkings.settings.settings_data': types.SimpleNamespace(SettingsData=object, user_settings={}, part_name=lambda value: value),
+            'Driftkings.settings.default_values': types.SimpleNamespace(SELECTOR={'loadConfig': 'default'}),
+            'Driftkings.settings.sections': sections, 'Driftkings.settings.store': store})
+        folder = self.root / 'profile'
+        (folder / 'default').mkdir(parents=True)
+        path = folder / 'default/clan_reward_collection.json'
+        original = b'{"enabled": false}'
+        path.write_bytes(original)
+        (folder / 'load.json').write_text('{"loadConfig":"default"}')
+        defaults = json.loads((ROOT / 'res/configs/Driftkings/default/clan_reward_collection.json').read_text())
+        value = loader.SettingsLoader(str(folder), settings=object()).load('clan_reward_collection', defaults)
+        expected = copy.deepcopy(defaults)
+        expected['enabled'] = False
+        self.assertEqual(value, expected)
+        self.assertEqual(path.read_bytes(), original)
+
+
+class AssetTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.assets = build_plan(ROOT)['assets']
+
+    def test_current_assets_and_optional_branding_warnings(self):
+        report = validate(ROOT, self.assets)
+        self.assertGreaterEqual(report['banks'], 1)
+        self.assertGreaterEqual(report['icons'], 10)
+        for name in ('setup-icon.ico', 'wizard-large.bmp', 'wizard-small.bmp'):
+            if not (ROOT / 'installer/setup/assets/branding' / name).exists() and not (ROOT / 'installer/setup/assets/branding' / name.replace('.bmp', '.png')).exists():
+                self.assertTrue(any(name in warning for warning in report['warnings']))
+
+    def fixture(self):
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        root = Path(temp.name)
+        path = root / 'mod/res/scripts/client/Driftkings/core/updater/inventory.py'
+        path.parent.mkdir(parents=True)
+        shutil.copy2(ROOT / path.relative_to(root), path)
+        audio = root / 'mod/res/audioww'
+        audio.mkdir(parents=True)
+        return root, audio
+
+    def test_missing_or_unlisted_xml_and_unpacked_banks_fail(self):
+        root, audio = self.fixture()
+        (audio / 'new.bnk').write_bytes(b'bank')
+        assets = [{'source': 'mod/res/audioww/new.' + ext} for ext in ('bnk', 'xml')]
+        with self.assertRaisesRegex(ValueError, 'Missing bank XML'):
+            validate(root, assets)
+        xml = audio / 'new.xml'
+        xml.write_text('<audio_mods.xml><loadBanks/></audio_mods.xml>')
+        with self.assertRaisesRegex(ValueError, 'missing from loadBanks'):
+            validate(root, assets)
+        xml.write_text('<audio_mods.xml><loadBanks><bank><name>new.bnk</name></bank></loadBanks></audio_mods.xml>')
+        self.assertEqual(validate(root, assets)['banks'], 1)
+        with self.assertRaisesRegex(ValueError, 'not declared'):
+            validate(root, assets[:1])
+        (audio / 'new.bnk').unlink()
+        with self.assertRaisesRegex(ValueError, 'Orphan bank XML'):
+            validate(root, assets)
+
+    def test_source_project_is_not_a_distribution_payload(self):
+        with self.assertRaisesRegex(ValueError, 'Wwise source project'):
+            validate(ROOT, [{'source': 'res/sound_bank_wwise/source.bnk'}])
+
+    def test_bank_size_uses_the_inventory_limit(self):
+        root, audio = self.fixture()
+        path = root / 'mod/res/scripts/client/Driftkings/core/updater/inventory.py'
+        text = path.read_text(encoding='utf-8').replace('MAX_FILE = 64 * 1024 * 1024', 'MAX_FILE = 3')
+        path.write_text(text, encoding='utf-8')
+        (audio / 'new.bnk').write_bytes(b'1234')
+        (audio / 'new.xml').write_text('<audio_mods.xml/>')
+        with self.assertRaisesRegex(ValueError, 'inventory limit'):
+            validate(root, [{'source': 'mod/res/audioww/new.' + ext} for ext in ('bnk', 'xml')])
+
+    def test_png_crc_truncation_and_size_limit(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / 'icon.png'
+            path.write_bytes(png())
+            self.assertEqual(validate_png(path, inventory_limit(ROOT)), (1, 1))
+            with self.assertRaises(ValueError):
+                validate_png(path, 20)
+            raw = bytearray(png())
+            raw[20] ^= 1
+            for data in (bytes(raw), png()[:-1], b'not a png'):
+                path.write_bytes(data)
+                with self.assertRaises(ValueError):
+                    validate_png(path, inventory_limit(ROOT))
+
+    def test_documentation_is_excluded_and_no_loose_media_are_installed(self):
+        self.assertFalse(any(entry['source'].endswith('/README.md') for entry in self.assets))
+        script = (ROOT / 'installer/setup/Driftkings.iss').read_text(encoding='utf-8')
+        code = (ROOT / 'installer/setup/wizard.iss').read_text(encoding='utf-8')
+        self.assertIn('components.generated.iss', script)
+        self.assertIn('payload.generated.iss', script)
+        self.assertNotIn('Source:', script)
+        self.assertIn('if not PreserveProfile then ApplyConfiguration', code)
+        self.assertIn('uninsneveruninstall', script)
+        self.assertNotIn('DelTree', code)
+        self.assertLess(code.index('Configuration backup failed'), code.index('if not DeleteFile(ConfigRoot'))

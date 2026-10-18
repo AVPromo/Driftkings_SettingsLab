@@ -28,6 +28,10 @@ jobs:
         run: python build_tools/validate_build_data.py
       - name: Validate locale catalogs
         run: python build_tools/validate_locales.py
+      - name: Test installer generation and packaged media
+        run: python -m unittest discover -s tests/installer -p 'test_*.py'
+      - name: Generate installer component contract
+        run: python build_tools/build_installer.py
       - name: Check generated defaults are in sync
         run: python build_tools/generate_defaults.py --check
       - name: Validate JSON resources and manifests

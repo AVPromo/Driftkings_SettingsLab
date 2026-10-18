@@ -1,0 +1,9 @@
+{
+  "options": [
+    {
+      "component": "sixth_sense_alert",
+      "key": "userSound",
+      "label_key": "UI_setting_userSound_text"
+    }
+  ]
+}

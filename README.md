@@ -41,6 +41,10 @@ Available behavior depends on configuration, vehicle and game mode.
 
 The defaults are the author's selected mod configurations. Existing personal JSON files take precedence. The in-game updater preserves those configurations; missing settings use packaged defaults.
 
+An optional Windows installer is built from the same compiler output; see [installer/setup/README.md](installer/setup/README.md). Its 28 component choices change JSON configuration only, never the installed WOTMOD/dependency set. Existing profiles are preserved on reinstall. Explicit `/RESETCONFIG=1` backs up configurations before resetting them. Branding and component previews are optional and can be added later.
+
+The installer creates user-media folders `mods/configs/Driftkings/SixthSense/` (default custom icon: `SixthSenseIcon.png`) and `mods/configs/Driftkings/images/`, with short READMEs. Uninstall preserves these folders and their contents. Images accept packaged `gui/maps/Driftkings/...` resources or custom files in `mods/configs/Driftkings/...`; select the paths in the mod settings. These user files are not optional installer payloads.
+
 ## Compatibility and beta status
 
 Designed for Wargaming EU, NA and ASIA clients; Mir Tankov/RU is outside scope. This beta was checked locally on EU 2.4.1.0, including normal startup and a battle replay. Other realms and every feature have not been fully validated in-game. MarksOnGun panel dragging was confirmed on NA in the hangar and battle replay; complete mark estimates still need live-battle validation. A complete update through the in-game updater remains to be validated.

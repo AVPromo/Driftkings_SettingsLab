@@ -12,11 +12,13 @@ try:
     from .validate_locales import validate_catalogs
     from .generate_defaults import check_generated as check_default_values, defaults_sha256
     from .generate_ui_catalog import validate as validate_ui_catalog
+    from .validate_installer_assets import validate as validate_installer_assets
 except ImportError:
     from components import read_components
     from validate_locales import validate_catalogs
     from generate_defaults import check_generated as check_default_values, defaults_sha256
     from generate_ui_catalog import validate as validate_ui_catalog
+    from validate_installer_assets import validate as validate_installer_assets
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_KEYS = {'schema_version', 'id', 'kind', 'enabled', 'entrypoint', 'config_files', 'assets'}
@@ -173,6 +175,7 @@ def build_plan(root=ROOT, check_generated=False, check_game=False, check_compone
                     plan['assets'].append(item)
         plan['components'].append(manifest)
 
+    plan['warnings'].extend(validate_installer_assets(root, plan['assets'])['warnings'])
     component_list = input_path(python_root, config['python']['component_list'])
     tree = ast.parse(component_list.read_text(encoding='utf-8'))
     current = next(ast.literal_eval(n.value) for n in tree.body if isinstance(n, ast.Assign)

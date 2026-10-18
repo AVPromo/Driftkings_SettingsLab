@@ -24,6 +24,47 @@ def read_catalog(root=ROOT):
             if isinstance(node, ast.Assign) and isinstance(node.targets[0], ast.Name)}
 
 
+def installer_catalog(root=ROOT):
+    """Installer choices come from canonical JSON and the same UI translations."""
+    try:
+        from .components import read_components
+        from .validate_locales import catalog
+    except ImportError:
+        from components import read_components
+        from validate_locales import catalog
+    root = Path(root)
+    config = json.loads((root / 'build_data/build_config.json').read_text(encoding='utf-8'))
+    manifests = {item['id']: item for item in read_components(root, config['components']['source'])}
+    catalogs = {lang: catalog(root / ('mod/res/scripts/client/Driftkings/i18n/' + lang + '.py'))
+                for lang in ('en', 'pt')}
+    choices = []
+    for path in sorted((root / config['defaults']['source_root'] / 'default').glob('*.json')):
+        values = json.loads(path.read_text(encoding='utf-8'))
+        if 'enabled' not in values:
+            continue
+        require(type(values['enabled']) is bool, 'Installer enabled must be boolean: ' + path.stem)
+        spec = manifests.get(path.stem)
+        require(spec is not None and spec['kind'] == 'feature' and spec['enabled'],
+                'Installer section has no enabled feature: ' + path.stem)
+        relative = 'default/' + path.name
+        require(relative in spec['config_files'], 'Installer JSON not declared: ' + relative)
+        prefix = spec['entrypoint'].split('.')[0]
+        group = {'battle': 'battle', 'lobby': 'hangar'}.get(prefix, 'general')
+        labels, descriptions, groups = {}, {}, {}
+        for lang, document in catalogs.items():
+            text = document['TEXT'].get(path.stem, {})
+            label = text.get('UI_description')
+            require(isinstance(label, str) and label.strip(), 'Missing installer label: ' + lang + '/' + path.stem)
+            group_label = document['PANEL'].get('category.' + group)
+            require(isinstance(group_label, str) and group_label.strip(), 'Missing installer group: ' + lang + '/' + group)
+            labels[lang] = label
+            descriptions[lang] = text.get('UI_tooltip') or label
+            groups[lang] = group_label
+        choices.append(dict(key=path.stem, file=relative, default=values['enabled'], group=group,
+                            labels=labels, descriptions=descriptions, group_labels=groups))
+    return choices
+
+
 def asset_target(url):
     require(isinstance(url, str) and url.startswith(PREFIX), 'UI asset must belong to Driftkings: %r' % url)
     relative = url[len('coui://'):]

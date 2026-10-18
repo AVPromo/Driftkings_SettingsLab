@@ -75,8 +75,8 @@ audit_mods/*.json
 previews/*.png
 flash_source/**/obj/
 
-# Bank embedded in the unified package
-!mod/res/audioww/driftkings_sixthsense.bnk
+# Banks embedded in the unified package
+!/mod/res/audioww/*.bnk
 
 # Native helpers and exact WOTMOD staging
 /installer/build/
@@ -111,3 +111,8 @@ htmlcov/
 !/tests/core/
 /tests/core/*
 !/tests/core/*.py
+
+# Build-time installer generation and media validation tests.
+!/tests/installer/
+/tests/installer/*
+!/tests/installer/*.py
