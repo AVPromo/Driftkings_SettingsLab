@@ -23,6 +23,7 @@ package driftkings.utils.tween
 		public var change:Number      = NaN;
 		public var looping:Boolean    = false;
 		private var _timer:Timer      = null;
+		private var disposed:Boolean = false;
 		private var _startTime:Number = NaN;
 		public var prop:String        = "";
 		private var _duration:Number  = NaN;
@@ -46,6 +47,7 @@ package driftkings.utils.tween
 		
 		public function continueTo(finish:Number, duration:Number):void
 		{
+			if (this.disposed) return;
 			this.begin = this.position;
 			this.finish = finish;
 			if (!isNaN(duration))
@@ -57,6 +59,7 @@ package driftkings.utils.tween
 		
 		protected function startTimer():void
 		{
+			if (this.disposed || this._timer == null) return;
 			this._timer.delay = 1000 / this._fps;
 			// Keep the running tween alive until stopTimer removes the listener.
 			this._timer.removeEventListener(TimerEvent.TIMER, this.timerHandler);
@@ -67,12 +70,14 @@ package driftkings.utils.tween
 		
 		public function stop():void
 		{
+			if (this.disposed) return;
 			this.stopTimer();
 			this.dispatchEvent(new TweenEvent(TweenEvent.MOTION_STOP, this._time, this._position));
 		}
 		
 		public function dispose():void
 		{
+			this.disposed = true;
 			this.stopTimer();
 			this._timer = null;
 			this.obj = null;
@@ -105,6 +110,7 @@ package driftkings.utils.tween
 		
 		public function set time(t:Number):void
 		{
+			if (this.disposed) return;
 			this.prevTime = this._time;
 			if (t > this.duration)
 			{
@@ -160,6 +166,7 @@ package driftkings.utils.tween
 		
 		public function setPosition(p:Number):void
 		{
+			if (this.disposed) return;
 			this.prevPos = this._position;
 			if (this.prop.length)
 			{
@@ -170,6 +177,7 @@ package driftkings.utils.tween
 		
 		public function resume():void
 		{
+			if (this.disposed) return;
 			this.fixTime();
 			this.startTimer();
 			this.dispatchEvent(new TweenEvent(TweenEvent.MOTION_RESUME, this._time, this._position));
@@ -177,6 +185,7 @@ package driftkings.utils.tween
 		
 		public function fforward():void
 		{
+			if (this.disposed) return;
 			this.time = this._duration;
 			this.fixTime();
 		}
@@ -188,6 +197,7 @@ package driftkings.utils.tween
 		
 		public function nextFrame():void
 		{
+			if (this.disposed) return;
 			this.time = (getTimer() - this._startTime) / 1000;
 		}
 		
@@ -199,6 +209,7 @@ package driftkings.utils.tween
 		
 		public function rewind(t:Number = 0):void
 		{
+			if (this.disposed) return;
 			this._time = t;
 			this.fixTime();
 			this.update();
@@ -221,6 +232,7 @@ package driftkings.utils.tween
 		
 		public function start():void
 		{
+			if (this.disposed) return;
 			this.rewind();
 			this.startTimer();
 			this.dispatchEvent(new TweenEvent(TweenEvent.MOTION_START, this._time, this._position));

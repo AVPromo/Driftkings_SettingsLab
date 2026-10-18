@@ -39,21 +39,44 @@ package driftkings.utils
             catch (error:Error) { imageFailed(null); }
         }
 
-        /** Accept resource names and the fixed legacy SWF-relative prefix only. */
+        /** Accept mod resources, user images and their fixed SWF-relative prefixes. */
         public static function localImagePath(path:String):String
         {
             if (!path) return null;
             if (path.indexOf("img://") == 0) path = path.substr(6);
+            var root:String;
             if (path.indexOf("gui/maps/Driftkings/") == 0)
+            {
                 path = path.substr("gui/maps/Driftkings/".length);
+                root = "../maps/Driftkings/";
+            }
             else if (path.indexOf("../maps/Driftkings/") == 0)
+            {
                 path = path.substr("../maps/Driftkings/".length);
+                root = "../maps/Driftkings/";
+            }
+            else if (path.indexOf("mods/configs/Driftkings/") == 0)
+            {
+                path = path.substr("mods/configs/Driftkings/".length);
+                root = "../../../mods/configs/Driftkings/";
+            }
+            else if (path.indexOf("../../../mods/configs/Driftkings/") == 0)
+            {
+                path = path.substr("../../../mods/configs/Driftkings/".length);
+                root = "../../../mods/configs/Driftkings/";
+            }
             else return null;
-            // No encoded separators, URL syntax, absolute paths or traversal.
-            if (!path || /[\\:%?#\x00-\x1f\x7f]/.test(path)) return null;
+            // Reject traversal, URL syntax and encoded separators in the tail.
+            if (!validImageTail(path)) return null;
+            return root + path;
+        }
+
+        public static function validImageTail(path:String):Boolean
+        {
+            if (!path || /[\\:%?#\x00-\x1f\x7f]/.test(path)) return false;
             for each (var part:String in path.split("/"))
-                if (!part || part == "." || part == "..") return null;
-            return "../maps/Driftkings/" + path;
+                if (!part || part == "." || part == "..") return false;
+            return true;
         }
 
         private function loaded(event:Event):void

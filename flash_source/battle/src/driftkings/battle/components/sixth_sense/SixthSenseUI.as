@@ -3,6 +3,8 @@ package driftkings.battle.components.sixth_sense
 	import flash.display.*;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
+	import flash.events.SecurityErrorEvent;
+	import driftkings.utils.ImageLoaderComponent;
 	import flash.net.URLRequest;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
@@ -22,6 +24,7 @@ package driftkings.battle.components.sixth_sense
 	public class SixthSenseUI extends BattleDisplayable
 	{
 		private var loader:Loader;
+		private var imageDisposed:Boolean = false;
 		private var params:Object;
 		private var timer:TextExt;
 		private var _container:Sprite;
@@ -49,6 +52,7 @@ package driftkings.battle.components.sixth_sense
 			this.loader = new Loader();
 			this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, this.imageLoaded);
 			this.loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
+			this.loader.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this.onLoadError);
 		}
 
 		override protected function onPopulate():void
@@ -58,22 +62,35 @@ package driftkings.battle.components.sixth_sense
 			this.x = App.appWidth >> 1;
 			this._container = new Sprite()
 			this.addChild(this._container);
-			if (this.params.defaultIcon)
-			{
-				this.loader.load(new URLRequest('../../gui/maps/icons/SixthSense/' + this.params.defaultIconName + '.png'));
-			}
-			else
-			{
-				this.loader.load(new URLRequest('../../../' + this.params.userIcon));
-			}
+            var path:String;
+            if (this.params.defaultIcon)
+            {
+                var name:String = String(this.params.defaultIconName);
+                if (ImageLoaderComponent.validImageTail(name) && name.indexOf("/") < 0)
+                    path = '../../gui/maps/icons/SixthSense/' + name + '.png';
+            }
+            else
+            {
+                path = ImageLoaderComponent.localImagePath(String(this.params.userIcon));
+            }
+            if (path == null)
+            {
+                this.onLoadError(null);
+                return;
+            }
+            try { this.loader.load(new URLRequest(path)); }
+            catch (error:Error) { this.onLoadError(null); }
 		}
 
 		override protected function onBeforeDispose():void
 		{
+			this.imageDisposed = true;
 			super.onBeforeDispose();
 			this.clearTimers();
 			this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, this.imageLoaded);
 			this.loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
+			this.loader.contentLoaderInfo.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, this.onLoadError);
+			Utils.safeUnload(this.loader);
 			this.loader = null;
 			if (this.hideAnimation)
 			{
@@ -239,15 +256,17 @@ package driftkings.battle.components.sixth_sense
 			}
 		}
 
-		private function onLoadError(e:IOErrorEvent):void
+		private function onLoadError(e:Event):void
 		{
-			this.loader.close();
+			if (this.imageDisposed || !this.loader) return;
+			Utils.safeUnload(this.loader);
 			this._image = new DefaultIcon() as Bitmap;
 			this.updateParams();
 		}
 
 		private function imageLoaded(e:Event):void
 		{
+			if (this.imageDisposed || !this.loader) return;
 			this._image = this.loader.content as Bitmap;
 			this.updateParams();
             if (this.onIconReady != null) this.onIconReady();

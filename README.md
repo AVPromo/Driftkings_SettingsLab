@@ -75,6 +75,10 @@ The current build contract uses the (EU, NA) installation as its resource source
 
 The next beta introduces descriptive module and configuration names, with migration for existing profiles.
 
+## Image paths in the next beta
+
+Overlay images and custom Sixth Sense icons accept `gui/maps/Driftkings/...` resources or user files in `mods/configs/Driftkings/...`, including their fixed SWF-relative forms. `img://` prefixes remain supported. Move custom images from other folders into `mods/configs/Driftkings/` and update their configuration paths. External URLs, absolute paths and directory traversal are rejected; overlays use their configured alternative image, and Sixth Sense uses its embedded fallback icon when loading fails.
+
 ## Support and credits
 
 [Report an issue](https://github.com/dkruben/Driftkings_SettingsLab/issues) with the mod version, game version/realm, reproduction steps and relevant `game.log` excerpts. Remove personal information before sharing logs.
