@@ -341,6 +341,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
             'UI_native_save': 'บันทึกและนำไปใช้',
             'UI_native_saved': 'บันทึกการตั้งค่าแล้ว'},
  'crew_management': {
+    'UI_setting_showBarracksProgression_text': u'ความคืบหน้าการฝึกพลรถในค่ายทหาร',
     'UI_setting_showCrewDetails_text': u'แสดงความคืบหน้าในประวัติส่วนตัว',
     'UI_setting_showCrewTooltips_text': u'แสดงความคืบหน้าในคำแนะนำพลรถ',
     'UI_crew_totalXP': u'XP การฝึกรวม: {xp}',

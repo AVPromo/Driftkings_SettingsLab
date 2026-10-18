@@ -125,6 +125,20 @@
       "additional_sources": [
         "installer/source/ExitWork.cs"
       ]
+    },
+    "crew_barracks_bridge": {
+      "kind": "gameface_patch",
+      "resource": "gui/gameface/_dist/production/lobby/crew/BarracksView/BarracksView.js",
+      "game_packages": [
+        "res/packages/gui-part1.pkg",
+        "res/packages/gui-part2.pkg",
+        "res/packages/gui-part3.pkg",
+        "res/packages/gui-part4.pkg"
+      ],
+      "output": "build/gameface/crew/BarracksView.js",
+      "implementation": "replace_exact",
+      "required": true,
+      "patch_file": "build_data/patches/crew_barracks_2.4.1.json"
     }
   }
 }

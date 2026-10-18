@@ -350,6 +350,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
             'UI_native_save': 'Save',
             'UI_native_saved': 'Settings saved'},
  'crew_management': {
+    'UI_setting_showBarracksProgression_text': u'Crew progression in the barracks',
     'UI_setting_showCrewDetails_text': u'Progression in the personal file',
     'UI_setting_showCrewTooltips_text': u'Progression in crew tooltips',
     'UI_crew_totalXP': u'Total training XP: {xp}',

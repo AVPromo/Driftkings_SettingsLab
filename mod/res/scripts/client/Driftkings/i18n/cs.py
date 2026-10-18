@@ -351,6 +351,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
             'UI_native_save': 'Uložit',
             'UI_native_saved': 'Nastavení uloženo'},
  'crew_management': {
+    'UI_setting_showBarracksProgression_text': u'Postup posádky v kasárnách',
     'UI_setting_showCrewDetails_text': u'Postup v osobním záznamu',
     'UI_setting_showCrewTooltips_text': u'Postup v nápovědě posádky',
     'UI_crew_totalXP': u'Celkové ZK výcviku: {xp}',

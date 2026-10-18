@@ -351,6 +351,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
             'UI_native_save': 'Zapisz',
             'UI_native_saved': 'Zapisano ustawienia'},
  'crew_management': {
+    'UI_setting_showBarracksProgression_text': u'Postęp załogi w koszarach',
     'UI_setting_showCrewDetails_text': u'Postęp w aktach osobowych',
     'UI_setting_showCrewTooltips_text': u'Postęp w podpowiedziach załogi',
     'UI_crew_totalXP': u'Łączne PD szkolenia: {xp}',

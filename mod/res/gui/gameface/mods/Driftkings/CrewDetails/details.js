@@ -23,6 +23,22 @@
         viewEnv.removeDataChangedCallback(bindings[id].callback, bindings[id].id);
         delete bindings[id];
     }
+    function mount(host, data) {
+        if (!host) { return; }
+        for (var k = mounted.length - 1; k >= 0; k--) {
+            if (mounted[k].parentNode === host) { host.removeChild(mounted[k]); mounted.splice(k, 1); }
+        }
+        var box = document.createElement('div'); box.className = 'dk-crew-details dk-crew-details--' + data.surface;
+        if (data.title) {
+            var title = document.createElement('div'); title.className = 'dk-crew-details__title';
+            title.textContent = data.title; box.appendChild(title);
+        }
+        (data.lines || []).forEach(function (value) {
+            var line = document.createElement('div'); line.className = 'dk-crew-details__line';
+            line.textContent = value; box.appendChild(line);
+        });
+        host.appendChild(box); mounted.push(box);
+    }
     function render() {
         pending = null;
         if (disposed) { return; }
@@ -42,21 +58,19 @@
                 binding.signature = model.payload;
                 try { binding.data = JSON.parse(model.payload || '{}'); } catch (error) { binding.data = {}; }
             }
-            var data = binding.data, selector = targets[data.surface];
+            var data = binding.data, selector = data.surface === 'barracks' ? '[data-dk-barracks-id]' : targets[data.surface];
             if (!(data.config || {}).visible || !selector) { return; }
-            var host = document.querySelector(selector);
-            if (!host) { return; }
-            for (var k = mounted.length - 1; k >= 0; k--) {
-                if (mounted[k].parentNode === host) { host.removeChild(mounted[k]); mounted.splice(k, 1); }
+            if (data.surface === 'barracks') {
+                var cards = document.querySelectorAll('[data-dk-barracks-kind="tankman"][data-dk-barracks-id]');
+                var rows = {};
+                (data.rows || []).forEach(function (row) { rows[String(row.id)] = row; });
+                Array.prototype.forEach.call(cards, function (card) {
+                    var row = rows[card.getAttribute('data-dk-barracks-id')];
+                    if (row) { mount(card, {surface: 'barracks', lines: row.lines}); }
+                });
+                return;
             }
-            var box = document.createElement('div'); box.className = 'dk-crew-details dk-crew-details--' + data.surface;
-            var title = document.createElement('div'); title.className = 'dk-crew-details__title';
-            title.textContent = data.title || ''; box.appendChild(title);
-            (data.lines || []).forEach(function (value) {
-                var line = document.createElement('div'); line.className = 'dk-crew-details__line';
-                line.textContent = value; box.appendChild(line);
-            });
-            host.appendChild(box); mounted.push(box);
+            mount(document.querySelector(selector), data);
         });
         Object.keys(bindings).forEach(function (id) { if (!present[id]) { release(id); } });
     }
@@ -64,6 +78,7 @@
     function mutations(records) {
         for (var i = 0; i < records.length; i++) {
             if (owned(records[i].target)) { continue; }
+            if (records[i].type === 'attributes') { schedule(); return; }
             var nodes = Array.prototype.slice.call(records[i].addedNodes).concat(Array.prototype.slice.call(records[i].removedNodes));
             for (var j = 0; j < nodes.length; j++) {
                 if (!owned(nodes[j])) { schedule(); return; }
@@ -87,7 +102,7 @@
         window.addEventListener('unload', dispose);
         if (window.MutationObserver) {
             observer = new MutationObserver(mutations);
-            observer.observe(document.body, {childList: true, subtree: true});
+            observer.observe(document.body, {childList: true, subtree: true, attributes: true, attributeFilter: ['data-dk-barracks-id', 'data-dk-barracks-kind']});
         }
         schedule();
     });

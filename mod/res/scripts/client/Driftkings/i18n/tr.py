@@ -356,6 +356,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
             'UI_native_save': 'Kaydet',
             'UI_native_saved': 'Ayarlar kaydedildi'},
  'crew_management': {
+    'UI_setting_showBarracksProgression_text': u'Kışlada mürettebat eğitim ilerlemesi',
     'UI_setting_showCrewDetails_text': u'Kişisel dosyada ilerleme',
     'UI_setting_showCrewTooltips_text': u'Mürettebat ipuçlarında ilerleme',
     'UI_crew_totalXP': u'Toplam eğitim DP: {xp}',

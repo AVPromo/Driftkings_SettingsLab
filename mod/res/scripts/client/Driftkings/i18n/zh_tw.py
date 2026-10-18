@@ -338,6 +338,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
             'UI_native_save': '儲存並套用',
             'UI_native_saved': '設定已儲存。'},
  'crew_management': {
+    'UI_setting_showBarracksProgression_text': u'在兵營顯示乘員訓練進度',
     'UI_setting_showCrewDetails_text': u'在個人檔案中顯示進度',
     'UI_setting_showCrewTooltips_text': u'在乘員提示中顯示進度',
     'UI_crew_totalXP': u'訓練經驗總計: {xp}',

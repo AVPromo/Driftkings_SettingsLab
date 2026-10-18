@@ -338,6 +338,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
             'UI_native_save': '保存して適用',
             'UI_native_saved': '設定を保存しました。'},
  'crew_management': {
+    'UI_setting_showBarracksProgression_text': u'兵舎で搭乗員の訓練進捗を表示',
     'UI_setting_showCrewDetails_text': u'搭乗員詳細に進捗を表示',
     'UI_setting_showCrewTooltips_text': u'搭乗員ツールチップに進捗を表示',
     'UI_crew_totalXP': u'訓練経験値合計: {xp}',

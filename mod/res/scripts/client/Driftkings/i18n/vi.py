@@ -355,6 +355,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
             'UI_native_save': 'Lưu và áp dụng',
             'UI_native_saved': 'Đã lưu cài đặt.'},
  'crew_management': {
+    'UI_setting_showBarracksProgression_text': u'Tiến độ huấn luyện kíp lái trong doanh trại',
     'UI_setting_showCrewDetails_text': u'Tiến độ trong hồ sơ cá nhân',
     'UI_setting_showCrewTooltips_text': u'Tiến độ trong chú giải kíp lái',
     'UI_crew_totalXP': u'Tổng XP huấn luyện: {xp}',

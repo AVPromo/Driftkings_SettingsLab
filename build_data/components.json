@@ -204,6 +204,11 @@
           "source": "mod/res/gui/gen_resources/driftkings.DriftkingsCrewDetails.json",
           "target": "res/gui/gen_resources/driftkings.DriftkingsCrewDetails.json",
           "generator": null
+        },
+        {
+          "source": "build/gameface/crew/BarracksView.js",
+          "target": "res/gui/gameface/_dist/production/lobby/crew/BarracksView/BarracksView.js",
+          "generator": "crew_barracks_bridge"
         }
       ]
     },

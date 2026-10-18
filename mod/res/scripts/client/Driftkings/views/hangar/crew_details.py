@@ -23,11 +23,13 @@ _installed = False
 def build_model(parent, surface):
     config = hangar_bridge._config
     settings = settings_service.getComponentDict(config)
-    option = 'showCrewTooltips' if surface == 'tooltip' else 'showCrewDetails'
+    option = {'tooltip': 'showCrewTooltips', 'barracks': 'showBarracksProgression'}.get(surface, 'showCrewDetails')
     enabled = bool(hangar_bridge.g_controller.active and settings[GLOBAL.ENABLED] and settings.get(option, True))
     result = {'config': {'visible': False}, 'surface': surface, 'lines': []}
     if not enabled:
         return result
+    if surface == 'barracks':
+        return build_barracks_model(parent, settings, config)
     if surface == 'tooltip':
         tankman_id = parent.tankmanID
     else:
@@ -51,12 +53,31 @@ def build_model(parent, surface):
     return result
 
 
+def build_barracks_model(parent, settings, config):
+    """Only the native filtered/paginated cards; recruits have no training data."""
+    items = ServicesLocator.itemsCache.items
+    rows = []
+    for card in parent.viewModel.getTankmanList():
+        if card.getTankmanKind().value != 'tankman':
+            continue
+        tankman_id = card.getTankmanID()
+        tankman = items.getTankman(tankman_id)
+        if tankman is None:
+            continue
+        row = collect_tankman(tankman, items)
+        lines = progression_lines(row, settings, config.lang, config.i18n)
+        if lines:
+            rows.append({'id': tankman_id, 'lines': lines})
+    return {'config': {'visible': True}, 'surface': 'barracks', 'rows': rows}
+
+
 def install():
     global _installed
     if _installed:
         return
     from frameworks.wulf import ViewModel
     from gui.impl.pub.view_component import ViewComponent
+    from gui.impl.lobby.crew.barracks_view import BarracksView
     from gui.impl.lobby.crew.tooltips.tankman_tooltip import TankmanTooltip
     from gui.impl.lobby.crew.container_vews.personal_file.personal_file_view import PersonalFileView
     from gui.impl.lobby.crew.container_vews.service_record.service_record_view import ServiceRecordView
@@ -132,7 +153,8 @@ def install():
 
     for target, surface, fill in ((TankmanTooltip, 'tooltip', '_fillModel'),
                                   (PersonalFileView, 'personal_file', '_fillViewModel'),
-                                  (ServiceRecordView, 'service_record', '_fillViewModel')):
+                                  (ServiceRecordView, 'service_record', '_fillViewModel'),
+                                  (BarracksView, 'barracks', '_fillVisibleCards')):
         loading, filled = handlers(surface)
         override(target, '_onLoading')(loading)
         override(target, fill)(filled)

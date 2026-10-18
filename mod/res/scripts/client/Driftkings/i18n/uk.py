@@ -352,6 +352,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
             'UI_native_save': 'Зберегти',
             'UI_native_saved': 'Налаштування збережено'},
  'crew_management': {
+    'UI_setting_showBarracksProgression_text': u'Прогрес навчання в казармі',
     'UI_setting_showCrewDetails_text': u'Прогрес в особовій справі',
     'UI_setting_showCrewTooltips_text': u'Прогрес у підказках екіпажу',
     'UI_crew_totalXP': u'Усього досвіду навчання: {xp}',

@@ -366,6 +366,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
             'UI_native_save': 'Guardar',
             'UI_native_saved': 'Configuración guardada'},
  'crew_management': {
+    'UI_setting_showBarracksProgression_text': u'Progreso de la tripulación en el cuartel',
     'UI_setting_showCrewDetails_text': u'Progreso en el expediente personal',
     'UI_setting_showCrewTooltips_text': u'Progreso en descripciones de tripulación',
     'UI_crew_totalXP': u'XP total de entrenamiento: {xp}',

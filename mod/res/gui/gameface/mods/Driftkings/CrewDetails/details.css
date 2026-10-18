@@ -2,3 +2,4 @@
 .dk-crew-details__title { margin-bottom:2rem; color:#e8c55a; }
 .dk-crew-details__line { white-space:normal; overflow-wrap:break-word; word-wrap:break-word; }
 .dk-crew-details--tooltip { margin:8rem 20rem 12rem; }
+.dk-crew-details--barracks { position:absolute; top:44rem; right:8rem; width:150rem; margin:0; padding:4rem 6rem; border:0; background:rgba(0,0,0,.65); font-size:12rem; line-height:16rem; }

@@ -338,6 +338,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
             'UI_native_save': '저장 및 적용',
             'UI_native_saved': '설정이 저장되었습니다.'},
  'crew_management': {
+    'UI_setting_showBarracksProgression_text': u'막사에서 승무원 훈련 진행 상황 표시',
     'UI_setting_showCrewDetails_text': u'신상 기록에 진행도 표시',
     'UI_setting_showCrewTooltips_text': u'승무원 도움말에 진행도 표시',
     'UI_crew_totalXP': u'총 훈련 경험치: {xp}',

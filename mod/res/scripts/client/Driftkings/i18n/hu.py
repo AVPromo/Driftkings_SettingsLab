@@ -356,6 +356,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
             'UI_native_save': 'Mentés',
             'UI_native_saved': 'Beállítások mentve'},
  'crew_management': {
+    'UI_setting_showBarracksProgression_text': u'Legénység fejlődése a laktanyában',
     'UI_setting_showCrewDetails_text': u'Fejlődés a személyes aktában',
     'UI_setting_showCrewTooltips_text': u'Fejlődés a legénységi tippekben',
     'UI_crew_totalXP': u'Összes képzési XP: {xp}',
