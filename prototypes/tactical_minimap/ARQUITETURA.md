@@ -1,0 +1,21 @@
+# Arquitetura e próximos contratos
+
+## Estado entregue
+
+`core/tactical_minimap.py` não importa BigWorld, GUI, Wulf, Settings ou eventos. Expõe política de seleção bloqueada, defaults do protótipo, transformação matemática e adapter exclusivo de fixtures sintéticas. Nunca oculta o nativo e não conserva coordenadas. `preview_snapshot()` rejeita fontes de batalha: não existe ainda um Battle Data Adapter verificado.
+
+`renderer.js` recebe apenas `source=synthetic-preview`, marcadores normalizados, relações e estados explícitos; descarta entradas invisíveis/lost antes de desenhar. Atualiza nós por ID e assinatura, remove nós ausentes, valida cores/tamanhos e torna dispose idempotente. Não tem timer de polling, listeners de batalha ou chamadas Python. O harness `preview.js` liga e desliga os controlos da página.
+
+Os SVG são fontes próprias: LT losango, MT losango com uma faixa, HT com duas, TD triângulo, SPG círculo/cruz, jogador chevron e destruído cruz. A relação equipa/pelotão é codificada por cor, mantendo a silhueta da classe. A orientação demonstrada é só a do chevron do jogador. Não há alegação de compatibilidade SVG com Gameface até teste real.
+
+## Integração futura dentro da arquitetura real
+
+1. Reutilizar a definição `minimap_enhancements`, service/store/loader e os quatro documentos existentes; integrar modo e campos com migração explícita, sem mexer à mão no Python de defaults gerado. Acrescentar os textos aos catálogos pelo fluxo de geração/validação existente.
+2. Reutilizar os limites de vida `BattleEvents` e os padrões ViewComponent/RandomHUDView existentes. Não criar outro event bus ou scheduler. Definir ownership único e desligar tudo em ended/finalize.
+3. Implementar um adapter de entradas **publicadas pelo minimapa nativo** que abranja veículos, objetivos, círculos, zonas, pings e estados especiais. Sinais de saúde/avistamento não bastam. Nada de pesquisar entidades para completar dados que não foram publicados.
+4. Confirmar bounds/texture via métodos nativos, sem lista inventada de caminhos de mapas. Validar a convenção norte/eixo z e escala em mapas assimétricos.
+5. Provar preservação de input, foco, cliques, zoom, ocultar HUD e replays. Não ativar um renderer que só desenhe veículos.
+6. Só ocultar a apresentação original depois de um handshake completo, com restauração independente caso JS ou Python falhe. A troca inicial deve acontecer no início da batalha, sem hot swap durante combate até prova de segurança.
+7. Partilhar um contrato de dados pequeno, limitado a informação autorizada; reconciliar incrementalmente no cliente visual, sem trabalho gráfico intensivo em Python.
+
+Os testes atuais cobrem a política bloqueada, não simulam um handoff real entre Flash e Gameface. Não há código de ocultação do nativo neste protótipo.
