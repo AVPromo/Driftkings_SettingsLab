@@ -16,3 +16,5 @@ Replace the files and rebuild: `python build_tools/build_installer.py --artifact
 Official documentation: [large image](https://jrsoftware.org/ishelp/topic_setup_wizardimagefile.htm), [small image](https://jrsoftware.org/ishelp/topic_setup_wizardsmallimagefile.htm), [icon](https://jrsoftware.org/ishelp/topic_setup_setupiconfile.htm), [PNG preview classes](https://jrsoftware.org/ishelp/topic_scriptclasses.htm).
 
 Guia em português, com caminhos e exemplos: [GUIA_INSTALADOR_PT.md](../GUIA_INSTALADOR_PT.md).
+
+Branding PNG/BMP/ICO files and preview PNG files are intentionally ignored by Git. Keep a separate backup and supply them locally before compiling. A fresh clone or CI build uses built-in branding and omits missing previews. Directory markers and this guide remain tracked.

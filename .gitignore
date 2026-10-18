@@ -116,3 +116,9 @@ htmlcov/
 !/tests/installer/
 /tests/installer/*
 !/tests/installer/*.py
+
+# Installer artwork is supplied locally; keep directory markers and guides tracked.
+/installer/setup/assets/branding/*.png
+/installer/setup/assets/branding/*.bmp
+/installer/setup/assets/branding/*.ico
+/installer/setup/assets/previews/*.png
