@@ -21,6 +21,10 @@ def balance_columns(controls):
                     (left if control.column == 0 else right).append(control)
             continue
         total = sum(3 if c.preview else 1 for c in items)
+        if total < 4:
+            for control in items:
+                control.column = 0
+            continue
         weight = 0
         for index, control in enumerate(items):
             control.column = 0 if index == 0 or weight < total / 2.0 else 1

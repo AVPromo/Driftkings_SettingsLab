@@ -97,3 +97,10 @@ htmlcov/
 
 # Local project documentation
 /docs/
+
+# Pure settings-panel regression tests are part of the source project.
+!/tests/
+/tests/*
+!/tests/settings_panel/
+/tests/settings_panel/*
+!/tests/settings_panel/test_*.py
