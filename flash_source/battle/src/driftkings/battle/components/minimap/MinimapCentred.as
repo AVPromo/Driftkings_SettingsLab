@@ -246,6 +246,39 @@ package driftkings.battle.components.minimap
             }
         }
 
+        private function updateVehicle(entry:VehicleMinimapEntry):void
+        {
+            var data:Object = vehicles[entry.vehicleID];
+            if (data)
+            {
+                var owned:VehicleLabel = labels[entry] as VehicleLabel;
+                if (!owned) { owned = new VehicleLabel(); labels[entry] = owned; entry.addChild(owned); }
+                var native:TextField = entry.vehicleNameTextFieldAlt.visible ? entry.vehicleNameTextFieldAlt : entry.vehicleNameTextFieldClassic;
+                remember(entry.vehicleNameTextFieldAlt); remember(entry.vehicleNameTextFieldClassic);
+                entry.vehicleNameTextFieldAlt.alpha = entry.vehicleNameTextFieldClassic.alpha = 0;
+                owned.update(data, options, native);
+                if (entry.visible && owned.caption.visible) visibleLabels.push(owned);
+            }
+            for each (var name:String in ["enemyRedAnimation", "enemyPurpleAnimation", "deadAnimation",
+                "deadPermanentAnimation", "squadmanYellowAnimation", "squadmanGoldAnimation",
+                "teamKillerBlueAnimation", "allyGreenAnimation"])
+                iconStyle(entry[name] as DisplayObject, options.icons.scale,
+                    options.showVehicleTypes ? Number(options.icons.alpha) * (data ? Number(data.alpha)/100 : 1) : 0);
+        }
+
+        private function updateViewPoint(point:ViewPointMinimapEntry):void
+        {
+            iconStyle(point.arrowPlaceholder, options.icons.selfScale, options.icons.selfAlpha);
+            if (point.arrowPlaceholder)
+            {
+                var arrowColor:ColorTransform = new ColorTransform();
+                arrowColor.color = VehicleLabel.parseColor(options.icons.selfColor);
+                point.arrowPlaceholder.transform.colorTransform = arrowColor;
+            }
+            line(point.sectorLeft, options.lines.sectorColor);
+            line(point.sectorRight, options.lines.sectorColor);
+        }
+
         private function scan(target:DisplayObject):void
         {
             if (--remaining <= 0 || target is VehicleLabel || target == sizeLabel || target.name == "dkMinimapGeometry") return;
@@ -259,22 +292,7 @@ package driftkings.battle.components.minimap
             var entry:VehicleMinimapEntry = target as VehicleMinimapEntry;
             if (entry)
             {
-                var data:Object = vehicles[entry.vehicleID];
-                if (data)
-                {
-                    var owned:VehicleLabel = labels[entry] as VehicleLabel;
-                    if (!owned) { owned = new VehicleLabel(); labels[entry] = owned; entry.addChild(owned); }
-                    var native:TextField = entry.vehicleNameTextFieldAlt.visible ? entry.vehicleNameTextFieldAlt : entry.vehicleNameTextFieldClassic;
-                    remember(entry.vehicleNameTextFieldAlt); remember(entry.vehicleNameTextFieldClassic);
-                    entry.vehicleNameTextFieldAlt.alpha = entry.vehicleNameTextFieldClassic.alpha = 0;
-                    owned.update(data, options, native);
-                    if (entry.visible && owned.caption.visible) visibleLabels.push(owned);
-                }
-                for each (var name:String in ["enemyRedAnimation", "enemyPurpleAnimation", "deadAnimation",
-                    "deadPermanentAnimation", "squadmanYellowAnimation", "squadmanGoldAnimation",
-                    "teamKillerBlueAnimation", "allyGreenAnimation"])
-                    iconStyle(entry[name] as DisplayObject, options.icons.scale,
-                        options.showVehicleTypes ? Number(options.icons.alpha) * (data ? Number(data.alpha)/100 : 1) : 0);
+                updateVehicle(entry);
                 return;
             }
             var camera:ArcadeCameraMinimapEntry = target as ArcadeCameraMinimapEntry;
@@ -282,15 +300,7 @@ package driftkings.battle.components.minimap
             var point:ViewPointMinimapEntry = target as ViewPointMinimapEntry;
             if (point)
             {
-                iconStyle(point.arrowPlaceholder, options.icons.selfScale, options.icons.selfAlpha);
-                if (point.arrowPlaceholder)
-                {
-                    var arrowColor:ColorTransform = new ColorTransform();
-                    arrowColor.color = VehicleLabel.parseColor(options.icons.selfColor);
-                    point.arrowPlaceholder.transform.colorTransform = arrowColor;
-                }
-                line(point.sectorLeft, options.lines.sectorColor);
-                line(point.sectorRight, options.lines.sectorColor);
+                updateViewPoint(point);
                 return;
             }
             var container:DisplayObjectContainer = target as DisplayObjectContainer;
@@ -298,9 +308,8 @@ package driftkings.battle.components.minimap
                 for (var i:int = 0; i < container.numChildren && remaining > 0; ++i) scan(container.getChildAt(i));
         }
 
-        private function refresh(event:TimerEvent = null):void
+        private function removeDetachedEntries():void
         {
-            if (!minimap || !minimap.visible || !options || !options.enabled) return;
             for (var key:Object in labels)
                 if (!DisplayObject(key).stage) { VehicleLabel(labels[key]).dispose(); delete labels[key]; }
             for (key in geometry)
@@ -310,10 +319,21 @@ package driftkings.battle.components.minimap
                     if (old.parent) old.parent.removeChild(old);
                     delete geometry[key];
                 }
+        }
+
+        private function refresh(event:TimerEvent = null):void
+        {
+            if (!minimap || !minimap.visible || !options || !options.enabled) return;
+            removeDetachedEntries();
             positionMapSize();
             visibleLabels = [];
             remaining = 4000;
             scan(minimap);
+            resolveLabelOverlaps();
+        }
+
+        private function resolveLabelOverlaps():void
+        {
             if (options.labels.avoidOverlap && !options.alternative)
             {
                 visibleLabels.sortOn("priority", Array.DESCENDING | Array.NUMERIC);
@@ -335,18 +355,28 @@ package driftkings.battle.components.minimap
             return false;
         }
 
-        private function restoreStyles():void
+        private function clearLabels():void
         {
             if (sizeLabel && sizeLabel.parent) sizeLabel.parent.removeChild(sizeLabel);
             sizeLabel = null;
             for each (var label:VehicleLabel in labels) label.dispose();
             labels = new Dictionary(true);
+        }
+
+        private function clearGeometry():void
+        {
             for each (var node:Object in geometry)
             {
                 var shape:Sprite = node is Sprite ? node as Sprite : node.shape;
                 if (shape.parent) shape.parent.removeChild(shape);
             }
             geometry = new Dictionary(true);
+        }
+
+        private function restoreStyles():void
+        {
+            clearLabels();
+            clearGeometry();
             for (var key:Object in styles)
             {
                 var target:DisplayObject = key as DisplayObject;
