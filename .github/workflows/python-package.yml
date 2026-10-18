@@ -24,6 +24,10 @@ jobs:
         run: python -m unittest discover -s tests/settings_panel -p 'test_*.py'
       - name: Validate build inputs and package plan
         run: python build_tools/validate_build_data.py
+      - name: Validate locale catalogs
+        run: python build_tools/validate_locales.py
+      - name: Check generated defaults are in sync
+        run: python build_tools/generate_defaults.py --check
       - name: Validate JSON resources and manifests
         run: |
           python - <<'PY'

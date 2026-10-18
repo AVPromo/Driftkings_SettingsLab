@@ -145,7 +145,9 @@ def refresh_snapshot(root=ROOT):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--write', action='store_true', help='Regenerate the checked-in Python fallback')
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument('--check', action='store_true', help='Check that the Python fallback matches the canonical JSON without writing')
+    mode.add_argument('--write', action='store_true', help='Regenerate the checked-in Python fallback')
     parser.add_argument('--refresh-snapshot', action='store_true', help='Record intentional edits to the JSON defaults')
     args = parser.parse_args()
     if args.refresh_snapshot and not args.write:
@@ -154,5 +156,8 @@ if __name__ == '__main__':
         (ROOT / TARGET).write_text(render(ROOT), encoding='utf-8')
         if args.refresh_snapshot:
             refresh_snapshot(ROOT)
-    check_generated(ROOT)
+    try:
+        check_generated(ROOT)
+    except ValueError as error:
+        parser.exit(1, str(error) + '\n')
     print('Defaults match the canonical JSON: %d components' % len(assemble(ROOT)[0]))
