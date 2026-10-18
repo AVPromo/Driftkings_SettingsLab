@@ -21,6 +21,11 @@
         return precision === undefined ? Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : value.toFixed(precision);
     }
     function percent(value) { return typeof value === 'number' && isFinite(value) ? value.toFixed(2) + '%' : '\u2014'; }
+    function roman(value) {
+        var n = number(value, 0), tiers = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
+            'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX'];
+        return n > 0 && n === Math.round(n) ? (tiers[n] || String(n)) : '';
+    }
     function color(value, fallback) {
         if (typeof value === 'number' && isFinite(value)) { return '#' + ('000000' + Math.max(0, Math.min(16777215, value)).toString(16)).slice(-6); }
         return /^#[0-9a-f]{6}$/i.test(value) ? value : fallback;
@@ -250,6 +255,6 @@
         return accent;
     }
     window.__dkMarksKit = {node:node, text:text, style:style, show:show, number:number,
-        formatted:formatted, percent:percent, label:label, stars:stars, updateStars:updateStars,
+        formatted:formatted, percent:percent, roman:roman, label:label, stars:stars, updateStars:updateStars,
         graph:graph, scale:scale, connect:connect, position:position, savedPosition:savedPosition, theme:theme};
 }());

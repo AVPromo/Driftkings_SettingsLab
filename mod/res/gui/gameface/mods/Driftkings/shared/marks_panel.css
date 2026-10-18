@@ -5,7 +5,7 @@
 .dk-mog__header { display:flex; align-items:center; justify-content:space-between; padding-bottom:11rem; margin-bottom:12rem; border-bottom:1rem solid #34505a; }
 .dk-mog__brand { font-size:27rem; font-weight:bold; font-style:italic; letter-spacing:.5rem; }
 .dk-mog__logo { color:#e8c55a; margin-right:12rem; letter-spacing:0; font-size:28rem; }
-.dk-mog__context { font-size:11rem; letter-spacing:3rem; color:#e8c55a; }
+.dk-mog__context { font-size:12rem; letter-spacing:3rem; color:#e8c55a; }
 .dk-mog__label { color:#a5b6bf; text-transform:uppercase; letter-spacing:1.3rem; font-size:13rem; }
 .dk-mog__hero { display:flex; align-items:center; justify-content:space-between; }
 .dk-mog__percent { font-size:70rem; line-height:1.15; font-weight:bold; color:#f1d677; text-shadow:0 2rem 3rem #000,0 0 18rem rgba(235,198,77,.2); }
@@ -15,12 +15,12 @@
 .dk-mog__fill { height:100%; background:linear-gradient(0deg,#b78525,#ffe989); border-radius:2rem; box-shadow:0 0 7rem rgba(240,198,60,.45); }
 .dk-mog__next { display:flex; justify-content:space-between; color:#b0bec5; margin-top:6rem; font-size:14rem; }
 .dk-mog__value { display:block; font-weight:bold; font-size:31rem; color:#f3f3ed; margin-top:2rem; }
-.dk-mog__metrics { display:flex; margin:15rem 0; padding:13rem 0; border-top:1rem solid #34505a; border-bottom:1rem solid #34505a; }
-.dk-mog__metric { flex:1; padding:0 14rem; border-left:1rem solid #34505a; }
+.dk-mog__metrics { display:flex; align-items:flex-end; margin:15rem 0; padding:13rem 0; border-top:1rem solid #34505a; border-bottom:1rem solid #34505a; }
+.dk-mog__metric { display:flex; flex-direction:column; justify-content:flex-end; flex:1; padding:0 14rem; border-left:1rem solid #34505a; }
 .dk-mog__metric:first-child { padding-left:0; border-left:0; }
 .dk-mog__muted { color:#9aaeb8; font-size:12rem; }
 .dk-mog__vehicle { color:#bdcbd1; font-size:14rem; margin-bottom:9rem; }
-.dk-mog__note { color:#a5b5bf; font-size:11rem; margin:9rem 0; }
+.dk-mog__note { color:#a5b5bf; font-size:12rem; margin:9rem 0; }
 .dk-mog__history { padding-top:8rem; }
 .dk-mog__graph { position:relative; height:95rem; margin:16rem 6rem 8rem; border-left:1rem solid #4c626d; border-bottom:1rem solid #4c626d; background-image:repeating-linear-gradient(0deg,transparent,transparent 23rem,rgba(62,95,103,.24) 24rem),repeating-linear-gradient(90deg,transparent,transparent 49rem,rgba(62,95,103,.24) 50rem); }
 .dk-mog__axis { position:absolute; left:6rem; margin-top:-8rem; font-size:12rem; line-height:16rem; color:#9aaeb8; pointer-events:none; }
@@ -37,7 +37,7 @@
 .dk-mog--compact { pointer-events:none; padding:10rem 15rem; }
 .dk-mog--compact .dk-mog__header { padding-bottom:7rem; margin-bottom:8rem; }
 .dk-mog--compact .dk-mog__brand { font-size:21rem; }
-.dk-mog--compact .dk-mog__context { font-size:9rem; letter-spacing:2rem; }
+.dk-mog--compact .dk-mog__context { font-size:12rem; letter-spacing:2rem; }
 .dk-mog--compact .dk-mog__percent { font-size:45rem; }
 .dk-mog--compact .dk-mog__star { font-size:26rem; }
 .dk-mog--compact .dk-mog__metrics { margin:6rem 0; padding:9rem 0; }
@@ -45,9 +45,9 @@
 .dk-mog--compact .dk-mog__overview .dk-mog__hero { flex:1; margin-right:14rem; }
 .dk-mog--compact .dk-mog__overview .dk-mog__metrics { flex:1.35; border:0; border-left:1rem solid #34505a; padding-left:14rem; }
 .dk-mog--compact .dk-mog__value { font-size:24rem; }
-.dk-mog--compact .dk-mog__label { font-size:10rem; }
+.dk-mog--compact .dk-mog__label { font-size:12rem; }
 .dk-mog--compact .dk-mog__bar { height:10rem; margin:9rem 0; }
-.dk-mog--compact .dk-mog__next { font-size:11rem; }
+.dk-mog--compact .dk-mog__next { font-size:12rem; }
 .dk-mog--full { pointer-events:auto; }
 .dk-mog--full .dk-mog__header { cursor:move; }
 .dk-mog__scale { position:relative; padding-bottom:22rem; }

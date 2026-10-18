@@ -30,7 +30,7 @@
         K.text(title,K.label(data,'title','Marks of Excellence'));
         K.text(context, K.label(data,'hangar','HANGAR'));
         K.text(currentLabel,K.label(data,'current','Consolidated mark'));
-        K.text(vehicle,(data.vehicle||'\u2014')+(data.tier?' · '+data.tier:'')+(data.nation?' · '+data.nation:''));
+        K.text(vehicle,(data.vehicle||'\u2014')+(K.roman(data.tier)?' · '+K.roman(data.tier):'')+(data.nation?' · '+data.nation:''));
         K.show(vehicle,cfg.showVehicleInfo!==false);
         K.text(current,valid?K.percent(data.currentMark):'\u2014'); K.style(current,'color',accent);
         K.updateStars(stars,valid?data.displayMarks:0);
@@ -40,10 +40,10 @@
         K.show(scale.fill,cfg.showProgress!==false); K.show(next,cfg.showProgress!==false);
         K.style(scale.fill,'backgroundImage','linear-gradient(0deg,'+accent+',#fff1ab)');
         K.text(nextLabel,milestone.completed?K.label(data,'completed','Three marks achieved'):K.label(data,'next','Next mark')+' '+milestone.nextMilestone+'%');
-        K.text(gap,milestone.completed?'':K.formatted(milestone.gap,2)+' pp');
+        K.text(gap,milestone.completed?'':K.formatted(milestone.gap,1)+' '+K.label(data,'gapUnit','')+' '+K.label(data,'remaining',''));
         K.show(metrics,valid&&cfg.showDamageStatistics!==false);
         ['ema','expected','needed'].forEach(function(key,i){ K.text(cards[i].label,K.label(data,key,key)); });
-        K.text(cards[2].label,K.label(data,'ema','Combined EMA')+' Δ');
+        K.text(cards[2].label,K.label(data,'emaGap',''));
         if ((data.target||{}).threshold && !milestone.completed) { K.text(cards[1].label,K.label(data,'expected','Estimated target')+' ('+data.target.threshold+'%)'); }
         K.text(cards[0].value,K.formatted(data.movingAverage));
         K.text(cards[1].value,K.formatted(data.targetDamage)); K.text(cards[2].value,K.formatted(data.damageNeeded));

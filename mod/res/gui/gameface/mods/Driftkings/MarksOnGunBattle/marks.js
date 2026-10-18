@@ -39,7 +39,7 @@
         K.show(progress,valid&&cfg.showProgress!==false); scale.update(data.estimatedMark,data.marksAchieved,data.currentMark);
         K.style(scale.fill,'backgroundImage','linear-gradient(0deg,'+accent+',#fff1ab)');
         K.text(nextLabel,data.completed?K.label(data,'completed','Three marks achieved'):K.label(data,'next','Next mark')+' '+data.nextMilestone+'%');
-        K.text(gap,data.completed?'':K.formatted(data.gap,2)+' pp');
+        K.text(gap,data.completed?'':K.formatted(data.gap,1)+' '+K.label(data,'gapUnit','')+' '+K.label(data,'remaining',''));
         K.text(current,K.label(data,'current','Consolidated mark')+': '+K.percent(data.currentMark));
         K.text(trend,(data.trend||{}).text||'\u2014'); trend.className='dk-mog__trend dk-mog__trend--'+((data.trend||{}).direction||'unknown');
         K.show(trend,valid&&cfg.showTrend!==false);
