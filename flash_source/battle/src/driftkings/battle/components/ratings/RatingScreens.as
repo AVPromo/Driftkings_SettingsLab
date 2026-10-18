@@ -199,7 +199,10 @@ package driftkings.battle.components.ratings
             removeEventListener(Event.ADDED_TO_STAGE,attached);
             if (mouseStage) mouseStage.removeEventListener(MouseEvent.MOUSE_MOVE,mouse);
             mouseStage=null;
-            panels.restore(); state.restore(); extra.dispose(); bindings=[];
+            panels.dispose();
+            state.restore();
+            extra.dispose();
+            bindings=[];
             super.onDispose();
         }
     }

@@ -2,8 +2,6 @@ package driftkings.battle.components.ratings
 {
     import flash.display.DisplayObject;
     import flash.display.DisplayObjectContainer;
-    import flash.geom.Point;
-    import flash.text.TextField;
     import flash.utils.Dictionary;
     import flash.utils.getTimer;
     import flash.events.Event;
@@ -17,22 +15,93 @@ package driftkings.battle.components.ratings
         public var reused:int=0;
         private var itemCache:Dictionary=new Dictionary(true);
         private var rowCache:Dictionary=new Dictionary(true);
-        public function PanelRenderer(s:NativeState) { common=s; }
+        private var watchedLists:Dictionary=new Dictionary(true);
+
+        public function PanelRenderer(s:NativeState)
+        {
+            common=s;
+        }
         public function begin():void
         {
-            matched=drawn=reused=0; measuredWidths=[0,0];
-            for each (var record:PanelRow in rowCache) record.used=false;
+            matched=drawn=reused=0;
+            measuredWidths=[0,0];
+            for each (var record:PanelRow in rowCache)
+                record.used=false;
         }
         public function end():void
         {
-            for (var item:Object in rowCache) if (!rowCache[item].used)
-            { rowCache[item].dispose(); delete rowCache[item]; }
+            for (var item:Object in rowCache)
+            {
+                if (rowCache[item].used) continue;
+                rowCache[item].dispose();
+                delete rowCache[item];
+            }
         }
-        public function restore():void { begin(); end(); widths=[0,0]; itemCache=new Dictionary(true); }
+        public function restore():void
+        {
+            unwatchLists();
+            begin();
+            end();
+            widths=[0,0];
+            itemCache=new Dictionary(true);
+        }
+        public function dispose():void
+        {
+            restore();
+            common=null;
+        }
         private function nativeY(item:Object):Number
-        { return rowCache[item] ? Number(rowCache[item].state.base(item,"y")) : Number(item.y); }
+        {
+            return rowCache[item] ? Number(rowCache[item].state.base(item,"y")) : Number(item.y);
+        }
         private function childrenChanged(event:Event):void
-        { if (itemCache[event.currentTarget]) itemCache[event.currentTarget].time=-1000; }
+        {
+            var cached:Object=itemCache[event.currentTarget];
+            if (cached) cached.time=-1000;
+        }
+        private function watchList(list:DisplayObjectContainer):void
+        {
+            if (watchedLists[list]) return;
+            list.addEventListener(Event.ADDED,childrenChanged,false,0,true);
+            list.addEventListener(Event.REMOVED,childrenChanged,false,0,true);
+            watchedLists[list]=true;
+        }
+        private function unwatchLists():void
+        {
+            for (var target:Object in watchedLists)
+            {
+                var list:DisplayObjectContainer=target as DisplayObjectContainer;
+                list.removeEventListener(Event.ADDED,childrenChanged);
+                list.removeEventListener(Event.REMOVED,childrenChanged);
+            }
+            watchedLists=new Dictionary(true);
+        }
+        private function isStale(list:DisplayObjectContainer,cached:Object,mode:String,now:int):Boolean
+        {
+            if (!cached || cached.mode!==mode || now-cached.time>=1000) return true;
+            for each (var item:DisplayObject in cached.items)
+                if (!item.stage || !list.contains(item)) return true;
+            return false;
+        }
+        private function discoverItems(list:DisplayObjectContainer,mode:String):Object
+        {
+            watchList(list);
+            var items:Array=[];
+            collect(list,items);
+            var cached:Object={items:items,mode:mode,time:getTimer()};
+            itemCache[list]=cached;
+            return cached;
+        }
+        private function cachedItems(list:DisplayObjectContainer,mode:String):Array
+        {
+            var cached:Object=itemCache[list];
+            // ADDED/REMOVED invalidate membership immediately, but native rows
+            // may initialise their identifying fields without a display event.
+            // Retain the one-second scan to discover those late-bound rows.
+            if (isStale(list,cached,mode,getTimer()))
+                cached=discoverItems(list,mode);
+            return cached.items;
+        }
         private function collect(node:DisplayObjectContainer,items:Array):void
         {
             if (!node) return;
@@ -58,20 +127,7 @@ package driftkings.battle.components.ratings
                 var list:Object=left ? panel.listLeft : panel.listRight;
                 if (!list) continue;
                 // Holders and the ID lookup are protected client members.
-                var cached:Object=itemCache[list], stale:Boolean=!cached || cached.mode!==mode || getTimer()-cached.time>=1000;
-                if (!stale) for each (var existing:DisplayObject in cached.items)
-                    if (!existing.stage || !(list as DisplayObjectContainer).contains(existing)) { stale=true; break; }
-                if (stale)
-                {
-                    if (!cached)
-                    {
-                        (list as DisplayObjectContainer).addEventListener(Event.ADDED,childrenChanged,false,0,true);
-                        (list as DisplayObjectContainer).addEventListener(Event.REMOVED,childrenChanged,false,0,true);
-                    }
-                    var discovered:Array=[]; collect(list as DisplayObjectContainer,discovered);
-                    itemCache[list]=cached={items:discovered,mode:mode,time:getTimer()};
-                }
-                var items:Array=cached.items;
+                var items:Array=cachedItems(list as DisplayObjectContainer,mode);
                 items.sort(function(a:Object,b:Object):Number { return nativeY(a)-nativeY(b); });
                 var entries:Array=[], maxNick:Number=0;
                 for (var itemIndex:int=0;itemIndex<items.length;++itemIndex)
