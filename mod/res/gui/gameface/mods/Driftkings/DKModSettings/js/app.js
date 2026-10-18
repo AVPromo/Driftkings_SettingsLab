@@ -423,6 +423,7 @@
             '.dk-switch.is-on .dk-switch-text{color:' + accent + '}',
             '.dk-checkbox.is-on{background:' + accent + ';border-color:' + light + '}',
             '.dk-text:focus,.dk-dropdown:focus{border-color:' + accent + '}',
+            '.dk-btn:focus,.dk-switch:focus,.dk-checkbox:focus,.dk-nav-item:focus,.dk-dropdown:focus,.dk-text:focus,.dk-slider-track:focus{outline:2px solid ' + accent + ';outline-offset:2px;box-shadow:none}',
             '.dk-slider-thumb{border-color:' + dark + '}',
             '.dk-window{border-color:' + shade(accent, -0.6) + '}'
         ].join('\n');
