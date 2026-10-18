@@ -31,8 +31,8 @@ button, input { font-family: Warhelios; font-size: 15rem; color: #e8e4da; }
     background: linear-gradient(180deg, rgba(40, 40, 38, 0.9), rgba(20, 20, 20, 0.9));
     border-bottom: 1rem solid #34342f;
 }
-.dk-logo { width: 26rem; height: 26rem; margin-right: 12rem; }
-.dk-title { font-size: 19rem; font-weight: bold; letter-spacing: 2rem; color: #f2ecd9; }
+.dk-logo { width: 26rem; height: 26rem; margin-right: 12rem; flex-shrink: 0; }
+.dk-title { font-size: 19rem; font-weight: bold; letter-spacing: 2rem; color: #f2ecd9; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .dk-spacer { flex: 1 1 auto; }
 .dk-unsaved { display: none; font-size: 14rem; margin-right: 18rem; }
 .dk-unsaved.is-visible { display: block; }
@@ -41,6 +41,9 @@ button, input { font-family: Warhelios; font-size: 15rem; color: #e8e4da; }
     color: #a9a59a; font-size: 26rem; line-height: 34rem; cursor: pointer; transition: color 0.15s, border-color 0.15s;
 }
 .dk-close:hover { color: #ffffff; border-color: #5b5a52; }
+.dk-window.has-toast .dk-header { padding-right: 488rem; }
+.dk-window.has-toast .dk-close { position: absolute; right: 10rem; top: 12rem; }
+.dk-window.is-narrow.has-toast .dk-header { padding-right: 368rem; }
 
 /* Body */
 .dk-body { display: flex; flex-direction: row; flex: 1 1 auto; min-height: 0; }
@@ -105,12 +108,14 @@ button, input { font-family: Warhelios; font-size: 15rem; color: #e8e4da; }
 
 /* Toast and dialog */
 .dk-toast {
-    position: absolute; left: 50%; bottom: 80rem; width: 460rem; margin-left: -230rem; padding: 10rem 16rem;
+    position: absolute; left: auto; right: 56rem; bottom: auto; top: 8rem; width: 420rem; margin-left: 0; padding: 10rem 16rem; z-index: 20;
     background: rgba(20, 20, 20, 0.95); border: 1rem solid #4f4c43; text-align: center; font-size: 14rem;
+    max-height: 46rem; overflow-y: auto; white-space: normal;
     opacity: 0; visibility: hidden; transition: opacity 0.25s, visibility 0.25s;
 }
 .dk-toast.is-visible { opacity: 1; visibility: visible; }
 .dk-toast.is-error { border-color: #b8432f; color: #ffc2b5; }
+.dk-window.is-narrow .dk-toast { width: 300rem; font-size: 13rem; }
 
 .dk-overlay {
     position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: none;

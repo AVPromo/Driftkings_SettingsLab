@@ -379,10 +379,16 @@
         if (!message || message.id === lastMessage) { return; }
         lastMessage = message.id;
         ui.toast.textContent = message.text;
+        ui.toast.title = message.text;
         setClass(ui.toast, 'is-error', message.kind === 'error');
         setClass(ui.toast, 'is-visible', true);
+        setClass(ui.window, 'has-toast', true);
         if (toastTimer !== null) { clearTimeout(toastTimer); }
-        toastTimer = setTimeout(function () { toastTimer = null; setClass(ui.toast, 'is-visible', false); }, 3000);
+        toastTimer = setTimeout(function () {
+            toastTimer = null;
+            setClass(ui.toast, 'is-visible', false);
+            setClass(ui.window, 'has-toast', false);
+        }, 3000);
     }
 
     /* Panel size in UI units: large on big screens, never larger than the client area. */
