@@ -59,7 +59,7 @@
         return parseFloat(result.toFixed(decimals(def.step)));
     }
     var normalizeHex = DK.colors.normalizeColor;
-    var hexToRgb = DK.colors.hexToRgb, rgbToHex = DK.colors.rgbToHex;
+    var hexToRgb = DK.colors.hexToRgb;
 
     /* Popup and tooltip layer, positioned from the anchor's client rectangle. */
     var activeDrags = [];

@@ -235,7 +235,7 @@
             if (cfg.visible !== undefined && !flag(cfg.visible)) { return; }
             var record=tabExtras.filter(function(r) { return r.source===element && r.index===index; })[0];
             if (!record) {
-                var node=document.createElement('div'); node.className='dk-tab-extra';
+                node=document.createElement('div'); node.className='dk-tab-extra';
                 node.style.cssText='position:fixed;pointer-events:none;overflow:hidden;display:flex;flex-wrap:nowrap;align-items:center;z-index:101;';
                 record={source:element,index:index,node:node}; tabExtras.push(record);
             }

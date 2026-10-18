@@ -62,6 +62,8 @@ python build_tools/validate_build_data.py
 .\release.cmd --version 0.1.2-beta.3 --channel beta
 ```
 
+Check portable logic with `python -m unittest discover -s tests/settings_panel -p 'test_*.py'` and `python -m unittest discover -s tests/core -p 'test_*.py'`; both suites also run on Python 2.7. Run `node tests/settings_panel/test_gameface.js` for the Gameface state tests. Install development dependencies with `npm ci --ignore-scripts`, then run `npm run lint` to enforce ES5 syntax and basic JavaScript checks. These tools run on Node 20.19+; client scripts remain ES5.
+
 Edit defaults in `res/configs/Driftkings/default/`, then run `python build_tools/generate_defaults.py --write` to regenerate the Python fallback. For intentional changes to the default values, also refresh the recorded snapshot with `python build_tools/generate_defaults.py --write --refresh-snapshot`. Use `python build_tools/generate_defaults.py --check` to check synchronization without writing files; never edit `settings/default_values.py` by hand.
 
 The current build contract uses the (EU, NA) installation as its resource source and an EU source reference. Local tool paths belong in ignored `build_data/toolchain.local.json`. Builds compile Python 2.7 to standard bytecode without obfuscation, Flash and native helpers, generate the carousel integration and verify the packages. Outputs go to `build/`; compilation does not install or publish them.
