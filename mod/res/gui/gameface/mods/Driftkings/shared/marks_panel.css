@@ -22,8 +22,8 @@
 .dk-mog__vehicle { color:#bdcbd1; font-size:14rem; margin-bottom:9rem; }
 .dk-mog__note { color:#a5b5bf; font-size:12rem; margin:9rem 0; }
 .dk-mog__history { padding-top:8rem; }
-.dk-mog__graph { position:relative; height:95rem; margin:16rem 6rem 8rem; border-left:1rem solid #4c626d; border-bottom:1rem solid #4c626d; background-image:repeating-linear-gradient(0deg,transparent,transparent 23rem,rgba(62,95,103,.24) 24rem),repeating-linear-gradient(90deg,transparent,transparent 49rem,rgba(62,95,103,.24) 50rem); }
-.dk-mog__axis { position:absolute; left:6rem; margin-top:-8rem; font-size:12rem; line-height:16rem; color:#9aaeb8; pointer-events:none; }
+.dk-mog__graph { position:relative; height:95rem; margin:16rem 6rem 8rem 64rem; border-left:1rem solid #4c626d; border-bottom:1rem solid #4c626d; background-image:repeating-linear-gradient(0deg,transparent,transparent 23rem,rgba(62,95,103,.24) 24rem),repeating-linear-gradient(90deg,transparent,transparent 49rem,rgba(62,95,103,.24) 50rem); }
+.dk-mog__axis { position:absolute; right:100%; margin-right:8rem; white-space:nowrap; margin-top:-8rem; font-size:12rem; line-height:16rem; color:#9aaeb8; pointer-events:none; }
 .dk-mog__axis--max { top:10%; }
 .dk-mog__axis--min { top:90%; }
 .dk-mog__ref { position:absolute; left:0; right:0; height:0; border-top:1rem dashed rgba(236,215,151,.45); font-size:12rem; line-height:16rem; color:#ecd797; text-align:right; padding-right:4rem; pointer-events:none; }

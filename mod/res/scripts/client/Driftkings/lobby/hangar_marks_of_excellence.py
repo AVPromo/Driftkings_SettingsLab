@@ -10,7 +10,7 @@ from gui.shared.gui_items.dossier.achievements.mark_on_gun import MarkOnGunAchie
 from gui.shared.personality import ServicesLocator
 
 from Driftkings.core.marks_calculator import ceil_damage, combined_damage, statistics, hangar_goal
-from Driftkings.views.marks_model import delta_model, milestone_model
+from Driftkings.views.marks_model import delta_model, milestone_model, number_locale
 from Driftkings.core.marks_state import marks_state
 from Driftkings._constants import GLOBAL, HANGAR_MARKS_OF_EXCELLENCE
 from Driftkings.common import logException, getStatisticColor, getMoeDamageColor
@@ -115,12 +115,12 @@ class MarksOnGunData(object):
 
     @staticmethod
     def _format_int(value):
-        return '{:,}'.format(int(value)).replace(',', ' ')
+        return '{:,}'.format(int(value)).replace(',', number_locale(config.lang)['groupSeparator'])
 
     @staticmethod
     def _format_float(value, digits=2):
         fmt = '%%.%sf' % digits
-        return fmt % float(value)
+        return (fmt % float(value)).replace('.', number_locale(config.lang)['decimalSeparator'])
 
     @staticmethod
     def _escape_html(value):
@@ -358,10 +358,10 @@ class MarksOnGunData(object):
             'estimate': '~' + self._format_int(target['estimate']) if target['estimate'] is not None else '--',
             'mastery': config.i18n['UI_panel_mastery%s' % mastery] if mastery else '--',
             'masteryIcon': 'coui://' + icon if icon else '',
-            'wn8': self._format_int(data['wn8']).replace(' ', result['config']['groupSeparator']) if data['wn8'] else '--',
+            'wn8': self._format_int(data['wn8']) if data['wn8'] else '--',
             'wn8Color': data['wn8Color'], 'winRateColor': data['winRateColor'],
-            'winRate': ('%.2f%%' % data['winRate']).replace('.', result['config']['decimalSeparator']) if data['battles'] else '--',
-            'battles': self._format_int(data['battles']).replace(' ', result['config']['groupSeparator'])
+            'winRate': self._format_float(data['winRate']) + '%' if data['battles'] else '--',
+            'battles': self._format_int(data['battles'])
         })
         result['milestone'] = milestone_model(data['damageRating'], data['earnedMarks'])
         if result['milestone']['completed']:
