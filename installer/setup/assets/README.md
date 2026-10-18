@@ -14,3 +14,5 @@ Inno 6.7.1 accepts PNG for wizard branding, including transparency. You may use 
 Replace the files and rebuild: `python build_tools/build_installer.py --artifacts build/debug/beta/0.1.2-beta.4 --compile`. No script edits are needed.
 
 Official documentation: [large image](https://jrsoftware.org/ishelp/topic_setup_wizardimagefile.htm), [small image](https://jrsoftware.org/ishelp/topic_setup_wizardsmallimagefile.htm), [icon](https://jrsoftware.org/ishelp/topic_setup_setupiconfile.htm), [PNG preview classes](https://jrsoftware.org/ishelp/topic_scriptclasses.htm).
+
+Guia em português, com caminhos e exemplos: [GUIA_INSTALADOR_PT.md](../GUIA_INSTALADOR_PT.md).

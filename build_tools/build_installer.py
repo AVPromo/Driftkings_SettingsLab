@@ -181,8 +181,9 @@ def supported_realms(config):
     """Realms whose clients the installer accepts; the build realm must be one of them."""
     game = config['game']
     realms = game.get('supported_realms', [game['realm']])
-    require(isinstance(realms, list) and realms and len(set(realms)) == len(realms) and
-            all(isinstance(item, str) and re.fullmatch(r'[A-Z]{2,5}', item) for item in realms) and game['realm'] in realms,
+    require(isinstance(realms, list) and realms and
+            all(isinstance(item, str) and re.fullmatch(r'[A-Z]{2,5}', item) for item in realms) and
+            len(set(realms)) == len(realms) and game['realm'] in realms,
             'Invalid supported_realms: uppercase unique realm codes that include the build realm are required')
     return realms
 

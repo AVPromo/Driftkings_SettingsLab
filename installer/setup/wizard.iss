@@ -1,8 +1,22 @@
 // All component names, paths and option keys come from the generated include.
+function GetDriveType(RootPath: String): Cardinal;
+  external 'GetDriveTypeW@kernel32.dll stdcall';
 var
   ResetConfig, PreserveProfile: Boolean;
   Preview: TBitmapImage;
+  SelectedRoot: String;
+  Installations: TStringList;
+  InstallationList: TNewComboBox;
+  ClientNotice: TNewStaticText;
   Description, PreserveNotice: TNewStaticText;
+
+// AppId is finalized after validation, separately for every game root.
+function InstallationId(Param: String): String;
+begin
+  Result := '';
+  if SelectedRoot <> '' then
+    Result := 'Driftkings.Modpack.' + GetSHA256OfString(Lowercase(SelectedRoot));
+end;
 
 function ConfigRoot: String;
 begin
@@ -106,6 +120,196 @@ begin
   UpdatePreview(Sender);
 end;
 
+function XmlValue(const Data, Name: String): String;
+var
+  Start, Finish: Integer;
+begin
+  Result := '';
+  Start := Pos('<' + Name + '>', Data);
+  Finish := Pos('</' + Name + '>', Data);
+  if (Start > 0) and (Finish > Start) then
+    Result := Trim(Copy(Data, Start + Length(Name) + 2, Finish - Start - Length(Name) - 2));
+end;
+
+// Discovery is deliberately bounded: registry plus immediate game folders.
+function GameRoot(Path: String): String;
+var
+  Parent: String;
+begin
+  Path := RemoveBackslashUnlessRoot(ExpandFileName(RemoveQuotes(Trim(Path))));
+  if FileExists(Path) then Path := ExtractFileDir(Path);
+  Result := '';
+  while Length(Path) > 3 do begin
+    if FileExists(Path + '\version.xml') and DirExists(Path + '\res\packages') and
+       (FileExists(Path + '\WorldOfTanks.exe') or FileExists(Path + '\win64\WorldOfTanks.exe') or
+        FileExists(Path + '\win32\WorldOfTanks.exe')) then begin
+      Result := Path;
+      Exit;
+    end;
+    Parent := ExtractFileDir(Path);
+    if Parent = Path then Exit;
+    Path := Parent;
+  end;
+end;
+
+function ReadClient(const Folder: String; var Version, Realm: String): Boolean;
+var
+  Data: AnsiString;
+  Hash: Integer;
+begin
+  Version := '';
+  Realm := '';
+  Result := LoadStringFromFile(Folder + '\version.xml', Data);
+  if not Result then Exit;
+  Version := XmlValue(String(Data), 'version');
+  if Copy(Version, 1, 2) = 'v.' then Delete(Version, 1, 2);
+  Hash := Pos(' #', Version);
+  if Hash > 0 then Version := Copy(Version, 1, Hash - 1);
+  Version := Trim(Version);
+  Realm := Uppercase(XmlValue(String(Data), 'realm'));
+  // SEA is the former name of the ASIA realm.
+  if Realm = 'SEA' then Realm := 'ASIA';
+  Result := (Version <> '') and (Realm <> '');
+end;
+
+function ClientError: String;
+var
+  Root, Version, Realm: String;
+begin
+  Result := CustomMessage('WrongClient');
+  Root := GameRoot(WizardDirValue);
+  if Root = '' then Exit;
+  if not ReadClient(Root, Version, Realm) then Exit;
+  if (Version <> '{#GameVersion}') or
+     (Pos('|' + Realm + '|', '{#SupportedRealms}') = 0) then begin
+    Result := Result + #13#10 + Format(CustomMessage('DetectedClient'), [Realm, Version, Root]);
+    Exit;
+  end;
+  Result := '';
+end;
+
+procedure RefreshClient(Sender: TObject);
+var
+  Root, Version, Realm: String;
+begin
+  Root := GameRoot(WizardDirValue);
+  if (Root <> '') and ReadClient(Root, Version, Realm) then
+    ClientNotice.Caption := Format(CustomMessage('DetectedClient'), [Realm, Version, Root])
+  else ClientNotice.Caption := CustomMessage('ChooseRoot');
+  PreserveNotice.Visible := HasProfile and not ResetConfig;
+end;
+
+procedure SelectInstallation(Sender: TObject);
+begin
+  if InstallationList.ItemIndex >= 0 then
+    WizardForm.DirEdit.Text := Installations[InstallationList.ItemIndex];
+end;
+
+procedure AddInstallation(const Candidate: String);
+var
+  Root, Version, Realm: String;
+  I: Integer;
+begin
+  if Trim(Candidate) = '' then Exit;
+  Root := GameRoot(Candidate);
+  if (Root = '') or not ReadClient(Root, Version, Realm) then Exit;
+  if Pos('|' + Realm + '|', '{#SupportedRealms}') = 0 then Exit;
+  for I := 0 to Installations.Count - 1 do
+    if CompareText(Installations[I], Root) = 0 then Exit;
+  Installations.Add(Root);
+  InstallationList.Items.Add(Realm + ' | ' + Version + ' | ' + Root);
+end;
+
+procedure RegistryInstallations(Hive: Integer);
+var
+  Names: TArrayOfString;
+  I: Integer;
+  Key, Name, Location: String;
+begin
+  Key := 'Software\Microsoft\Windows\CurrentVersion\Uninstall';
+  if not RegGetSubkeyNames(Hive, Key, Names) then Exit;
+  for I := 0 to GetArrayLength(Names) - 1 do begin
+    if RegQueryStringValue(Hive, Key + '\' + Names[I], 'DisplayName', Name) then
+      if Pos('world of tanks', Lowercase(Name)) > 0 then
+        if RegQueryStringValue(Hive, Key + '\' + Names[I], 'InstallLocation', Location) then
+          AddInstallation(Location);
+  end;
+end;
+
+procedure ScanGameFolders(const Folder: String);
+var
+  Item: TFindRec;
+begin
+  AddInstallation(Folder);
+  if not FindFirst(AddBackslash(Folder) + '*', Item) then Exit;
+  try
+    repeat
+      if ((Item.Attributes and FILE_ATTRIBUTE_DIRECTORY) <> 0) and
+         ((Item.Attributes and $400) = 0) and
+         (Pos('world', Lowercase(Item.Name)) > 0) then
+        AddInstallation(AddBackslash(Folder) + Item.Name);
+    until not FindNext(Item);
+  finally
+    FindClose(Item);
+  end;
+end;
+
+procedure DiscoverInstallations;
+var
+  I, Match: Integer;
+  Drive: String;
+begin
+  AddInstallation(WizardDirValue);
+  RegistryInstallations(HKCU32);
+  RegistryInstallations(HKLM32);
+  if IsWin64 then begin
+    RegistryInstallations(HKCU64);
+    RegistryInstallations(HKLM64);
+  end;
+  for I := 67 to 90 do begin
+    Drive := Chr(I) + ':\';
+    // Only fixed local drives, never network or removable devices.
+    if GetDriveType(Drive) = 3 then begin
+      ScanGameFolders(Drive);
+      ScanGameFolders(Drive + 'Games');
+      ScanGameFolders(Drive + 'Wargaming.net');
+      ScanGameFolders(Drive + 'Games\Wargaming.net');
+    end;
+  end;
+  ScanGameFolders(ExpandConstant('{autopf}'));
+  ScanGameFolders(ExpandConstant('{autopf}\Wargaming.net'));
+  if IsWin64 then ScanGameFolders(ExpandConstant('{commonpf32}\Wargaming.net'));
+  // Preserve an explicit /DIR or previous valid path; otherwise prefer a matching client.
+  Match := -1;
+  for I := 0 to Installations.Count - 1 do begin
+    if CompareText(Installations[I], GameRoot(WizardDirValue)) = 0 then begin
+      Match := I;
+      Break;
+    end;
+  end;
+  if (Match < 0) and (ExpandConstant('{param:DIR|}') = '') then
+    for I := 0 to Installations.Count - 1 do
+      if Pos(' | {#GameVersion} | ', InstallationList.Items[I]) > 0 then begin
+        Match := I;
+        Break;
+      end;
+  InstallationList.ItemIndex := Match;
+  if Match >= 0 then SelectInstallation(InstallationList);
+  RefreshClient(WizardForm.DirEdit);
+end;
+
+function NextButtonClick(CurPageID: Integer): Boolean;
+var
+  Error: String;
+begin
+  Result := True;
+  if CurPageID <> wpSelectDir then Exit;
+  Error := ClientError;
+  Result := Error = '';
+  if Result then WizardForm.DirEdit.Text := GameRoot(WizardDirValue)
+  else MsgBox(Error, mbError, MB_OK);
+end;
+
 procedure InitializeWizard;
 begin
   ResetConfig := ExpandConstant('{param:RESETCONFIG|0}') = '1';
@@ -130,13 +334,31 @@ begin
   PreserveNotice := TNewStaticText.Create(WizardForm);
   PreserveNotice.Parent := WizardForm.SelectDirPage;
   PreserveNotice.Left := WizardForm.DirEdit.Left;
-  PreserveNotice.Top := WizardForm.DirEdit.Top + WizardForm.DirEdit.Height + ScaleY(20);
+  PreserveNotice.Top := WizardForm.SelectDirPage.ClientHeight - ScaleY(45);
   PreserveNotice.Width := WizardForm.SelectDirPage.ClientWidth - PreserveNotice.Left;
-  PreserveNotice.Height := ScaleY(55);
+  PreserveNotice.Height := ScaleY(40);
   PreserveNotice.AutoSize := False;
   PreserveNotice.WordWrap := True;
   PreserveNotice.Caption := CustomMessage('PreserveSettings');
   PreserveNotice.Visible := False;
+  Installations := TStringList.Create;
+  InstallationList := TNewComboBox.Create(WizardForm);
+  InstallationList.Parent := WizardForm.SelectDirPage;
+  InstallationList.Left := WizardForm.DirEdit.Left;
+  InstallationList.Top := WizardForm.DirEdit.Top + WizardForm.DirEdit.Height + ScaleY(12);
+  InstallationList.Width := WizardForm.SelectDirPage.ClientWidth - InstallationList.Left;
+  InstallationList.Style := csDropDownList;
+  InstallationList.OnChange := @SelectInstallation;
+  ClientNotice := TNewStaticText.Create(WizardForm);
+  ClientNotice.Parent := WizardForm.SelectDirPage;
+  ClientNotice.Left := InstallationList.Left;
+  ClientNotice.Top := InstallationList.Top + InstallationList.Height + ScaleY(8);
+  ClientNotice.Width := InstallationList.Width;
+  ClientNotice.Height := ScaleY(55);
+  ClientNotice.AutoSize := False;
+  ClientNotice.WordWrap := True;
+  WizardForm.DirEdit.OnChange := @RefreshClient;
+  DiscoverInstallations;
 end;
 
 procedure CurPageChanged(CurPageID: Integer);
@@ -150,30 +372,13 @@ begin
   Result := ((PageID = wpSelectComponents) or (PageID = wpSelectTasks)) and HasProfile and not ResetConfig;
 end;
 
-function XmlValue(const Data, Name: String): String;
-var
-  Start, Finish: Integer;
-begin
-  Result := '';
-  Start := Pos('<' + Name + '>', Data);
-  Finish := Pos('</' + Name + '>', Data);
-  if (Start > 0) and (Finish > Start) then
-    Result := Trim(Copy(Data, Start + Length(Name) + 2, Finish - Start - Length(Name) - 2));
-end;
-
 function PrepareToInstall(var NeedsRestart: Boolean): String;
 var
-  Data: AnsiString;
-  Version: String;
   Locator, Services, Processes: Variant;
 begin
-  Result := CustomMessage('WrongClient');
-  if not LoadStringFromFile(ExpandConstant('{app}\version.xml'), Data) then Exit;
-  Version := XmlValue(String(Data), 'version');
-  if Copy(Version, 1, 2) = 'v.' then Delete(Version, 1, 2);
-  if Pos(' #', Version) > 0 then Version := Copy(Version, 1, Pos(' #', Version) - 1);
-  if (Version <> '{#GameVersion}') or
-     (Pos('|' + Uppercase(XmlValue(String(Data), 'realm')) + '|', '{#SupportedRealms}') = 0) then Exit;
+  Result := ClientError;
+  if Result <> '' then Exit;
+  WizardForm.DirEdit.Text := GameRoot(WizardDirValue);
   Result := ExistingDependenciesError;
   if Result <> '' then Exit;
   Result := ConfigurationPathError;
@@ -190,6 +395,7 @@ begin
   except
     Exit;
   end;
+  SelectedRoot := GameRoot(WizardDirValue);
   PreserveProfile := HasProfile and not ResetConfig;
   Result := '';
 end;

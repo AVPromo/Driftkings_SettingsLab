@@ -54,3 +54,7 @@ In-game **reset to defaults** still restores the defaults packaged by the author
 - Add a new packaged `.bnk`/matching XML pair, declare both in `components.json`, rebuild and confirm the sound bank loader discovers/loads it in the game. Sound packs cannot become optional payloads without extending the updater inventory/helper first.
 
 Pure generator/media tests run in CI. The Windows EXE is compiled locally; these tests do not simulate installation or the game's sound engine.
+
+## WG client discovery
+
+See [the Portuguese installer guide](GUIA_INSTALADOR_PT.md) for discovery scope, supported versions/realms, side-by-side uninstall registration and exact branding/preview paths. Clients outside the bounded registry/common-folder search can be selected manually.
