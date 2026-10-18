@@ -5,7 +5,7 @@
   "client_build": "970",
   "resource": "gui/gameface/_dist/production/mono/hangar/main/bundle.js",
   "source_sha256": "0f70f90d3ed8154f46bae0c02d13497c8cc2134035205b2d9fd1dc5ef511df47",
-  "output_sha256": "17f527d769eb713fc1c5cdfe67e613d83807ab80d76f774d6a36db7c72e5ae58",
+  "output_sha256": "aecd3bf962bc971e1449fd3c68a2bc503ba419ca024833d2ebcab31a595bdf53",
   "operations": [
     {
       "find": "var[tr,ar]=ba(\"HeroTankModelProvider\")",
@@ -110,6 +110,11 @@
     {
       "find": "params:{count:r}}),e===yh.restoreTank",
       "replace": "params:{count:r}}),extra&&e===yh.buyTank&&(0,ti.jsx)(\"span\",{style:{marginLeft:\"6px\"},children:extra}),e===yh.restoreTank",
+      "count": 1
+    },
+    {
+      "find": "className:ta(lv,d&&cv,t.length>1&&dv),children:",
+      "replace": "\"data-dk-crew-slot\":a,\"data-dk-crew-id\":e,className:ta(lv,d&&cv,t.length>1&&dv),children:",
       "count": 1
     }
   ]

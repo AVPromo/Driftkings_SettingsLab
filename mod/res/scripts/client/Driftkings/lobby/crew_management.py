@@ -242,6 +242,9 @@ class Crew(object):
 
 g_crew = Crew()
 
+from Driftkings.views.hangar import crew_progression as progression_view
+progression_view.install(config)
+
 
 @override(VehicleSelectorPopup, 'onSelectVehicles')
 @logException
@@ -258,6 +261,7 @@ def onContextEntered(spaceID):
     if spaceID == GuiGlobalSpaceID.LOBBY and not _lobbyActive:
         _lobbyActive = True
         g_crew.init()
+        progression_view.g_controller.start()
         g_currentVehicle.onChanged += _onChanged
 
 
@@ -267,6 +271,7 @@ def onContextLeft(spaceID):
         _lobbyActive = False
         g_currentVehicle.onChanged -= _onChanged
         g_crew.invalidate()
+        progression_view.g_controller.stop()
 
 
 @logException

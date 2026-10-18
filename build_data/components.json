@@ -184,7 +184,18 @@
       "config_files": [
         "default/crew_management.json"
       ],
-      "assets": []
+      "assets": [
+        {
+          "source": "mod/res/gui/gameface/mods/Driftkings/CrewProgression/**",
+          "target": "res/gui/gameface/mods/Driftkings/CrewProgression/**",
+          "generator": null
+        },
+        {
+          "source": "mod/res/gui/gen_resources/driftkings.DriftkingsCrewProgression.json",
+          "target": "res/gui/gen_resources/driftkings.DriftkingsCrewProgression.json",
+          "generator": null
+        }
+      ]
     },
     "enemy_spotting_status": {
       "kind": "feature",
