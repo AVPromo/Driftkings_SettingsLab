@@ -57,7 +57,7 @@
         var samples=(data.recent||{}).samples||[], sufficient=samples.length>=2;
         K.show(chart.element,sufficient);
         if (resized) { chart.invalidate(); }
-        if (sufficient&&cfg.showHistory!==false&&valid) { chart.draw(samples); }
+        if (sufficient&&!cfg.compactMode&&cfg.showHistory!==false&&valid) { chart.draw(samples); }
         K.text(historyInfo,sufficient?K.label(data,'historyNote','Dossier observations by battle counter'):K.label(data,'waiting','Not enough observed history'));
         K.text(range,sufficient?samples[0].battles+' → '+samples[samples.length-1].battles+' · '+K.percent(samples[0].percent)+' → '+K.percent(samples[samples.length-1].percent):'');
         K.show(advanced,valid&&cfg.showAdvancedStatistics!==false);

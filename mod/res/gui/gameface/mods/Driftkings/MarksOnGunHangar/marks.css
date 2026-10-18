@@ -4,4 +4,6 @@
 .dk-mog--full .dk-mog__history { min-height:40rem; }
 .dk-mog--dense .dk-mog__percent { font-size:60rem; }
 .dk-mog--dense .dk-mog__metric { padding:0 9rem; }
-.dk-mog--dense .dk-mog__footer { flex-direction:column; }
+.dk-mog--dense .dk-mog__history,
+.dk-mog--dense .dk-mog__note,
+.dk-mog--dense .dk-mog__footer { display:none; }
