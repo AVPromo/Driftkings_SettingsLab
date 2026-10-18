@@ -104,3 +104,4 @@ htmlcov/
 !/tests/settings_panel/
 /tests/settings_panel/*
 !/tests/settings_panel/test_*.py
+!/tests/settings_panel/test_*.js

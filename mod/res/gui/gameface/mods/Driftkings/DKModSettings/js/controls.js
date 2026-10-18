@@ -2,6 +2,10 @@
 (function () {
     'use strict';
     var DK = window.DK = window.DK || {};
+    function label(ctx, key, fallback) {
+        var value = ctx && ctx.labels ? ctx.labels[key] : undefined;
+        return value === undefined || value === null ? fallback : value;
+    }
 
     function handled(event) {
         if (event && event.keyCode !== undefined && event.preventDefault) { event.preventDefault(); }
@@ -415,7 +419,7 @@
             if (api.state.disabled) { return; }
             var draft = value, draftAlpha = alpha, position = DK.colors.spectrumPosition(value), x = position.x, y = position.y;
             var panel = el('div', 'dk-color-picker'), area = el('div', 'dk-spectrum', null, panel);
-            area.tabIndex = 0; area.setAttribute('aria-label', ctx.labels['color.area'] || 'Color spectrum');
+            area.tabIndex = 0; area.setAttribute('aria-label', label(ctx, 'color.area', 'Color spectrum'));
             var canvas = el('canvas', 'dk-spectrum-canvas', null, area), cursor = el('div', 'dk-spectrum-cursor', null, area);
             canvas.width = 256; canvas.height = 192;
             try {
@@ -434,7 +438,7 @@
                 var box=el('div', '', null, previews); el('div','dk-color-title',label,box);
                 return el('div','dk-color-preview dk-checker',null,box);
             }
-            var current=preview(ctx.labels['color.current'] || 'Current'), next=preview(ctx.labels['color.new'] || 'New');
+            var current=preview(label(ctx, 'color.current', 'Current')), next=preview(label(ctx, 'color.new', 'New'));
             var currentFill=el('div','dk-preview-fill',null,current), nextFill=el('div','dk-preview-fill',null,next);
             currentFill.style.backgroundColor=value; currentFill.style.opacity=alpha/100;
             el('div','dk-color-title','HEX',panel);
@@ -477,8 +481,8 @@
                     btn.addEventListener('click',function(){ draft=normalizeHex(p.value); position=DK.colors.spectrumPosition(draft); x=position.x; y=position.y; render(); }); });
             }
             var actions=el('div','dk-modal-actions',null,panel);
-            el('button','dk-btn',ctx.labels.cancel || 'Cancel',actions).addEventListener('click',function(){DK.modal.close(false);});
-            el('button','dk-btn dk-primary',ctx.labels.apply || 'Apply',actions).addEventListener('click',function(){if(readHex()){DK.modal.close(true);}});
+            el('button','dk-btn',label(ctx, 'cancel', 'Cancel'),actions).addEventListener('click',function(){DK.modal.close(false);});
+            el('button','dk-btn dk-primary',label(ctx, 'apply', 'Apply'),actions).addEventListener('click',function(){if(readHex()){DK.modal.close(true);}});
             render(); DK.modal.open(panel,{origin:swatch, cleanup:function(){stop(); if(alphaWidget){alphaWidget.dispose();}}, apply:function(){
                 if(draft!==value || draftAlpha!==alpha) {
                     value=draft; alpha=draftAlpha; show();
@@ -613,7 +617,7 @@
             if (['live', 'battle', 'view', 'restart'].indexOf(timing) >= 0) {
                 var labels = (ctx && ctx.labels) || {};
                 var badge = el('div', 'dk-apply-timing dk-apply-timing--' + timing,
-                    (timing === 'restart' ? '↻ ' : '• ') + (labels['timing.' + timing] || {live: 'Immediate', battle: 'Next battle', view: 'Next view opening', restart: 'Requires restart'}[timing]), api.node);
+                    (timing === 'restart' ? '↻ ' : '• ') + label(ctx, 'timing.' + timing, {live: 'Immediate', battle: 'Next battle', view: 'Next view opening', restart: 'Requires restart'}[timing]), api.node);
                 badge.title = labels['applyTiming.' + timing] || '';
             }
             if (def.preview && def.preview.kind === 'image') {
@@ -650,7 +654,7 @@
             if (ctx && ctx.commit && Object.prototype.hasOwnProperty.call(def, 'default')) {
                 var reset = el('button', 'dk-option-reset', null, api.node.firstChild || api.node);
                 reset.type = 'button';
-                reset.title = (ctx.labels || {}).resetOption || 'Reset this option to default';
+                reset.title = label(ctx, 'resetOption', 'Reset this option to default');
                 reset.setAttribute('aria-label', reset.title);
                 reset.addEventListener('click', function () {
                     if (api.state && api.state.disabled) { return; }

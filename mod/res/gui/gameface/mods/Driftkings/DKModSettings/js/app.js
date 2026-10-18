@@ -7,11 +7,16 @@
     var ui = {}, schema = null, state = null, mods = {}, controls = {}, rendered = null;
     var query = '', activeTab = '', profileSelection = '', profileDialog = null;
     var toastTimer = null, lastMessage = 0, lastAccent = null, disposed = false, confirmFocused = false;
+    var lastLayout = null, lastFilter = null, scrollbarTimer = null;
 
     function labels() { return (schema && schema.labels) || {}; }
+    function label(key, fallback) {
+        var value = labels()[key];
+        return value === undefined || value === null ? fallback : value;
+    }
     function categoryLabel(category) {
         category = category || 'general';
-        return labels()['category.' + category] || {general: 'General', battle: 'Battle', hangar: 'Hangar', system: 'System'}[category] || category;
+        return label('category.' + category, {general: 'General', battle: 'Battle', hangar: 'Hangar', system: 'System'}[category] || category);
     }
     function send(action, data) { DK.bridge.send(action, data); }
 
@@ -99,11 +104,12 @@
     }
 
     function onSchema(next) {
+        lastFilter = null;
         schema = next; mods = {}; rendered = null;
         var text = labels();
         ui.installed.textContent = text.installed; ui.themeReset.textContent = text.resetTheme;
         ui.search.placeholder = text.search; ui.undo.textContent = text.undo; ui.profiles.textContent = text.profiles;
-        ui.title.textContent = text.title || 'DK MOD SETTINGS';
+        ui.title.textContent = label('title', 'DK MOD SETTINGS');
         ui.unsaved.textContent = '● ' + (text.unsaved || '');
         ui.close.title = text.close || '';
         ui.reset.textContent = text.reset; ui.cancel.textContent = text.cancel;
@@ -152,6 +158,7 @@
     }
 
     function renderMod(modId) {
+        lastFilter = null;
         DK.layer.cancelDrags(); DK.layer.close(); DK.layer.hideTip();
         Object.keys(controls).forEach(function (key) { if (controls[key].dispose) { controls[key].dispose(); } });
         controls = {}; rendered = modId; activeTab = '';
@@ -168,14 +175,14 @@
         }
         ui.modName.textContent = mod.name;
         var meta = mod.category ? [categoryLabel(mod.category)] : [];
-        if (mod.version) { meta.push((modId === 'dk.settings' ? 'DriftKings' : (text.version || 'Version')) + ' ' + mod.version); }
-        if (mod.author) { meta.push((text.author || 'Author') + ' ' + mod.author); }
+        if (mod.version) { meta.push((modId === 'dk.settings' ? 'DriftKings' : label('version', 'Version')) + ' ' + mod.version); }
+        if (mod.author) { meta.push(label('author', 'Author') + ' ' + mod.author); }
         ui.modMeta.textContent = meta.join('   •   ');
         ui.modDescription.textContent = mod.description || '';
         if (mod.soundBank) { ui.modDescription.textContent += ' • ' + text['sound.bank'] + ': ' + mod.soundBank; }
         (mod.dependencies || []).forEach(function (dependency) { if (!dependency.installed) { ui.modDescription.textContent += ' • ' + text.dependencyMissing + ': ' + dependency.id; } });
         ui.modDependencies.textContent = (mod.dependencies || []).map(function (dependency) {
-            return (dependency.installed ? '✓ ' + (text['status.available'] || 'Component available') : '! ' + (text.dependencyMissing || 'Missing dependency')) + ': ' + dependency.id;
+            return (dependency.installed ? '✓ ' + label('status.available', 'Component available') : '! ' + label('dependencyMissing', 'Missing dependency')) + ': ' + dependency.id;
         }).join(' • ');
         if (!mod.controls.length) { el('div', 'dk-empty', text.noControls, ui.controls); }
         var context = {
@@ -243,17 +250,17 @@
     function contains(list, key) { return !!list && list.indexOf(key) >= 0; }
 
     function statusParts(id) {
-        var text = labels(), mod = mods[id], current = (state.status || {})[id] || {}, parts = [];
-        if (current.status === 'configError') { parts.push('! ' + (text.statusConfigError || 'Configuration error')); }
-        else if (current.status === 'error') { parts.push('! ' + (text.statusError || 'Error')); }
-        else if (current.status && current.status !== 'active') { parts.push('! ' + (text['status.unavailable'] || 'Unavailable')); }
+        var mod = mods[id], current = (state.status || {})[id] || {}, parts = [];
+        if (current.status === 'configError') { parts.push('! ' + label('statusConfigError', 'Configuration error')); }
+        else if (current.status === 'error') { parts.push('! ' + label('statusError', 'Error')); }
+        else if (current.status && current.status !== 'active') { parts.push('! ' + label('status.unavailable', 'Unavailable')); }
         else if (current.status === 'active' || current.enabled !== undefined) {
-            parts.push(current.enabled === false ? (text['status.disabled'] || text.off || 'Off') : '✓ ' + (text['status.enabled'] || text.on || 'Active'));
-        } else { parts.push(text['status.unknown'] || 'Status unavailable'); }
+            parts.push(current.enabled === false ? label('status.disabled', label('off', 'Off')) : '✓ ' + label('status.enabled', label('on', 'Active')));
+        } else { parts.push(label('status.unknown', 'Status unavailable')); }
         (mod.dependencies || []).forEach(function (dependency) {
-            if (!dependency.installed) { parts.push('! ' + (text.dependencyMissing || 'Missing dependency') + ': ' + dependency.id); }
+            if (!dependency.installed) { parts.push('! ' + label('dependencyMissing', 'Missing dependency') + ': ' + dependency.id); }
         });
-        if (current.restartRequired || contains(state.restartRequired, id)) { parts.push('↻ ' + (text['status.restart'] || 'Restart required')); }
+        if (current.restartRequired || contains(state.restartRequired, id)) { parts.push('↻ ' + label('status.restart', 'Restart required')); }
         return parts;
     }
 
@@ -282,7 +289,6 @@
         var modId = state.selected, values = state.values[modId] || {};
         if (ui.updates) {
             var update = state.updater, strings = labels();
-            ui.updates.style.display = update ? '' : 'none';
             if (update) {
                 ui.updateInstalled.textContent = strings['updates.installed'] + ': ' + update.installedVersion;
                 ui.updateChannel.textContent = strings['updates.channel'] + ': ' + update.channel;
@@ -378,6 +384,7 @@
         confirmFocused = showDialog;
         toast(state.message);
         filter();
+        scheduleScrollbars();
     }
 
     function toast(message) {
@@ -397,17 +404,28 @@
     }
 
     /* Panel size in UI units: large on big screens, never larger than the client area. */
+    function scheduleScrollbars() {
+        if (disposed || scrollbarTimer !== null) { return; }
+        scrollbarTimer = setTimeout(function () {
+            scrollbarTimer = null;
+            if (!disposed) { ui.sidebarScroll(); ui.controlScroll(); }
+        }, 0);
+    }
     function layout() {
         if (disposed) { return; }
         var customScale = state && state.theme ? (state.theme.uiScale || 100) / 100 : 1;
-        document.documentElement.style.fontSize = (DK.bridge.scale() * customScale) + 'px';
+        var unit = DK.bridge.scale();
         var actual = DK.bridge.clientSizeRem(), client = {width: actual.width / customScale, height: actual.height / customScale};
+        var signature = [actual.width, actual.height, unit, customScale].join('|');
+        if (signature === lastLayout) { return; }
+        lastLayout = signature;
+        document.documentElement.style.fontSize = (unit * customScale) + 'px';
         setClass(ui.window, 'is-narrow', client.width < 1050);
         var width = Math.min(client.width - 20, Math.max(760, Math.min(1280, client.width - 160)));
         var height = Math.min(client.height - 20, Math.max(480, Math.min(840, client.height - 160)));
         ui.window.style.width = Math.round(width) + 'rem';
         ui.window.style.height = Math.round(height) + 'rem';
-        setTimeout(function () { if (!disposed) { ui.sidebarScroll(); ui.controlScroll(); } }, 0);
+        scheduleScrollbars();
     }
 
     function shade(hex, amount) {
@@ -454,6 +472,9 @@
         return !query || [def.name, def.label, def.category, def.category !== undefined || def.name !== undefined ? categoryLabel(def.category) : '', def.description, (def.keywords || []).join(' ')].join(' ').toLowerCase().indexOf(query) >= 0;
     }
     function filter() {
+        var signature = JSON.stringify([query, activeTab, rendered, !!(state && state.updater)]);
+        if (signature === lastFilter) { return; }
+        lastFilter = signature;
         Object.keys(ui.nav || {}).forEach(function (id) {
             var mod = mods[id];
             ui.nav[id].style.display = matches(mod) || mod.controls.some(matches) ? 'flex' : 'none';
@@ -471,7 +492,7 @@
         (ui.groups || []).forEach(function (group) {
             group.node.style.display = group.ids.some(function (id) { return ui.nav[id].style.display !== 'none'; }) ? '' : 'none';
         });
-        setTimeout(function () { if (!disposed) { ui.sidebarScroll(); ui.controlScroll(); } }, 0);
+        scheduleScrollbars();
     }
     function closeProfiles() {
         if (profileDialog) { DK.modal.close(null); if (profileDialog.root.parentNode) { profileDialog.root.parentNode.removeChild(profileDialog.root); } profileDialog = null; }
@@ -523,6 +544,7 @@
         if (disposed) { return; }
         disposed = true;
         if (toastTimer !== null) { clearTimeout(toastTimer); }
+        if (scrollbarTimer !== null) { clearTimeout(scrollbarTimer); scrollbarTimer = null; }
         document.removeEventListener('keydown', onKey);
         window.removeEventListener('resize', layout);
         window.removeEventListener('unload', dispose);
