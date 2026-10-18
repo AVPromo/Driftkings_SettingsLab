@@ -166,8 +166,8 @@
       "config_files": [],
       "assets": [
         {
-          "source": "mod/licenses/common.txt",
-          "target": "LICENSE",
+          "source": "LICENCE",
+          "target": "LICENCE",
           "generator": null
         },
         {
