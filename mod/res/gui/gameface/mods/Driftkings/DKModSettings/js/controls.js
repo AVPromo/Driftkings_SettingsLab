@@ -108,12 +108,23 @@
     /* Row layout shared by value controls. */
     function row(def, extraClass) {
         var node = el('div', 'dk-row' + (extraClass ? ' ' + extraClass : ''));
+        // Capture focus/blur: Gameface does not need :focus-within support.
+        node.addEventListener('focus', function () { setClass(node, 'has-focus', true); }, true);
+        node.addEventListener('blur', function (event) {
+            setClass(node, 'has-focus', inside(event.relatedTarget, node));
+        }, true);
         var labelArea = el('div', 'dk-label-area', null, node);
         el('div', 'dk-label', def.label, labelArea);
         if (def.description) {
             var help = el('div', 'dk-help', '?', labelArea);
+            help.tabIndex = 0;
+            help.setAttribute('aria-label', def.description);
             help.addEventListener('mouseenter', function () { showTip(help, def.description); });
-            help.addEventListener('mouseleave', hideTip);
+            help.addEventListener('mouseleave', function () {
+                if (document.activeElement !== help) { hideTip(); }
+            });
+            help.addEventListener('focus', function () { showTip(help, def.description); });
+            help.addEventListener('blur', hideTip);
         }
         return {node: node, input: el('div', 'dk-input-area', null, node)};
     }
