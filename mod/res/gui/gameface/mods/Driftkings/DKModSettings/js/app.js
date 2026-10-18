@@ -431,7 +431,10 @@
         var rgba = 'rgba(' + [(n >> 16) & 255, (n >> 8) & 255, n & 255, (values.opacity || 96) / 100].join(',') + ')';
         var css = '.dk-label,.dk-text,.dk-dropdown{font-size:' + (values.fontSize || 15) + 'rem}' + themeCss(accent) + '.dk-window{background:' + rgba + ';color:' + (values.textColor || '#E8E4DA') + ';font-size:' + (values.fontSize || 15) + 'rem}';
         css += '.dk-section{font-size:' + (values.sectionFontSize || 18) + 'rem}.dk-sidebar{background:rgba(0,0,0,' + (Number(values.sidebarOpacity === undefined ? 35 : values.sidebarOpacity) / 100) + ')}';
-        css += '.dk-label,.dk-text{color:' + (values.textColor || '#E8E4DA') + '}.dk-mod-description,.dk-mod-meta{color:' + (values.secondary || '#B3AE9F') + '}.dk-window{border-color:' + (values.border || '#4A463E') + '}.dk-nav-item:hover{background:' + (values.hover || '#39352B') + '}';
+        css += '.dk-label,.dk-text{color:' + (values.textColor || '#E8E4DA') + '}.dk-window{border-color:' + (values.border || '#4A463E') + '}.dk-nav-item:hover{background:' + (values.hover || '#39352B') + '}';
+        if (values.secondary) {
+            css += '.dk-mod-description,.dk-mod-meta,.dk-nav-status,.dk-apply-timing{color:' + values.secondary + '}';
+        }
         document.getElementById('dk-theme').textContent = css;
     }
 
