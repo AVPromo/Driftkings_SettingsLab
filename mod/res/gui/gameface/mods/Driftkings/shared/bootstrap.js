@@ -39,9 +39,7 @@
             "scripts": [
                 "coui://gui/gameface/mods/Driftkings/CrewProgression/crew.js"
             ],
-            "styles": [
-                "coui://gui/gameface/mods/Driftkings/CrewProgression/crew.css"
-            ]
+            "styles": []
         },
         "DriftkingsHangarClock": {
             "owner": "__dkHangarClock",

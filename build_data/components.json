@@ -209,6 +209,11 @@
           "source": "build/gameface/crew/BarracksView.js",
           "target": "res/gui/gameface/_dist/production/lobby/crew/BarracksView/BarracksView.js",
           "generator": "crew_barracks_bridge"
+        },
+        {
+          "source": "build/gameface/crew/tooltips.js",
+          "target": "res/gui/gameface/_dist/production/mono/hangar/tooltips/bundle.js",
+          "generator": "crew_tooltip_bridge"
         }
       ]
     },

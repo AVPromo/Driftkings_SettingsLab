@@ -22,7 +22,7 @@ _installed = False
 
 def build_model(visible):
     settings = settings_service.getComponentDict(_config)
-    enabled = bool(visible and settings[GLOBAL.ENABLED] and settings.get('showCrewProgression', True))
+    enabled = bool(visible and settings[GLOBAL.ENABLED] and settings.get('showCrewProgression', True) and settings.get('showCrewTooltips', True))
     result = {'config': {'visible': enabled}, 'rows': []}
     if not enabled or not g_currentVehicle.isPresent():
         return result
@@ -31,7 +31,10 @@ def build_model(visible):
     for row in collect_rows(vehicle, ServicesLocator.itemsCache.items):
         lines = progression_lines(row, settings, _config.lang, _config.i18n)
         if lines:
-            result['rows'].append({'slot': row['slot'], 'id': row['id'], 'lines': lines})
+            kinds = ([row['state']] if row['state'] != 'training' else
+                     (['xp'] if settings.get('showRemainingXP', True) else []) +
+                     (['battles' if row['estimatedBattles'] is not None else 'unavailable'] if settings.get('showEstimatedBattles', True) else []))
+            result['rows'].append({'slot': row['slot'], 'id': row['id'], 'lines': lines, 'kinds': kinds})
     return result
 
 

@@ -139,6 +139,20 @@
       "implementation": "replace_exact",
       "required": true,
       "patch_file": "build_data/patches/crew_barracks_2.4.1.json"
+    },
+    "crew_tooltip_bridge": {
+      "kind": "gameface_patch",
+      "resource": "gui/gameface/_dist/production/mono/hangar/tooltips/bundle.js",
+      "game_packages": [
+        "res/packages/gui-part1.pkg",
+        "res/packages/gui-part2.pkg",
+        "res/packages/gui-part3.pkg",
+        "res/packages/gui-part4.pkg"
+      ],
+      "output": "build/gameface/crew/tooltips.js",
+      "implementation": "replace_exact",
+      "required": true,
+      "patch_file": "build_data/patches/crew_tooltip_2.4.1.json"
     }
   }
 }

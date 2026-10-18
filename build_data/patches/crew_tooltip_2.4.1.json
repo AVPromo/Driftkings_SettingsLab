@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "game_version": "2.4.1.0",
+  "realm": "NA",
+  "client_build": "970",
+  "resource": "gui/gameface/_dist/production/mono/hangar/tooltips/bundle.js",
+  "source_sha256": "20a182bc2e36b037d32bbd4fc09a61dfee33837ec68aee5f193bccf86865f5d9",
+  "output_sha256": "c5271bcc70a1ae1e8823696038914cb280c2ed12daeba3c1873f5c9c868334f8",
+  "operations": [
+    {
+      "find": "ie=ae(r(m({tankman:p})))",
+      "replace": "ie=ae(r(m({tankman:p,dkCrewProgression:p})))",
+      "count": 1
+    },
+    {
+      "find": "(0,me.jsx)(ue,{})]})})})}),ks=",
+      "replace": "(0,me.jsx)(ue,{}),(()=>{const dk=ie().dkCrewProgression;if(!dk||!dk.lines)return null;return(0,me.jsx)(\"div\",{style:{marginTop:\"12rem\",paddingTop:\"10rem\",borderTop:\"1rem solid rgba(255,255,255,.12)\",fontSize:\"14rem\",lineHeight:\"18rem\"},children:dk.lines.map((line,index)=>(0,me.jsx)(\"div\",{style:{color:({xp:\"#00FFFF\",battles:\"#28F09C\",ready:\"#28F09C\",complete:\"#28F09C\",unavailable:\"#8C8C7E\"})[(dk.kinds||[])[index]]||\"#E9E2BF\"},children:line},index))})})()]})})})}),ks=",
+      "count": 1
+    }
+  ]
+}

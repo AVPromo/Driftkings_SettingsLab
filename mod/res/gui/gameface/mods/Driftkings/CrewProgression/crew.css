@@ -1,4 +1,0 @@
-.dk-crew-progress-host { position:relative; }
-.dk-crew-progress { position:absolute; left:100%; top:5rem; width:168rem; margin-left:6rem; padding:5rem 7rem; background:rgba(10,15,19,.72); border-left:1rem solid rgba(232,197,90,.65); color:#e8e4da; font:12rem/16rem "Warhelios",Arial,sans-serif; pointer-events:none; }
-.dk-crew-progress__line { white-space:normal; overflow-wrap:break-word; word-wrap:break-word; }
-.dk-crew-progress--horizontal { left:0; top:auto; bottom:100%; width:100%; box-sizing:border-box; margin:0 0 4rem; padding:3rem 2rem; font-size:10rem; line-height:12rem; }
