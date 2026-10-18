@@ -147,6 +147,7 @@ package driftkings.battle.components.ratings
             }
             catch(error:Error)
             {
+                // Report through the Python diagnostic callback, suppressing repeats.
                 var failure:String=error.toString();
                 if (failure!=lastReport && reportState!=null) { lastReport=failure; reportState(failure); }
             }

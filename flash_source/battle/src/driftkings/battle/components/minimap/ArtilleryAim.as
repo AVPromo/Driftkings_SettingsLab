@@ -1,6 +1,7 @@
 package driftkings.battle.components.minimap
 {
     import flash.display.DisplayObjectContainer;
+    import driftkings.utils.Utils;
     import flash.display.Sprite;
     import flash.display.Loader;
     import flash.display.Bitmap;
@@ -72,7 +73,6 @@ package driftkings.battle.components.minimap
 
         private function imageFailed(event:Event):void
         {
-            trace("[Driftkings.Minimap] Cannot load artillery aim: " + source);
             releaseImage();
             visible = false;
         }
@@ -85,8 +85,7 @@ package driftkings.battle.components.minimap
             loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, imageReady);
             loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, imageFailed);
             loader.contentLoaderInfo.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, imageFailed);
-            try { loader.close(); } catch (error:Error) {}
-            try { loader.unload(); } catch (ignored:Error) {}
+            Utils.safeUnload(loader);
             if (loader.parent == this) removeChild(loader);
             loader = null;
         }

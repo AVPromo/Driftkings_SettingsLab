@@ -1,4 +1,5 @@
 package driftkings.battle.components.overlay {
+import driftkings.utils.Utils;
 import flash.display.Sprite;
 import flash.display.Loader;
 import flash.display.DisplayObjectContainer;
@@ -129,8 +130,7 @@ public class OverlayElement extends Sprite {
         loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, imageReady);
         loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, imageFailed);
         loader.contentLoaderInfo.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, imageFailed);
-        try { loader.close(); } catch (error:Error) {}
-        try { loader.unload(); } catch (ignored:Error) {}
+        Utils.safeUnload(loader);
         if (loader.parent == this) removeChild(loader);
         loader = null;
     }
