@@ -357,3 +357,11 @@ class DiscoveryContractTests(unittest.TestCase):
         for realms in ([{}], [['NA']], [None], [1], ['NA', {}]):
             with self.assertRaisesRegex(ValueError, 'Invalid supported_realms'):
                 supported_realms({'game': {'realm': 'NA', 'supported_realms': realms}})
+
+
+class StartupRegressionTests(unittest.TestCase):
+    def test_profile_lookup_during_initialize_does_not_expand_app(self):
+        code = (ROOT / 'installer/setup/wizard.iss').read_text(encoding='utf-8-sig')
+        config_root = code.split('function ConfigRoot: String;', 1)[1].split('function IsReparseDirectory', 1)[0]
+        self.assertNotIn('ExpandConstant', config_root)
+        self.assertIn('AddBackslash(WizardDirValue)', config_root)

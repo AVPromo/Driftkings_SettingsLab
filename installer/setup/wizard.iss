@@ -20,7 +20,8 @@ end;
 
 function ConfigRoot: String;
 begin
-  Result := ExpandConstant('{app}\mods\configs\Driftkings');
+  // The directory page exists during InitializeWizard; {app} is not ready yet.
+  Result := AddBackslash(WizardDirValue) + 'mods\configs\Driftkings';
 end;
 
 function IsReparseDirectory(const Folder: String): Boolean;
