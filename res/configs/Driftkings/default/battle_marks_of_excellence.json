@@ -46,6 +46,7 @@
   "showProgress": true,
   "showTargets": true,
   "gameface": {
+    "miniMode": true,
     "locked": true,
     "enabled": true,
     "backgroundOpacity": 0.82,

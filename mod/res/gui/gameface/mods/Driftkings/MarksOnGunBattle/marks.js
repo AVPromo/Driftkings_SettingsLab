@@ -6,20 +6,23 @@
     var context=K.node('span','dk-mog__context',header);
     var overview=K.node('div','dk-mog__overview',root);
     var hero=K.node('div','dk-mog__hero',overview), main=K.node('div','',hero);
-    var estimatedLabel=K.node('div','dk-mog__label',main), estimated=K.node('div','dk-mog__percent',main);
+    var estimatedLabel=K.node('div','dk-mog__label',main), percentRow=K.node('div','dk-mog__percentrow',main);
+    var estimated=K.node('div','dk-mog__percent',percentRow), trend=K.node('span','dk-mog__trend',percentRow);
     var starRow=K.node('div','',hero), stars=K.stars(starRow);
     var unavailable=K.node('div','dk-mog__unavailable',root);
     var metrics=K.node('div','dk-mog__metrics',overview), cards=[];
     ['combined','target','needed'].forEach(function(key){
-        var card=K.node('div','dk-mog__metric',metrics);
+        var card=K.node('div','dk-mog__metric dk-mog__metric--'+key,metrics);
         cards.push({root:card,label:K.node('div','dk-mog__label',card),value:K.node('span','dk-mog__value',card)});
     });
     var progress=K.node('div','dk-mog__progress',root), scale=K.scale(progress);
     var next=K.node('div','dk-mog__next',progress), nextLabel=K.node('span','',next), gap=K.node('span','',next);
-    var footer=K.node('div','dk-mog__footer',root), current=K.node('span','',footer), trend=K.node('span','dk-mog__trend',footer);
+    var footer=K.node('div','dk-mog__footer',root), current=K.node('span','',footer);
     function render(data) {
-        var cfg=data.config||{}, valid=data.state==='data', accent=K.theme(root,cfg,true);
+        var cfg=data.config||{}, valid=data.state==='data', mini=cfg.miniMode!==false;
         var interactive=cfg.draggable===true && cfg.locked===false;
+        root.className='dk-mog dk-mog--compact'+(mini?' dk-mog--mini':'')+(interactive?' dk-mog--unlocked':'');
+        var accent=K.theme(root,cfg,true,mini?400:650);
         K.style(root,'zIndex','10000');
         K.style(root,'pointerEvents',interactive?'auto':'none');
         K.style(root.firstChild,'pointerEvents',interactive?'auto':'none');

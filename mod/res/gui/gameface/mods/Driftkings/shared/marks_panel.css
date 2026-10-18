@@ -60,3 +60,20 @@
 .dk-mog__marker { position:absolute; top:-5rem; bottom:-5rem; width:2rem; margin-left:-1rem; background:#ffffff; opacity:.85; }
 .dk-mog__progress .dk-mog__next { margin-top:2rem; }
 .dk-mog--compact .dk-mog__tick { height:16rem; }
+.dk-mog__percentrow { display:flex; align-items:center; }
+.dk-mog__percentrow .dk-mog__trend { margin-left:12rem; font-size:15rem; }
+.dk-mog--mini { padding:9rem 14rem; }
+.dk-mog--mini .dk-mog__header, .dk-mog--mini .dk-mog__footer { display:none; }
+.dk-mog--mini .dk-mog__label { display:none; }
+.dk-mog--mini .dk-mog__overview { margin-bottom:0; }
+.dk-mog--mini .dk-mog__percent { font-size:38rem; }
+.dk-mog--mini .dk-mog__star { font-size:22rem; padding:0 2rem; }
+.dk-mog--mini .dk-mog__metric--combined, .dk-mog--mini .dk-mog__metric--target { display:none; }
+.dk-mog--mini .dk-mog__overview .dk-mog__metrics { margin:0; padding:0 0 0 12rem; }
+.dk-mog--mini .dk-mog__metric { padding:0; border:0; }
+.dk-mog--mini .dk-mog__metric--needed .dk-mog__label { display:block; font-size:12rem; }
+.dk-mog--mini .dk-mog__value { font-size:26rem; }
+.dk-mog--mini .dk-mog__scale { padding-bottom:18rem; }
+.dk-mog--mini .dk-mog__bar { margin:8rem 0 4rem; }
+.dk-mog--mini .dk-mog__next { font-size:12rem; }
+.dk-mog--mini.dk-mog--unlocked .dk-mog__header { display:flex; }

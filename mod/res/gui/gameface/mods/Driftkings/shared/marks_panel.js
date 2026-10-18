@@ -243,12 +243,12 @@
         else if (cfg.alignY === 'center') { y -= (window.innerHeight - rect.height) / 2; }
         return {x: Math.round(x / unit()), y: Math.round(y / unit())};
     }
-    function theme(root, cfg, compact) {
+    function theme(root, cfg, compact, baseWidth) {
         var accent = color(cfg.accentColor, '#E8C55A'), bg = color(cfg.backgroundColor, '#0b141b');
         style(root, 'borderColor', '#518896'); style(root, 'color', color(cfg.titleColor, '#E8E4DA'));
         style(root, 'backgroundColor', 'rgba(' + parseInt(bg.slice(1,3),16) + ',' + parseInt(bg.slice(3,5),16) + ',' + parseInt(bg.slice(5,7),16) + ',' + number(cfg.backgroundOpacity, number(cfg.backgroundAlpha, .82)) + ')');
         var scale = Math.max(.1, Math.min(10, number(cfg.scale, 1)));
-        var base = compact ? 650 : cfg.compactMode ? 640 : 760;
+        var base = number(baseWidth, compact ? 650 : cfg.compactMode ? 640 : 760);
         scale = Math.min(scale, window.innerWidth / (base * unit()) * .96);
         style(root, 'width', base + 'rem'); style(root, 'transform', 'scale(' + scale + ')');
         style(root, 'opacity', String(number(cfg.alpha, 1)));

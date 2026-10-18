@@ -24,6 +24,7 @@ class BattleMarksOfExcellenceSettings(SectionDefinition):
             [
                 options(BATTLE_MARKS_OF_EXCELLENCE.COLOR_RATING, [table['ScaleColor'] for table in color_tables]),
                 field(['gameface', 'enabled'], self.i18n['UI_mog_enableBattle']),
+                field(['gameface', 'miniMode'], self.i18n['UI_mog_miniMode']),
                 control('showMarks'), control('showDelta'), control('showDamage'),
                 control('showProgress'), control('showTargets'),
                 control(BATTLE_MARKS_OF_EXCELLENCE.SHOW_IN_STATISTIC),
