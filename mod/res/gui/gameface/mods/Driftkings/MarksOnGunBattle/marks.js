@@ -28,13 +28,13 @@
         K.style(root,'pointerEvents',interactive?'auto':'none');
         K.style(root.firstChild,'pointerEvents',interactive?'auto':'none');
         K.style(root.firstChild,'cursor',interactive?'move':'default');
-        K.text(title,K.label(data,'title','Marks of Excellence'));
-        K.text(context,K.label(data,'battle','IN BATTLE'));
-        K.text(estimatedLabel,K.label(data,'estimated','Estimated mark'));
+        K.text(title,K.label(data,'title',''));
+        K.text(context,K.label(data,'battle',''));
+        K.text(estimatedLabel,K.label(data,'estimated',''));
         K.text(estimated,valid?K.percent(data.estimatedMark):'\u2014'); K.style(estimated,'color',accent);
         K.show(starRow,cfg.showStars!==false); K.updateStars(stars,data.marksAchieved||0);
-        K.show(unavailable,!valid); K.text(unavailable,data.message||K.label(data,'unavailable','No reliable marks data available'));
-        ['combined','target','needed'].forEach(function(key,i){ K.text(cards[i].label,K.label(data,key,key)); });
+        K.show(unavailable,!valid); K.text(unavailable,data.message||K.label(data,'unavailable',''));
+        ['combined','target','needed'].forEach(function(key,i){ K.text(cards[i].label,K.label(data,key,'')); });
         K.text(cards[0].value,K.formatted(data.combinedDamage));
         K.text(cards[1].value,valid?K.formatted(data.targetDamage):'\u2014'); K.text(cards[2].value,valid?K.formatted(data.damageNeeded):'\u2014');
         K.style(cards[2].value,'color',accent);
@@ -42,9 +42,9 @@
         K.show(metrics,cfg.showCombined!==false||cfg.showTargetDamage!==false||cfg.showRequiredDamage!==false);
         K.show(progress,valid&&cfg.showProgress!==false); scale.update(data.estimatedMark,data.marksAchieved,data.currentMark);
         K.style(scale.fill,'backgroundImage','linear-gradient(0deg,'+accent+',#fff1ab)');
-        K.text(nextLabel,data.completed?K.label(data,'completed','Three marks achieved'):K.label(data,'next','Next mark')+' '+data.nextMilestone+'%');
+        K.text(nextLabel,data.completed?K.label(data,'completed',''):K.label(data,'next','')+' '+data.nextMilestone+'%');
         K.text(gap,data.completed?'':K.formatted(data.gap,1)+' '+K.label(data,'gapUnit','')+' '+K.label(data,'remaining',''));
-        K.text(current,K.label(data,'current','Consolidated mark')+': '+K.percent(data.currentMark));
+        K.text(current,K.label(data,'current','')+': '+K.percent(data.currentMark));
         K.text(trend,(data.trend||{}).text||'\u2014'); trend.className='dk-mog__trend dk-mog__trend--'+((data.trend||{}).direction||'unknown');
         K.show(trend,valid&&cfg.showTrend!==false);
     }
