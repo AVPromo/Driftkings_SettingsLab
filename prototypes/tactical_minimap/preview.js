@@ -8,7 +8,8 @@
         {id: 3, visible: true, state: 'visible', side: 'ally', vehicleClass: 'lightTank', x: 0.7, y: 0.5, name: 'LT'},
         {id: 4, visible: true, state: 'visible', side: 'platoon', vehicleClass: 'AT-SPG', x: 0.2, y: 0.6, name: 'TD'},
         {id: 5, visible: true, state: 'visible', side: 'ally', vehicleClass: 'SPG', x: 0.8, y: 0.85, name: 'SPG'},
-        {id: 6, visible: true, state: 'destroyed', side: 'enemy', vehicleClass: 'mediumTank', x: 0.8, y: 0.2, name: 'Destruído'}
+        {id: 7, visible: true, state: 'visible', side: 'ally', vehicleClass: 'mediumTank', x: 0.55, y: 0.4, name: 'MT'},
+        {id: 6, visible: true, state: 'destroyed', side: 'enemy', vehicleClass: 'mediumTank', x: 0.8, y: 0.2, name: 'DestruÃ­do'}
     ]};
     function render() {
         function value(id) { return document.getElementById(id).value; }
