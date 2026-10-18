@@ -85,6 +85,46 @@
             invalidate: function () { previous = null; }
         };
     }
+    // One scale for the three excellence marks. Positions are piecewise linear so each interval has room:
+    // 0-65 | 65-85 | 85-95 | 95-100. The fill shows the real percentage; ticks fill when a mark is reached.
+    var SCALE_STOPS = [[0, 0], [65, 36], [85, 64], [95, 88], [100, 100]];
+    function scalePosition(percentValue) {
+        var v = Math.max(0, Math.min(100, number(percentValue, 0)));
+        for (var i = 1; i < SCALE_STOPS.length; i++) {
+            if (v <= SCALE_STOPS[i][0]) {
+                var a = SCALE_STOPS[i - 1], b = SCALE_STOPS[i];
+                return a[1] + (v - a[0]) / (b[0] - a[0]) * (b[1] - a[1]);
+            }
+        }
+        return 100;
+    }
+    function scale(parent) {
+        var box = node('div', 'dk-mog__scale', parent), track = node('div', 'dk-mog__bar', box), fill = node('div', 'dk-mog__fill', track);
+        var marker = node('i', 'dk-mog__marker', track), ticks = [], names = node('div', 'dk-mog__ticks', box);
+        [65, 85, 95].forEach(function (limit) {
+            var left = scalePosition(limit) + '%';
+            var tick = node('i', 'dk-mog__tick', track); style(tick, 'left', left);
+            var name = node('span', 'dk-mog__tickname', names, limit + '%'); style(name, 'left', left);
+            ticks.push({tick: tick, name: name, limit: limit});
+        });
+        return {
+            element: box, fill: fill,
+            update: function (value, earned, observed, showMarks) {
+                show(names, showMarks !== false);
+                style(box, 'paddingBottom', showMarks === false ? '0' : '');
+                style(fill, 'width', scalePosition(value) + '%');
+                ticks.forEach(function (item, index) {
+                    show(item.tick, showMarks !== false);
+                    var hit = number(value, 0) >= item.limit || number(earned, 0) > index;
+                    item.tick.className = 'dk-mog__tick' + (hit ? ' dk-mog__tick--hit' : '');
+                    item.name.className = 'dk-mog__tickname' + (hit ? ' dk-mog__tickname--hit' : '');
+                });
+                var showMarker = typeof observed === 'number' && isFinite(observed);
+                show(marker, showMarker);
+                if (showMarker) { style(marker, 'left', scalePosition(observed) + '%'); }
+            }
+        };
+    }
     function connect(feature, owner, root, render, position, savePosition) {
         if (window[owner]) { window[owner].dispose(); }
         var disposed = false, model = null, resourceId = null, callbackId = null;
@@ -211,5 +251,5 @@
     }
     window.__dkMarksKit = {node:node, text:text, style:style, show:show, number:number,
         formatted:formatted, percent:percent, label:label, stars:stars, updateStars:updateStars,
-        graph:graph, connect:connect, position:position, savedPosition:savedPosition, theme:theme};
+        graph:graph, scale:scale, connect:connect, position:position, savedPosition:savedPosition, theme:theme};
 }());

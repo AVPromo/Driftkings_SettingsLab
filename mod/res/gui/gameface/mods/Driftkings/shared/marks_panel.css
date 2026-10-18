@@ -21,9 +21,6 @@
 .dk-mog__muted { color:#9aaeb8; font-size:12rem; }
 .dk-mog__vehicle { color:#bdcbd1; font-size:14rem; margin-bottom:9rem; }
 .dk-mog__note { color:#a5b5bf; font-size:11rem; margin:9rem 0; }
-.dk-mog__milestones { display:flex; justify-content:space-around; padding:12rem 0; margin:11rem 0; border-top:1rem solid #34505a; border-bottom:1rem solid #34505a; background:linear-gradient(0deg,transparent 48%,#48595d 49%,#48595d 51%,transparent 52%); }
-.dk-mog__milestone { text-align:center; background:#0d171d; min-width:70rem; }
-.dk-mog__milestone .dk-mog__star { display:block; font-size:31rem; }
 .dk-mog__history { padding-top:8rem; }
 .dk-mog__graph { position:relative; height:95rem; margin:16rem 6rem 8rem; border-left:1rem solid #4c626d; border-bottom:1rem solid #4c626d; background-image:repeating-linear-gradient(0deg,transparent,transparent 23rem,rgba(62,95,103,.24) 24rem),repeating-linear-gradient(90deg,transparent,transparent 49rem,rgba(62,95,103,.24) 50rem); }
 .dk-mog__axis { position:absolute; left:6rem; margin-top:-8rem; font-size:12rem; line-height:16rem; color:#9aaeb8; pointer-events:none; }
@@ -53,3 +50,13 @@
 .dk-mog--compact .dk-mog__next { font-size:11rem; }
 .dk-mog--full { pointer-events:auto; }
 .dk-mog--full .dk-mog__header { cursor:move; }
+.dk-mog__scale { position:relative; padding-bottom:22rem; }
+.dk-mog__scale .dk-mog__bar { overflow:visible; }
+.dk-mog__tick { position:absolute; top:-3rem; width:2rem; height:20rem; margin-left:-1rem; background:#6f8791; }
+.dk-mog__tick--hit { background:#ffe989; box-shadow:0 0 6rem rgba(240,198,60,.6); }
+.dk-mog__ticks { position:absolute; left:0; right:0; bottom:0; height:18rem; }
+.dk-mog__tickname { position:absolute; top:0; width:44rem; margin-left:-22rem; text-align:center; font-size:12rem; color:#9aaeb8; }
+.dk-mog__tickname--hit { color:#ecd797; }
+.dk-mog__marker { position:absolute; top:-5rem; bottom:-5rem; width:2rem; margin-left:-1rem; background:#ffffff; opacity:.85; }
+.dk-mog__progress .dk-mog__next { margin-top:2rem; }
+.dk-mog--compact .dk-mog__tick { height:16rem; }

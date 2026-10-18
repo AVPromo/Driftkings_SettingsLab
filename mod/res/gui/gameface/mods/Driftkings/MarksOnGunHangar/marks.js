@@ -9,18 +9,14 @@
     var currentLabel = K.node('div', 'dk-mog__label', main), current = K.node('div', 'dk-mog__percent', main);
     var starsRow = K.node('div', '', hero), stars = K.stars(starsRow);
     var unavailable = K.node('div', 'dk-mog__unavailable', root);
-    var progress = K.node('div', '', root), bar = K.node('div', 'dk-mog__bar', progress), fill = K.node('div', 'dk-mog__fill', bar);
+    var progress = K.node('div', 'dk-mog__progress', root), scale = K.scale(progress);
     var next = K.node('div', 'dk-mog__next', progress), nextLabel = K.node('span', '', next), gap = K.node('span', '', next);
     var metrics = K.node('div', 'dk-mog__metrics', root), cards = [];
     ['ema', 'target', 'needed'].forEach(function (name) {
         var card = K.node('div', 'dk-mog__metric', metrics);
         cards.push({label:K.node('div','dk-mog__label',card),value:K.node('span','dk-mog__value',card)});
     });
-    var note = K.node('div', 'dk-mog__note', root), milestones = K.node('div', 'dk-mog__milestones', root), marks = [];
-    [65, 85, 95].forEach(function (limit) {
-        var marker = K.node('div','dk-mog__milestone',milestones);
-        K.node('span','dk-mog__label',marker,limit+'%'); marks.push(K.node('span','dk-mog__star',marker,'\u2606'));
-    });
+    var note = K.node('div', 'dk-mog__note', root);
     var history = K.node('div', 'dk-mog__history', root), historyLabel = K.node('div', 'dk-mog__label', history);
     var chart = K.graph(history), historyInfo = K.node('div','dk-mog__muted',history), range = K.node('div','dk-mog__muted',history);
     var advanced = K.node('div','dk-mog__footer',root), averages = K.node('span','',advanced), achievements = K.node('span','',advanced);
@@ -37,10 +33,12 @@
         K.text(vehicle,(data.vehicle||'\u2014')+(data.tier?' · '+data.tier:'')+(data.nation?' · '+data.nation:''));
         K.show(vehicle,cfg.showVehicleInfo!==false);
         K.text(current,valid?K.percent(data.currentMark):'\u2014'); K.style(current,'color',accent);
-        K.updateStars(stars,valid?data.displayMarks:0); K.updateStars(marks,valid?data.displayMarks:0);
+        K.updateStars(stars,valid?data.displayMarks:0);
         K.show(unavailable,!valid); K.text(unavailable,data.message||K.label(data,'unavailable','No reliable marks data available'));
-        K.show(progress,valid&&cfg.showProgress!==false);
-        K.style(fill,'width',(K.number(milestone.progress,0)*100)+'%'); K.style(fill,'backgroundImage','linear-gradient(0deg,'+accent+',#fff1ab)');
+        K.show(progress,valid&&(cfg.showProgress!==false||cfg.showMilestones!==false));
+        scale.update(data.currentMark,data.displayMarks,null,cfg.showMilestones!==false);
+        K.show(scale.fill,cfg.showProgress!==false); K.show(next,cfg.showProgress!==false);
+        K.style(scale.fill,'backgroundImage','linear-gradient(0deg,'+accent+',#fff1ab)');
         K.text(nextLabel,milestone.completed?K.label(data,'completed','Three marks achieved'):K.label(data,'next','Next mark')+' '+milestone.nextMilestone+'%');
         K.text(gap,milestone.completed?'':K.formatted(milestone.gap,2)+' pp');
         K.show(metrics,valid&&cfg.showDamageStatistics!==false);
@@ -51,7 +49,6 @@
         K.text(cards[1].value,K.formatted(data.targetDamage)); K.text(cards[2].value,K.formatted(data.damageNeeded));
         K.style(cards[2].value,'color',accent);
         K.text(note,K.label(data,'estimateNote','Local estimate, not a guaranteed server threshold')); K.show(note,valid&&cfg.showDamageStatistics!==false);
-        K.show(milestones,valid&&cfg.showMilestones!==false);
         K.show(history,valid&&cfg.showHistory!==false);
         K.text(historyLabel,K.label(data,'history','Observed progress history'));
         var samples=(data.recent||{}).samples||[], sufficient=samples.length>=2;
