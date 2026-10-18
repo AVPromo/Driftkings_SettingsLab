@@ -41,16 +41,17 @@ Name: "{app}\mods\configs\Driftkings\images"; Flags: uninsneveruninstall
 
 [CustomMessages]
 en.Recommended=Recommended (author defaults)
-pt.Recommended=Recomendado (predefinições do autor)
 en.Customized=Custom
-pt.Customized=Personalizado
-en.WrongClient=Select the World of Tanks {#GameVersion} ({#GameRealm}) game folder.
-pt.WrongClient=Seleciona a pasta do World of Tanks {#GameVersion} ({#GameRealm}).
+en.WrongClient=Select the World of Tanks {#GameVersion} game folder (supported realms: {#SupportedRealmsText}).
 en.CloseGame=Close World of Tanks before installing.
-pt.CloseGame=Fecha o World of Tanks antes de instalar.
 en.ProcessCheckFailed=Cannot verify whether World of Tanks is running. Installation stopped.
-pt.ProcessCheckFailed=Não foi possível verificar se o World of Tanks está aberto. Instalação interrompida.
 en.PreserveSettings=An existing profile was found. All existing JSON settings will be preserved.
+//PT
+pt.Recommended=Recomendado (predefinições do autor)
+pt.Customized=Personalizado
+pt.WrongClient=Seleciona a pasta do World of Tanks {#GameVersion} (realms suportados: {#SupportedRealmsText}).
+pt.CloseGame=Fecha o World of Tanks antes de instalar.
+pt.ProcessCheckFailed=Não foi possível verificar se o World of Tanks está aberto. Instalação interrompida.
 pt.PreserveSettings=Foi encontrado um perfil existente. Todos os JSON de configuração serão preservados.
 
 #include InputDir + "\branding.generated.iss"

@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from build_tools.build_installer import definitions, generate_components, partial_choices, prepare_payload
+from build_tools.build_installer import definitions, generate_components, partial_choices, prepare_payload, supported_realms
 from build_tools.generate_ui_catalog import installer_catalog
 from build_tools.validate_build_data import build_plan
 from build_tools.validate_installer_assets import validate, validate_png, inventory_limit
@@ -176,6 +176,9 @@ class GeneratorTests(unittest.TestCase):
         prepare_payload(self.root, artifacts, out)
         payload = (out / 'payload.generated.iss').read_bytes()
         script = payload.decode('utf-8-sig')
+        metadata = (out / 'metadata.generated.iss').read_text(encoding='utf-8-sig')
+        self.assertIn('#define SupportedRealms "|EU|NA|ASIA|"', metadata)
+        self.assertIn('#define SupportedRealmsText "EU, NA, ASIA"', metadata)
         self.assertEqual(script.count('Source:'), 3)
         self.assertNotIn('Components:', script)
         self.assertNotIn('Tasks:', script)
@@ -191,6 +194,18 @@ class GeneratorTests(unittest.TestCase):
         (artifacts / 'dependencies/first.wotmod').write_bytes(b'changed')
         with self.assertRaisesRegex(ValueError, 'Invalid installer payload'):
             prepare_payload(self.root, artifacts, out)
+
+    def test_supported_realms_are_validated_and_include_the_build_realm(self):
+        config = json.loads((self.root / 'build_data/build_config.json').read_text())
+        self.assertEqual(supported_realms(config), ['EU', 'NA', 'ASIA'])
+        del config['game']['supported_realms']
+        self.assertEqual(supported_realms(config), [config['game']['realm']])
+        build = config['game']['realm']
+        other = 'EU' if build != 'EU' else 'NA'
+        for invalid in ([], [build, build], [build.lower()], [other], [build, 1]):
+            config['game']['supported_realms'] = invalid
+            with self.assertRaisesRegex(ValueError, 'Invalid supported_realms'):
+                supported_realms(config)
 
     def test_runtime_loader_merges_partial_file_without_rewriting_it(self):
         client = ROOT / 'mod/res/scripts/client/Driftkings'
