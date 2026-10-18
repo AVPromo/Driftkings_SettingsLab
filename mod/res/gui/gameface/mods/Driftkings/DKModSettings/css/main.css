@@ -156,7 +156,10 @@ textarea { font-family: Warhelios; font-size: 15rem; color: #e8e4da; }
 .dk-window.is-narrow .dk-columns { flex-direction: column; }
 .dk-window.is-narrow .dk-unsaved { display: none; }
 .dk-window.is-narrow .dk-footer .dk-btn { min-width: 64rem; padding: 0 8rem; margin-left: 4rem; }
-.dk-window.is-narrow .dk-search { width: 160rem; }
+.dk-window.is-narrow .dk-search { width: 160rem; font-size: 13rem; }
+.dk-window.is-narrow .dk-nav-item { height: auto; min-height: 60rem; }
+.dk-window.is-narrow .dk-nav-name { white-space: normal; text-overflow: clip; overflow-wrap: break-word; word-wrap: break-word; line-height: 18rem; }
+.dk-window.is-narrow .dk-nav-icon, .dk-window.is-narrow .dk-nav-dot { flex-shrink: 0; }
 .dk-row.is-disabled { opacity: .45; }
 
 .dk-mod-header { position: relative; }
