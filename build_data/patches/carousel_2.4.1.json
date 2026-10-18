@@ -5,7 +5,7 @@
   "client_build": "970",
   "resource": "gui/gameface/_dist/production/mono/hangar/main/bundle.js",
   "source_sha256": "0f70f90d3ed8154f46bae0c02d13497c8cc2134035205b2d9fd1dc5ef511df47",
-  "output_sha256": "c4ca0a6ca9ae95cfa3d44424b5d7bb3213ad10dcddc26121dd7e9a4f30bae0f1",
+  "output_sha256": "2ebd38962658806fc5b3d03b676d6c3bd9d195a4bd7f754937a8259ed5ea8d03",
   "operations": [
     {
       "find": "var[tr,ar]=ba(\"HeroTankModelProvider\")",
@@ -119,7 +119,7 @@
     },
     {
       "find": "(0,Tr.useMemo)(()=>({tankman:_??{},resId:GS.read(e=>e.mono.hangar.tooltips(\"resId\"))}),[_])",
-      "replace": "(0,Tr.useMemo)(()=>({tankman:_??{},dkCrewProgression:window.__dkCrewProgression?window.__dkCrewProgression.getRow(t):null,resId:GS.read(e=>e.mono.hangar.tooltips(\"resId\"))}),[_,dkCarouselRevision.get()])",
+      "replace": "(0,Tr.useMemo)(()=>({tankman:_??{},dkCrewProgression:window.__dkCrewProgression?window.__dkCrewProgression.getRow(t)||void 0:void 0,resId:GS.read(e=>e.mono.hangar.tooltips(\"resId\"))}),[_,dkCarouselRevision.get()])",
       "count": 1
     }
   ]

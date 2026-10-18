@@ -5,11 +5,16 @@
   "client_build": "970",
   "resource": "gui/gameface/_dist/production/mono/hangar/tooltips/bundle.js",
   "source_sha256": "20a182bc2e36b037d32bbd4fc09a61dfee33837ec68aee5f193bccf86865f5d9",
-  "output_sha256": "c5271bcc70a1ae1e8823696038914cb280c2ed12daeba3c1873f5c9c868334f8",
+  "output_sha256": "ef5a31525496059bd271332b69008f17affff29fa647f967121c74750ae907d1",
   "operations": [
     {
+      "find": "import\"../chunks/global.js\";",
+      "replace": "import{Gt as dkOptional}from\"../chunks/lib.js\";import\"../chunks/global.js\";",
+      "count": 1
+    },
+    {
       "find": "ie=ae(r(m({tankman:p})))",
-      "replace": "ie=ae(r(m({tankman:p,dkCrewProgression:p})))",
+      "replace": "ie=ae(r(m({tankman:p,dkCrewProgression:dkOptional(m({lines:n(u()),kinds:n(u())}))})))",
       "count": 1
     },
     {
