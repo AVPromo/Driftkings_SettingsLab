@@ -4,7 +4,9 @@
   "crewReturnByDefault": true,
   "enabled": true,
   "excludePremiumVehicles": false,
+  "showCrewDetails": true,
   "showCrewProgression": true,
+  "showCrewTooltips": true,
   "showEstimatedBattles": true,
   "showNotifications": true,
   "showRemainingXP": true

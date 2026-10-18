@@ -194,6 +194,16 @@
           "source": "mod/res/gui/gen_resources/driftkings.DriftkingsCrewProgression.json",
           "target": "res/gui/gen_resources/driftkings.DriftkingsCrewProgression.json",
           "generator": null
+        },
+        {
+          "source": "mod/res/gui/gameface/mods/Driftkings/CrewDetails/**",
+          "target": "res/gui/gameface/mods/Driftkings/CrewDetails/**",
+          "generator": null
+        },
+        {
+          "source": "mod/res/gui/gen_resources/driftkings.DriftkingsCrewDetails.json",
+          "target": "res/gui/gen_resources/driftkings.DriftkingsCrewDetails.json",
+          "generator": null
         }
       ]
     },

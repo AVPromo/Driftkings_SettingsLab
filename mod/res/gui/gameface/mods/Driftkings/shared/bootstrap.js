@@ -25,6 +25,15 @@
                 "coui://gui/gameface/mods/Driftkings/CarouselStats/carousel.css"
             ]
         },
+        "DriftkingsCrewDetails": {
+            "owner": "__dkCrewDetails",
+            "scripts": [
+                "coui://gui/gameface/mods/Driftkings/CrewDetails/details.js"
+            ],
+            "styles": [
+                "coui://gui/gameface/mods/Driftkings/CrewDetails/details.css"
+            ]
+        },
         "DriftkingsCrewProgression": {
             "owner": "__dkCrewProgression",
             "scripts": [

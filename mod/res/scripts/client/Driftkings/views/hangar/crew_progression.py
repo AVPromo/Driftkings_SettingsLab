@@ -11,18 +11,13 @@ from Driftkings.interface_catalog import gameface_spec
 from Driftkings.lobby.crew_progression import collect_rows
 from Driftkings.settings.service import settings_service
 from Driftkings.views.hangar.common import HangarController, install_card, publish_card
-from Driftkings.views.marks_model import number_locale
+from Driftkings.views.crew_progression_model import progression_lines
 
 FEATURE = 'DriftkingsCrewProgression'
 RESOURCE = gameface_spec(FEATURE)['resource']
 LOG = logging.getLogger('Driftkings.CrewProgressionView')
 _config = None
 _installed = False
-
-
-def translated(key):
-    value = _config.i18n[key]
-    return value.decode('utf-8') if isinstance(value, bytes) else value
 
 
 def build_model(visible):
@@ -33,23 +28,8 @@ def build_model(visible):
         return result
     vehicle = g_currentVehicle.item
     result['vehicleId'] = vehicle.intCD
-    separators = number_locale(_config.lang)
-    def integer(value):
-        return u'{:,}'.format(int(value)).replace(u',', separators['groupSeparator'])
     for row in collect_rows(vehicle, ServicesLocator.itemsCache.items):
-        if row['state'] == 'empty':
-            continue
-        lines = []
-        if row['state'] in ('complete', 'ready', 'unavailable'):
-            lines.append(translated('UI_crew_' + row['state']))
-        else:
-            if settings.get('showRemainingXP', True):
-                key = 'UI_crew_roleXP' if row['roleTraining'] else 'UI_crew_xp'
-                lines.append(translated(key).format(xp=integer(row['remainingXP'])))
-            if settings.get('showEstimatedBattles', True):
-                estimate = row['estimatedBattles']
-                lines.append(translated('UI_crew_noHistory') if estimate is None else
-                             translated('UI_crew_battles').format(battles=integer(estimate)))
+        lines = progression_lines(row, settings, _config.lang, _config.i18n)
         if lines:
             result['rows'].append({'slot': row['slot'], 'id': row['id'], 'lines': lines})
     return result
@@ -140,3 +120,5 @@ def install(config):
                 publish_card(self, {'config': {'visible': False}, 'rows': []})
 
     install_card(lambda: sys.modules[__name__], CrewView, __name__)
+    from Driftkings.views.hangar import crew_details
+    crew_details.install()

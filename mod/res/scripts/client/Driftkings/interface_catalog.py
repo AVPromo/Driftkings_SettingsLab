@@ -51,7 +51,15 @@ FLASH_COMPONENTS = {'ArmorCalculatorView': {'as3': 'driftkings.battle.components
                     'section': 'sixth_sense_alert',
                     'surfaces': ['battle']}}
 
-GAMEFACE = {'DriftkingsCrewProgression': {'context': 'hangar',
+GAMEFACE = {'DriftkingsCrewDetails': {'context': 'hangar',
+                          'layout': 'coui://gui/gameface/mods/Driftkings/CrewDetails/model.html',
+                          'owner': '__dkCrewDetails',
+                          'python': 'Driftkings.views.hangar.crew_details',
+                          'resource': 'mods/Driftkings/CrewDetails/model',
+                          'scripts': ['coui://gui/gameface/mods/Driftkings/CrewDetails/details.js'],
+                          'section': 'crew_management',
+                          'styles': ['coui://gui/gameface/mods/Driftkings/CrewDetails/details.css']},
+ 'DriftkingsCrewProgression': {'context': 'hangar',
                             'layout': 'coui://gui/gameface/mods/Driftkings/CrewProgression/model.html',
                             'owner': '__dkCrewProgression',
                             'python': 'Driftkings.views.hangar.crew_progression',
