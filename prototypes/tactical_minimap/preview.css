@@ -1,0 +1,12 @@
+body { margin:32px; background:#12181b; color:#e2e7e7; font:15px Arial,sans-serif; }
+h1 { font-size:24px; } p { max-width:780px; line-height:1.5; }
+.controls { display:flex; flex-wrap:wrap; gap:16px; margin:24px 0; max-width:800px; }
+label { display:flex; flex-direction:column; gap:8px; } select,input { padding:6px; }
+.tm-map { position:relative; margin:38px; border:1px solid #8bb3ba; box-shadow:0 0 0 4px #18282b; }
+.tm-map:before { content:"DADOS SINTÉTICOS — FORA DO JOGO"; position:absolute; bottom:-25px; font-size:11px; color:#ffc45b; }
+.tm-grid { position:absolute; width:100%; height:100%; box-sizing:border-box; padding:8px; color:#91a6ad; font-size:12px; word-spacing:12px; background-image:linear-gradient(rgba(140,170,170,.15) 1px,transparent 1px),linear-gradient(90deg,rgba(140,170,170,.15) 1px,transparent 1px); background-size:10% 10%; }
+.tm-marker { position:absolute; transform:translate(-50%,-50%); text-align:center; pointer-events:none; }
+.tm-marker svg { display:block; margin:auto; filter:drop-shadow(0 1px 1px #000); }
+.tm-marker span { white-space:nowrap; text-shadow:1px 1px #000; }
+.tm-military { border-color:#a7b58a; background-image:linear-gradient(35deg,rgba(72,85,42,.4),transparent); }
+.tm-minimal { border-color:#888; box-shadow:none; }
