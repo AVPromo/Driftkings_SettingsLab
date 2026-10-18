@@ -26,3 +26,15 @@ def progression_lines(row, settings, language, strings):
         lines.append(translated(strings, 'UI_crew_noHistory') if estimate is None else
                      translated(strings, 'UI_crew_battles').format(battles=integer(estimate, language)))
     return lines
+
+
+def progression_kinds(row, settings):
+    """Semantic colours shared by native tooltips, details and barracks."""
+    if row['state'] == 'empty':
+        return []
+    if row['state'] != 'training':
+        return [row['state']]
+    kinds = ['xp'] if settings.get('showRemainingXP', True) else []
+    if settings.get('showEstimatedBattles', True):
+        kinds.append('battles' if row['estimatedBattles'] is not None else 'unavailable')
+    return kinds

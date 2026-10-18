@@ -33,8 +33,12 @@
             var title = document.createElement('div'); title.className = 'dk-crew-details__title';
             title.textContent = data.title; box.appendChild(title);
         }
-        (data.lines || []).forEach(function (value) {
+        (data.lines || []).forEach(function (value, index) {
             var line = document.createElement('div'); line.className = 'dk-crew-details__line';
+            var kind = (data.kinds || [])[index];
+            if (/^(xp|battles|ready|complete|unavailable|total)$/.test(kind || '')) {
+                line.className += ' dk-crew-details__line--' + kind;
+            }
             line.textContent = value; box.appendChild(line);
         });
         host.appendChild(box); mounted.push(box);
@@ -66,7 +70,7 @@
                 (data.rows || []).forEach(function (row) { rows[String(row.id)] = row; });
                 Array.prototype.forEach.call(cards, function (card) {
                     var row = rows[card.getAttribute('data-dk-barracks-id')];
-                    if (row) { mount(card, {surface: 'barracks', lines: row.lines}); }
+                    if (row) { mount(card, {surface: 'barracks', lines: row.lines, kinds: row.kinds}); }
                 });
                 return;
             }

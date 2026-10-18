@@ -11,7 +11,7 @@ from Driftkings.interface_catalog import gameface_spec
 from Driftkings.lobby.crew_progression import collect_rows
 from Driftkings.settings.service import settings_service
 from Driftkings.views.hangar.common import HangarController, install_card, publish_card
-from Driftkings.views.crew_progression_model import progression_lines
+from Driftkings.views.crew_progression_model import progression_kinds, progression_lines
 
 FEATURE = 'DriftkingsCrewProgression'
 RESOURCE = gameface_spec(FEATURE)['resource']
@@ -31,9 +31,7 @@ def build_model(visible):
     for row in collect_rows(vehicle, ServicesLocator.itemsCache.items):
         lines = progression_lines(row, settings, _config.lang, _config.i18n)
         if lines:
-            kinds = ([row['state']] if row['state'] != 'training' else
-                     (['xp'] if settings.get('showRemainingXP', True) else []) +
-                     (['battles' if row['estimatedBattles'] is not None else 'unavailable'] if settings.get('showEstimatedBattles', True) else []))
+            kinds = progression_kinds(row, settings)
             result['rows'].append({'slot': row['slot'], 'id': row['id'], 'lines': lines, 'kinds': kinds})
     return result
 

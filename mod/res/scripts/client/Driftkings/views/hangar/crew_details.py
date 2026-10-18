@@ -10,7 +10,7 @@ from Driftkings.core.hooks import override
 from Driftkings.interface_catalog import gameface_spec
 from Driftkings.lobby.crew_progression import collect_tankman
 from Driftkings.settings.service import settings_service
-from Driftkings.views.crew_progression_model import integer, progression_lines, translated
+from Driftkings.views.crew_progression_model import integer, progression_kinds, progression_lines, translated
 from Driftkings.views.hangar.common import publish_card
 from Driftkings.views.hangar import crew_progression as hangar_bridge
 
@@ -45,10 +45,13 @@ def build_model(parent, surface):
     # Use the native descriptor; no old reset/retraining XP thresholds.
     total = nonnegative(tankman.descriptor.totalXP())
     lines = []
+    kinds = []
     if total is not None:
         lines.append(translated(config.i18n, 'UI_crew_totalXP').format(xp=integer(total, config.lang)))
+        kinds.append('total')
     lines.extend(progression_lines(row, settings, config.lang, config.i18n))
-    result.update(config={'visible': bool(lines)}, id=tankman_id, lines=lines,
+    kinds.extend(progression_kinds(row, settings))
+    result.update(config={'visible': bool(lines)}, id=tankman_id, lines=lines, kinds=kinds,
                   title=translated(config.i18n, 'UI_crew_progressionTitle'))
     return result
 
@@ -67,7 +70,7 @@ def build_barracks_model(parent, settings, config):
         row = collect_tankman(tankman, items)
         lines = progression_lines(row, settings, config.lang, config.i18n)
         if lines:
-            rows.append({'id': tankman_id, 'lines': lines})
+            rows.append({'id': tankman_id, 'lines': lines, 'kinds': progression_kinds(row, settings)})
     return {'config': {'visible': True}, 'surface': 'barracks', 'rows': rows}
 
 

@@ -18,6 +18,8 @@ def collect_tankman(tankman, items, slot=None):
         row.update(id=tankman.invID, name=tankman.getFullUserNameWithSkin(),
                    role=tankman.roleUserName)
         complete = tankman.allSkillsLearned()
+        # Native API sums only the unfinished skill to 100%, including free XP.
+        # getNextLevelXpCost would instead stop at the next percentage point.
         remaining = 0 if complete else tankman.getNextSkillXpCost()
         # Native free XP can exceed the remaining skill cost.
         if remaining is not None and remaining < 0:
