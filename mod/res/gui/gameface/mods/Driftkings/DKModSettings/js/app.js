@@ -68,7 +68,9 @@
         ui.apply = footerButton(footer, function () { send('apply'); });
         ui.save = footerButton(footer, function () { send('save'); }, 'is-primary');
 
-        ui.toast = el('div', 'dk-toast', null, win);
+        ui.toast = el('button', 'dk-toast', null, win);
+        ui.toast.type = 'button';
+        ui.toast.addEventListener('click', showNotice);
         ui.overlay = el('div', 'dk-overlay', null, win);
         var dialog = ui.dialog = el('div', 'dk-dialog', null, ui.overlay);
         ui.dialogTitle = el('div', 'dk-dialog-title', null, dialog);
@@ -387,6 +389,16 @@
         scheduleScrollbars();
     }
 
+    function showNotice() {
+        if (!ui.toast.textContent || DK.modal.isOpen()) { return; }
+        var panel = el('div', 'dk-notice-dialog');
+        el('div', 'dk-notice-text', ui.toast.textContent, panel);
+        var actions = el('div', 'dk-notice-actions', null, panel);
+        footerButton(actions, function () { DK.modal.close(false); }).textContent = label('close', 'Close');
+        // The toast may expire while reading; return focus to a stable control.
+        DK.modal.open(panel, {origin: ui.close});
+    }
+
     function toast(message) {
         if (!message || message.id === lastMessage) { return; }
         lastMessage = message.id;
@@ -446,7 +458,7 @@
             '.dk-switch.is-on .dk-switch-text{color:' + accent + '}',
             '.dk-checkbox.is-on{background:' + accent + ';border-color:' + light + '}',
             '.dk-text:focus,.dk-dropdown:focus{border-color:' + accent + '}',
-            '.dk-btn:focus,.dk-switch:focus,.dk-checkbox:focus,.dk-nav-item:focus,.dk-dropdown:focus,.dk-text:focus,.dk-slider-track:focus{outline:2px solid ' + accent + ';outline-offset:2px;box-shadow:none}',
+            '.dk-btn:focus,.dk-switch:focus,.dk-checkbox:focus,.dk-nav-item:focus,.dk-dropdown:focus,.dk-text:focus,.dk-slider-track:focus,.dk-toast:focus{outline:2px solid ' + accent + ';outline-offset:2px;box-shadow:none}',
             '.dk-slider-thumb{border-color:' + dark + '}',
             '.dk-window{border-color:' + shade(accent, -0.6) + '}'
         ].join('\n');

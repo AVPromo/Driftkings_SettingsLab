@@ -128,13 +128,18 @@ def check_generated(root=ROOT):
         raise ValueError('Python defaults differ from JSON. Run python build_tools/generate_defaults.py --write')
 
 
+def defaults_sha256(path):
+    """Hash JSON text consistently across LF and CRLF working-tree checkouts."""
+    return hashlib.sha256(path.read_bytes().replace(b'\r\n', b'\n')).hexdigest()
+
+
 def refresh_snapshot(root=ROOT):
     path = root / 'build_data/defaults_snapshot.json'
     snapshot = read_object(path)
     config = read_object(root / 'build_data/build_config.json')
     source = root / config['defaults']['source_root']
     for item in snapshot['files']:
-        item['sha256'] = hashlib.sha256((source / item['path']).read_bytes()).hexdigest()
+        item['sha256'] = defaults_sha256(source / item['path'])
     path.write_text(json.dumps(snapshot, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
 
 

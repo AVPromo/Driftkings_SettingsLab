@@ -178,3 +178,7 @@ button:focus,input:focus,textarea:focus,select:focus,[tabindex]:focus { outline:
 .dk-row:hover .dk-option-reset, .dk-row.has-focus .dk-option-reset, .dk-row.is-changed .dk-option-reset, .dk-option-reset:focus { opacity:1; }
 .dk-option-reset:hover { color:#f0d69b; border-color:#b79858; }
 .dk-option-reset:disabled { cursor:default; }
+.dk-row:hover .dk-option-reset:disabled,
+.dk-row.has-focus .dk-option-reset:disabled,
+.dk-row.is-changed .dk-option-reset:disabled,
+.dk-option-reset:disabled:focus { opacity:.4; }

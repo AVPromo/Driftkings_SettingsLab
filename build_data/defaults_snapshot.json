@@ -101,7 +101,7 @@
     {
       "path": "default/hangar_preferences.json",
       "source_sha256": "7a514224cf02cc639df62cb8cfd3dc0c345155d2e3fe998d7a6268f4088ebe56",
-      "sha256": "8a83fb84d1eef1542ed771e17bc8c71ceaaba027446dd5dc451d30d3a7647b41"
+      "sha256": "a0b211d8bd0ce21e2448e41ba16cf1dbbf539af7067382706c7d88f0cc5bceec"
     },
     {
       "path": "default/target_information.json",
@@ -121,12 +121,12 @@
     {
       "path": "default/battle_marks_of_excellence.json",
       "source_sha256": "36fab7807469e846f1aa2887a1ba8b94d41facf22e23763087c056dc2123c2a0",
-      "sha256": "fe45d51fa97e2375637992b80971d0092be3e80ef55a6c73b4efdef2bee1e462"
+      "sha256": "057dbc25e2356b4f61844048a5035019e64f49326a5f2265cd2e5878eeb85657"
     },
     {
       "path": "default/hangar_marks_of_excellence.json",
       "source_sha256": "9adecf9063cb8036d592739f95ffcb1b5ce10d30d72b653d1c4227abab2533e5",
-      "sha256": "fd6b87ccfbceff17c5264e7d3b389c40ce1cff63d4adffd5405af93ca6acc963"
+      "sha256": "bc3c2cccd5746244cc904d875e07112661858ceb545ece9b8581be57772b2911"
     },
     {
       "path": "default/tech_tree_marks_of_excellence.json",
@@ -211,12 +211,12 @@
     {
       "path": "default/repair_controls.json",
       "source_sha256": "18da0797d2745eb22042c63fbdb21d97a25e998cac6471554bb4d8acedc57413",
-      "sha256": "798a41322877bd2f42bea28c69903bf5a97e3aa3988aa8172124fa08988858de"
+      "sha256": "61d0ae149e41d6aef9f11e41ead310e835186b00f25ebaa48e952504f5bea9c6"
     },
     {
       "path": "default/server_turret_sync.json",
       "source_sha256": "7d6daedede815ca6c63943681308c06e397c78ac98154e6d44ed640a93e68b68",
-      "sha256": "03c811ee6b3ddc72eb16d1295e15fc7b44657bba740b023066effe9952702cdf"
+      "sha256": "318bba90b22d09ae4125f388c848be2ca2d2f78fe3b31c9ac02f2f7fc773a889"
     },
     {
       "path": "default/sixth_sense_alert.json",

@@ -10,12 +10,12 @@ import zipfile
 try:
     from .components import read_components
     from .validate_locales import validate_catalogs
-    from .generate_defaults import check_generated as check_default_values
+    from .generate_defaults import check_generated as check_default_values, defaults_sha256
     from .generate_ui_catalog import validate as validate_ui_catalog
 except ImportError:
     from components import read_components
     from validate_locales import validate_catalogs
-    from generate_defaults import check_generated as check_default_values
+    from generate_defaults import check_generated as check_default_values, defaults_sha256
     from generate_ui_catalog import validate as validate_ui_catalog
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -239,7 +239,7 @@ def build_plan(root=ROOT, check_generated=False, check_game=False, check_compone
             'Defaults snapshot inventory mismatch')
     for item in snapshot['files']:
         path = input_path(defaults_root, item['path'])
-        require(hashlib.sha256(path.read_bytes()).hexdigest() == item['sha256'], 'Defaults snapshot hash mismatch: %s' % item['path'])
+        require(defaults_sha256(path) == item['sha256'], 'Defaults snapshot hash mismatch: %s' % item['path'])
     for generator, spec in config['generators'].items():
         if spec['kind'] == 'flash':
             require(input_path(root, spec['entrypoint']).is_file(), 'Missing Flash entrypoint')
