@@ -77,15 +77,15 @@ package driftkings.battle.components.sixth_sense
 			this.loader = null;
 			if (this.hideAnimation)
 			{
-				this.hideAnimation.stop();
+				this.hideAnimation.dispose();
 			}
 			if (this.hideAnimation2)
 			{
-				this.hideAnimation2.stop();
+				this.hideAnimation2.dispose();
 			}
 			if (this.showAnimation)
 			{
-				this.showAnimation.stop();
+				this.showAnimation.dispose();
 			}
 			this.hideAnimation = null;
 			this.hideAnimation2 = null;

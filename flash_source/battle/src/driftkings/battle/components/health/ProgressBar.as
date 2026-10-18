@@ -121,7 +121,7 @@ package driftkings.battle.components.health
 			this.uiText = null;
 			if (this.animation)
 			{
-				this.animation.stop();
+				this.animation.dispose();
 				this.animation = null;
 			}
 		}

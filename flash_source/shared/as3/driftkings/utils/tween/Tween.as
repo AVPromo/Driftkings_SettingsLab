@@ -1,6 +1,5 @@
 package driftkings.utils.tween
 {
-	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
@@ -56,20 +55,29 @@ package driftkings.utils.tween
 			this.start();
 		}
 		
-		protected function startEnterFrame():void
+		protected function startTimer():void
 		{
 			this._timer.delay = 1000 / this._fps;
-			this._timer.addEventListener(TimerEvent.TIMER, this.timerHandler, false, 0, true);
+			// Keep the running tween alive until stopTimer removes the listener.
+			this._timer.removeEventListener(TimerEvent.TIMER, this.timerHandler);
+			this._timer.addEventListener(TimerEvent.TIMER, this.timerHandler);
 			this._timer.start();
 			this.isPlaying = true;
 		}
 		
 		public function stop():void
 		{
-			this.stopEnterFrame();
+			this.stopTimer();
 			this.dispatchEvent(new TweenEvent(TweenEvent.MOTION_STOP, this._time, this._position));
 		}
 		
+		public function dispose():void
+		{
+			this.stopTimer();
+			this._timer = null;
+			this.obj = null;
+		}
+
 		private function fixTime():void
 		{
 			this._startTime = getTimer() - this._time * 1000;
@@ -85,10 +93,13 @@ package driftkings.utils.tween
 			return this._duration;
 		}
 		
-		protected function stopEnterFrame():void
+		protected function stopTimer():void
 		{
-			
-			this._timer.stop();
+			if (this._timer != null)
+			{
+				this._timer.stop();
+				this._timer.removeEventListener(TimerEvent.TIMER, this.timerHandler);
+			}
 			this.isPlaying = false;
 		}
 		
@@ -160,7 +171,7 @@ package driftkings.utils.tween
 		public function resume():void
 		{
 			this.fixTime();
-			this.startEnterFrame();
+			this.startTimer();
 			this.dispatchEvent(new TweenEvent(TweenEvent.MOTION_RESUME, this._time, this._position));
 		}
 		
@@ -168,11 +179,6 @@ package driftkings.utils.tween
 		{
 			this.time = this._duration;
 			this.fixTime();
-		}
-		
-		protected function onEnterFrame(event:Event):void
-		{
-			this.nextFrame();
 		}
 		
 		public function yoyo():void
@@ -216,7 +222,7 @@ package driftkings.utils.tween
 		public function start():void
 		{
 			this.rewind();
-			this.startEnterFrame();
+			this.startTimer();
 			this.dispatchEvent(new TweenEvent(TweenEvent.MOTION_START, this._time, this._position));
 		}
 	}
