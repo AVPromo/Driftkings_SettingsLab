@@ -5,7 +5,7 @@
   "client_build": "970",
   "resource": "gui/gameface/_dist/production/mono/hangar/main/bundle.js",
   "source_sha256": "0f70f90d3ed8154f46bae0c02d13497c8cc2134035205b2d9fd1dc5ef511df47",
-  "output_sha256": "aecd3bf962bc971e1449fd3c68a2bc503ba419ca024833d2ebcab31a595bdf53",
+  "output_sha256": "74ee055e74f36c6606f5fbdbb13d2228ec08afe9b2b599f39e6c76bac41978d3",
   "operations": [
     {
       "find": "var[tr,ar]=ba(\"HeroTankModelProvider\")",
@@ -115,6 +115,11 @@
     {
       "find": "className:ta(lv,d&&cv,t.length>1&&dv),children:",
       "replace": "\"data-dk-crew-slot\":a,\"data-dk-crew-id\":e,className:ta(lv,d&&cv,t.length>1&&dv),children:",
+      "count": 1
+    },
+    {
+      "find": "\"data-test-id\":`crewSlot-${e}`,children:",
+      "replace": "\"data-dk-crew-slot\":a,\"data-dk-crew-id\":t,\"data-dk-crew-layout\":\"horizontal\",\"data-test-id\":`crewSlot-${e}`,children:",
       "count": 1
     }
   ]

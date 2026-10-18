@@ -127,25 +127,25 @@ def install():
                 publish_card(self, {'config': {'visible': False}, 'surface': self._surface, 'lines': []})
 
     def handlers(surface):
-        def loading(original, parent, *args, **kwargs):
-            result = original(parent, *args, **kwargs)
+        def loading(original, view, *args, **kwargs):
+            result = original(view, *args, **kwargs)
             child = None
             try:
                 layout_id = resource_id(RESOURCE)
                 if layout_id == INVALID_RES_ID:
                     LOG.warning('Missing crew details Gameface resource: %s', RESOURCE)
-                elif parent.getChildView(layout_id) is None:
-                    child = DetailsView(parent, layout_id, surface)
-                    parent.setChildView(layout_id, child)
+                elif view.getChildView(layout_id) is None:
+                    child = DetailsView(view, layout_id, surface)
+                    view.setChildView(layout_id, child)
             except Exception:
                 LOG.exception('Could not attach crew details for %s', surface)
                 if child is not None:
                     child.destroy()
             return result
 
-        def filled(original, parent, *args, **kwargs):
-            result = original(parent, *args, **kwargs)
-            child = hangar_bridge.g_controller.views.get(parent)
+        def filled(original, view, *args, **kwargs):
+            result = original(view, *args, **kwargs)
+            child = hangar_bridge.g_controller.views.get(view)
             if child is not None:
                 child.refresh()
             return result

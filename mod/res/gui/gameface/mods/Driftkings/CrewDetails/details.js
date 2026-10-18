@@ -70,7 +70,12 @@
                 });
                 return;
             }
-            mount(document.querySelector(selector), data);
+            var host = document.querySelector(selector);
+            if (!host && (data.surface === 'personal_file' || data.surface === 'service_record')) {
+                var root = document.querySelector(data.surface === 'personal_file' ? '[class^="PersonalFileViewApp_content_"]' : '[class^="ServiceRecordApp_content_"]');
+                if (root) { host = document.querySelector('[class^="TankmanInfoApp_descriptionBlock_"]') || root; }
+            }
+            mount(host, data);
         });
         Object.keys(bindings).forEach(function (id) { if (!present[id]) { release(id); } });
     }

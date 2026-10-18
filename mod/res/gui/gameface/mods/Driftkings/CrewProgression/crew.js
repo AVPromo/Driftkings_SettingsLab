@@ -46,8 +46,9 @@
                 if (rows[j].id === id && rows[j].slot === index) { row = rows[j]; break; }
             }
             if (!row || !slot.parentNode) { continue; }
-            var host = slot.parentNode, badge = document.createElement('div');
-            badge.className = 'dk-crew-progress';
+            var horizontal = slot.getAttribute('data-dk-crew-layout') === 'horizontal';
+            var host = horizontal ? slot : slot.parentNode, badge = document.createElement('div');
+            badge.className = 'dk-crew-progress' + (horizontal ? ' dk-crew-progress--horizontal' : '');
             (row.lines || []).forEach(function (value) {
                 var line = document.createElement('div'); line.className = 'dk-crew-progress__line';
                 line.textContent = value; badge.appendChild(line);
