@@ -19,9 +19,8 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from build_tools.package_tools import MAGIC, metadata, sha, validate_swf, verify_package, write_json, zip_entries
+from build_tools.package_tools import metadata, sha, validate_swf, verify_package, write_json, zip_entries
 from build_tools.toolchain import discover, require_tools
-from build_tools.protection import obfuscator
 from build_tools.validate_build_data import apply_patch_set, build_plan, input_path, read_json, require
 from build_tools.generate_defaults import TARGET as DEFAULT_VALUES, render as render_defaults, assemble as assemble_defaults
 from build_tools.modpack import create as create_modpack
@@ -157,36 +156,6 @@ def generate(root, config, plan, tools, run):
     return outputs
 
 
-def protect_bytecodes(root, config, plan, tools, run, compiled):
-    policy = read_json(root / 'build_data/obfuscation.json')
-    require(policy['enabled'] and policy['profile'] == 'safe', 'Only the enabled safe protection profile is supported')
-    allowed = {'Driftkings/core/marks_calculator.pyc', 'Driftkings/core/updater/versioning.pyc',
-               'Driftkings/core/updater/manifest.pyc'}
-    require(set(policy['include']) and set(policy['include']).issubset(allowed), 'Unreviewed protection allowlist')
-    require(len(policy['include']) == len(set(policy['include'])), 'Duplicate protection input')
-    originals = {item['target']: sha(compiled / item['target']) for item in plan['python']}
-    results = []
-    replacements = {}
-    with obfuscator(tools, run) as (command, cwd):
-        require(any('{output}' in arg for arg in command), 'obfuscator_command needs an {output} placeholder')
-        for name in policy['include']:
-            print('Protecting: ' + name, flush=True)
-            target = policy['path_root'] + '/' + name
-            original = compiled / target
-            protected = run / 'protected' / target
-            protected.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(original, protected)
-            before = sha(original)
-            args = [arg.format(input=str(original), output=str(protected)) for arg in command]
-            run_tool(args, run / 'logs' / ('protect-' + Path(name).stem + '.log'), timeout=120, cwd=cwd)
-            require(sha(original) == before, 'Obfuscator changed the unprotected input: ' + name)
-            require(protected.read_bytes()[:4] == MAGIC and sha(protected) != before, 'Protection failed or unchanged: ' + name)
-            replacements[target] = protected
-            results.append(dict(module=name, input_sha256=before, output_sha256=sha(protected)))
-    require(all(sha(compiled / name) == digest for name, digest in originals.items()), 'Obfuscator changed unprotected staging')
-    return replacements, results
-
-
 def git_state(root):
     def git(*args):
         return subprocess.check_output(['git', *args], cwd=root, stderr=subprocess.DEVNULL).decode('utf-8').strip()
@@ -266,18 +235,13 @@ def build(args):
         config['game']['root'] = str(Path(args.game_root).resolve())
     plan = build_plan(root, check_component_list=False, game_root=config['game']['root'], check_defaults=False)
     tools = discover(root, vars(args))
-    policy = read_json(root / 'build_data/obfuscation.json')
-    protection = bool(args.protect or (args.mode == 'release' and policy['enabled'] and not args.no_obfuscation))
-    require(not (args.protect and args.no_obfuscation), '--protect and --no-obfuscation conflict')
     destination = output_path(root, config['package']['release_root' if args.mode == 'release' else 'debug_root'] + '/' + channel + '/' + version)
     if args.plan:
         print(json.dumps(dict(version=version, source_version=source_version, channel=channel, mode=args.mode,
-                              protected=protection, output=str(destination), tools=tools,
+                              output=str(destination), tools=tools,
                               python=len(plan['python']), assets=len(plan['assets']), defaults=len(plan['defaults'])), indent=2))
         return destination
     require_tools(tools)
-    if protection:
-        require(tools['obfuscator_command'] or tools['pjorion_home'], 'Release protection is enabled. Configure PJOrion, or use --no-obfuscation for a diagnostic build')
     game = Path(config['game']['root'])
     version_xml = ET.parse(game / 'version.xml')
     require(version_contract(root).normalize_game_version(version_xml.findtext('version')) == config['game']['version'], 'Installed game version differs from build target')
@@ -288,7 +252,7 @@ def build(args):
     run = output_path(root, 'build/runs/' + stamp)
     run.mkdir(parents=True)
     report = dict(schema=1, status='running', version=version, source_version=source_version, channel=channel,
-                  mode=args.mode, protected=protection, publishable=False, gameVersion=config['game']['version'],
+                  mode=args.mode, publishable=False, gameVersion=config['game']['version'],
                   realm=config['game']['realm'], tools=tools, git=git_state(root), logs=str(run / 'logs'))
     started = time.monotonic()
     try:
@@ -310,9 +274,7 @@ def build(args):
         report['python'] = run_worker(tools, run, dict(action='compile', files=[dict(source=str(root / i['source']), target=i['target']) for i in plan['python']],
                                                     output=str(compiled), overrides=overrides, epoch=epoch), 'python')
         generated = generate(root, config, plan, tools, run)
-        protected, protected_report = protect_bytecodes(root, config, plan, tools, run, compiled) if protection else ({}, [])
-        report['protection'] = protected_report
-        entries = {item['target']: protected.get(item['target'], compiled / item['target']).read_bytes() for item in plan['python']}
+        entries = {item['target']: (compiled / item['target']).read_bytes() for item in plan['python']}
         for item in plan['assets']:
             require(item['target'] not in entries, 'Duplicate archive target')
             entries[item['target']] = (generated[item['source']] if item['generator'] else root / item['source']).read_bytes()
@@ -356,7 +318,7 @@ def build(args):
                                                            version=version, channel=channel, game_version=config['game']['version'], components=components,
                                                            defaults=assemble_defaults(root)[0], selector=assemble_defaults(root)[1]), 'verify')
         require(source_inventory(root, plan) == inventory, 'Build inputs changed during compilation; previous output preserved')
-        report.update(status='success', publishable=bool(args.mode == 'release' and (protection or not policy['enabled'])),
+        report.update(status='success', publishable=bool(args.mode == 'release'),
                       counts=dict(components=len(components), python=len(plan['python']), assets=len(plan['assets']), entries=len(entries), defaults=len(defaults)),
                       generated={name: sha(path) for name, path in generated.items()}, seconds=round(time.monotonic() - started, 3))
         report['artifacts'] = {p.relative_to(candidate).as_posix(): dict(size=p.stat().st_size, sha256=sha(p))
@@ -381,10 +343,8 @@ def main():
     parser.add_argument('--channel', choices=('auto', 'stable', 'beta'), default='auto')
     parser.add_argument('--game-root', help='Read-only game installation override')
     parser.add_argument('--changelog', help='UTF-8 changelog, one entry per line')
-    parser.add_argument('--protect', action='store_true', help='Apply the safe allowlist using the configured obfuscator')
-    parser.add_argument('--no-obfuscation', action='store_true', help='Explicit diagnostic build; not publishable when protection policy is enabled')
     parser.add_argument('--plan', action='store_true', help='Display version, outputs and tool discovery without building')
-    for key in ('python27', 'hg', 'flex_home', 'mxmlc_jar', 'playerglobal', 'java', 'csc', 'pjorion_home'):
+    for key in ('python27', 'hg', 'flex_home', 'mxmlc_jar', 'playerglobal', 'java', 'csc'):
         parser.add_argument('--' + key.replace('_', '-'), dest=key)
     args = parser.parse_args()
     try:

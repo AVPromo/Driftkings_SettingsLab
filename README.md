@@ -53,7 +53,7 @@ Settings translations: Czech, German, English, Spanish, French, Hungarian, Itali
 
 This repository contains the compiler, runtime sources, defaults and required resource inputs. Generated packages, Python bytecode, caches and local tests are excluded from Git. Download compiled packages from Releases.
 
-On Windows, configure Python 3.10+, Python 2.7, Java/Flex, playerglobal and game SWCs, the .NET C# compiler and PJOrion for protected releases. Game and reference directories are external read-only inputs.
+On Windows, configure Python 3.10+, Python 2.7, Java/Flex, playerglobal and game SWCs, the .NET C# compiler. Game and reference directories are external read-only inputs.
 
 ```powershell
 python build_tools/compiler.py --plan
@@ -62,7 +62,7 @@ python build_tools/validate_build_data.py
 .\release.cmd --version 0.1.2-beta.3 --channel beta
 ```
 
-The current build contract uses the (EU, NA) installation as its resource source and an EU source reference. Local tool paths belong in ignored `build_data/toolchain.local.json`. Builds compile Python 2.7, Flash and native helpers, generate the carousel integration and verify the packages. Outputs go to `build/`; compilation does not install or publish them.
+The current build contract uses the (EU, NA) installation as its resource source and an EU source reference. Local tool paths belong in ignored `build_data/toolchain.local.json`. Builds compile Python 2.7 to standard bytecode without obfuscation, Flash and native helpers, generate the carousel integration and verify the packages. Outputs go to `build/`; compilation does not install or publish them.
 
 | Directory | Contents |
 | --- | --- |

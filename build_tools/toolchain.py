@@ -9,8 +9,8 @@ from build_tools.validate_build_data import read_json, require
 def discover(root, overrides):
     local = root / 'build_data/toolchain.local.json'
     settings = read_json(local) if local.exists() else {}
-    keys = ('python27', 'hg', 'flex_home', 'mxmlc_jar', 'playerglobal', 'java', 'csc', 'pjorion_home')
-    require(not set(settings) - set(keys) - {'obfuscator_command'}, 'Unknown local toolchain field')
+    keys = ('python27', 'hg', 'flex_home', 'mxmlc_jar', 'playerglobal', 'java', 'csc')
+    require(not set(settings) - set(keys), 'Unknown local toolchain field')
 
     def configured(key):
         return overrides.get(key) or os.environ.get('DK_' + key.upper()) or settings.get(key)
@@ -45,10 +45,6 @@ def discover(root, overrides):
     java = Path(os.environ.get('ProgramFiles', 'C:/Program Files')) / 'Java'
     result['java'] = choose('java', sorted(java.glob('jre1.8*/bin/java.exe'), reverse=True) + [shutil.which('java')])
     result['csc'] = choose('csc', [Path(os.environ.get('WINDIR', 'C:/Windows')) / 'Microsoft.NET/Framework/v4.0.30319/csc.exe'])
-    result['pjorion_home'] = choose('pjorion_home', [root.parent / 'Programas/PJOrion', 'F:/Programas/PJOrion'], True)
-    result['obfuscator_command'] = settings.get('obfuscator_command', [])
-    require(isinstance(result['obfuscator_command'], list) and all(isinstance(s, str) for s in result['obfuscator_command']),
-            'obfuscator_command must be an argument array')
     return result
 
 

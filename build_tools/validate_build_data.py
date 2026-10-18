@@ -226,14 +226,6 @@ def build_plan(root=ROOT, check_generated=False, check_game=False, check_compone
     validate_ui_catalog(root, plan)
     if check_defaults:
         check_default_values(root)
-    obfuscation = read_json(root / 'build_data/obfuscation.json')
-    require(obfuscation['schema_version'] == 1 and obfuscation['path_root'] == config['python']['archive_root'],
-            'Obfuscation path root mismatch')
-    for name in obfuscation['include']:
-        target = obfuscation['path_root'] + '/' + name
-        require(target.casefold() in owners, 'Obfuscation input not packaged: %s' % name)
-        require(not any(name.startswith(prefix) for prefix in obfuscation['exclude']), 'Obfuscation include/exclude overlap')
-
     snapshot = read_json(root / 'build_data/defaults_snapshot.json')
     require({item['path'] for item in snapshot['files']} == {p.relative_to(defaults_root).as_posix() for p in selected_defaults},
             'Defaults snapshot inventory mismatch')
