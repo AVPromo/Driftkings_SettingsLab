@@ -314,11 +314,6 @@
           "generator": null
         },
         {
-          "source": "mod/res/gui/maps/Driftkings/clock/XVM-LICENSE.txt",
-          "target": "res/gui/maps/Driftkings/clock/XVM-LICENSE.txt",
-          "generator": null
-        },
-        {
           "source": "mod/res/gui/maps/Driftkings/clock/clockBg.png",
           "target": "res/gui/maps/Driftkings/clock/clockBg.png",
           "generator": null

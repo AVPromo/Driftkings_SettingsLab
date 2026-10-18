@@ -4,6 +4,7 @@
   "autoLogin": true,
   "blockVehicleIfLowAmmo": false,
   "clock": true,
+  "clockBackground": false,
   "clock24Hour": true,
   "clockScale": 100,
   "clockSeconds": true,

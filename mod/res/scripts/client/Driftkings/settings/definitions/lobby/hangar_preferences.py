@@ -20,6 +20,7 @@ class HangarPreferencesSettings(SectionDefinition):
             [
                 control(HANGAR_PREFERENCES.AUTO_LOGIN),
                 control(HANGAR_PREFERENCES.CLOCK),
+                control(HANGAR_PREFERENCES.CLOCK_BACKGROUND),
                 slider(HANGAR_PREFERENCES.CLOCK_X, -3840, 3840, 1),
                 slider(HANGAR_PREFERENCES.CLOCK_Y, -2160, 2160, 1),
                 slider(HANGAR_PREFERENCES.CLOCK_SCALE, 50, 200, 5),

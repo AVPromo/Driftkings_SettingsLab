@@ -95,7 +95,10 @@
                 var copies=[];for(var i=0;i<Math.max(1,Math.min(8,Math.round(bounded(shadow.strength,1,0,255))));i++)copies.push(effect);
                 field.style.textShadow=copies.join(',');
             }
-            var content=document.createElement('div');field.appendChild(content);custom.appendChild(field);
+            var content=document.createElement('div');content.className='dk-clock-custom__content';
+            content.style.alignSelf=tf.align==='right'?'flex-end':tf.align==='center'?'center':'flex-start';
+            if(cfg.clockBackground)content.classList.add('dk-clock-custom__content--background');
+            field.appendChild(content);custom.appendChild(field);
             customFields.push({def:def,node:field,content:content,last:null});
         });
     }

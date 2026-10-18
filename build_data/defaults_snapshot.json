@@ -101,7 +101,7 @@
     {
       "path": "default/hangar_preferences.json",
       "source_sha256": "7a514224cf02cc639df62cb8cfd3dc0c345155d2e3fe998d7a6268f4088ebe56",
-      "sha256": "a0b211d8bd0ce21e2448e41ba16cf1dbbf539af7067382706c7d88f0cc5bceec"
+      "sha256": "00fa9e4205ac8b36d4783e84ac4c3cbba7d87147dcc26985ad9ba4f0f2707f6f"
     },
     {
       "path": "default/target_information.json",
