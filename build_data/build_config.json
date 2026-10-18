@@ -3,6 +3,7 @@
   "game": {
     "version": "2.4.1.0",
     "realm": "NA",
+    "supported_realms": ["EU", "NA", "ASIA"],
     "root": "D:/Games/World_of_Tanks_NA"
   },
   "reference": {

@@ -177,6 +177,16 @@ end;
     return components, options, presets
 
 
+def supported_realms(config):
+    """Realms whose clients the installer accepts; the build realm must be one of them."""
+    game = config['game']
+    realms = game.get('supported_realms', [game['realm']])
+    require(isinstance(realms, list) and realms and len(set(realms)) == len(realms) and
+            all(isinstance(item, str) and re.fullmatch(r'[A-Z]{2,5}', item) for item in realms) and game['realm'] in realms,
+            'Invalid supported_realms: uppercase unique realm codes that include the build realm are required')
+    return realms
+
+
 def prepare_payload(root, artifacts, output):
     artifacts = Path(artifacts).resolve()
     manifest = read_json(artifacts / 'release.json')
@@ -213,8 +223,10 @@ def prepare_payload(root, artifacts, output):
     conflicts.extend(['  except', '    Result := GetExceptionMessage;', '  end;', 'end;'])
     verification.append('end;')
     (output / 'payload.generated.iss').write_text('\n'.join(rows + ['[Code]'] + conflicts + verification) + '\n', encoding='utf-8-sig')
+    realms = supported_realms(config)
     metadata = dict(RepoRoot=str(root.resolve()), BuildVersion=manifest['version'], GameVersion=manifest['gameVersion'],
-                    GameRealm=report['realm'], InstallerOutput=str((root / 'build/installer').resolve()))
+                    GameRealm=report['realm'], SupportedRealms='|' + '|'.join(realms) + '|',
+                    SupportedRealmsText=', '.join(realms), InstallerOutput=str((root / 'build/installer').resolve()))
     (output / 'metadata.generated.iss').write_text('\n'.join('#define ' + key + ' ' + quoted(value) for key, value in metadata.items()) + '\n', encoding='utf-8-sig')
 
 

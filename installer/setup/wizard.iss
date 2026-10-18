@@ -172,7 +172,8 @@ begin
   Version := XmlValue(String(Data), 'version');
   if Copy(Version, 1, 2) = 'v.' then Delete(Version, 1, 2);
   if Pos(' #', Version) > 0 then Version := Copy(Version, 1, Pos(' #', Version) - 1);
-  if (Version <> '{#GameVersion}') or (XmlValue(String(Data), 'realm') <> '{#GameRealm}') then Exit;
+  if (Version <> '{#GameVersion}') or
+     (Pos('|' + Uppercase(XmlValue(String(Data), 'realm')) + '|', '{#SupportedRealms}') = 0) then Exit;
   Result := ExistingDependenciesError;
   if Result <> '' then Exit;
   Result := ConfigurationPathError;
