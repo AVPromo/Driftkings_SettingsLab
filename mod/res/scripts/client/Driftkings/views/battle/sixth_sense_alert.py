@@ -38,7 +38,7 @@ class SixthSense(SixthSenseMeta):
         try:
             from constants import DIRECT_DETECTION_TYPE
             self.__radar = DIRECT_DETECTION_TYPE.STEALTH_RADAR
-        except:
+        except Exception:
             pass
 
     def callWWISE(self, wwiseEventName):
