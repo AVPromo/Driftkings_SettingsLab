@@ -7,6 +7,14 @@ class ColorTests(RuntimeTest):
         super(ColorTests, self).setUp()
         self.colors = self.load('common.utils.colorRatting')
 
+    def test_extracted_tables_preserve_legacy_exports_and_shared_identity(self):
+        data = self.load('common.utils.color_rating_data')
+        self.assertEqual(self.colors.__all__, ('color_tables', 'getRatingColors', 'getColor', 'getStatisticColor',
+                                               'getRatingPaletteColor', 'getComparisonColor', 'getMoeDamageColor'))
+        for name in ('ColorRating', 'MOE_LEVELS', 'color_tables', 'noob_meter_definitions', 'noob_meter_colors',
+                     'xvm_definitions', 'xvm_colors', 'wot_labs_definitions', 'wot_labs_colors'):
+            self.assertIs(getattr(self.colors, name), getattr(data, name))
+
     def test_all_numeric_scales_at_below_and_above_every_boundary(self):
         api = self.colors
         checked = 0

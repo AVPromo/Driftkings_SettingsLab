@@ -220,6 +220,15 @@ class ServiceTests(RuntimeTest):
             safe_spaces=('login', 'lobby'), staging_root=self.folder)
         self.service.active = True
 
+    def test_public_service_and_dependency_exports_remain_available(self):
+        api = self.load('core.updater')
+        self.assertIs(api.UpdaterService, self.load('core.updater.service').UpdaterService)
+        self.assertEqual(api.UpdaterService.__module__, 'Driftkings.core.updater')
+        for name in ('VERSION', 'Checker', 'State', 'UnavailableTransport', 'Downloader', 'LOG', 'INTERVAL',
+                     'IDLE', 'CHECKING', 'AVAILABLE', 'ERROR', 'DOWNLOADING', 'VERIFYING', 'READY',
+                     'INSTALLING', 'RESTART_REQUIRED', 'logging', 'os', 'time', 'threading'):
+            self.assertTrue(hasattr(api, name), name)
+
     def test_manual_check_reports_unavailable_transport_and_automatic_check_skips_it(self):
         self.assertFalse(self.service.check())
         self.assertTrue(self.service.check(manual=True))
