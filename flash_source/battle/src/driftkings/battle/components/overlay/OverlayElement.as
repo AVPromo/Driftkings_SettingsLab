@@ -1,25 +1,20 @@
 package driftkings.battle.components.overlay {
-import driftkings.utils.Utils;
-import flash.display.Sprite;
-import flash.display.Loader;
+import driftkings.utils.ImageLoaderComponent;
+import flash.display.Stage;
 import flash.display.DisplayObjectContainer;
 import flash.events.Event;
-import flash.events.IOErrorEvent;
-import flash.events.SecurityErrorEvent;
 import flash.events.MouseEvent;
 import flash.filters.DropShadowFilter;
-import flash.net.URLRequest;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.utils.getTimer;
 
-public class OverlayElement extends Sprite {
+public class OverlayElement extends ImageLoaderComponent {
     public var alias:String;
     public var props:Object = {x:0, y:0, alignX:'left', alignY:'top', alpha:1, visible:true};
     private var kind:String;
     private var moved:Function;
     private var label:TextField;
-    private var loader:Loader;
     private var imagePath:String = '';
     private var fallback:Boolean = false;
     private var boxWidth:Number = 0;
@@ -27,6 +22,7 @@ public class OverlayElement extends Sprite {
     private var areaWidth:Number = 0;
     private var areaHeight:Number = 0;
     private var dragging:Boolean = false;
+    private var dragStage:Stage;
     private var dragX:Number;
     private var dragY:Number;
     private var tweens:Object = {};
@@ -87,7 +83,7 @@ public class OverlayElement extends Sprite {
             var path:String = props.image == null ? '' : String(props.image);
             if (path != imagePath) {
                 imagePath = path; fallback = false;
-                loadImage(path);
+                loadImage(path, 0);
             }
             if (loader != null && loader.content != null) {
                 loader.width = boxWidth; loader.height = boxHeight;
@@ -125,33 +121,13 @@ public class OverlayElement extends Sprite {
         } else graphics.drawRoundRect(-margin, -margin, Math.max(1, w + margin * 2), Math.max(1, h + margin * 2), bg == null ? 0 : Number(bg.ellipseWidth || 0));
         graphics.endFill();
     }
-    private function releaseImage():void {
-        if (loader == null) return;
-        loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, imageReady);
-        loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, imageFailed);
-        loader.contentLoaderInfo.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, imageFailed);
-        Utils.safeUnload(loader);
-        if (loader.parent == this) removeChild(loader);
-        loader = null;
-    }
-    private function loadImage(path:String):void {
-        releaseImage();
-        if (!path || dead) return;
-        loader = new Loader();
-        loader.mouseEnabled = false;
-        loader.contentLoaderInfo.addEventListener(Event.COMPLETE, imageReady);
-        loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, imageFailed);
-        loader.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR, imageFailed);
-        addChildAt(loader, 0);
-        try { loader.load(new URLRequest(path)); } catch (error:Error) { imageFailed(null); }
-    }
-    private function imageReady(event:Event):void {
+    override protected function imageReady(event:Event):void {
         if (dead) return;
         render(); layout(areaWidth, areaHeight);
     }
-    private function imageFailed(event:Event):void {
+    override protected function imageFailed(event:Event):void {
         if (!fallback && props.imageAlt && props.imageAlt != imagePath) {
-            fallback = true; loadImage(String(props.imageAlt));
+            fallback = true; loadImage(String(props.imageAlt), 0);
         } else releaseImage();
     }
     private function anchor(align:String, area:Number, size:Number):Number {
@@ -189,16 +165,18 @@ public class OverlayElement extends Sprite {
         dragX = x; dragY = y; dragging = true;
         delete tweens.x; delete tweens.y;
         startDrag();
-        stage.addEventListener(MouseEvent.MOUSE_UP, endDrag);
-        stage.addEventListener(Event.MOUSE_LEAVE, endDrag);
+        dragStage = stage;
+        dragStage.addEventListener(MouseEvent.MOUSE_UP, endDrag);
+        dragStage.addEventListener(Event.MOUSE_LEAVE, endDrag);
     }
     private function endDrag(event:Event):void { finishDrag(); }
     private function finishDrag():void {
         if (!dragging) return;
         stopDrag(); dragging = false;
-        if (stage != null) {
-            stage.removeEventListener(MouseEvent.MOUSE_UP, endDrag);
-            stage.removeEventListener(Event.MOUSE_LEAVE, endDrag);
+        if (dragStage != null) {
+            dragStage.removeEventListener(MouseEvent.MOUSE_UP, endDrag);
+            dragStage.removeEventListener(Event.MOUSE_LEAVE, endDrag);
+            dragStage = null;
         }
         props.x = Number(props.x) + x - dragX;
         props.y = Number(props.y) + y - dragY;
@@ -207,11 +185,11 @@ public class OverlayElement extends Sprite {
         props.y = y - anchor(props.alignY, areaHeight, boxHeight);
         if (!dead && moved != null) moved(alias, props.x, props.y);
     }
-    public function dispose():void {
+    override public function dispose():void {
         dead = true; finishDrag();
         removeEventListener(MouseEvent.MOUSE_DOWN, beginDrag);
         removeEventListener(Event.ENTER_FRAME, tick);
-        releaseImage();
+        super.dispose();
         tweens = {}; moved = null; filters = [];
     }
 }
