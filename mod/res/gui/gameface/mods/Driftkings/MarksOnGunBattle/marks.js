@@ -21,7 +21,7 @@
     function render(data) {
         var cfg=data.config||{}, valid=data.state==='data', mini=cfg.miniMode!==false;
         var interactive=cfg.draggable===true && cfg.locked===false;
-        root.className='dk-mog dk-mog--compact'+(mini?' dk-mog--mini':'')+(interactive?' dk-mog--unlocked':'');
+        root.className='dk-mog dk-mog--compact'+(mini?' dk-mog--mini':'')+(valid?'':' dk-mog--empty')+(interactive?' dk-mog--unlocked':'');
         var accent=K.theme(root,cfg,true,mini?400:650);
         K.style(root,'zIndex','10000');
         K.style(root,'pointerEvents',interactive?'auto':'none');
@@ -32,7 +32,7 @@
         K.text(estimatedLabel,K.label(data,'estimated','Estimated mark'));
         K.text(estimated,valid?K.percent(data.estimatedMark):'\u2014'); K.style(estimated,'color',accent);
         K.show(starRow,cfg.showStars!==false); K.updateStars(stars,data.marksAchieved||0);
-        K.show(unavailable,!valid); K.text(unavailable,K.label(data,'unavailable','No reliable marks data available'));
+        K.show(unavailable,!valid); K.text(unavailable,data.message||K.label(data,'unavailable','No reliable marks data available'));
         ['combined','target','needed'].forEach(function(key,i){ K.text(cards[i].label,K.label(data,key,key)); });
         K.text(cards[0].value,K.formatted(data.combinedDamage));
         K.text(cards[1].value,valid?K.formatted(data.targetDamage):'\u2014'); K.text(cards[2].value,valid?K.formatted(data.damageNeeded):'\u2014');

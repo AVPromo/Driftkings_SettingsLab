@@ -77,3 +77,12 @@
 .dk-mog--mini .dk-mog__bar { margin:8rem 0 4rem; }
 .dk-mog--mini .dk-mog__next { font-size:12rem; }
 .dk-mog--mini.dk-mog--unlocked .dk-mog__header { display:flex; }
+.dk-mog--empty .dk-mog__hero,
+.dk-mog--empty .dk-mog__overview,
+.dk-mog--empty .dk-mog__metrics,
+.dk-mog--empty .dk-mog__progress,
+.dk-mog--empty .dk-mog__history,
+.dk-mog--empty .dk-mog__note,
+.dk-mog--empty .dk-mog__footer { display:none; }
+.dk-mog--empty .dk-mog__unavailable { padding:6rem 0 2rem; font-size:15rem; line-height:17rem; overflow-wrap:break-word; word-wrap:break-word; }
+.dk-mog--mini.dk-mog--empty { padding:8rem 14rem; }

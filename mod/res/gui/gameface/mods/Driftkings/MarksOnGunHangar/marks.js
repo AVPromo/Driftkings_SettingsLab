@@ -22,7 +22,7 @@
     var advanced = K.node('div','dk-mog__footer',root), averages = K.node('span','',advanced), achievements = K.node('span','',advanced);
     function render(data, resized) {
         var cfg=data.config||{}, milestone=data.milestone||{}, valid=data.state==='data' && (data.target||{}).eligible;
-        root.className='dk-mog dk-mog--full'+(cfg.compactMode?' dk-mog--dense':'');
+        root.className='dk-mog dk-mog--full'+(cfg.compactMode?' dk-mog--dense':'')+(valid?'':' dk-mog--empty');
         K.style(root,'zIndex','10000');
         K.style(root,'pointerEvents','auto');
         K.style(header,'cursor',cfg.locked?'default':'move');
