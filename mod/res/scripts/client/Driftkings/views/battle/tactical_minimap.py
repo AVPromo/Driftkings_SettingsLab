@@ -174,3 +174,22 @@ def native_player_point(component, record):
     yaw = finite(matrix.yaw)
     return {'x': point[0], 'y': point[1], 'heading': degrees(yaw) % 360, 'side': 'player',
             'cell': getCellName(getCellIdFromPosition(position, (lower, upper), 10), 10)}
+
+
+def native_objective_points(component, records):
+    """Positions of currently active bases/control points published via addEntry."""
+    import Math
+    lower, upper = component.getBoundingBox()
+    bounds = (lower[0], lower[1], upper[0], upper[1])
+    result = []
+    for record in list(records.values())[:16]:
+        if not record.get('active') or record.get('matrix') is None:
+            continue
+        try:
+            position = Math.Matrix(record['matrix']).translation
+            point = coordinates(position.x, position.z, bounds)
+            if point is not None:
+                result.append({'kind': record['kind'], 'x': point[0], 'y': point[1]})
+        except Exception:
+            continue
+    return result

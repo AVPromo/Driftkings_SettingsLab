@@ -117,6 +117,23 @@ class NativeAdapterTests(RuntimeTest):
         self.assertIsNone(api['native_player_point'](self.component, record))
         self.assertEqual(len(providers), 1)
 
+    def test_native_objectives_read_only_active_publication_and_world_bounds(self):
+        reads = []
+        def matrix(provider):
+            reads.append(provider)
+            return Owner(translation=Owner(x=100, z=200))
+        api = source('views/battle/tactical_minimap.py', {
+            'Driftkings.core.tactical_minimap': self.load('core.tactical_minimap'),
+            'Math': module(Matrix=matrix)})
+        provider = object()
+        records = {1: dict(active=True, matrix=provider, kind='allyBase'),
+                   2: dict(active=False, matrix=object(), kind='enemyBase')}
+        self.assertEqual(api['native_objective_points'](self.component, records),
+                         [{'kind': 'allyBase', 'x': .5, 'y': .5}])
+        self.assertEqual(reads, [provider])
+        records.clear()
+        self.assertEqual(api['native_objective_points'](self.component, records), [])
+
     def test_hidden_lost_transitional_dead_and_inactive_entries_never_read_matrices(self):
         entries = [self.entry(active=False), self.entry(alive=False), self.entry(aoi=False),
                    self.entry(location=0), self.entry(location=2), self.entry(location=3)]

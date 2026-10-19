@@ -89,3 +89,13 @@ A captura do utilizador mostrou o deslocamento/intermitência da seta e aliados 
 Aliados vivos e ativos em FAR passam a ser aceites quando o próprio minimapa os publica. Inimigos FAR/transicionais continuam excluídos antes de ler qualquer matriz. Os mortos continuam fora da amostra atual. Não há pesquisa de entidades nem reconstrução de posições.
 
 Confirmar seta/célula em movimento com e sem zoom original e depois fora de AoI dos aliados. O ajuste visual anterior foi removido, sem constantes de compensação. Testes cobrem FAR aliado versus inimigo, posição própria em bounds deslocados, yaw, correspondência de ID, substituição/desativação/eliminação da matriz publicada. Falta confirmação no jogo.
+
+## Bases e pontos de controlo clássicos
+
+O utilizador confirmou a correção da posição própria e dos aliados distantes. Acrescentadas posições de bases aliadas/inimigas e pontos de controlo publicados por `TeamsOrControlsPointsPlugin` do cliente clássico. Fonte auditada: classic/minimap.py (`__addBaseEntry`, `__addTeamBasePositions`, `__addControlPoints`) e shared/minimap/settings.py. Apenas `AllyTeamBaseEntry`, `EnemyTeamBaseEntry` e `ControlPointEntry` no contentor `points` são aceites.
+
+Reutiliza os quatro hooks de publicação existentes: criação, matriz, ativação e eliminação. Sem novo timer. Conserva apenas a matriz nativa e o estado atual, limitados a 16 entradas; elimina dados no fim da batalha/dispose. Aplica os mesmos bounds mundiais da amostra. O contrato transmite apenas tipo/x/y, sem IDs ou texto arbitrário. Uma falha nos objetivos não desativa os aliados.
+
+Bandeira verde = base aliada; vermelha = base inimiga; símbolo branco = ponto de controlo. Sem SVG, usa B/C. Os nós são reutilizados e removidos quando a entrada desaparece. Não inclui números, estado/progresso de captura, cliques ou pings. Objetivos especiais de Frontline/outros modos continuam por auditar. Não confundir base inimiga pública com posição de veículo inimigo.
+
+Confirmar no replay as duas bases e respetivas células; testar encontro/controlo quando disponível, zoom original e saída de batalha. O contador «Bases/objetivos» ajuda a distinguir falta de publicação de falha de desenho. Confirmação visual pendente.

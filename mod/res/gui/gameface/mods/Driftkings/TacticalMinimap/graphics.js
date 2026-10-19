@@ -1,7 +1,7 @@
 /* Shared synthetic renderer and SVG capability probe; never controls native minimap UI. */
 (function (root) {
     'use strict';
-    var shapes = {"lightTank": "M16 3 L27 16 L16 29 L5 16 Z", "mediumTank": "M16 3 L27 16 L16 29 L5 16 Z M10 21 L22 10", "heavyTank": "M16 3 L27 16 L16 29 L5 16 Z M8 18 L19 7 M13 25 L25 13", "AT-SPG": "M16 3 L29 28 L3 28 Z", "SPG": "M16 3 A13 13 0 1 0 16 29 A13 13 0 1 0 16 3 M9 16 L23 16 M16 9 L16 23", "player": "M16 2 L28 28 L16 22 L4 28 Z", "destroyed": "M7 7 L25 25 M25 7 L7 25"};
+    var shapes = {"lightTank": "M16 3 L27 16 L16 29 L5 16 Z", "mediumTank": "M16 3 L27 16 L16 29 L5 16 Z M10 21 L22 10", "heavyTank": "M16 3 L27 16 L16 29 L5 16 Z M8 18 L19 7 M13 25 L25 13", "AT-SPG": "M16 3 L29 28 L3 28 Z", "SPG": "M16 3 A13 13 0 1 0 16 29 A13 13 0 1 0 16 3 M9 16 L23 16 M16 9 L16 23", "player": "M16 2 L28 28 L16 22 L4 28 Z", "base": "M7 29 L7 4 L26 4 L21 11 L26 18 L7 18", "controlPoint": "M16 3 L29 16 L16 29 L3 16 Z M16 10 L16 22 M10 16 L22 16", "destroyed": "M7 7 L25 25 M25 7 L7 25"};
     var sides = ['player', 'ally', 'enemy', 'platoon'];
     var classes = ['lightTank', 'mediumTank', 'heavyTank', 'AT-SPG', 'SPG'];
     var defaults = {size: 320, theme: 'dark', opacity: 0.85, iconScale: 1,

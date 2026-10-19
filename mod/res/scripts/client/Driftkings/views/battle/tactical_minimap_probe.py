@@ -3,8 +3,8 @@
 import logging
 import weakref
 
-from Driftkings.core.tactical_minimap_probe import accepts_ack, geometry_response, graphics_result, payload
-from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point
+from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, accepts_ack, geometry_response, graphics_result, payload
+from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points
 from Driftkings.views.hangar.common import publish_card
 
 LOG = logging.getLogger('Driftkings.TacticalMinimapProbe')
@@ -21,6 +21,7 @@ class ProbeBridge(object):
         self._geometry_callback = None
         self.views = weakref.WeakSet()
         self._personal_entries = weakref.WeakKeyDictionary()
+        self._objective_entries = weakref.WeakKeyDictionary()
         self.active = False
         self.generation = 0
         self._native_failed = False
@@ -59,6 +60,7 @@ class ProbeBridge(object):
             self._close_adapter()
             self._native = None
             self._personal_entries.pop(component, None)
+            self._objective_entries.pop(component, None)
             self._calibration = None
             self.refresh()
 
@@ -91,6 +93,7 @@ class ProbeBridge(object):
         self._close_adapter()
         self._native = None
         self._personal_entries.clear()
+        self._objective_entries.clear()
         self._calibration = None
         self.refresh()
 
@@ -157,6 +160,12 @@ class ProbeBridge(object):
                     if self._adapter is None:
                         self._adapter = self._factory(component, component.sessionProvider)
                     snapshot = self._adapter.capture()
+                    if snapshot.get('available'):
+                        try:
+                            snapshot['objectives'] = native_objective_points(component, self._objective_entries.get(component, {}))
+                        except Exception:
+                            snapshot['objectives'] = []
+                            LOG.debug('Native map objectives unavailable', exc_info=True)
                 except Exception:
                     self._close_adapter()
                     self._native_failed = True
@@ -277,6 +286,10 @@ class ProbeBridge(object):
             entry_id = original(component, symbol, container, matrix, active, *args, **kwargs)
             if bridge.enabled() and symbol == 'ViewPointEntry' and container == 'personal' and entry_id:
                 bridge._personal_entries[component] = {'id': entry_id, 'matrix': matrix, 'active': bool(active)}
+            if bridge.enabled() and container == 'points' and symbol in OBJECTIVE_SYMBOLS and entry_id:
+                records = bridge._objective_entries.setdefault(component, {})
+                if entry_id in records or len(records) < 16:
+                    records[entry_id] = {'kind': OBJECTIVE_SYMBOLS[symbol], 'matrix': matrix, 'active': bool(active)}
             return entry_id
 
         @override(MinimapComponent, 'setMatrix')
@@ -285,6 +298,9 @@ class ProbeBridge(object):
             record = bridge._personal_entries.get(component)
             if record is not None and record['id'] == entry_id:
                 record['matrix'] = matrix
+            objective = bridge._objective_entries.get(component, {}).get(entry_id)
+            if objective is not None:
+                objective['matrix'] = matrix
             return result
 
         @override(MinimapComponent, 'setActive')
@@ -293,6 +309,9 @@ class ProbeBridge(object):
             record = bridge._personal_entries.get(component)
             if record is not None and record['id'] == entry_id:
                 record['active'] = bool(active)
+            objective = bridge._objective_entries.get(component, {}).get(entry_id)
+            if objective is not None:
+                objective['active'] = bool(active)
             return result
 
         @override(MinimapComponent, 'delEntry')
@@ -301,6 +320,7 @@ class ProbeBridge(object):
             record = bridge._personal_entries.get(component)
             if record is not None and record['id'] == entry_id:
                 bridge._personal_entries.pop(component, None)
+            bridge._objective_entries.get(component, {}).pop(entry_id, None)
             return result
 
         @override(MinimapComponent, '_populate')

@@ -114,12 +114,40 @@
         });
         points._dkAllies = records;
     }
-    function mapSample(uri, allies) {
+    function mapObjectives(layer, values) {
+        if (!Array.isArray(values)) { values = []; }
+        var records = layer._dkObjectives || {}, seen = {};
+        values.slice(0, 16).forEach(function (value, index) {
+            if (!validAlly(value) || ['allyBase', 'enemyBase', 'controlPoint'].indexOf(value.kind) === -1) { return; }
+            var key = 'objective' + index, record = records[key]; seen[key] = true;
+            if (!record || record.kind !== value.kind) {
+                if (record) { layer.removeChild(record.node); }
+                var node = document.createElement('div'); node.className = 'dk-probe-objective';
+                var color = value.kind === 'allyBase' ? '#67cf69' : value.kind === 'enemyBase' ? '#ee6868' : '#ffffff';
+                node.style.color = color; node.textContent = value.kind === 'controlPoint' ? 'C' : 'B';
+                if (window.DKTacticalGraphics) {
+                    try {
+                        var glyph = window.DKTacticalGraphics.createGlyph(document,
+                            value.kind === 'controlPoint' ? 'controlPoint' : 'base', color, 22);
+                        node.textContent = ''; node.appendChild(glyph.node);
+                    } catch (error) { /* Retain B/C fallback. */ }
+                }
+                layer.appendChild(node); record = records[key] = {node: node, kind: value.kind};
+            }
+            record.node.style.left = (100 * value.x) + '%'; record.node.style.top = (100 * value.y) + '%';
+        });
+        Object.keys(records).forEach(function (key) {
+            if (!seen[key]) { layer.removeChild(records[key].node); delete records[key]; }
+        });
+        layer._dkObjectives = records;
+    }
+    function mapSample(uri, allies, objectives) {
         if (typeof uri !== 'string' || uri.length > 262 ||
                 !/^img:\/\/(spaces\/[A-Za-z0-9_/-]+\.(dds|png)|gui\/maps\/icons\/map\/[A-Za-z0-9_-]+\.png)$/.test(uri) ||
                 uri.indexOf('//', 6) !== -1) { return null; }
         if (cartography && cartography.uri === uri) {
             mapPoints(cartography.points, allies);
+            mapObjectives(cartography.objectives, objectives);
             return cartography.node;
         }
         var root = document.createElement('div');
@@ -132,7 +160,9 @@
         root.appendChild(caption); root.appendChild(image);
         var points = mapGrid(image);
         mapPoints(points, allies);
-        cartography = {uri: uri, node: root, points: points};
+        var objectiveLayer = document.createElement('div'); objectiveLayer.className = 'dk-probe-objectives';
+        image.appendChild(objectiveLayer); mapObjectives(objectiveLayer, objectives);
+        cartography = {uri: uri, node: root, points: points, objectives: objectiveLayer};
         return root;
     }
     function clearAlignment() {
@@ -205,7 +235,8 @@
         line('Calibração: NO/NE/SO/SE nos cantos; + no centro nativo.');
         var allies = Array.isArray(data.alliedPoints) ? data.alliedPoints : (data.alliedPoint ? [data.alliedPoint] : []);
         line('Veículos na amostra: ' + allies.length + ' | branco: tu; verde: aliado; amarelo: pelotão');
-        var map = mapSample(data.textureUri, allies);
+        line('Bases/objetivos: ' + (Array.isArray(data.objectives) ? data.objectives.length : 0) + ' (posições; sem captura)');
+        var map = mapSample(data.textureUri, allies, data.objectives);
         if (map) { node.appendChild(map); }
         line('Amostras fixas — 16 / 24 / 32 px; confirmar visualmente.');
         var sample = graphicsSample();

@@ -5,6 +5,8 @@ import re
 from Driftkings.core.tactical_minimap import CLASSES, finite
 
 PROTOCOL = 1
+OBJECTIVE_SYMBOLS = {'AllyTeamBaseEntry': 'allyBase', 'EnemyTeamBaseEntry': 'enemyBase',
+                     'ControlPointEntry': 'controlPoint'}
 
 
 def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, calibration=None):
@@ -47,6 +49,7 @@ def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, c
         if player is not None:
             points = [player] + [point for point in points if point.get('side') != 'player']
         data['playerAvailable'] = any(point.get('side') == 'player' for point in points)
+        data['objectives'] = objective_points(snapshot.get('objectives', []))
         data['alliedPoints'] = points
         point = points[0] if points else None
         if point is not None:
@@ -185,4 +188,21 @@ def player_point(value):
     cell = value.get('cell')
     if isinstance(cell, (str, type(u''))) and re.match(r'^[A-HJK][1-90]\Z', cell):
         result['cell'] = cell
+    return result
+
+
+def objective_points(values):
+    """Only current, active public map objectives; no arbitrary marker types."""
+    if not isinstance(values, list):
+        return []
+    result = []
+    for value in values[:16]:
+        if not isinstance(value, dict) or value.get('kind') not in OBJECTIVE_SYMBOLS.values():
+            continue
+        try:
+            x, y = finite(value['x']), finite(value['y'])
+        except (KeyError, ValueError, TypeError, OverflowError):
+            continue
+        if 0 <= x <= 1 and 0 <= y <= 1:
+            result.append({'x': x, 'y': y, 'kind': value['kind']})
     return result

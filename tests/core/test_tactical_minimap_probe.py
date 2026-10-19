@@ -34,7 +34,7 @@ class ProbeTests(RuntimeTest):
         self.scheduled, self.cancelled = [], []
         self.api = source('views/battle/tactical_minimap_probe.py', {
             'Driftkings.core.tactical_minimap_probe': self.policy,
-            'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory, native_player_point=lambda component, record: None),
+            'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: []),
             'Driftkings.views.hangar.common': module(publish_card=publish),
             'Driftkings.core.hud_visibility': module(hudVisibility=hud)})
         self.bridge = self.api['ProbeBridge'](object(), lambda config: self.settings,
@@ -208,6 +208,38 @@ class ProbeTests(RuntimeTest):
         hooks['addEntry'](add, component, 'VehicleEntry', 'aliveVehicles', matrix, True)
         self.assertNotIn(component, bridge._personal_entries)
 
+    def test_objective_contract_is_bounded_and_strips_identity(self):
+        rows = [dict(kind=kind, x=.25, y=.5, id=666, text='private')
+                for kind in ('allyBase', 'enemyBase', 'controlPoint')]
+        clean = self.policy.objective_points(rows)
+        self.assertEqual(len(clean), 3)
+        self.assertNotIn('666', json.dumps(clean))
+        self.assertNotIn('private', json.dumps(clean))
+        self.assertEqual(self.policy.objective_points([dict(kind='enemyVehicle', x=.5, y=.5)]), [])
+        self.assertEqual(self.policy.objective_points([dict(kind='allyBase', x=float('nan'), y=.5)]), [])
+        self.assertEqual(len(self.policy.objective_points(rows * 20)), 16)
+
+    def test_native_objective_publication_reuses_existing_hooks_and_removes_state(self):
+        self.settings['tacticalDiagnostics'] = True
+        bridge, hooks, events = self.install_runtime_stubs()
+        bridge.install()
+        component, matrix = Owner(), object()
+        native = lambda *args: 42
+        hooks['addEntry'](native, component, 'AllyTeamBaseEntry', 'points', matrix, True)
+        self.assertEqual(bridge._objective_entries[component][42]['kind'], 'allyBase')
+        hooks['setActive'](native, component, 42, False)
+        self.assertFalse(bridge._objective_entries[component][42]['active'])
+        other = object()
+        hooks['setMatrix'](native, component, 42, other)
+        self.assertIs(bridge._objective_entries[component][42]['matrix'], other)
+        hooks['delEntry'](native, component, 42)
+        self.assertEqual(bridge._objective_entries[component], {})
+        hooks['addEntry'](native, component, 'EnemyVehicleEntry', 'points', matrix, True)
+        self.assertEqual(bridge._objective_entries[component], {})
+        hooks['addEntry'](native, component, 'EnemyTeamBaseEntry', 'points', matrix, True)
+        bridge.stop()
+        self.assertEqual(len(bridge._objective_entries), 0)
+
     def test_default_off_creates_no_adapter_and_starts_no_diagnostic(self):
         self.bridge.bind_native(self.component)
         self.bridge.start()
@@ -346,7 +378,7 @@ class ProbeTests(RuntimeTest):
         self.resource_id = 123
         dependencies = {
             'Driftkings.core.tactical_minimap_probe': self.policy,
-            'Driftkings.views.battle.tactical_minimap': module(native_adapter=lambda *args: None, native_player_point=lambda component, record: None),
+            'Driftkings.views.battle.tactical_minimap': module(native_adapter=lambda *args: None, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: []),
             'Driftkings.views.hangar.common': module(publish_card=lambda *args: None),
             'frameworks.wulf': module(ViewModel=BaseModel),
             'gui.impl.pub.view_component': module(ViewComponent=BaseView),
