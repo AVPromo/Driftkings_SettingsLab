@@ -50,27 +50,43 @@
         }
         return graphics;
     }
-    function mapSample(uri) {
+    function validAlly(ally) {
+        return ally && typeof ally.x === 'number' && isFinite(ally.x) && ally.x >= 0 && ally.x <= 1 &&
+            typeof ally.y === 'number' && isFinite(ally.y) && ally.y >= 0 && ally.y <= 1;
+    }
+    function mapPoint(image, ally) {
+        while (image.firstChild) { image.removeChild(image.firstChild); }
+        if (!validAlly(ally)) { return; }
+        var marker = document.createElement('div');
+        marker.className = 'dk-probe-ally'; marker.textContent = 'A';
+        marker.style.left = (100 * ally.x) + '%'; marker.style.top = (100 * ally.y) + '%';
+        image.appendChild(marker);
+    }
+    function mapSample(uri, ally) {
         if (typeof uri !== 'string' || uri.length > 262 ||
                 !/^img:\/\/(spaces\/[A-Za-z0-9_/-]+\.(dds|png)|gui\/maps\/icons\/map\/[A-Za-z0-9_-]+\.png)$/.test(uri) ||
                 uri.indexOf('//', 6) !== -1) { return null; }
-        if (cartography && cartography.uri === uri) { return cartography.node; }
+        if (cartography && cartography.uri === uri) {
+            mapPoint(cartography.image, ally);
+            return cartography.node;
+        }
         var root = document.createElement('div');
         root.className = 'dk-probe-cartography';
         var caption = document.createElement('div');
-        caption.textContent = 'Amostra da textura — confirmar visualmente';
+        caption.textContent = 'Mapa de teste — A = aliado';
         var image = document.createElement('div');
         image.className = 'dk-probe-map-image';
         image.style.backgroundImage = 'url("' + uri + '")';
         root.appendChild(caption); root.appendChild(image);
-        cartography = {uri: uri, node: root};
+        mapPoint(image, ally);
+        cartography = {uri: uri, node: root, image: image};
         return root;
     }
     function clearAlignment() {
         if (alignment && alignment.parentNode) { alignment.parentNode.removeChild(alignment); }
         alignment = null;
     }
-    function alignNativeArea(data, ally) {
+    function alignNativeArea(data) {
         clearAlignment();
         if (!data || data.available !== true) { return; }
         var keys = ['x', 'y', 'width', 'height', 'stageWidth', 'stageHeight'];
@@ -90,13 +106,6 @@
             mark.style.left = point[0] + '%'; mark.style.top = point[1] + '%';
             mark.textContent = point[2]; alignment.appendChild(mark);
         });
-        if (ally && typeof ally.x === 'number' && isFinite(ally.x) && ally.x >= 0 && ally.x <= 1 &&
-                typeof ally.y === 'number' && isFinite(ally.y) && ally.y >= 0 && ally.y <= 1) {
-            var marker = document.createElement('div');
-            marker.className = 'dk-probe-ally'; marker.textContent = 'A';
-            marker.style.left = (100 * ally.x) + '%'; marker.style.top = (100 * ally.y) + '%';
-            alignment.appendChild(marker);
-        }
         document.body.appendChild(alignment);
     }
     function calibration(data) {
@@ -129,11 +138,15 @@
             line('Fonte nativa: ' + (data.reason || 'indisponível'), 'dk-probe-pending');
         }
         line('Um aliado para calibração; sem inimigos ou Lost Contact.');
-        line('Ponto A: ' + (data.allyStatus || 'a aguardar'));
+        line('Ponto A no mapa de teste: ' + (data.allyStatus || 'a aguardar'));
+        if (validAlly(data.alliedPoint)) {
+            line('Aliado: ' + (100 * data.alliedPoint.x).toFixed(1) + '% horizontal / ' +
+                (100 * data.alliedPoint.y).toFixed(1) + '% vertical');
+        }
         calibration(data.calibration);
-        alignNativeArea(data.calibration, data.alliedPoint);
+        alignNativeArea(data.calibration);
         line('Calibração: NO/NE/SO/SE nos cantos; + no centro nativo.');
-        var map = mapSample(data.textureUri);
+        var map = mapSample(data.textureUri, data.alliedPoint);
         if (map) { node.appendChild(map); }
         line('Amostras fixas — 16 / 24 / 32 px; confirmar visualmente.');
         var sample = graphicsSample();

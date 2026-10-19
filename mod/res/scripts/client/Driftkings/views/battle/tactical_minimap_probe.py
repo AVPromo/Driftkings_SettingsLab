@@ -156,7 +156,7 @@ class ProbeBridge(object):
             try:
                 data = payload(enabled and view._guiVisible, view._acknowledged, snapshot, self.generation,
                                getattr(view, '_graphicsResult', None), self._calibration)
-                state = (data['allyStatus'], data['reason'], (self._calibration or {}).get('reason', 'no-native-geometry'))
+                state = (data['allyStatus'], data['reason'], 'ready' if (self._calibration or {}).get('available') else (self._calibration or {}).get('reason', 'no-native-geometry'))
                 if enabled and state != self._ally_log_state and self._ally_log_count < 8:
                     self._ally_log_state = state
                     self._ally_log_count += 1

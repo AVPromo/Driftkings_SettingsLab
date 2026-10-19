@@ -8,9 +8,9 @@
 #dk-tactical-minimap-probe .dk-probe-glyph-column svg { display:block; margin:5rem auto; }
 
 .dk-probe-cartography { position: absolute; left: 100%; top: 0; width: 120rem; padding: 8rem; background: rgba(0,0,0,.8); }
-.dk-probe-map-image { width: 120rem; height: 120rem; background-size: contain; background-repeat: no-repeat; background-position: center; }
+.dk-probe-map-image { position:relative; width: 120rem; height: 120rem; background-size: contain; background-repeat: no-repeat; background-position: center; }
 
 #dk-tactical-minimap-alignment { position:fixed; pointer-events:none; box-sizing:border-box; border:1px dashed #ff70e5; }
 #dk-tactical-minimap-alignment .dk-probe-anchor { position:absolute; transform:translate(-50%,-50%); color:#ff70e5; background:rgba(0,0,0,.8); font:12px/14px Arial,sans-serif; padding:1px; }
 
-#dk-tactical-minimap-alignment .dk-probe-ally { position:absolute; transform:translate(-50%,-50%); color:#67cf69; border:1px solid #67cf69; background:#102010; font:bold 12px/14px Arial,sans-serif; padding:1px; }
+.dk-probe-map-image .dk-probe-ally { position:absolute; transform:translate(-50%,-50%); color:#67cf69; border:1px solid #67cf69; background:#102010; font:bold 12px/14px Arial,sans-serif; padding:1px; }

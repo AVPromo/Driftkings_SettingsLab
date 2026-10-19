@@ -41,3 +41,9 @@ O segundo teste continuou em `waiting-geometry`. Foi confirmado por hash que o S
 A biblioteca passa a expor `as_DriftkingsMinimapGeometry` no protótipo `BaseMinimap`, tal como já expõe as fábricas na página nativa. A ponte consulta o próprio `MinimapComponent.flashObject`, sem criar ou esperar por `MinimapCentredView`. Uma string limitada transporta seis números do palco, evitando conversão implícita de objetos GFx. A leitura repete-se a cada 250 ms pelo serviço existente de callbacks; é cancelada em ended/dispose, não lê quando o HUD está oculto e recupera caso a biblioteca ainda esteja a carregar. Foram removidos o getter e o polling da view auxiliar.
 
 Esta revisão requer substituir o pacote e reabrir o replay. O teste visual permanece pendente; o log apresenta agora também `geometry=...`, distinguindo biblioteca indisponível, palco indisponível e dados inválidos.
+
+## Ponto recebido mas oculto pelo Flash
+
+O log NA de 19/10/2026 às 02:39:30 confirmou `status=ready`, 14 entradas e geometria válida. O mesmo log mostra `classicBattlePage` (Flash) na camada 4 e `randomBattleHud` (Gameface) na camada 3. Isto explica a provável ocultação do ponto pelo fundo do minimapa original; um z-index CSS não atravessa janelas nativas.
+
+O A passa agora a ser desenhado exclusivamente na pequena amostra da cartografia junto ao painel diagnóstico. A legenda indica claramente «Mapa de teste — A = aliado» e o texto mostra as percentagens horizontal/vertical. A textura é reutilizada; só o ponto muda. Não são alteradas as camadas nem a visibilidade do original. Confirmar o A nesta amostra, não no minimapa original. A possibilidade de substituição futura continua bloqueada por paridade e gestão de camadas. A indicação anterior para procurar o A sobre o original estava incorreta.
