@@ -178,6 +178,94 @@ def native_surface_audit(component):
     return result
 
 
+def native_surface_trial_allowed(component):
+    try:
+        from Driftkings.common import xvmInstalled
+        return bool(not xvmInstalled and not component.isModalViewShown() and
+                    _topography_context(component, component.sessionProvider, component.getPlugin('vehicles')) and
+                    owns_player_marker(component))
+    except Exception:
+        return False
+
+
+class NativeSurfaceTrial(object):
+    """Two-second training experiment; recovery callback is armed before hiding."""
+    def __init__(self, component, schedule, cancel, reporter):
+        self.surface = getattr(component, '_MinimapComponent__component', None)
+        self.schedule, self.cancel, self.reporter = schedule, cancel, reporter
+        self.token = None
+        self.status = 'idle'
+        self.original = None
+
+    def _status(self, value):
+        if value == self.status:
+            return
+        self.status = value
+        try:
+            self.reporter(value)
+        except Exception:
+            pass
+
+    def start(self):
+        if self.status != 'idle':
+            return self.status
+        surface = self.surface
+        if surface is None or (type(surface).__module__, type(surface).__name__) != ('GUI', 'WGMinimapFlashAS3'):
+            self._status('unsupported-surface')
+            return self.status
+        try:
+            self.original = surface.visible
+            if self.original is not True:
+                self._status('already-hidden')
+                return self.status
+            self._status('armed')
+            token = self.schedule(2.0, self.expire)
+            if token is None:
+                raise ValueError('Restoration callback was not armed')
+            if self.status != 'armed':
+                # A scheduler invoking inline must never result in late hiding.
+                self.cancel(token)
+                return self.status
+            self.token = token
+            surface.visible = False
+            if surface.visible is not False:
+                raise ValueError('Native visibility write was not confirmed')
+            self._status('active')
+        except Exception:
+            if self.status == 'idle':
+                self._status('unavailable')
+            self.restore()
+            if self.status == 'restored':
+                self._status('failed-restored')
+        return self.status
+
+    def expire(self):
+        self.token = None
+        self.restore()
+
+    def restore(self):
+        if self.status not in ('armed', 'active', 'restore-failed'):
+            return self.status
+        try:
+            if self.surface.visible is not self.original:
+                self.surface.visible = self.original
+            if self.surface.visible is not self.original:
+                raise ValueError('Native restoration was not confirmed')
+        except Exception:
+            # Keep an already armed expiry if an early restoration failed.
+            self._status('restore-failed')
+            return self.status
+        if self.token is not None:
+            token, self.token = self.token, None
+            try:
+                self.cancel(token)
+            except Exception:
+                pass
+        self.surface = None
+        self._status('restored')
+        return self.status
+
+
 def native_adapter(component, session):
     """Factory using contracts verified in the local 2.4.1 SRC, called explicitly.
 

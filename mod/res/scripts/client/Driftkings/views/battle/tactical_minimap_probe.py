@@ -7,8 +7,8 @@ from Driftkings.core.diagnostics import Diagnostics
 
 from Driftkings.core.tactical_minimap import preferences, selection
 
-from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits, strategic_area_response, native_click_sample, gameface_click_sample, input_request, presentation_response
-from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points, native_camera_line, native_yaw_lines, native_strategic_point, forward_native_position_input, native_surface_audit
+from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits, strategic_area_response, native_click_sample, gameface_click_sample, input_request, presentation_response, native_surface_trial_ready
+from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points, native_camera_line, native_yaw_lines, native_strategic_point, forward_native_position_input, native_surface_audit, NativeSurfaceTrial, native_surface_trial_allowed
 from Driftkings.views.hangar.common import publish_card
 
 LOG = logging.getLogger('Driftkings.TacticalMinimapProbe')
@@ -41,6 +41,7 @@ class ProbeBridge(object):
         self._adapter = None
         self._calibration = None
         self._presentation_audit = None
+        self._surface_trial = None
         self._ally_log_state = None
         self._ally_log_count = 0
         self._ping_log_state = None
@@ -64,6 +65,8 @@ class ProbeBridge(object):
             self._adapter = None
 
     def bind_native(self, component):
+        self._restore_surface_trial()
+        self._surface_trial = None
         self._presentation_audit = None
         self._last_input = None
         self._close_adapter()
@@ -74,6 +77,7 @@ class ProbeBridge(object):
 
     def unbind_native(self, component):
         if self._native is not None and self._native() is component:
+            self._restore_surface_trial()
             self._close_adapter()
             self._native = None
             self._last_input = None
@@ -111,6 +115,7 @@ class ProbeBridge(object):
         self.refresh()
 
     def stop(self, *args):
+        self._restore_surface_trial()
         self._metrics.configure(False)
         from Driftkings.core.hud_visibility import hudVisibility
         self.active = False
@@ -139,7 +144,10 @@ class ProbeBridge(object):
         self.refresh()
 
     def _read_geometry(self):
-        return self._metrics.call('tactical_minimap.geometry', self._read_geometry_impl)
+        result = self._metrics.call('tactical_minimap.geometry', self._read_geometry_impl)
+        if not (self._calibration or {}).get('available'):
+            self._restore_surface_trial()
+        return result
 
     def _read_geometry_impl(self):
         component = self._native() if self._native is not None else None
@@ -191,6 +199,21 @@ class ProbeBridge(object):
                          child['childCount'], child['mouseEnabled'], child['mouseChildren'])
         else:
             LOG.info('Native presentation audit unavailable: %s; Vanilla unchanged', result['reason'])
+
+    def _restore_surface_trial(self):
+        if self._surface_trial is not None:
+            self._surface_trial.restore()
+
+    def _try_surface_trial(self, settings, data):
+        if (not self.active or not self.enabled() or not self.hudVisible or
+                self._surface_trial is not None or not native_surface_trial_ready(settings, data)):
+            return
+        component = self._native() if self._native is not None else None
+        if component is None or not native_surface_trial_allowed(component) or self._schedule is None or self._cancel is None:
+            return
+        self._surface_trial = NativeSurfaceTrial(component, self._schedule, self._cancel,
+            lambda status: LOG.info('Native C++ visibility trial: %s; production replacement blocked', status))
+        self._surface_trial.start()
 
     def observe_native_click(self, component, x, y, button, size_index):
         if (not self.active or not self.enabled() or not self.hudVisible or
@@ -254,6 +277,7 @@ class ProbeBridge(object):
     def _geometry_tick(self):
         self._geometry_callback = None
         if not self.active or not self.enabled():
+            self._restore_surface_trial()
             self._calibration = None
             self.refresh()
             return
@@ -263,6 +287,8 @@ class ProbeBridge(object):
         self._geometry_callback = self._schedule(0.25, self._geometry_tick)
 
     def setBattleHudVisible(self, visible):
+        if not visible:
+            self._restore_surface_trial()
         self.hudVisible = bool(visible)
         self.refresh()
 
@@ -283,6 +309,8 @@ class ProbeBridge(object):
     def _refresh(self):
         enabled = self.active and self.enabled() and self.hudVisible
         ready_views = [view for view in self.views if view._ready]
+        if not enabled or not any(view._guiVisible for view in ready_views):
+            self._restore_surface_trial()
         snapshot = None
         if enabled and any(view._guiVisible for view in ready_views):
             component = self._native() if self._native is not None else None
@@ -352,6 +380,8 @@ class ProbeBridge(object):
                 data['visualConfig'] = preferences(settings.get('tactical'))
                 data['rendererSelection'] = selection(settings.get('minimapMode', 'vanilla'),
                                                       renderer_ready=bool(data.get('available')))
+                self._try_surface_trial(settings, data)
+                data['nativeSurfaceTrial'] = self._surface_trial.status if self._surface_trial is not None else 'idle'
                 data['sampleInputEnabled'] = bool(data.get('available') and self.sample_input_enabled(view))
                 data['sampleInputRequest'] = getattr(view, '_sampleRequest', 0)
                 if data.get('enabled') and data.get('acknowledged') and data.get('calibration', {}).get('available'):
@@ -365,6 +395,7 @@ class ProbeBridge(object):
                 sent = self._metrics.call('tactical_minimap.publish', self._publish, view, data)
                 self._metrics.count('tactical_minimap.skipped' if sent is False else 'tactical_minimap.published')
             except Exception:
+                self._restore_surface_trial()
                 LOG.exception('Cannot publish minimap diagnostic; Vanilla unchanged')
 
     def dispose(self):

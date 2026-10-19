@@ -62,6 +62,8 @@ def preferences(values=None):
 
 
 def validate_settings(data):
+    if type(data.get('tacticalNativeSurfaceTrial', False)) is not bool:
+        raise ValueError('Invalid native surface trial switch')
     if data.get('minimapMode', 'vanilla') not in MODES:
         raise ValueError('Unknown minimap mode')
     preferences(data.get('tactical'))

@@ -37,7 +37,7 @@ class ProbeTests(RuntimeTest):
             'Driftkings.core.tactical_minimap_probe': self.policy,
             'gui.battle_control.minimap_utils': module(MINIMAP_SIZE=(210, 210)),
             'GUI': module(mcursor=lambda: Owner(visible=self.cursor_visible)),
-            'Driftkings.views.battle.tactical_minimap': module(native_surface_audit=lambda component: {'available': False}, native_adapter=factory, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: [], native_strategic_point=lambda component, record: None, forward_native_position_input=lambda component, value: 'diagnostic-replay'),
+            'Driftkings.views.battle.tactical_minimap': module(NativeSurfaceTrial=None, native_surface_trial_allowed=lambda component: False, native_surface_audit=lambda component: {'available': False}, native_adapter=factory, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: [], native_strategic_point=lambda component, record: None, forward_native_position_input=lambda component, value: 'diagnostic-replay'),
             'Driftkings.views.hangar.common': module(publish_card=publish),
             'Driftkings.core.hud_visibility': module(hudVisibility=hud)})
         self.bridge = self.api['ProbeBridge'](object(), lambda config: self.settings,
@@ -128,6 +128,38 @@ class ProbeTests(RuntimeTest):
         self.assertTrue(self.bridge._calibration['available'])
         self.assertFalse(self.bridge._presentation_audit['available'])
         self.assertEqual(self.bridge._presentation_audit['reason'], 'presentation-method-unavailable')
+
+    def test_cpp_visibility_trial_opt_in_evidence_and_one_attempt_per_component(self):
+        data = dict(enabled=True, acknowledged=True, available=True, playerAvailable=True,
+                    mapContext='topography', calibration={'available': True},
+                    graphics={'svgApi': True, 'glyphCount': 21})
+        ready = self.policy.native_surface_trial_ready
+        self.assertFalse(ready({}, data))
+        self.assertFalse(ready({'tacticalPresentationTrial': True}, data))  # Old unsafe flag is inert.
+        settings = {'tacticalNativeSurfaceTrial': True}
+        self.assertTrue(ready(settings, data))
+        for key, value in (('enabled', False), ('acknowledged', False), ('playerAvailable', False),
+                           ('mapContext', 'classic'), ('graphics', {})):
+            self.assertFalse(ready(settings, dict(data, **{key: value})))
+        native = source('views/battle/tactical_minimap.py', {
+            'Driftkings.core.tactical_minimap': self.load('core.tactical_minimap')})
+        self.api['NativeSurfaceTrial'] = native['NativeSurfaceTrial']
+        Surface = type('WGMinimapFlashAS3', (Owner,), {'__module__': 'GUI'})
+        surface = Surface(visible=True)
+        self.component._MinimapComponent__component = surface
+        self.settings.update(tacticalDiagnostics=True, tacticalNativeSurfaceTrial=True)
+        self.bridge.start()
+        self.bridge._native = lambda: self.component
+        self.bridge._try_surface_trial(settings, data)
+        self.assertTrue(surface.visible)  # Independent native mode guard.
+        self.api['native_surface_trial_allowed'] = lambda component: True
+        self.bridge._try_surface_trial(settings, data)
+        self.bridge._try_surface_trial(settings, data)
+        self.assertFalse(surface.visible)
+        self.assertEqual(len([item for item in self.scheduled if item[0] == 2]), 1)
+        self.bridge.stop()
+        self.assertTrue(surface.visible)
+        self.assertEqual(self.bridge._surface_trial.status, 'restored')
 
     def test_preferences_publish_separately_without_enabling_replacement(self):
         self.settings.update(tacticalDiagnostics=True, minimapMode='driftkings',
@@ -922,7 +954,7 @@ class ProbeTests(RuntimeTest):
         dependencies = {
             'Driftkings.core.tactical_minimap_probe': self.policy,
             'GUI': module(mcursor=lambda: Owner(visible=fixture.cursor_visible)),
-            'Driftkings.views.battle.tactical_minimap': module(native_surface_audit=lambda component: {'available': False}, native_adapter=lambda *args: None, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: [], native_strategic_point=lambda component, record: None, forward_native_position_input=lambda component, value: 'diagnostic-replay'),
+            'Driftkings.views.battle.tactical_minimap': module(NativeSurfaceTrial=None, native_surface_trial_allowed=lambda component: False, native_surface_audit=lambda component: {'available': False}, native_adapter=lambda *args: None, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: [], native_strategic_point=lambda component, record: None, forward_native_position_input=lambda component, value: 'diagnostic-replay'),
             'Driftkings.views.hangar.common': module(publish_card=lambda *args: None),
             'frameworks.wulf': module(ViewModel=BaseModel),
             'gui.impl.pub.view_component': module(ViewComponent=BaseView),

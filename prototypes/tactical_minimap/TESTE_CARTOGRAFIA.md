@@ -1,5 +1,11 @@
 # Cartografia e calibração — diagnóstico
 
+## Ensaio C++ de visibilidade — dois segundos
+
+A leitura da superfície C++ foi confirmada no NA. Novo controlo opt-in, desligado por defeito: “Training only: test native surface visibility (2 seconds)”. Não é o ensaio scrollRect retirado; não usa recortes nem cores. Instalar/reiniciar, ativar este controlo, guardar e entrar em Topography. Confirmar ocultação completa e regresso normal do original após dois segundos, mantendo a amostra. Depois desativar a opção e consultar o log `Native C++ visibility trial`.
+
+Não há ainda troca permanente, e este ensaio está bloqueado em batalha normal. Detalhes de recuperação, limitações e testes em `TRANSICAO_SEGURA.md`.
+
 ## Correção após o ensaio de ocultação
 
 O ensaio scrollRect foi retirado após produzir fundo vermelho e linhas fora do minimapa, apesar de o log indicar reposição das propriedades. O novo pacote não contém o helper nem o comando/controlo de ensaio; uma flag antiga guardada não tem efeito. A sondagem estrutural continua só de leitura e Vanilla permanece ativo.

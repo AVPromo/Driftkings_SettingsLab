@@ -150,5 +150,6 @@
     "allyColor": "#67cf69",
     "enemyColor": "#ee6868",
     "platoonColor": "#ffc45b"
-  }
+  },
+  "tacticalNativeSurfaceTrial": false
 }

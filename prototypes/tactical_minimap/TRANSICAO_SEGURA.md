@@ -59,3 +59,18 @@ Testar falha de carregamento, falha de desenho, ausência de confirmações, per
 ## O que esta etapa não comprova
 
 Ainda não há ocultação nem lease nativo implementados. Os testes existentes cobrem a amostra e a política bloqueada. A seleção específica de veículos continua sem contrato confirmado; não será inventada nem convertida silenciosamente em ping de posição. Compatibilidade EU/NA/ASIA não pode ser deduzida apenas do SRC EU ou dos testes NA/Topography.
+
+
+## Novo ensaio opt-in: visible da superfície C++
+
+A leitura real NA de 2026-10-19 20:26:27 confirmou GUI.WGMinimapFlashAS3, visible=True, RGBA 255/255/255/255, width/height 0,5 e inputMode 2, sem propriedades indisponíveis. A alternativa agora ensaia apenas visible deste objeto, sem scrollRect, cor, dimensões, pais ou setters Flash.
+
+O controlo “Training only: test native surface visibility (2 seconds)” corresponde a `tacticalNativeSurfaceTrial`, default falso. É diferente da flag antiga de recorte, que continua inerte. Exige diagnóstico ativo, Topography nativo exato, proprietário vivo, geometria e SVG 21/21 confirmados; recusa XVM, modal e batalha normal. Sem estas condições não toca na superfície. As legendas novas continuam em inglês sem editar os catálogos.
+
+A classe NativeSurfaceTrial agenda primeiro uma única reposição de dois segundos pelo serviço de callbacks existente e só depois escreve visible=False. Sem token de callback válido não oculta. Guarda a visibilidade original, verifica escrita/reposição, faz uma tentativa por componente e cancela a expiração quando a reposição antecipada resulta. Stop/unbind, HUD oculto, vista indisponível, erro na publicação ou perda de geometria também repõem. Não força uma superfície originalmente invisível a aparecer. Se a reposição antecipada falhar, mantém a expiração previamente agendada para outra tentativa e regista restore-failed; não declara sucesso.
+
+A expiração é Python/BigWorld e não depende de JavaScript, de um evento do Gameface ou do polling da geometria. Não é um lease de produção nem uma garantia contra falhas do próprio cliente/Python. O teste continua a exigir prova visual de ocultação e recuperação; uma escrita lida de volta não prova que a superfície renderizada ficou correta, como mostrou o ensaio anterior.
+
+Procedimento: instalar e reiniciar completamente o jogo; ativar apenas o novo controlo de dois segundos, guardar e entrar em Topography. Confirmar se o original desaparece inteiro durante dois segundos e regressa normal, mantendo a amostra, ícones, pings e linhas. Voltar ao hangar e recolher `Native C++ visibility trial` no log; desativar o controlo depois. Não ativar troca permanente com base neste ensaio. Se a ocultação for parcial ou o original não regressar normal, rejeitar esta via e reiniciar o cliente com o controlo desligado.
+
+Testes Python cobrem agendamento antes da escrita, restauração sem JS, stop, duplicações, superfície já invisível, falta de backend/token, scheduler síncrono, falha transitória ao restaurar e guarda independente do modo. A compilação e os testes não substituem a confirmação no jogo.

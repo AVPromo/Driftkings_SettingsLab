@@ -11,6 +11,16 @@ OBJECTIVE_SYMBOLS = {'AllyTeamBaseEntry': 'allyBase', 'EnemyTeamBaseEntry': 'ene
                      'ControlPointEntry': 'controlPoint'}
 
 
+def native_surface_trial_ready(settings, data):
+    return bool(settings.get('tacticalNativeSurfaceTrial') is True and
+                data.get('enabled') is True and data.get('acknowledged') is True and
+                data.get('available') is True and data.get('playerAvailable') is True and
+                data.get('mapContext') == 'topography' and
+                data.get('calibration', {}).get('available') is True and
+                data.get('graphics', {}).get('svgApi') is True and
+                data.get('graphics', {}).get('glyphCount') == 21)
+
+
 def presentation_response(value):
     """Bounded structural metadata, never a capability to hide native UI."""
     unavailable = {'available': False, 'reason': 'invalid-presentation-audit'}

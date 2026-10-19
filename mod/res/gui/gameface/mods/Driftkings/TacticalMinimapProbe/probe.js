@@ -547,6 +547,10 @@
         configureVisual(data.visualConfig);
         desiredNodes = []; lineIndex = 0;
         line('Tactical Minimap — diagnóstico | Vanilla preservado', 'dk-probe-title');
+        if (data.nativeSurfaceTrial && data.nativeSurfaceTrial !== 'idle') {
+            line(data.nativeSurfaceTrial === 'active' ? 'Ensaio C++ Topography: original oculto durante 2 segundos.' :
+                'Ensaio C++: ' + data.nativeSurfaceTrial, 'dk-probe-pending');
+        }
         if (data.rendererSelection && data.rendererSelection.requestedMode === 'driftkings') {
             line('Preferência Driftkings guardada; Vanilla ativo: interação e recuperação por concluir.', 'dk-probe-pending');
         }

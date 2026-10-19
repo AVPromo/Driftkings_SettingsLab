@@ -70,6 +70,108 @@ class NativeAdapterTests(RuntimeTest):
         self.assertEqual(result['missing'], ['visible', 'colour', 'size', 'inputMode'])
         self.assertIsNone(result['colour'])
 
+    def make_visibility_trial(self, scheduler=None, fail_restore=None):
+        events, pending, cancelled, statuses = [], [], [], []
+        state = [True]
+        def get_visible(owner):
+            return state[0]
+        def set_visible(owner, value):
+            if value and fail_restore and fail_restore[0]:
+                fail_restore[0] = False
+                raise RuntimeError('Simulated transient restoration failure')
+            events.append(('visible', value))
+            state[0] = value
+        Surface = type('WGMinimapFlashAS3', (object,), {'__module__': 'GUI',
+                       'visible': property(get_visible, set_visible)})
+        surface = Surface()
+        def schedule(delay, function):
+            events.append(('schedule', delay))
+            pending.append(function)
+            return len(pending)
+        trial = self.api['NativeSurfaceTrial'](Owner(_MinimapComponent__component=surface),
+            scheduler or schedule, cancelled.append, statuses.append)
+        return trial, surface, events, pending, cancelled, statuses
+
+    def test_visibility_trial_arms_recovery_before_hiding_and_restores_without_js(self):
+        trial, surface, events, pending, cancelled, statuses = self.make_visibility_trial()
+        self.assertEqual(trial.start(), 'active')
+        self.assertFalse(surface.visible)
+        self.assertEqual(events, [('schedule', 2.0), ('visible', False)])
+        trial.start()
+        self.assertEqual(len(pending), 1)
+        pending[0]()  # Independent callback; no model, Gameface or poll involved.
+        self.assertTrue(surface.visible)
+        self.assertEqual(trial.status, 'restored')
+        self.assertIsNone(trial.surface)
+        previous = list(events)
+        trial.restore()
+        pending[0]()
+        self.assertEqual(events, previous)
+
+    def test_visibility_trial_stop_cancels_timeout_and_does_not_force_already_hidden_surface(self):
+        trial, surface, events, pending, cancelled, statuses = self.make_visibility_trial()
+        trial.start()
+        trial.restore()
+        self.assertTrue(surface.visible)
+        self.assertEqual(cancelled, [1])
+        pending[0]()
+        self.assertTrue(surface.visible)
+        trial, surface, events, pending, cancelled, statuses = self.make_visibility_trial()
+        surface.visible = False
+        self.assertEqual(trial.start(), 'already-hidden')
+        self.assertEqual(pending, [])
+        self.assertFalse(surface.visible)
+
+    def test_visibility_trial_does_not_hide_without_a_recovery_token(self):
+        def fail(delay, function):
+            raise RuntimeError('No callback backend')
+        for scheduler in (fail, lambda delay, function: None):
+            trial, surface, events, pending, cancelled, statuses = self.make_visibility_trial(scheduler)
+            self.assertEqual(trial.start(), 'failed-restored')
+            self.assertTrue(surface.visible)
+            self.assertEqual(events, [])
+        def inline(delay, function):
+            function()
+            return 42
+        trial, surface, events, pending, cancelled, statuses = self.make_visibility_trial(inline)
+        self.assertEqual(trial.start(), 'restored')
+        self.assertTrue(surface.visible)
+        self.assertEqual(events, [])
+        self.assertEqual(cancelled, [42])
+
+    def test_visibility_trial_keeps_expiry_armed_when_early_restore_fails(self):
+        fail_restore = [True]
+        trial, surface, events, pending, cancelled, statuses = self.make_visibility_trial(fail_restore=fail_restore)
+        trial.start()
+        self.assertEqual(trial.restore(), 'restore-failed')
+        self.assertFalse(surface.visible)
+        self.assertEqual(cancelled, [])
+        pending[0]()
+        self.assertTrue(surface.visible)
+        self.assertEqual(trial.status, 'restored')
+
+    def test_native_surface_trial_requires_exact_training_context(self):
+        native_module = 'gui.Scaleform.daapi.view.battle.maps_training.minimap'
+        Component = type('MapsTrainingMinimapComponent', (Owner,), {'__module__': native_module})
+        Plugin = type('BotAppearNotificationPlugin', (Owner,), {'__module__': native_module})
+        common = module(xvmInstalled=False)
+        session = Owner(arenaVisitor=Owner(gui=Owner(guiType=99)))
+        component = Component(getPlugin=lambda name: Plugin(), sessionProvider=session,
+                              isModalViewShown=lambda: False)
+        api = source('views/battle/tactical_minimap.py', {
+            'Driftkings.core.tactical_minimap': self.load('core.tactical_minimap'),
+            'Driftkings.common': common, 'constants': module(ARENA_GUI_TYPE=Owner(MAPS_TRAINING=99))})
+        api['owns_player_marker'] = lambda owner: True
+        self.assertTrue(api['native_surface_trial_allowed'](component))
+        session.arenaVisitor.gui.guiType = 1
+        self.assertFalse(api['native_surface_trial_allowed'](component))
+        session.arenaVisitor.gui.guiType = 99
+        common.xvmInstalled = True
+        self.assertFalse(api['native_surface_trial_allowed'](component))
+        common.xvmInstalled = False
+        component.isModalViewShown = lambda: True
+        self.assertFalse(api['native_surface_trial_allowed'](component))
+
     def test_native_map_and_visible_entries_are_read_without_orientation_or_world_reads(self):
         self.plugin._entries = {1: self.entry(), 2: self.entry(enemy=False)}
         frame = self.adapter.capture()
