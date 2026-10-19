@@ -256,3 +256,22 @@ def native_circle_points(component, record):
     return [dict(value, kind=kind, x=center[0], y=center[1],
                  rx=value['radius'] / (bounds[2] - bounds[0]), ry=value['radius'] / (bounds[3] - bounds[1]))
             for kind, value in record['circles'].items()]
+
+
+def native_ping_points(component, records):
+    """Read currently published communication entries; native deletion owns expiry."""
+    import Math
+    lower, upper = component.getBoundingBox()
+    bounds = (lower[0], lower[1], upper[0], upper[1])
+    result = []
+    for record in list(records.values())[:32]:
+        if not record.get('active') or record.get('matrix') is None:
+            continue
+        try:
+            position = Math.Matrix(record['matrix']).translation
+            point = coordinates(position.x, position.z, bounds)
+            if point is not None:
+                result.append({'x': point[0], 'y': point[1], 'kind': record['kind'], 'state': record['state']})
+        except Exception:
+            continue
+    return result

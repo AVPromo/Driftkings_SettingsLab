@@ -180,6 +180,20 @@ class NativeAdapterTests(RuntimeTest):
         self.assertEqual(api['native_circle_points'](self.component, record), [])
         self.assertEqual(len(reads), 1)
 
+    def test_ping_matrix_normalization_and_removal_use_current_publication(self):
+        reads = []
+        api = source('views/battle/tactical_minimap.py', {
+            'Driftkings.core.tactical_minimap': self.load('core.tactical_minimap'),
+            'Math': module(Matrix=lambda provider: reads.append(provider) or Owner(translation=Owner(x=100, z=200)))})
+        records = {1: dict(active=True, matrix=object(), kind='attention', state='attack')}
+        self.assertEqual(api['native_ping_points'](self.component, records),
+                         [{'x': .5, 'y': .5, 'kind': 'attention', 'state': 'attack'}])
+        records[1]['active'] = False
+        self.assertEqual(api['native_ping_points'](self.component, records), [])
+        self.assertEqual(len(reads), 1)
+        records.clear()
+        self.assertEqual(api['native_ping_points'](self.component, records), [])
+
     def test_hidden_lost_transitional_dead_and_inactive_entries_never_read_matrices(self):
         entries = [self.entry(active=False), self.entry(alive=False), self.entry(aoi=False),
                    self.entry(location=0), self.entry(location=2), self.entry(location=3)]

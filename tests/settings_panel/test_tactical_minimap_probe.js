@@ -69,7 +69,7 @@ data.alliedPoint = {x: .25, y: .5}; refresh();
 alignment = body.children.filter(function (child) { return child.id === 'dk-tactical-minimap-alignment'; })[0];
 assert.strictEqual(alignment.children.length, 5);
 var mapImage = box.children.filter(function (child) { return child.className === 'dk-probe-cartography'; })[0].children[1];
-assert.strictEqual(mapImage.children.length, 4);
+assert.strictEqual(mapImage.children.length, 5);
 var grid = mapImage.children[0];
 assert.strictEqual(grid.children.filter(function (child) { return child.className === 'dk-probe-grid-column'; }).map(function (child) { return child.textContent; }).join(''), '1234567890');
 assert.strictEqual(grid.children.filter(function (child) { return child.className === 'dk-probe-grid-row'; }).map(function (child) { return child.textContent; }).join(''), 'ABCDEFGHJK');
@@ -223,6 +223,18 @@ assert.strictEqual(ranges.children[0], range);
 assert.strictEqual(range.style.width, '60%');
 data.circles = []; refresh();
 assert.strictEqual(ranges.children.length, 0);
+data.pings = [{kind: 'attention', state: 'attack', x: .25, y: .75},
+    {kind: 'going', state: 'reply', x: .5, y: .5}]; refresh();
+var pingLayer = iconImage.children[4], ping = pingLayer.children[0];
+assert.strictEqual(pingLayer.children.length, 2);
+assert.strictEqual(ping.textContent, '!');
+assert.strictEqual(ping.style.left, '25%');
+assert.strictEqual(pingLayer.children[1].textContent, '>R');
+data.pings[0].state = 'idle'; refresh();
+assert.strictEqual(pingLayer.children[0], ping);
+assert.strictEqual(ping.style.opacity, .65);
+data.pings = []; refresh();
+assert.strictEqual(pingLayer.children.length, 0);
 data.alliedPoints = []; refresh();
 assert.strictEqual(livePoints.children.length, 0); // Empty frame overrides the legacy reference.
 delete data.alliedPoints;

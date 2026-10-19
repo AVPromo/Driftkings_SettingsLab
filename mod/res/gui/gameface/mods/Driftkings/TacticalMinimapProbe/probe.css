@@ -38,3 +38,8 @@
 .dk-probe-range-layer { position:absolute; left:0; top:0; width:100%; height:100%; overflow:hidden; z-index:0; }
 .dk-probe-range-circle { position:absolute; border:1px solid; border-radius:50%; box-sizing:border-box; }
 .dk-probe-map-grid { z-index:1; }
+
+.dk-probe-pings { position:absolute; left:0; top:0; width:100%; height:100%; z-index:4; }
+.dk-probe-ping { position:absolute; transform:translate(-50%,-50%); border:1px solid; border-radius:50%; background:rgba(0,0,0,.7); padding:1px 3px; font:bold 12px/14px Arial,sans-serif; }
+.dk-probe-ping-attention { color:#ffc45b; }
+.dk-probe-ping-going { color:#70dfff; }

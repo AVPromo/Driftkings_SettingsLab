@@ -34,7 +34,7 @@ class ProbeTests(RuntimeTest):
         self.scheduled, self.cancelled = [], []
         self.api = source('views/battle/tactical_minimap_probe.py', {
             'Driftkings.core.tactical_minimap_probe': self.policy,
-            'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: []),
+            'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: []),
             'Driftkings.views.hangar.common': module(publish_card=publish),
             'Driftkings.core.hud_visibility': module(hudVisibility=hud)})
         self.bridge = self.api['ProbeBridge'](object(), lambda config: self.settings,
@@ -294,6 +294,35 @@ class ProbeTests(RuntimeTest):
         bridge.stop()
         self.assertEqual(len(bridge._circle_entries), 0)
 
+    def test_ping_publication_response_deactivation_and_native_expiry(self):
+        self.settings['tacticalDiagnostics'] = True
+        bridge, hooks, events = self.install_runtime_stubs()
+        bridge.install()
+        component, provider = Owner(), object()
+        original = lambda *args: 9
+        hooks['addEntry'](original, component, 'MarkAttentionEntryUI', 'equipments', provider, True)
+        self.assertEqual(bridge._ping_entries[component][9]['kind'], 'attention')
+        hooks['invoke'](original, component, 9, 'setState', 'reply')
+        self.assertEqual(bridge._ping_entries[component][9]['state'], 'reply')
+        hooks['setActive'](original, component, 9, False)
+        self.assertFalse(bridge._ping_entries[component][9]['active'])
+        hooks['delEntry'](original, component, 9)
+        self.assertEqual(bridge._ping_entries[component], {})
+        hooks['addEntry'](original, component, 'UnspottedMarkerUI', 'equipments', provider, True)
+        self.assertEqual(bridge._ping_entries[component], {})
+        hooks['addEntry'](original, component, 'MarkGoingToPositionEntryUI', 'equipments', provider, True)
+        bridge.stop()
+        self.assertEqual(len(bridge._ping_entries), 0)
+
+    def test_ping_contract_is_bounded_and_contains_no_sender_or_text(self):
+        value = dict(kind='going', x=.5, y=.25, state='reply', sender=666, text='private')
+        clean = self.policy.ping_points([value])[0]
+        self.assertEqual(clean, {'kind': 'going', 'x': .5, 'y': .25, 'state': 'reply'})
+        self.assertEqual(len(self.policy.ping_points([value] * 40)), 32)
+        self.assertEqual(self.policy.ping_points([dict(value, kind='unspotted')]), [])
+        self.assertEqual(self.policy.ping_points([dict(value, x=float('inf'))]), [])
+        self.assertEqual(self.policy.ping_points([dict(value, state='unknown')]), [])
+
     def test_default_off_creates_no_adapter_and_starts_no_diagnostic(self):
         self.bridge.bind_native(self.component)
         self.bridge.start()
@@ -432,7 +461,7 @@ class ProbeTests(RuntimeTest):
         self.resource_id = 123
         dependencies = {
             'Driftkings.core.tactical_minimap_probe': self.policy,
-            'Driftkings.views.battle.tactical_minimap': module(native_adapter=lambda *args: None, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: []),
+            'Driftkings.views.battle.tactical_minimap': module(native_adapter=lambda *args: None, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: []),
             'Driftkings.views.hangar.common': module(publish_card=lambda *args: None),
             'frameworks.wulf': module(ViewModel=BaseModel),
             'gui.impl.pub.view_component': module(ViewComponent=BaseView),

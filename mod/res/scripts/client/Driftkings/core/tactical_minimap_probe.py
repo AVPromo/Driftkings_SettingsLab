@@ -5,6 +5,7 @@ import re
 from Driftkings.core.tactical_minimap import CLASSES, finite
 
 PROTOCOL = 1
+PING_SYMBOLS = {'MarkAttentionEntryUI': 'attention', 'MarkGoingToPositionEntryUI': 'going'}
 OBJECTIVE_SYMBOLS = {'AllyTeamBaseEntry': 'allyBase', 'EnemyTeamBaseEntry': 'enemyBase',
                      'ControlPointEntry': 'controlPoint'}
 
@@ -51,6 +52,7 @@ def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, c
         data['playerAvailable'] = any(point.get('side') == 'player' for point in points)
         data['objectives'] = objective_points(snapshot.get('objectives', []))
         data['circles'] = circle_points(snapshot.get('circles', []))
+        data['pings'] = ping_points(snapshot.get('pings', []))
         data['alliedPoints'] = points
         point = points[0] if points else None
         if point is not None:
@@ -273,4 +275,21 @@ def circle_points(values):
         clean.update(kind=value['kind'], color=color)
         seen.add(value['kind'])
         result.append(clean)
+    return result
+
+
+def ping_points(values):
+    result = []
+    if not isinstance(values, list):
+        return result
+    for value in values[:32]:
+        if not isinstance(value, dict) or value.get('kind') not in PING_SYMBOLS.values():
+            continue
+        try:
+            x, y = finite(value['x']), finite(value['y'])
+        except (KeyError, ValueError, TypeError, OverflowError):
+            continue
+        state = value.get('state', 'attack')
+        if 0 <= x <= 1 and 0 <= y <= 1 and state in ('attack', 'idle', 'reply'):
+            result.append({'x': x, 'y': y, 'kind': value['kind'], 'state': state})
     return result

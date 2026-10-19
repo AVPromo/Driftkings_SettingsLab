@@ -3,8 +3,8 @@
 import logging
 import weakref
 
-from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, accepts_ack, geometry_response, graphics_result, payload, update_ranges
-from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points
+from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, geometry_response, graphics_result, payload, update_ranges
+from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points
 from Driftkings.views.hangar.common import publish_card
 
 LOG = logging.getLogger('Driftkings.TacticalMinimapProbe')
@@ -23,6 +23,7 @@ class ProbeBridge(object):
         self._personal_entries = weakref.WeakKeyDictionary()
         self._objective_entries = weakref.WeakKeyDictionary()
         self._circle_entries = weakref.WeakKeyDictionary()
+        self._ping_entries = weakref.WeakKeyDictionary()
         self.active = False
         self.generation = 0
         self._native_failed = False
@@ -63,6 +64,7 @@ class ProbeBridge(object):
             self._personal_entries.pop(component, None)
             self._objective_entries.pop(component, None)
             self._circle_entries.pop(component, None)
+            self._ping_entries.pop(component, None)
             self._calibration = None
             self.refresh()
 
@@ -97,6 +99,7 @@ class ProbeBridge(object):
         self._personal_entries.clear()
         self._objective_entries.clear()
         self._circle_entries.clear()
+        self._ping_entries.clear()
         self._calibration = None
         self.refresh()
 
@@ -164,6 +167,10 @@ class ProbeBridge(object):
                         self._adapter = self._factory(component, component.sessionProvider)
                     snapshot = self._adapter.capture()
                     if snapshot.get('available'):
+                        try:
+                            snapshot['pings'] = native_ping_points(component, self._ping_entries.get(component, {}))
+                        except Exception:
+                            snapshot['pings'] = []
                         try:
                             snapshot['circles'] = native_circle_points(component, self._circle_entries.get(component))
                         except Exception:
@@ -299,6 +306,10 @@ class ProbeBridge(object):
                 records = bridge._objective_entries.setdefault(component, {})
                 if entry_id in records or len(records) < 16:
                     records[entry_id] = {'kind': OBJECTIVE_SYMBOLS[symbol], 'matrix': matrix, 'active': bool(active)}
+            if bridge.enabled() and container == 'equipments' and symbol in PING_SYMBOLS and entry_id:
+                records = bridge._ping_entries.setdefault(component, {})
+                if entry_id in records or len(records) < 32:
+                    records[entry_id] = {'kind': PING_SYMBOLS[symbol], 'matrix': matrix, 'active': bool(active), 'state': 'attack'}
             return entry_id
 
         @override(MinimapComponent, 'setMatrix')
@@ -310,6 +321,9 @@ class ProbeBridge(object):
             circle = bridge._circle_entries.get(component)
             if circle is not None and circle['id'] == entry_id:
                 circle['matrix'] = matrix
+            ping = bridge._ping_entries.get(component, {}).get(entry_id)
+            if ping is not None:
+                ping['matrix'] = matrix
             objective = bridge._objective_entries.get(component, {}).get(entry_id)
             if objective is not None:
                 objective['matrix'] = matrix
@@ -324,6 +338,9 @@ class ProbeBridge(object):
             circle = bridge._circle_entries.get(component)
             if circle is not None and circle['id'] == entry_id:
                 circle['active'] = bool(active)
+            ping = bridge._ping_entries.get(component, {}).get(entry_id)
+            if ping is not None:
+                ping['active'] = bool(active)
             objective = bridge._objective_entries.get(component, {}).get(entry_id)
             if objective is not None:
                 objective['active'] = bool(active)
@@ -335,6 +352,9 @@ class ProbeBridge(object):
             circle = bridge._circle_entries.get(component)
             if circle is not None and circle['id'] == entry_id:
                 update_ranges(circle, signature)
+            ping = bridge._ping_entries.get(component, {}).get(entry_id)
+            if ping is not None and len(signature) == 2 and signature[0] == 'setState' and signature[1] in ('attack', 'idle', 'reply'):
+                ping['state'] = signature[1]
             record = bridge._objective_entries.get(component, {}).get(entry_id)
             if record is not None and len(signature) == 2 and signature[0] == 'setPointNumber':
                 number = signature[1]
@@ -351,6 +371,7 @@ class ProbeBridge(object):
             circle = bridge._circle_entries.get(component)
             if circle is not None and circle['id'] == entry_id:
                 bridge._circle_entries.pop(component, None)
+            bridge._ping_entries.get(component, {}).pop(entry_id, None)
             bridge._objective_entries.get(component, {}).pop(entry_id, None)
             return result
 
