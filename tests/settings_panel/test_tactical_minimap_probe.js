@@ -238,7 +238,7 @@ function sampleClick(x, y, button) {
 }
 sampleClick(200, 150, 0);
 assert.strictEqual(sampleCommands.length, 1);
-assert.strictEqual(JSON.stringify(sampleCommands[0]), JSON.stringify({protocol: 1, generation: 3, x: .5, y: .25, button: 0}));
+assert.strictEqual(JSON.stringify(sampleCommands[0]), JSON.stringify({protocol: 1, generation: 3, request: 1, x: .5, y: .25, button: 0}));
 assert.strictEqual(prevented, 1); assert.strictEqual(stopped, 1);
 documentEvents.mousedown({clientX: 200, clientY: 150, button: 0, target: body,
     preventDefault: function () { throw new Error('Must not capture foreign elements'); },
@@ -248,8 +248,10 @@ sampleClick(90, 150, 0); sampleClick(NaN, 150, 0); sampleClick(200, 150, 4);
 assert.strictEqual(sampleCommands.length, 1);
 sampleClick(200, 150, 2);
 assert.strictEqual(sampleCommands[1].button, 1); // Browser right -> native right.
+assert.strictEqual(sampleCommands[1].request, 2);
 sampleClick(200, 150, 1);
 assert.strictEqual(sampleCommands[2].button, 2); // Browser middle -> native middle.
+assert.strictEqual(sampleCommands[2].request, 3);
 data.sampleInputEnabled = false; refresh();
 sampleClick(200, 150, 0);
 assert.strictEqual(sampleCommands.length, 3);

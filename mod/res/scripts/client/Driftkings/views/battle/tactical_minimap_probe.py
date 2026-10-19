@@ -3,8 +3,8 @@
 import logging
 import weakref
 
-from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits, strategic_area_response, native_click_sample, gameface_click_sample
-from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points, native_camera_line, native_yaw_lines, native_strategic_point
+from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits, strategic_area_response, native_click_sample, gameface_click_sample, input_request
+from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points, native_camera_line, native_yaw_lines, native_strategic_point, forward_native_position_input
 from Driftkings.views.hangar.common import publish_card
 
 LOG = logging.getLogger('Driftkings.TacticalMinimapProbe')
@@ -94,6 +94,7 @@ class ProbeBridge(object):
             view._graphicsResult = None
             view._sampleInput = None
             view._sampleSequence = 0
+            view._sampleRequest = 0
         self.active = True
         self._start_geometry_poll()
         hudVisibility.attach(self)
@@ -113,6 +114,7 @@ class ProbeBridge(object):
             view._graphicsResult = None
             view._sampleInput = None
             view._sampleSequence = 0
+            view._sampleRequest = 0
         hudVisibility.detach(self)
         self._close_adapter()
         self._native = None
@@ -171,16 +173,26 @@ class ProbeBridge(object):
     def receive_sample_input(self, view, args):
         if not self.sample_input_enabled(view):
             return
+        request = input_request(args, getattr(view, '_sampleRequest', 0))
+        if request is None:
+            return
         try:
             import GUI
             from gui.battle_control.minimap_utils import MINIMAP_SIZE
             if not GUI.mcursor().visible or self._native().getMinimapDimensions() != 10:
                 return
+            self._read_geometry()
+            if not self.sample_input_enabled(view):
+                return
             value = gameface_click_sample(args, self.generation, self._calibration['sizeIndex'],
                                           MINIMAP_SIZE, getattr(view, '_sampleSequence', 0) + 1)
             if value is not None:
+                # Commit the request before invoking native code: re-entrant or
+                # repeated model events must never send the same click twice.
+                view._sampleRequest = request
                 view._sampleInput = value
                 view._sampleSequence = value['sequence']
+                value['dispatch'] = forward_native_position_input(self._native(), value)
                 self.refresh()
         except Exception:
             LOG.debug('Gameface input diagnostic unavailable', exc_info=True)
@@ -286,6 +298,7 @@ class ProbeBridge(object):
                 data = payload(enabled and view._guiVisible, view._acknowledged, snapshot, self.generation,
                                getattr(view, '_graphicsResult', None), self._calibration)
                 data['sampleInputEnabled'] = bool(data.get('available') and self.sample_input_enabled(view))
+                data['sampleInputRequest'] = getattr(view, '_sampleRequest', 0)
                 if data.get('enabled') and data.get('acknowledged') and data.get('calibration', {}).get('available'):
                     data['gamefaceInput'] = getattr(view, '_sampleInput', None)
                 state = (data['allyStatus'], data['reason'], 'ready' if (self._calibration or {}).get('available') else (self._calibration or {}).get('reason', 'no-native-geometry'), data['playerAvailable'])
@@ -344,6 +357,7 @@ class ProbeBridge(object):
                 self._cursorVisible = False
                 self._sampleInput = None
                 self._sampleSequence = 0
+                self._sampleRequest = 0
                 self._lastPayload = None
                 super(ProbeView, self).__init__(layoutID=layout_id, model=ProbeModel)
                 bridge.views.add(self)

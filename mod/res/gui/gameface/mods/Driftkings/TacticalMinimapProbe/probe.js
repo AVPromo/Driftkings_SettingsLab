@@ -307,8 +307,13 @@
         if (!isFinite(x) || !isFinite(y) || x < 0 || x > 1 || y < 0 || y > 1) { return; }
         event.preventDefault(); event.stopPropagation();
         try {
+            if (binding.inputGeneration !== interaction.generation) {
+                binding.inputGeneration = interaction.generation; binding.inputSequence = 0;
+            }
+            binding.inputSequence = Math.max(binding.inputSequence, interaction.request) + 1;
+            if (binding.inputSequence > 2147483647) { return; }
             binding.model.onSampleInput({protocol: 1, generation: interaction.generation,
-                x: x, y: y, button: button === 1 ? 2 : button === 2 ? 1 : 0});
+                request: binding.inputSequence, x: x, y: y, button: button === 1 ? 2 : button === 2 ? 1 : 0});
         } catch (error) {
             interaction = null; image.style.pointerEvents = 'none';
             console.error('[Driftkings] Sample input diagnostic failed', error);
@@ -438,11 +443,18 @@
         var sample = nativeInput(data.gamefaceInput);
         var interactive = inputListening && data.sampleInputEnabled === true && data.acknowledged === true &&
             data.available === true && data.calibration && data.calibration.available === true;
-        interaction = interactive ? {generation: data.generation} : null;
-        line('Input da amostra: ' + (interactive ? 'ativo com cursor; apenas diagnóstico' : 'inativo'));
+        var request = data.sampleInputRequest;
+        if (typeof request !== 'number' || !isFinite(request) || request < 0 || request > 2147483647 || Math.floor(request) !== request) { request = 0; }
+        interaction = interactive ? {generation: data.generation, request: request} : null;
+        line('Input da amostra: ' + (interactive ? 'esquerdo via cliente; restantes botões em diagnóstico' : 'inativo'));
         if (sample && typeof sample.localX === 'number' && isFinite(sample.localX) &&
                 typeof sample.localY === 'number' && isFinite(sample.localY)) {
             line('Gameface → Python #' + sample.sequence + ': ' + sample.localX.toFixed(1) + ', ' + sample.localY.toFixed(1) + ' px nativos (cruz turquesa)');
+            var statuses = {forwarded: 'entregue ao cliente', 'diagnostic-replay': 'replay: apenas diagnóstico',
+                'diagnostic-button': 'botão apenas diagnóstico', 'native-input-unavailable': 'envio nativo indisponível',
+                'third-party-owner': 'outro componente controla o minimapa', 'unsupported-mode': 'modo não suportado',
+                'modal-view': 'janela modal aberta', 'invalid-input': 'coordenadas inválidas', failed: 'falha nativa; pedido não repetido'};
+            line('Clique: ' + (statuses[data.gamefaceInput.dispatch] || 'diagnóstico'));
         }
         alignNativeArea(data.calibration);
         line('Calibração: NO/NE/SO/SE nos cantos; + no centro nativo.');

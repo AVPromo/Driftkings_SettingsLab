@@ -1,5 +1,15 @@
 # Cartografia e calibração — diagnóstico
 
+## Clique esquerdo encaminhado ao cliente
+
+Receção Gameface confirmada pelo utilizador. A etapa atual acrescenta encaminhamento **só do clique esquerdo** para `MinimapComponent.onMinimapClicked`, depois de validar cursor, modal, geração, pedido e posição. A geometria/tamanho são relidos no momento da receção. A classe do plugin tem de ser exatamente `ClassicMinimapPingPlugin` do módulo clássico auditado; plugin ausente, terceiro/XVM, modo não clássico ou replay mantêm diagnóstico sem envio. Os outros botões continuam sem encaminhamento.
+
+O código não chama diretamente APIs de chat nem procura alvos: o plugin original decide limites de envio, marcação de atenção/área de artilharia, resposta a marcador e base próxima. O resultado `forwarded` significa apenas que o método nativo foi chamado, não que um ping foi aceite pelo servidor. Não cobre ainda as interações específicas dos ícones de veículos.
+
+Cada evento recebe um identificador crescente por geração. O backend grava esse identificador antes da chamada nativa; duplicações, repetição reentrante e gerações antigas são rejeitadas. Falhas nativas não são repetidas. Não há fila, callback de reenvio ou timer novo. Um clique intencional posterior recebe outro identificador e segue as regras normais do cliente.
+
+Teste numa batalha real: mostrar cursor com Ctrl esquerdo e clicar uma vez numa posição livre da amostra. Comparar a posição com o ping recebido no original e confirmar ausência de duplicação. Testar após alterar tamanho, junto a uma base e com uma janela modal aberta. Em replay deve continuar a aparecer a cruz turquesa e a indicação de diagnóstico, sem envio. Confirmar aceitação real antes de declarar paridade de input; botão direito, interações de veículos, zoom/foco completos e substituição permanecem pendentes. As secções abaixo registam as etapas anteriores.
+
 ## Cliques na amostra Gameface — percurso de diagnóstico
 
 A amostra aceita mousedown apenas com handshake atual, geometria/tamanho nativos válidos, adaptador disponível, HUD visível, cursor nativo visível e ausência de janela modal. Reutiliza `SHOW_CURSOR`/`HIDE_CURSOR` e `GUI.mcursor().visible`, como o painel de marcas; não força cursor ou foco. O listener de captura verifica que o alvo pertence à imagem da amostra e que as coordenadas cabem no seu getBoundingClientRect. Só esse caso consome o evento. Botões DOM esquerdo/meio/direito são convertidos para os índices nativos 0/2/1.

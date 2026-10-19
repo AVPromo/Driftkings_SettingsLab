@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-"""Unbound read-only native minimap adapter for integration tests.
+"""Native minimap reads and guarded explicit position-input delegation.
 
-No event subscriptions, UI changes, pings or BigWorld entity reads. The adapter
-is deliberately not installed by the feature loader. Its audit snapshots are
-not accepted by the synthetic renderer and do not enable production mode.
+The adapter does not subscribe to events, query world entities or retain past
+positions. Its snapshots feed diagnostics, not production replacement. Input
+delegation calls the stock classic handler only for validated user left-clicks.
 """
 import weakref
 
@@ -210,6 +210,51 @@ def _world_direction_line(point, yaw, bounds):
     distance = min(distances)
     return {'x': point[0], 'y': point[1], 'x2': max(0, min(1, point[0] + distance * dx)),
             'y2': max(0, min(1, point[1] + distance * dy))}
+
+
+def native_position_input_status(component):
+    """Conservative capability check for the stock classic position handler."""
+    try:
+        import BattleReplay
+        from Driftkings.common import xvmInstalled
+        if BattleReplay.g_replayCtrl.isPlaying:
+            return 'diagnostic-replay'
+        if xvmInstalled:
+            return 'third-party-owner'
+        if component.getMinimapDimensions() != 10:
+            return 'unsupported-mode'
+        plugin = component.getPlugin('pinging')
+        if plugin is None:
+            return 'native-input-unavailable'
+        if (type(plugin).__module__ != 'gui.Scaleform.daapi.view.battle.classic.minimap' or
+                type(plugin).__name__ != 'ClassicMinimapPingPlugin'):
+            return 'third-party-owner'
+        if component.isModalViewShown():
+            return 'modal-view'
+        return 'ready'
+    except Exception:
+        return 'native-input-unavailable'
+
+
+def forward_native_position_input(component, value):
+    """One explicit left-click, delegated once; never retry or send chat here."""
+    status = native_position_input_status(component)
+    if status != 'ready':
+        return status
+    try:
+        from Driftkings.core.tactical_minimap_probe import input_sample
+        from Driftkings.core.tactical_minimap import native_click_point
+        from gui.battle_control.minimap_utils import MINIMAP_SIZE
+        value = input_sample(value)
+        if value is None:
+            return 'invalid-input'
+        if value['button'] != 0:
+            return 'diagnostic-button'
+        x, y = native_click_point(value['x'], value['y'], MINIMAP_SIZE)
+        component.onMinimapClicked(x, y, value['button'], value['sizeIndex'])
+        return 'forwarded'
+    except Exception:
+        return 'failed'
 
 
 def native_strategic_point(component, record):

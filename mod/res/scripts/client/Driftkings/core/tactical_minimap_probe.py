@@ -269,8 +269,16 @@ def input_sample(value):
     return point if point['sequence'] > 0 else None
 
 
+def input_request(args, previous):
+    value = args.get('request') if isinstance(args, dict) else None
+    if (isinstance(value, bool) or not isinstance(value, (int, float)) or
+            not previous < value <= 2147483647 or int(value) != value):
+        return None
+    return int(value)
+
+
 def gameface_click_sample(args, generation, size_index, native_size, sequence):
-    """Validate a dry-run input; only calculate native pixels, never dispatch."""
+    """Validate sample input and calculate native pixels; never dispatch here."""
     if not accepts_ack(args, generation):
         return None
     try:

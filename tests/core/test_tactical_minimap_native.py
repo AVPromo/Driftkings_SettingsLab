@@ -235,6 +235,50 @@ class NativeAdapterTests(RuntimeTest):
         api['owns_player_marker'] = lambda component: False
         self.assertIsNone(api['native_strategic_point'](self.component, record))
 
+    def test_position_input_delegates_once_only_to_stock_classic_plugin(self):
+        Ping = type('ClassicMinimapPingPlugin', (object,), {
+            '__module__': 'gui.Scaleform.daapi.view.battle.classic.minimap'})
+        plugin, modal, calls = [Ping()], [False], []
+        replay = Owner(isPlaying=False)
+        common = module(xvmInstalled=False)
+        self.component.getMinimapDimensions = lambda: 10
+        self.component.getPlugin = lambda name: plugin[0] if name == 'pinging' else None
+        self.component.isModalViewShown = lambda: modal[0]
+        self.component.onMinimapClicked = lambda *args: calls.append(args)
+        api = source('views/battle/tactical_minimap.py', {
+            'Driftkings.core.tactical_minimap': self.load('core.tactical_minimap'),
+            'Driftkings.core.tactical_minimap_probe': self.load('core.tactical_minimap_probe'),
+            'Driftkings.common': common, 'BattleReplay': module(g_replayCtrl=replay),
+            'gui.battle_control.minimap_utils': module(MINIMAP_SIZE=(210, 210))})
+        send = api['forward_native_position_input']
+        value = dict(x=.5, y=.25, button=0, sizeIndex=4, sequence=1)
+        self.assertEqual(send(self.component, value), 'forwarded')
+        self.assertEqual(calls, [(105, 52.5, 0, 4)])
+        calls[:] = []
+        self.assertEqual(send(self.component, dict(value, button=1)), 'diagnostic-button')
+        self.assertEqual(send(self.component, dict(value, x=2)), 'invalid-input')
+        replay.isPlaying = True
+        self.assertEqual(send(self.component, value), 'diagnostic-replay')
+        replay.isPlaying = False
+        modal[0] = True
+        self.assertEqual(send(self.component, value), 'modal-view')
+        modal[0] = False
+        common.xvmInstalled = True
+        self.assertEqual(send(self.component, value), 'third-party-owner')
+        common.xvmInstalled = False
+        plugin[0] = Owner()
+        self.assertEqual(send(self.component, value), 'third-party-owner')
+        plugin[0] = None
+        self.assertEqual(send(self.component, value), 'native-input-unavailable')
+        self.assertEqual(calls, [])
+        plugin[0] = Ping()
+        def broken(*args):
+            calls.append(args)
+            raise RuntimeError('Simulated native failure')
+        self.component.onMinimapClicked = broken
+        self.assertEqual(send(self.component, value), 'failed')
+        self.assertEqual(len(calls), 1)
+
     def test_native_objectives_read_only_active_publication_and_world_bounds(self):
         reads = []
         def matrix(provider):

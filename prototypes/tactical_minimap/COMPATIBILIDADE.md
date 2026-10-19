@@ -4,7 +4,7 @@
 
 O estado inicial abaixo é histórico. O diagnóstico opt-in já tem transporte de posições publicadas, SVG, cartografia/grelha, geometria, bases/captura, círculos, pings de célula/posição/artilharia, impactos inimigos e inimigos próximos/distantes confirmados pelo utilizador em replay. A linha de direção da câmara arcade também foi confirmada. Destruídos, etiquetas, limites do canhão e mira/contorno estratégico têm código e testes, mas ainda carecem de confirmação visual explícita; o utilizador fará o teste de artilharia numa batalha.
 
-A etapa de input inclui observação de cliques no original/índice de tamanho e receção de cliques na amostra Gameface com confirmação pelo Python, ainda por validar no jogo. O segundo percurso é exclusivamente diagnóstico e não envia comandos ao cliente. A substituição permanece bloqueada: faltam paridade de interação, modos, recuperação e medições reais. `TESTE_CARTOGRAFIA.md` contém o procedimento e as limitações atuais; nenhum destes testes permite declarar suporte global EU/NA/ASIA ou Lost Contact.
+A receção de cliques na amostra Gameface foi confirmada pelo utilizador. A etapa atual encaminha apenas cliques esquerdos explícitos ao handler clássico original, quando disponível e com pedidos deduplicados; falta confirmação numa batalha real. Replays e outros botões continuam em diagnóstico. A substituição permanece bloqueada: faltam paridade de interação, modos, recuperação e medições reais. `TESTE_CARTOGRAFIA.md` contém o procedimento e as limitações atuais; nenhum destes testes permite declarar suporte global EU/NA/ASIA ou Lost Contact.
 
 ## Registo inicial da auditoria
 
