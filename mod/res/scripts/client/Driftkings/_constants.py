@@ -220,10 +220,8 @@ class HIGH_CALIBER_PROGRESS(object):
     NAME = 'high_caliber_progress'
     BACK_GROUND_ENABLED = 'backGroundEnabled'
     TEXT_LOCK = 'textLock'
-    FORMAT = 'format'
     BACKGROUND = 'background'
     HIGH_CALIBER_PROGRESS = 'mainGun'
-    SHADOW = 'shadow'
     TEXT_POSITION = 'textPosition'
 
 

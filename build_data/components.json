@@ -339,8 +339,13 @@
       ],
       "assets": [
         {
-          "source": "mod/res/gui/maps/Driftkings/MainGun/bg.png",
-          "target": "res/gui/maps/Driftkings/MainGun/bg.png",
+          "source": "mod/res/gui/gameface/mods/Driftkings/MainGun/**",
+          "target": "res/gui/gameface/mods/Driftkings/MainGun/**",
+          "generator": null
+        },
+        {
+          "source": "mod/res/gui/gen_resources/driftkings.DriftkingsMainGun.json",
+          "target": "res/gui/gen_resources/driftkings.DriftkingsMainGun.json",
           "generator": null
         }
       ]

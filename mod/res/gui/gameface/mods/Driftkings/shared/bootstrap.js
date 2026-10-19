@@ -57,6 +57,16 @@
             ],
             "styles": []
         },
+        "DriftkingsMainGun": {
+            "owner": "__dkMainGun",
+            "scripts": [
+                "coui://gui/gameface/mods/Driftkings/shared/marks_panel.js",
+                "coui://gui/gameface/mods/Driftkings/MainGun/main_gun.js"
+            ],
+            "styles": [
+                "coui://gui/gameface/mods/Driftkings/MainGun/main_gun.css"
+            ]
+        },
         "DriftkingsMarksOnGunBattle": {
             "owner": "__dkBattleMarks",
             "scripts": [

@@ -1,31 +1,12 @@
 {
-  "backGroundEnabled": false,
+  "backGroundEnabled": true,
   "background": {
-    "alpha": 80,
-    "height": 50,
-    "image": "../maps/Driftkings/MainGun/bg.png",
-    "width": 200
+    "alpha": 88
   },
   "enabled": true,
-  "format": "<font size=\"16\" face=\"$FieldFont\"><b>{mainGun}</b></font>",
   "mainGun": {
     "dynamic": true,
-    "enabled": true,
-    "format": "{mainGunIcon}{mainGunDoneIcon}{mainGunFailureIcon} <font color='#E0E06D'>{mainGun}</font>",
-    "mainGunDoneIcon": "<img src='img://gui/maps/icons/library/done.png' width='32' height='32' vspace='-8'>",
-    "mainGunFailureIcon": "<img src='img://gui/maps/icons/library/icon_alert_32x32.png' width='32' height='32' vspace='-8'>",
-    "mainGunIcon": "<img src='img://gui/maps/icons/achievement/32x32/mainGun.png' width='32' height='32' vspace='-8'>"
-  },
-  "shadow": {
-    "alpha": 0.8,
-    "angle": 90,
-    "blurX": 2,
-    "blurY": 2,
-    "color": "#000000",
-    "distance": 0,
-    "enabled": true,
-    "quality": 4,
-    "strength": 2
+    "enabled": true
   },
   "textLock": false,
   "textPosition": {
@@ -33,5 +14,12 @@
     "alignY": "top",
     "x": 200,
     "y": 200
+  },
+  "gameface": {
+    "scale": 1.0,
+    "accentColor": "#E4B866",
+    "showPercentage": true,
+    "showProgress": true,
+    "showSecondary": true
   }
 }

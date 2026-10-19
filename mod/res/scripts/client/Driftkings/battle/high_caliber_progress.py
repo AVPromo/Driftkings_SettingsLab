@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import math
 
-from Vehicle import Vehicle
 from Driftkings.core.battle_policy import battle_policy
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.shared.ribbons_aggregator import RibbonsAggregator
@@ -12,23 +11,25 @@ from Driftkings._constants import GLOBAL, HIGH_CALIBER_PROGRESS
 from Driftkings.common import getPlayer
 from Driftkings.core.battle_events import battleEvents
 from Driftkings.core.hooks import override, on_event
-from Driftkings.settings.service import settings_service, affects
+from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.battle.high_caliber_progress import HighCaliberProgressSettings as Settings
-from Driftkings.views.battle.high_caliber_progress import _startFlash
+from Driftkings.views.battle.high_caliber_gameface import MainGunAdapter
+from Driftkings.core.high_caliber import project
 
-# g_flash = None
+g_gameface = None
 config = Settings()
 
 
 class MainGun(object):
     def __init__(self):
         self.players_damage = dict()
-        self.mainGunText = ''
         self.totals = [0, 0, True, 0, 0]
+        self.payload = {'visible': False}
+        self.destroyed = False
 
     @property
     def showMainGun(self):
-        return settings_service.getComponentDict(config)[HIGH_CALIBER_PROGRESS.HIGH_CALIBER_PROGRESS]['enabled'] and '{mainGun}' in settings_service.getComponentDict(config)[HIGH_CALIBER_PROGRESS.FORMAT] and scl.guiType in (ARENA_GUI_TYPE.RANDOM, ARENA_GUI_TYPE.EPIC_RANDOM)
+        return settings_service.getComponentDict(config)[HIGH_CALIBER_PROGRESS.HIGH_CALIBER_PROGRESS]['enabled'] and scl.guiType in (ARENA_GUI_TYPE.RANDOM, ARENA_GUI_TYPE.EPIC_RANDOM)
 
     def battleLoading(self):
         enemy_health = scl.health.get(scl.enemyTeam)
@@ -38,22 +39,19 @@ class MainGun(object):
 
     def playersDamage(self, attackerID, damage, targetTeam, attackerTeam):
         if attackerID is None or damage <= 0:
+            self.updateMainGun()
             return
         p_damage = self.players_damage.setdefault(attackerID, [0, False])
         if targetTeam == attackerTeam:
             p_damage[1] = True
+            if attackerID != scl.playerID:
+                self.totals[3] = max([0] + [value[0] for key, value in self.players_damage.items()
+                                          if key != scl.playerID and not value[1]])
         else:
             p_damage[0] += damage
-            if self.showMainGun and settings_service.getComponentDict(config)[HIGH_CALIBER_PROGRESS.HIGH_CALIBER_PROGRESS]['dynamic']:
-                player_damage = self.players_damage.setdefault(scl.playerID, [0, False])
-                if attackerID != scl.playerID and p_damage[0] > self.totals[3] and not p_damage[1]:
-                    if p_damage[0] > self.totals[0] and p_damage[0] > player_damage[0]:
-                        self.totals[3] = p_damage[0]
-                        self.totals[2] = False
-                        self.updateMainGun()
-                if player_damage[1]:
-                    self.totals[2] = False
-                    self.updateMainGun()
+            if attackerID != scl.playerID and not p_damage[1]:
+                self.totals[3] = max(self.totals[3], p_damage[0])
+        self.updateMainGun()
 
     def onPlayerFeedbackReceived(self, events):
         for event in events:
@@ -62,48 +60,30 @@ class MainGun(object):
             if eventType == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY and extra is not None:
                 damage = extra.getDamage()
                 self.totals[4] += damage
-                if settings_service.getComponentDict(config)[HIGH_CALIBER_PROGRESS.HIGH_CALIBER_PROGRESS]['dynamic']:
-                    self.updateMainGun()
-
-    @staticmethod
-    def recipes(value):
-        return '{:,}'.format(int(value)).replace(',', ' ')
+                self.updateMainGun()
 
     def updateMainGun(self):
-        if not scl.inBattle or not settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
-            # if g_flash is not None:
-            #    g_flash.hide()
-            return
+        settings = settings_service.getComponentDict(config)
         player = getPlayer()
-        if not player or not player.arena or not battle_policy.decision('high_caliber_progress')[0] or not self.showMainGun or not self.totals[0]:
-            # if g_flash is not None:
-            #    g_flash.hide()
-            return
-        macros = {
-            'mainGun': 0,
-            'mainGunIcon': settings_service.getComponentDict(config)[HIGH_CALIBER_PROGRESS.HIGH_CALIBER_PROGRESS]['mainGunIcon'],
-            'mainGunDoneIcon': '',
-            'mainGunFailureIcon': settings_service.getComponentDict(config)[HIGH_CALIBER_PROGRESS.HIGH_CALIBER_PROGRESS]['mainGunFailureIcon']
-        }
-        if self.showMainGun:
-            dynamic = settings_service.getComponentDict(config)[HIGH_CALIBER_PROGRESS.HIGH_CALIBER_PROGRESS]['dynamic']
-            if dynamic:
-                if self.totals[3] and self.totals[4] > self.totals[3]:
-                    self.totals[3] = self.totals[4]
-                    self.totals[2] = True
-                self.totals[1] = max(max(self.totals[0], self.totals[3]) - self.totals[4], 0)
-            mainGunAchived = dynamic and not self.totals[1] and self.totals[2]
-            if mainGunAchived:
-                macros['mainGun'] = ''
-            elif not self.totals[2] and dynamic:
-                macros['mainGun'] = ''
-            else:
-                macros['mainGun'] = self.recipes(self.totals[int(dynamic)])
-            macros['mainGunDoneIcon'] = settings_service.getComponentDict(config)[HIGH_CALIBER_PROGRESS.HIGH_CALIBER_PROGRESS]['mainGunDoneIcon'] if mainGunAchived else ''
-            macros['mainGunFailureIcon'] = settings_service.getComponentDict(config)[HIGH_CALIBER_PROGRESS.HIGH_CALIBER_PROGRESS]['mainGunFailureIcon'] if not self.totals[2] and dynamic else ''
-        self.mainGunText = settings_service.getComponentDict(config)[HIGH_CALIBER_PROGRESS.HIGH_CALIBER_PROGRESS]['format'].format(**macros)
-        # if g_flash is not None:
-        #    g_flash.addText(settings_service.getComponentDict(config)[HIGH_CALIBER_PROGRESS.FORMAT].format(mainGun=self.mainGunText))
+        visible = bool(scl.inBattle and settings[GLOBAL.ENABLED] and player and player.arena
+                       and battle_policy.decision('high_caliber_progress')[0]
+                       and self.showMainGun and self.totals[0])
+        self.payload = {'visible': False}
+        if visible:
+            options = settings[HIGH_CALIBER_PROGRESS.HIGH_CALIBER_PROGRESS]
+            health = scl.health.get(scl.enemyTeam)
+            # Health events and ribbons can arrive in either order. Account for
+            # observed own damage before feedback credits it, without double counting.
+            own = self.players_damage.get(scl.playerID, [0, False])
+            pending = max(0, own[0] - self.totals[4])
+            self.payload = project(self.totals[0], self.totals[3], self.totals[4],
+                                   options['dynamic'], own[1], not self.destroyed,
+                                   health[0] + pending if health is not None else None)
+            self.payload['visible'] = True
+            self.totals[1] = self.payload['remaining']
+            self.totals[2] = self.payload['state'] != 'unavailable'
+        if g_gameface is not None:
+            g_gameface.refresh()
 
 
 class SysClass(object):
@@ -148,14 +128,10 @@ class SysClass(object):
             battleEvents.release(self)
 
     def onSettingsChanged(self, component, changes):
-        if affects(changes, GLOBAL.ENABLED, HIGH_CALIBER_PROGRESS.FORMAT, HIGH_CALIBER_PROGRESS.HIGH_CALIBER_PROGRESS):
-            self.refresh()
+        self.refresh()
 
     def refresh(self):
-        # if g_flash is not None:
-        #    g_flash.hide()
-        if self.inBattle and settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
-            mainGuns.updateMainGun()
+        mainGuns.updateMainGun()
 
     def battleLoading(self):
         self.destroyBattle()
@@ -194,8 +170,7 @@ class SysClass(object):
             self.arena = None
         self.reset()
         mainGuns.__init__()
-        # if g_flash is not None:
-        #    g_flash.hide()
+        mainGuns.updateMainGun()
 
     def tanklistsCreate(self):
         arena_dp = self.player.guiSessionProvider.getArenaDP()
@@ -239,10 +214,6 @@ class SysClass(object):
         self._health[index] -= damage
         if self._health[index] <= 0:
             self._health[index] = 0
-        if mainGuns.showMainGun and settings_service.getComponentDict(config)[HIGH_CALIBER_PROGRESS.HIGH_CALIBER_PROGRESS]['dynamic'] and team == self.enemyTeam:
-            if health and mainGuns.totals[2] and mainGuns.totals[1] and health < mainGuns.totals[1]:
-                mainGuns.totals[2] = False
-                mainGuns.updateMainGun()
 
     def onHealthChanged(self, vehicle, newHealth, _, attackerID, __):
         if self.guiType in [ARENA_GUI_TYPE.RANDOM, ARENA_GUI_TYPE.EPIC_RANDOM]:
@@ -264,9 +235,9 @@ class SysClass(object):
         if target and target[0] > 0:
             self.updateHealthPoints(target[0], target[2])
             target[0] = 0
-        if self.playerID == targetID and mainGuns.showMainGun and settings_service.getComponentDict(config)[HIGH_CALIBER_PROGRESS.HIGH_CALIBER_PROGRESS]['dynamic'] and mainGuns.totals[1]:
-            mainGuns.totals[2] = False
-            mainGuns.updateMainGun()
+        if self.playerID == targetID:
+            mainGuns.destroyed = True
+        mainGuns.updateMainGun()
 
     def _onVehicleUpdate(self, tid):
         if not self.inBattle:
@@ -303,6 +274,7 @@ class SysClass(object):
         if target and target[0] != newHealth and vehicle.isAlive():
             self.updateHealthPoints(max(target[0] - newHealth, 0), target[2])
             target[0] = newHealth
+            mainGuns.updateMainGun()
 
 
 @override(RibbonsAggregator, '_onPlayerFeedbackReceived')
@@ -325,13 +297,16 @@ scl = SysClass()
 
 
 def init():
-    _startFlash()
+    global g_gameface
+    if g_gameface is None:
+        g_gameface = MainGunAdapter()
+        g_gameface.install()
     scl.start()
 
 
 def fini():
-    # global g_flash
+    global g_gameface
     scl.stop()
-    # if g_flash is not None:
-    #    g_flash.destroy()
-    #    g_flash = None
+    if g_gameface is not None:
+        g_gameface.dispose()
+        g_gameface = None

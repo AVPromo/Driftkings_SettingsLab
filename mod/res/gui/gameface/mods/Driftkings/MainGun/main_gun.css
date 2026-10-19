@@ -1,0 +1,31 @@
+.dk-main-gun {
+    display: none;
+    position: fixed;
+    box-sizing: border-box;
+    z-index: 10000;
+    height: 84rem;
+    border: 1rem solid rgba(218, 170, 88, 0.65);
+    border-radius: 6rem;
+    background: rgba(15, 18, 22, 0.88);
+    box-shadow: 0 2rem 7rem rgba(0, 0, 0, 0.35);
+    font-family: Roboto, Arial, sans-serif;
+    transform-origin: top left;
+    pointer-events: none;
+}
+.dk-main-gun__content { position: relative; height: 82rem; }
+.dk-main-gun__medal { position: absolute; left: 12rem; top: 10rem; width: 44rem; height: 44rem; }
+.dk-main-gun__info {
+    position: absolute;
+    left: 67rem;
+    right: 10rem;
+    top: 10rem;
+    min-height: 43rem;
+    padding-left: 11rem;
+    border-left: 1rem solid rgba(218, 170, 88, 0.25);
+}
+.dk-main-gun__value { line-height: 29rem; font-size: 25rem; font-weight: bold; }
+.dk-main-gun__secondary { font-size: 11rem; line-height: 13rem; color: #AAB0B8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dk-main-gun__footer { position: absolute; left: 13rem; right: 12rem; bottom: 10rem; height: 11rem; display: flex; align-items: center; }
+.dk-main-gun__track { flex: 1; height: 5rem; background: #30363D; border-radius: 2rem; overflow: hidden; }
+.dk-main-gun__fill { width: 0; height: 100%; transition: width 200ms linear, background-color 200ms linear; }
+.dk-main-gun__percentage { margin-left: 8rem; font-size: 10rem; color: #AAB0B8; }
