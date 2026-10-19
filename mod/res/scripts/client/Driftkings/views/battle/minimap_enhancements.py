@@ -20,6 +20,7 @@ class MinimapCentredView(MinimapMeta):
     def __init__(self):
         super(MinimapCentredView, self).__init__(_component().config.NAME)
         self._releaseCallback = None
+        self._probeCallback = None
 
 
     def _populate(self):
@@ -55,11 +56,14 @@ class MinimapCentredView(MinimapMeta):
         if bridge is not None:
             try:
                 if bridge.register_geometry_source(self):
-                    self.as_minimapProbeS(True)
+                    self._probeTick()
             except Exception as error:
                 logError(self.section, 'Tactical calibration unavailable: ' + repr(error))
 
     def _releaseTacticalProbe(self):
+        if self._probeCallback is not None:
+            cancelCallback(self._probeCallback)
+            self._probeCallback = None
         bridge = _component()._probe_bridge
         if bridge is not None:
             try:
@@ -67,13 +71,20 @@ class MinimapCentredView(MinimapMeta):
             except Exception as error:
                 logError(self.section, 'Tactical calibration cleanup failed: ' + repr(error))
 
-    def onTacticalGeometry(self, data):
+    def _probeTick(self):
+        self._probeCallback = None
         bridge = _component()._probe_bridge
-        if bridge is not None:
-            try:
-                bridge.on_geometry(self, data)
-            except Exception as error:
-                logError(self.section, 'Tactical geometry rejected: ' + repr(error))
+        if bridge is None:
+            return
+        if not bridge.enabled():
+            bridge.clear_geometry_source(self)
+            return
+        try:
+            bridge.on_geometry(self, self.as_minimapGeometryS())
+            self._probeCallback = callback(0.25, self._probeTick)
+        except Exception as error:
+            bridge.clear_geometry_source(self)
+            logError(self.section, 'Tactical geometry read failed: ' + repr(error))
 
     def _checkRelease(self):
         self._releaseCallback = None

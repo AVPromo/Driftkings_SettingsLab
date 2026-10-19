@@ -23,8 +23,6 @@ package driftkings.battle.components.minimap
 
     public class MinimapCentred extends BattleDisplayable
     {
-        public var onTacticalGeometry:Function;
-        private var probeEnabled:Boolean = false;
         private var minimap:BaseMinimap;
         private var options:Object;
         private var vehicles:Object = {};
@@ -54,15 +52,8 @@ package driftkings.battle.components.minimap
             timer.addEventListener(TimerEvent.TIMER, refresh);
         }
 
-        public function as_minimapProbe(enabled:Boolean):void
+        public function as_minimapGeometry():Object
         {
-            probeEnabled = enabled;
-            reportProbeGeometry();
-        }
-
-        private function reportProbeGeometry():void
-        {
-            if (!probeEnabled || onTacticalGeometry == null) return;
             var data:Object = {available:false, reason:"minimap-unavailable"};
             if (minimap && stage && stage.stageWidth > 0 && stage.stageHeight > 0)
             {
@@ -90,9 +81,7 @@ package driftkings.battle.components.minimap
                 catch (error:Error) { data = {available:false, reason:"map-area-unavailable"}; }
             }
             else if (minimap) data.reason = "stage-unavailable";
-            // Existing 250 ms timer also drives the opt-in ally coordinate probe.
-            try { onTacticalGeometry(data); }
-            catch (callbackError:Error) { probeEnabled = false; }
+            return data;
         }
 
         public function as_minimapPresentation(value:Object):void
@@ -365,7 +354,6 @@ package driftkings.battle.components.minimap
 
         private function refresh(event:TimerEvent = null):void
         {
-            reportProbeGeometry();
             if (!minimap || !minimap.visible || !options || !options.enabled) return;
             removeDetachedEntries();
             positionMapSize();
@@ -441,8 +429,6 @@ package driftkings.battle.components.minimap
 
         override protected function onDispose():void
         {
-            probeEnabled = false;
-            onTacticalGeometry = null;
             artilleryAim.dispose();
             timer.stop();
             timer.removeEventListener(TimerEvent.TIMER, refresh);

@@ -111,6 +111,40 @@ class ProbeTests(RuntimeTest):
         self.bridge.on_geometry(owner, raw)
         self.assertEqual(len(self.frames), count + 1)
 
+    def test_direct_flash_geometry_poll_is_opt_in_owned_and_cancelled(self):
+        scheduled, cancelled, readings = [], [], []
+        class Meta(object):
+            def __init__(self, section):
+                self.section = section
+            def as_minimapGeometryS(self):
+                return {'available': False, 'reason': 'stage-unavailable'}
+        callbacks = module(callback=lambda delay, fn: scheduled.append((delay, fn)) or len(scheduled),
+                           cancelCallback=lambda token: cancelled.append(token))
+        api = source('views/battle/minimap_enhancements.py', {
+            'Driftkings._constants': module(GLOBAL=Owner(), MINIMAP_ENHANCEMENTS=Owner()),
+            'Driftkings.settings.service': module(settings_service=Owner()),
+            'Driftkings.common': module(logError=lambda *args: None, xvmInstalled=False),
+            'Driftkings.common.utils.game': module(checkKeys=lambda *args: False),
+            'Driftkings.core.callbacks': callbacks,
+            'Driftkings.meta.battle.minimap': module(MinimapMeta=Meta),
+            'Driftkings.ui.common.events': module(g_events=Owner())})
+        enabled = [True]
+        bridge = Owner(enabled=lambda: enabled[0], register_geometry_source=lambda view: True,
+                       clear_geometry_source=lambda view: readings.append('clear'),
+                       on_geometry=lambda view, data: readings.append(data))
+        api['_component'] = lambda: Owner(config=Owner(NAME='minimap_enhancements'), _probe_bridge=bridge)
+        view = api['MinimapCentredView']()
+        view._bindTacticalProbe()
+        self.assertEqual(readings[0]['reason'], 'stage-unavailable')
+        self.assertEqual(scheduled[0][0], .25)
+        view._releaseTacticalProbe()
+        self.assertEqual(cancelled, [1])
+        self.assertIsNone(view._probeCallback)
+        enabled[0] = False
+        view._probeTick()
+        self.assertEqual(len(scheduled), 1)
+        self.assertEqual(readings[-1], 'clear')
+
     def test_default_off_creates_no_adapter_and_starts_no_diagnostic(self):
         self.bridge.bind_native(self.component)
         self.bridge.start()
