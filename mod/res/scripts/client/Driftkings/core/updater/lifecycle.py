@@ -2,7 +2,7 @@
 """Updater service lifecycle behavior; state is owned by UpdaterService."""
 from Driftkings import VERSION
 from Driftkings.core.updater.shared import LOG
-from Driftkings.core.updater.state import State, IDLE, CHECKING, AVAILABLE, ERROR, DOWNLOADING, VERIFYING, READY, INSTALLING, RESTART_REQUIRED
+from Driftkings.core.updater.state import IDLE, RESTART_REQUIRED
 import os
 
 

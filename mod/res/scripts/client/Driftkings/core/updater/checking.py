@@ -3,7 +3,7 @@
 from Driftkings import VERSION
 from Driftkings.core.updater.shared import INTERVAL
 from Driftkings.core.updater.shared import LOG
-from Driftkings.core.updater.state import State, IDLE, CHECKING, AVAILABLE, ERROR, DOWNLOADING, VERIFYING, READY, INSTALLING, RESTART_REQUIRED
+from Driftkings.core.updater.state import IDLE, CHECKING, AVAILABLE, ERROR, READY, INSTALLING, RESTART_REQUIRED
 
 
 class CheckMixin(object):

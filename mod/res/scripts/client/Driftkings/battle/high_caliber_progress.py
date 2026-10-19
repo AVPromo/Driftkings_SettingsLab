@@ -209,7 +209,6 @@ class SysClass(object):
         self.health[team][0] -= damage
         if self.health[team][0] < 0:
             self.health[team][0] = 0
-        health = self.health[team][0]
         index = 1 if team == getPlayer().team else 0
         self._health[index] -= damage
         if self._health[index] <= 0:

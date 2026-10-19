@@ -2,7 +2,6 @@
 from Driftkings.common.utils import events
 import BigWorld
 import Math
-from Avatar import PlayerAvatar
 from AvatarInputHandler.aih_global_binding import CTRL_MODE_NAME
 from VehicleGunRotator import VehicleGunRotator
 from gui.shared.gui_items import Vehicle

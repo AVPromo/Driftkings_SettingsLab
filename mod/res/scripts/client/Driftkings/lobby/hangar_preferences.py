@@ -7,7 +7,6 @@ from CurrentVehicle import g_currentVehicle
 from HeroTank import HeroTank
 from gui.Scaleform.daapi.view.lobby.rankedBattles.ranked_battles_results import RankedBattlesResults
 from gui.Scaleform.daapi.view.lobby.techtree.techtree_dp import _TechTreeDataProvider
-from gui.Scaleform.daapi.view.login.LoginView import LoginView
 from gui.Scaleform.locale.MENU import MENU
 from gui.Scaleform.locale.RES_ICONS import RES_ICONS
 from gui.Scaleform.locale.STORAGE import STORAGE
