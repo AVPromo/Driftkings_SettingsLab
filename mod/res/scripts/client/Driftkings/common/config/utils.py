@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import BigWorld
-import Keys
 
 from Driftkings.settings.hotkeys import processHotKeys
 

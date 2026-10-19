@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+"""EU 2.4 Gameface implementation; the legacy NationTreeNode SWF is not used."""
 from Driftkings.interface_catalog import gameface_spec
 from Driftkings._constants import GLOBAL, TECH_TREE_MARKS_OF_EXCELLENCE
 from Driftkings.settings.service import settings_service, affects
-"""EU 2.4 Gameface implementation; the legacy NationTreeNode SWF is not used."""
 import json
 import logging
 import weakref
@@ -10,7 +10,6 @@ import weakref
 from dossiers2.ui.achievements import ACHIEVEMENT_BLOCK, MARK_OF_MASTERY_RECORD
 from gui.shared.personality import ServicesLocator
 
-from Driftkings._constants import GLOBAL
 from Driftkings.common import getStatisticColor
 from Driftkings.settings.definitions.lobby.tech_tree_marks_of_excellence import TechTreeMarksOfExcellenceSettings as Settings
 from Driftkings.views.hangar.tech_tree_marks_of_excellence import install

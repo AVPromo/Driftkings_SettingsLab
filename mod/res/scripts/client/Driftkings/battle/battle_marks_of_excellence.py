@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function
 from Driftkings.core.battle_events import battleEvents
 from Driftkings.common.utils import events
 
 import datetime
 
 import BattleReplay
-from BattleFeedbackCommon import BATTLE_EVENT_TYPE
 from CurrentVehicle import g_currentVehicle
 from Vehicle import Vehicle
 from Driftkings.core.battle_policy import battle_policy
@@ -18,7 +16,6 @@ from gui.impl.lobby.hangar.presenters.crew_presenter import CrewPresenter
 
 from Driftkings.core.marks_calculator import ceil_damage, combined_damage, statistics, battle_estimate, battle_target, battle_curve, valid_calibration
 from Driftkings.views.marks_model import compact_model
-from Driftkings.core.marks_state import marks_state
 
 from Driftkings._constants import GLOBAL, BATTLE_MARKS_OF_EXCELLENCE, DAMAGE_EVENTS, BATTLE_EVENT_TYPE
 from Driftkings.common import loadJson, checkKeys, getPlayer, sendPanelMessage, getStatisticColor, getMoeDamageColor

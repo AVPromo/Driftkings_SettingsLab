@@ -30,10 +30,6 @@ def set_debug(enabled):
     diagnostics.configure(enabled)
 
 
-def debug_enabled():
-    return _state['debug']
-
-
 def info(message, *args):
     message = _text(message, args)
     if _native:

@@ -11,11 +11,6 @@ LANGUAGES = (
     ('vi', 'Tiếng Việt'), ('zh_cn', '简体中文'), ('zh_tw', '繁體中文'),
 )
 CODES = tuple(code for code, _ in LANGUAGES)
-REGIONS = {
-    'EU': ('cs', 'de', 'en', 'es', 'fr', 'hu', 'it', 'pl', 'ru', 'tr', 'uk'),
-    'NA': ('en', 'es', 'pt'),
-    'ASIA': ('en', 'ja', 'ko', 'th', 'vi', 'zh_cn', 'zh_tw'),
-}
 ALIASES = {
     'cz': 'cs', 'jp': 'ja', 'kr': 'ko', 'vn': 'vi',
     'zh': 'zh_cn', 'zh_sg': 'zh_cn', 'zh_hans': 'zh_cn',

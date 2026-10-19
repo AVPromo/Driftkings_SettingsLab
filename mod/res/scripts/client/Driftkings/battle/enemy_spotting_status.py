@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 from Driftkings.core.battle_events import battleEvents
-from Avatar import PlayerAvatar
 from BattleFeedbackCommon import BATTLE_EVENT_TYPE
 from gui.battle_control.controllers import feedback_events
 from gui.battle_control.controllers.personal_efficiency_ctrl import _AGGREGATED_DAMAGE_EFFICIENCY_TYPES, _createEfficiencyInfoFromFeedbackEvent
 
 from Driftkings._constants import GLOBAL, ENEMY_SPOTTING_STATUS
 from Driftkings.common import sendPanelMessage, getPlayer
-from Driftkings.core.hooks import override, on_event
+from Driftkings.core.hooks import on_event
 from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.battle.enemy_spotting_status import EnemySpottingStatusSettings as Settings
 

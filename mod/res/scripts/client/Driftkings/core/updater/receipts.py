@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Updater service receipts behavior; state is owned by UpdaterService."""
 from Driftkings.core.updater.shared import LOG
-from Driftkings.core.updater.state import State, IDLE, CHECKING, AVAILABLE, ERROR, DOWNLOADING, VERIFYING, READY, INSTALLING, RESTART_REQUIRED
+from Driftkings.core.updater.state import AVAILABLE, READY, RESTART_REQUIRED
 
 
 class ReceiptMixin(object):

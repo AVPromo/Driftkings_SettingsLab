@@ -2,7 +2,7 @@
 """Compose updater responsibilities around one service-owned state."""
 from Driftkings.core.updater.checker import Checker
 from Driftkings.core.updater.downloader import Downloader
-from Driftkings.core.updater.state import State, IDLE, CHECKING, AVAILABLE, ERROR, DOWNLOADING, VERIFYING, READY, INSTALLING, RESTART_REQUIRED
+from Driftkings.core.updater.state import State
 from Driftkings.core.updater.transport import UnavailableTransport
 import os
 import time

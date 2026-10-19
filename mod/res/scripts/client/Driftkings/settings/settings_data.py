@@ -3,7 +3,7 @@
 import copy
 
 from Driftkings._constants import (
-    ACCOUNT_MANAGER, GUN_TRAVERSE_LIMITS, THIRD_PERSON_ZOOM, PENETRATION_INDICATOR,
+    GUN_TRAVERSE_LIMITS, THIRD_PERSON_ZOOM, PENETRATION_INDICATOR,
     ARTILLERY_BLAST_RADIUS, AUTOAIM_TARGET_INDICATOR, CLAN_REWARD_COLLECTION, SOUND_BANK_LOADER,
     BATTLE_PERFORMANCE, BATTLE_PREFERENCES, BATTLE_STATISTICS, VEHICLE_CAROUSEL,
     CREW_MANAGEMENT, AIMING_RETICLES, AIMING_COUNTDOWN,
@@ -128,5 +128,3 @@ def application_timing(component, field):
     return policy.get('*', RESTART)
 
 
-def requires_restart(component, field):
-    return application_timing(component, field) == RESTART

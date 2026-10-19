@@ -183,24 +183,3 @@ def init():
 
 def fini():
     controller.fini()
-
-
-# Callable compatibility wrappers remain, without installing aim/input hooks.
-def new_autoAim(original, player, target=None, magnetic=False):
-    return original(player, target, magnetic)
-
-
-def new_keyEventSniper(func, *args, **kwargs):
-    return func(*args, **kwargs)
-
-
-def new_keyEventStrategic(func, *args, **kwargs):
-    return func(*args, **kwargs)
-
-
-def new_keyEventArty(func, *args, **kwargs):
-    return func(*args, **kwargs)
-
-
-def new_keyEventArcade(func, *args, **kwargs):
-    return func(*args, **kwargs)

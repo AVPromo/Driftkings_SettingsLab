@@ -90,7 +90,7 @@ class Manifest(object):
                 validate_https(self.download)
                 self.payload_size = self.inventory.distribution['size']
                 self.payload_sha256 = self.inventory.distribution['sha256']
-        except (TypeError, KeyError, OverflowError) as error:
+        except (TypeError, KeyError, OverflowError):
             raise ValueError('Invalid manifest types')
 
     @classmethod
