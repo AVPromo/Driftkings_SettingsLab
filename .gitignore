@@ -122,3 +122,6 @@ htmlcov/
 /installer/setup/assets/branding/*.bmp
 /installer/setup/assets/branding/*.ico
 /installer/setup/assets/previews/*.png
+
+# Private release-signing seed; only the public verification key is tracked.
+/release-signing.key

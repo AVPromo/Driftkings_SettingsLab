@@ -10,7 +10,7 @@ import binascii
 import hashlib
 
 # Hex-encoded 32-byte Ed25519 public keys accepted for releases. Several entries allow key rotation.
-TRUSTED_KEYS = ()
+TRUSTED_KEYS = ('136550a098687f4f8143384705ea66e9b9c20ddc4ed59f4bf92a3437a474a75d',)
 SIGNATURE_ASSET = 'release.json.sig'
 MAX_SIGNATURE = 256
 
