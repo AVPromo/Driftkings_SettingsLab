@@ -187,13 +187,23 @@ var ownIcon = livePoints.children[0].children[0].children[0];
 assert.strictEqual(ownIcon.attributes.stroke, '#ffffff');
 assert.strictEqual(livePoints.children[0].children[0].style.transform, 'rotate(90deg)');
 assert.strictEqual(ownIcon.attributes.d, win.DKTacticalGraphics.createGlyph(graphicsDoc, 'player', '#ffffff', 18).path.attributes.d);
-data.objectives = [{kind: 'allyBase', x: .2, y: .1}, {kind: 'enemyBase', x: .8, y: .9},
+data.objectives = [{kind: 'allyBase', x: .2, y: .1, number: 2, state: 'capturing', progress: 42}, {kind: 'enemyBase', x: .8, y: .9},
     {kind: 'controlPoint', x: .5, y: .5}]; refresh();
 var objectiveLayer = iconImage.children[2];
 assert.strictEqual(objectiveLayer.children.length, 3);
 assert.strictEqual(objectiveLayer.children[0].children[0].children[0].attributes.stroke, '#67cf69');
 assert.strictEqual(objectiveLayer.children[1].children[0].children[0].attributes.stroke, '#ee6868');
 assert.strictEqual(objectiveLayer.children[2].children[0].children[0].attributes.stroke, '#ffffff');
+assert.strictEqual(objectiveLayer.children[0].children[1].textContent, '2');
+assert.strictEqual(objectiveLayer.children[0].children[2].textContent, '42%');
+assert.strictEqual(objectiveLayer.children[0].children[3].children[0].style.width, '42%');
+data.objectives[0].state = 'blocked'; refresh();
+assert.strictEqual(objectiveLayer.children[0].children[2].textContent, 'PAUSA');
+data.objectives[0].state = 'captured'; data.objectives[0].progress = 100; refresh();
+assert.strictEqual(objectiveLayer.children[0].children[2].textContent, 'OK');
+data.objectives[0].state = 'idle'; data.objectives[0].progress = 0; refresh();
+assert.strictEqual(objectiveLayer.children[0].children[2].textContent, '');
+assert.strictEqual(objectiveLayer.children[0].children[3].style.display, 'none');
 var base = objectiveLayer.children[0], objectiveCount = svgNodesCreated;
 data.objectives[0].x = .3; refresh();
 assert.strictEqual(objectiveLayer.children[0], base);

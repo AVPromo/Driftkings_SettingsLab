@@ -314,6 +314,16 @@ class ProbeBridge(object):
                 objective['active'] = bool(active)
             return result
 
+        @override(MinimapComponent, 'invoke')
+        def invoke_entry(original, component, entry_id, *signature):
+            result = original(component, entry_id, *signature)
+            record = bridge._objective_entries.get(component, {}).get(entry_id)
+            if record is not None and len(signature) == 2 and signature[0] == 'setPointNumber':
+                number = signature[1]
+                if not isinstance(number, bool) and isinstance(number, (int, float)) and 0 <= number <= 99 and int(number) == number:
+                    record['number'] = int(number)
+            return result
+
         @override(MinimapComponent, 'delEntry')
         def del_entry(original, component, entry_id):
             result = original(component, entry_id)

@@ -132,8 +132,20 @@
                         node.textContent = ''; node.appendChild(glyph.node);
                     } catch (error) { /* Retain B/C fallback. */ }
                 }
-                layer.appendChild(node); record = records[key] = {node: node, kind: value.kind};
+                var label = document.createElement('div'); label.className = 'dk-probe-objective-number'; node.appendChild(label);
+                var status = document.createElement('div'); status.className = 'dk-probe-objective-status'; node.appendChild(status);
+                var bar = document.createElement('div'); bar.className = 'dk-probe-objective-bar';
+                var fill = document.createElement('div'); bar.appendChild(fill); node.appendChild(bar);
+                layer.appendChild(node); record = records[key] = {node: node, kind: value.kind,
+                    label: label, status: status, bar: bar, fill: fill};
             }
+            record.label.textContent = typeof value.number === 'number' && value.number > 0 && value.number <= 99 && value.number % 1 === 0 ? String(value.number) : '';
+            var state = ['idle', 'capturing', 'blocked', 'captured'].indexOf(value.state) !== -1 ? value.state : 'unknown';
+            var progress = typeof value.progress === 'number' && isFinite(value.progress) && value.progress >= 0 && value.progress <= 100 ? value.progress : null;
+            record.status.textContent = state === 'captured' ? 'OK' : state === 'blocked' ? 'PAUSA' :
+                state === 'capturing' && progress !== null ? Math.floor(progress) + '%' : state === 'unknown' ? '?' : '';
+            record.bar.style.display = progress !== null && state !== 'idle' && state !== 'unknown' ? '' : 'none';
+            record.fill.style.width = (progress === null ? 0 : progress) + '%';
             record.node.style.left = (100 * value.x) + '%'; record.node.style.top = (100 * value.y) + '%';
         });
         Object.keys(records).forEach(function (key) {
@@ -235,7 +247,7 @@
         line('Calibração: NO/NE/SO/SE nos cantos; + no centro nativo.');
         var allies = Array.isArray(data.alliedPoints) ? data.alliedPoints : (data.alliedPoint ? [data.alliedPoint] : []);
         line('Veículos na amostra: ' + allies.length + ' | branco: tu; verde: aliado; amarelo: pelotão');
-        line('Bases/objetivos: ' + (Array.isArray(data.objectives) ? data.objectives.length : 0) + ' (posições; sem captura)');
+        line('Bases/objetivos: ' + (Array.isArray(data.objectives) ? data.objectives.length : 0) + ' (captura publicada pelo cliente)');
         var map = mapSample(data.textureUri, allies, data.objectives);
         if (map) { node.appendChild(map); }
         line('Amostras fixas — 16 / 24 / 32 px; confirmar visualmente.');

@@ -99,3 +99,13 @@ Reutiliza os quatro hooks de publicação existentes: criação, matriz, ativaç
 Bandeira verde = base aliada; vermelha = base inimiga; símbolo branco = ponto de controlo. Sem SVG, usa B/C. Os nós são reutilizados e removidos quando a entrada desaparece. Não inclui números, estado/progresso de captura, cliques ou pings. Objetivos especiais de Frontline/outros modos continuam por auditar. Não confundir base inimiga pública com posição de veículo inimigo.
 
 Confirmar no replay as duas bases e respetivas células; testar encontro/controlo quando disponível, zoom original e saída de batalha. O contador «Bases/objetivos» ajuda a distinguir falta de publicação de falha de desenho. Confirmação visual pendente.
+
+## Identificação e captura clássica
+
+Posições das bases confirmadas pelo utilizador. A amostra lê agora o número enviado pelo cliente através de `invoke(entryID, setPointNumber, number)`; acrescentado um único hook ao conjunto existente, sem timer novo. Número 0 corresponde a ponto sem numeração e não é desenhado. Não renumera bases por ordem da nossa lista.
+
+A captura vem de `session.shared.teamBases`, restringindo o contrato ao módulo nativo clássico `team_bases_ctrl`. Usa `makeClientTeamBaseID`, `isTeamBaseCaptured` e o accessor nativo `_getPoints` (points/timeLeft/invaders/stopped). Bases são associadas à equipa, número e posição publicados pela arena; pontos neutros consultam as equipas disponíveis definidas pelo próprio controlador. Não usa o estado `attack/reply` do minimapa como captura e não extrapola tempos/progresso.
+
+A amostra mostra percentagem/barra durante captura, PAUSA quando bloqueada, OK após captura e ? se o contrato não estiver confirmado. Os valores são limitados e validados; estados ausentes nunca são tratados como captura livre. Reset nativo volta a idle e oculta a barra. Ainda não suporta captura de objetivos especiais de Frontline/outros modos nem ações de clique.
+
+Teste: comparar número, percentagem e bloqueio com o painel de captura do jogo num replay com captura. Confirmar reset após saída dos invasores e conclusão a 100%. Não é necessário fazer uma batalha real para tentar este teste, mas o replay precisa de conter estes eventos. Testes automáticos cobrem leitura atual, captura/bloqueio/conclusão/reset, controlo neutro e limites do contrato; confirmação visual pendente.

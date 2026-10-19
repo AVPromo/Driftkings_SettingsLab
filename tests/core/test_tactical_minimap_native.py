@@ -134,6 +134,40 @@ class NativeAdapterTests(RuntimeTest):
         records.clear()
         self.assertEqual(api['native_objective_points'](self.component, records), [])
 
+    def test_capture_controller_state_progress_reset_and_neutral_teams(self):
+        states, captured = {}, set()
+        Controller = type('Controller', (object,), {
+            '__module__': 'gui.battle_control.controllers.team_bases_ctrl',
+            'isTeamBaseCaptured': lambda ctrl, client_id: client_id in captured,
+            '_getPoints': lambda ctrl, client_id: states[client_id]})
+        self.component.sessionProvider = self.session
+        self.session.shared = Owner(teamBases=Controller())
+        self.dp.getNumberOfTeam = lambda: 1
+        self.arena_type.getTeamBasePositionsIterator = lambda: iter([(1, (100, 0, 200), 1)])
+        api = source('views/battle/tactical_minimap.py', {
+            'Driftkings.core.tactical_minimap': self.load('core.tactical_minimap'),
+            'gui.battle_control.controllers.team_bases_ctrl': module(
+                makeClientTeamBaseID=lambda team, number: (number << 6) + team,
+                _AVAILABLE_TEAMS_NUMBERS=(1, 2))})
+        record = dict(kind='allyBase', number=1)
+        position = Owner(x=100, z=200)
+        read = lambda: api['native_objective_capture'](self.component, record, position)
+        self.assertEqual(read(), {'state': 'idle', 'progress': 0})
+        states[65] = (42, 30, 1, False)
+        self.assertEqual(read(), {'state': 'capturing', 'progress': 42})
+        states[65] = (42, 30, 1, True)
+        self.assertEqual(read(), {'state': 'blocked', 'progress': 42})
+        captured.add(65)
+        self.assertEqual(read(), {'state': 'captured', 'progress': 100})
+        states.clear()
+        captured.clear()
+        self.assertEqual(read(), {'state': 'idle', 'progress': 0})
+        record['kind'] = 'controlPoint'
+        states[66] = (75, 10, 1, False)
+        self.assertEqual(read(), {'state': 'capturing', 'progress': 75})
+        record['kind'], record['number'] = 'allyBase', 9
+        self.assertEqual(read(), {'state': 'unknown'})
+
     def test_hidden_lost_transitional_dead_and_inactive_entries_never_read_matrices(self):
         entries = [self.entry(active=False), self.entry(alive=False), self.entry(aoi=False),
                    self.entry(location=0), self.entry(location=2), self.entry(location=3)]

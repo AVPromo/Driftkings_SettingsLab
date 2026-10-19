@@ -227,6 +227,10 @@ class ProbeTests(RuntimeTest):
         native = lambda *args: 42
         hooks['addEntry'](native, component, 'AllyTeamBaseEntry', 'points', matrix, True)
         self.assertEqual(bridge._objective_entries[component][42]['kind'], 'allyBase')
+        self.assertEqual(hooks['invoke'](native, component, 42, 'setPointNumber', 2), 42)
+        self.assertEqual(bridge._objective_entries[component][42]['number'], 2)
+        hooks['invoke'](native, component, 42, 'setPointNumber', True)
+        self.assertEqual(bridge._objective_entries[component][42]['number'], 2)
         hooks['setActive'](native, component, 42, False)
         self.assertFalse(bridge._objective_entries[component][42]['active'])
         other = object()
@@ -239,6 +243,16 @@ class ProbeTests(RuntimeTest):
         hooks['addEntry'](native, component, 'EnemyTeamBaseEntry', 'points', matrix, True)
         bridge.stop()
         self.assertEqual(len(bridge._objective_entries), 0)
+
+    def test_capture_metadata_is_whitelisted_and_bounded(self):
+        value = dict(kind='allyBase', x=.2, y=.3, number=2, state='blocked', progress=42)
+        clean = self.policy.objective_points([value])[0]
+        self.assertEqual((clean['number'], clean['state'], clean['progress']), (2, 'blocked', 42))
+        value.update(number=True, state='invented', progress=float('nan'))
+        clean = self.policy.objective_points([value])[0]
+        self.assertNotIn('number', clean)
+        self.assertEqual(clean['state'], 'unknown')
+        self.assertNotIn('progress', clean)
 
     def test_default_off_creates_no_adapter_and_starts_no_diagnostic(self):
         self.bridge.bind_native(self.component)
@@ -405,7 +419,7 @@ class ProbeTests(RuntimeTest):
         bridge, hooks, events = self.install_runtime_stubs()
         bridge.install()
         bridge.install()
-        self.assertEqual(len(hooks), 7)
+        self.assertEqual(len(hooks), 8)
         self.assertEqual(len(events), 4)
         native = {7: object()}
         children = hooks['_getChildComponents'](lambda parent: native, Owner())

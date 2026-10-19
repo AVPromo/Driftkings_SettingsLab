@@ -29,3 +29,8 @@
 .dk-probe-map-points { z-index:2; }
 .dk-probe-objective { position:absolute; transform:translate(-50%,-50%); font:bold 14px/22px Arial,sans-serif; }
 .dk-probe-objective svg { display:block; }
+
+.dk-probe-objective-number { position:absolute; left:17px; top:-7px; font:bold 10px/12px Arial,sans-serif; color:#fff; background:rgba(0,0,0,.7); }
+.dk-probe-objective-status { position:absolute; left:-5px; top:26px; width:34px; text-align:center; font:bold 8px/10px Arial,sans-serif; color:#fff; background:rgba(0,0,0,.7); }
+.dk-probe-objective-bar { position:absolute; left:-4px; top:22px; width:30px; height:3px; background:#333; }
+.dk-probe-objective-bar div { height:100%; background:#e8c55a; }

@@ -204,5 +204,17 @@ def objective_points(values):
         except (KeyError, ValueError, TypeError, OverflowError):
             continue
         if 0 <= x <= 1 and 0 <= y <= 1:
-            result.append({'x': x, 'y': y, 'kind': value['kind']})
+            item = {'x': x, 'y': y, 'kind': value['kind']}
+            number = value.get('number')
+            if not isinstance(number, bool) and isinstance(number, (int, float)) and 0 <= number <= 99 and int(number) == number:
+                item['number'] = int(number)
+            state = value.get('state', 'unknown')
+            item['state'] = state if state in ('idle', 'capturing', 'blocked', 'captured') else 'unknown'
+            try:
+                progress = finite(value.get('progress'))
+                if item['state'] != 'unknown' and 0 <= progress <= 100:
+                    item['progress'] = 100 if item['state'] == 'captured' else progress
+            except (ValueError, TypeError, OverflowError):
+                pass
+            result.append(item)
     return result

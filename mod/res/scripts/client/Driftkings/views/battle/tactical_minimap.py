@@ -189,7 +189,55 @@ def native_objective_points(component, records):
             position = Math.Matrix(record['matrix']).translation
             point = coordinates(position.x, position.z, bounds)
             if point is not None:
-                result.append({'kind': record['kind'], 'x': point[0], 'y': point[1]})
+                item = {'kind': record['kind'], 'x': point[0], 'y': point[1]}
+                if 'number' in record:
+                    item['number'] = record['number']
+                    item.update(native_objective_capture(component, record, position))
+                result.append(item)
         except Exception:
             continue
     return result
+
+
+def native_objective_capture(component, record, position):
+    """Read the classic controller's current publication; never extrapolate."""
+    unknown = {'state': 'unknown'}
+    try:
+        session = component.sessionProvider
+        controller = session.shared.teamBases
+        if type(controller).__module__ != 'gui.battle_control.controllers.team_bases_ctrl':
+            return unknown
+        from gui.battle_control.controllers.team_bases_ctrl import makeClientTeamBaseID, _AVAILABLE_TEAMS_NUMBERS
+        number = record['number']
+        if record['kind'] == 'controlPoint':
+            teams = _AVAILABLE_TEAMS_NUMBERS
+        else:
+            own_team = session.getArenaDP().getNumberOfTeam()
+            teams = []
+            for team, location, native_number in session.arenaVisitor.type.getTeamBasePositionsIterator():
+                matches_side = (team == own_team) == (record['kind'] == 'allyBase')
+                if (matches_side and native_number == number and abs(location[0] - position.x) < .01 and
+                        abs(location[2] - position.z) < .01):
+                    teams.append(team)
+        if not teams:
+            return unknown
+        states = []
+        for team in teams:
+            client_id = makeClientTeamBaseID(team, number)
+            if controller.isTeamBaseCaptured(client_id):
+                states.append({'state': 'captured', 'progress': 100})
+                continue
+            try:
+                points, _, invaders, stopped = controller._getPoints(client_id)
+            except KeyError:
+                states.append({'state': 'idle', 'progress': 0})
+                continue
+            points = finite(points)
+            if not 0 <= points <= 100:
+                continue
+            state = 'blocked' if stopped and invaders > 0 else 'capturing' if points > 0 and not stopped else 'idle'
+            states.append({'state': state, 'progress': points})
+        priority = {'idle': 0, 'capturing': 1, 'blocked': 2, 'captured': 3}
+        return max(states, key=lambda value: priority[value['state']]) if states else unknown
+    except Exception:
+        return unknown
