@@ -4,12 +4,15 @@
     var OWNER = '__dkTacticalMinimapProbe', FEATURE = 'DriftkingsTacticalMinimapProbe';
     if (window[OWNER]) { window[OWNER].dispose(); }
     var disposed = false, node = null, binding = null, graphics = null, cartography = null, alignment = null;
+    var inputListening = false, interaction = null;
     function hide() {
+        interaction = null;
         if (node && node.parentNode) { node.parentNode.removeChild(node); }
         node = null; graphics = null; cartography = null;
         clearAlignment();
     }
     function release() {
+        interaction = null;
         if (binding && binding.callback !== null) { viewEnv.removeDataChangedCallback(binding.callback, binding.id); }
         binding = null;
     }
@@ -289,7 +292,29 @@
         mapStrategic(layer, value);
         if (value && layer.firstChild) { layer.firstChild.className = 'dk-probe-input-point'; }
     }
-    function mapSample(uri, allies, objectives, circles, pings, camera, yawLines, strategicPoint, strategicArea, input) {
+    function sampleInput(event) {
+        if (disposed || !interaction || !binding || !cartography || typeof binding.model.onSampleInput !== 'function') { return; }
+        var image = cartography.image;
+        if (!image || typeof image.getBoundingClientRect !== 'function') { return; }
+        var target = event.target, budget = 64;
+        while (target && target !== image && --budget > 0) { target = target.parentNode; }
+        if (target !== image) { return; }
+        var rect = image.getBoundingClientRect(), button = event.button;
+        if (!rect || !isFinite(rect.width) || !isFinite(rect.height) || rect.width <= 0 || rect.height <= 0 ||
+                typeof event.clientX !== 'number' || typeof event.clientY !== 'number' ||
+                !isFinite(event.clientX) || !isFinite(event.clientY) || [0, 1, 2].indexOf(button) === -1) { return; }
+        var x = (event.clientX - rect.left) / rect.width, y = (event.clientY - rect.top) / rect.height;
+        if (!isFinite(x) || !isFinite(y) || x < 0 || x > 1 || y < 0 || y > 1) { return; }
+        event.preventDefault(); event.stopPropagation();
+        try {
+            binding.model.onSampleInput({protocol: 1, generation: interaction.generation,
+                x: x, y: y, button: button === 1 ? 2 : button === 2 ? 1 : 0});
+        } catch (error) {
+            interaction = null; image.style.pointerEvents = 'none';
+            console.error('[Driftkings] Sample input diagnostic failed', error);
+        }
+    }
+    function mapSample(uri, allies, objectives, circles, pings, camera, yawLines, strategicPoint, strategicArea, input, sample) {
         if (typeof uri !== 'string' || uri.length > 262 ||
                 !/^img:\/\/(spaces\/[A-Za-z0-9_/-]+\.(dds|png)|gui\/maps\/icons\/map\/[A-Za-z0-9_-]+\.png)$/.test(uri) ||
                 uri.indexOf('//', 6) !== -1) { return null; }
@@ -303,6 +328,8 @@
             mapStrategic(cartography.strategic, strategicPoint);
             mapStrategicArea(cartography.area, strategicPoint ? strategicArea : []);
             mapInput(cartography.input, input);
+            mapInput(cartography.sample, sample);
+            if (cartography.sample.firstChild) { cartography.sample.firstChild.className = 'dk-probe-gameface-point'; }
             return cartography.node;
         }
         var root = document.createElement('div');
@@ -331,7 +358,10 @@
         image.appendChild(areaLayer); mapStrategicArea(areaLayer, strategicPoint ? strategicArea : []);
         var inputLayer = document.createElement('div'); inputLayer.className = 'dk-probe-strategic';
         image.appendChild(inputLayer); mapInput(inputLayer, input);
-        cartography = {uri: uri, node: root, points: points, objectives: objectiveLayer, circles: circleLayer, pings: pingLayer, camera: cameraLayer, yaw: yawLayer, strategic: strategicLayer, area: areaLayer, input: inputLayer};
+        var sampleLayer = document.createElement('div'); sampleLayer.className = 'dk-probe-strategic';
+        image.appendChild(sampleLayer); mapInput(sampleLayer, sample);
+        if (sampleLayer.firstChild) { sampleLayer.firstChild.className = 'dk-probe-gameface-point'; }
+        cartography = {uri: uri, node: root, image: image, points: points, objectives: objectiveLayer, circles: circleLayer, pings: pingLayer, camera: cameraLayer, yaw: yawLayer, strategic: strategicLayer, area: areaLayer, input: inputLayer, sample: sampleLayer};
         return root;
     }
     function clearAlignment() {
@@ -404,7 +434,16 @@
         line('Tamanho nativo: ' + (typeof sizeIndex === 'number' && sizeIndex >= 0 && sizeIndex <= 5 && Math.floor(sizeIndex) === sizeIndex ? sizeIndex : 'indisponível'));
         var input = nativeInput(data.nativeInput);
         line(input ? 'Último clique no original #' + input.sequence + ': botão ' + input.button +
-            ', escala ' + input.sizeIndex + ' (cruz magenta; apenas diagnóstico)' : 'Cliques nativos: a aguardar (a amostra não recebe cliques)');
+            ', escala ' + input.sizeIndex + ' (cruz magenta; apenas diagnóstico)' : 'Cliques nativos: a aguardar no original');
+        var sample = nativeInput(data.gamefaceInput);
+        var interactive = inputListening && data.sampleInputEnabled === true && data.acknowledged === true &&
+            data.available === true && data.calibration && data.calibration.available === true;
+        interaction = interactive ? {generation: data.generation} : null;
+        line('Input da amostra: ' + (interactive ? 'ativo com cursor; apenas diagnóstico' : 'inativo'));
+        if (sample && typeof sample.localX === 'number' && isFinite(sample.localX) &&
+                typeof sample.localY === 'number' && isFinite(sample.localY)) {
+            line('Gameface → Python #' + sample.sequence + ': ' + sample.localX.toFixed(1) + ', ' + sample.localY.toFixed(1) + ' px nativos (cruz turquesa)');
+        }
         alignNativeArea(data.calibration);
         line('Calibração: NO/NE/SO/SE nos cantos; + no centro nativo.');
         var allies = Array.isArray(data.alliedPoints) ? data.alliedPoints : (data.alliedPoint ? [data.alliedPoint] : []);
@@ -423,11 +462,12 @@
         line('Limites do canhão: ' + (Array.isArray(data.yawLines) && data.yawLines.length === 2 ? 'publicados (azul)' : 'indisponíveis/ocultos'));
         line('Ponto de mira estratégico: ' + (data.strategicPoint ? 'publicado (mira azul)' : 'indisponível/oculto'));
         line('Contorno estratégico: ' + (Array.isArray(data.strategicArea) && data.strategicArea.length === 4 ? 'publicado' : 'indisponível/oculto'));
-        var map = mapSample(data.textureUri, vehicles, data.objectives, data.circles, data.pings, data.cameraLine, data.yawLines, data.strategicPoint, data.strategicArea, input);
+        var map = mapSample(data.textureUri, vehicles, data.objectives, data.circles, data.pings, data.cameraLine, data.yawLines, data.strategicPoint, data.strategicArea, input, sample);
+        if (cartography) { cartography.image.style.pointerEvents = interactive ? 'auto' : 'none'; }
         if (map) { node.appendChild(map); }
         line('Amostras fixas — 16 / 24 / 32 px; confirmar visualmente.');
-        var sample = graphicsSample();
-        node.appendChild(sample.node);
+        var glyphSample = graphicsSample();
+        node.appendChild(glyphSample.node);
         if (data.graphics) {
             line('SVG DOM: ' + (data.graphics.svgApi ? 'disponível' : 'indisponível') +
                 ' | nós construídos: ' + data.graphics.glyphCount + '/21');
@@ -479,6 +519,7 @@
         engine.off('viewEnv.onDataChanged', refresh);
         engine.off('subViews.onAdded', refresh); engine.off('subViews.onRemoved', refresh);
         window.removeEventListener('unload', dispose);
+        if (inputListening) { document.removeEventListener('mousedown', sampleInput, true); inputListening = false; }
         release(); hide();
         if (window[OWNER] && window[OWNER].dispose === dispose) { delete window[OWNER]; }
     }
@@ -488,6 +529,9 @@
         engine.on('viewEnv.onDataChanged', refresh);
         engine.on('subViews.onAdded', refresh); engine.on('subViews.onRemoved', refresh);
         window.addEventListener('unload', dispose);
+        if (document.addEventListener && document.removeEventListener) {
+            document.addEventListener('mousedown', sampleInput, true); inputListening = true;
+        }
         refresh();
     });
 }());

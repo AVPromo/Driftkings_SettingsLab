@@ -16,6 +16,7 @@ class ProbeTests(RuntimeTest):
         super(ProbeTests, self).setUp()
         self.policy = self.load('core.tactical_minimap_probe')
         self.settings = {'enabled': True, 'tacticalDiagnostics': False}
+        self.cursor_visible = False
         self.frames, self.factory_calls, self.closed = [], [], []
         self.snapshot = {'source': 'native-minimap-audit', 'available': True,
                          'bounds': [-1, -1, 1, 1], 'nativeSize': [210, 210], 'texture': 'test.dds',
@@ -35,6 +36,7 @@ class ProbeTests(RuntimeTest):
         self.api = source('views/battle/tactical_minimap_probe.py', {
             'Driftkings.core.tactical_minimap_probe': self.policy,
             'gui.battle_control.minimap_utils': module(MINIMAP_SIZE=(210, 210)),
+            'GUI': module(mcursor=lambda: Owner(visible=self.cursor_visible)),
             'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: [], native_strategic_point=lambda component, record: None),
             'Driftkings.views.hangar.common': module(publish_card=publish),
             'Driftkings.core.hud_visibility': module(hudVisibility=hud)})
@@ -43,7 +45,7 @@ class ProbeTests(RuntimeTest):
             cancel=lambda token: self.cancelled.append(token))
         self.view = Owner(_ready=True, _guiVisible=True, _acknowledged=False, destroy=lambda: None)
         self.bridge.views.add(self.view)
-        self.component = Owner(sessionProvider=Owner(),
+        self.component = Owner(sessionProvider=Owner(), isModalViewShown=lambda: False,
             flashObject=Owner(as_DriftkingsMinimapGeometry=lambda *args: '1|800|400|200|200|1000|800'))
 
     def test_cell_ping_response_rejects_invalid_and_duplicate_samples(self):
@@ -159,6 +161,51 @@ class ProbeTests(RuntimeTest):
         hooks['addEntry'](original, component, 'StrategicCameraEntry', 'personal', 'matrix', True)
         bridge.stop()
         self.assertEqual(len(bridge._strategic_entries), 0)
+
+    def test_gameface_click_dry_run_validates_generation_and_native_pixels(self):
+        read = self.policy.gameface_click_sample
+        args = dict(protocol=1, generation=3, x=.5, y=.25, button=0)
+        value = read(args, 3, 2, (210, 210), 1)
+        self.assertEqual((value['localX'], value['localY']), (105, 52.5))
+        for changes in ({'generation': 2}, {'protocol': True}, {'x': 2}, {'y': float('nan')}, {'button': False}):
+            self.assertIsNone(read(dict(args, **changes), 3, 2, (210, 210), 1))
+
+    def test_gameface_click_round_trip_is_cursor_gated_and_never_dispatches(self):
+        self.settings['tacticalDiagnostics'] = True
+        self.view._cursorVisible = True
+        self.component.getMinimapDimensions = lambda: 10
+        self.component.onMinimapClicked = lambda *args: self.fail('Dry run must not invoke native input')
+        self.component.flashObject.as_DriftkingsMinimapGeometry = lambda: '1|800|400|200|200|1000|800|2'
+        self.bridge.bind_native(self.component)
+        self.bridge.start()
+        args = dict(protocol=1, generation=1, x=.5, y=.25, button=0)
+        self.bridge.receive_sample_input(self.view, args)
+        self.assertIsNone(self.view._sampleInput)
+        self.bridge.acknowledge(self.view, {'protocol': 1, 'generation': 1})
+        self.bridge.receive_sample_input(self.view, args)
+        self.assertIsNone(self.view._sampleInput)  # Native cursor independently checked.
+        self.cursor_visible = True
+        self.bridge.receive_sample_input(self.view, args)
+        self.assertEqual(self.frames[-1]['gamefaceInput']['localX'], 105)
+        self.assertEqual(self.frames[-1]['gamefaceInput']['localY'], 52.5)
+        self.assertTrue(self.frames[-1]['sampleInputEnabled'])
+        self.component.isModalViewShown = lambda: True
+        self.bridge.receive_sample_input(self.view, args)
+        self.assertEqual(self.view._sampleSequence, 1)
+        self.assertFalse(self.bridge.sample_input_enabled(self.view))
+        self.component.isModalViewShown = lambda: False
+        self.bridge.receive_sample_input(self.view, dict(args, generation=0))
+        self.assertEqual(self.view._sampleSequence, 1)
+        self.view._cursorVisible = False
+        self.bridge.receive_sample_input(self.view, args)
+        self.assertEqual(self.view._sampleSequence, 1)
+        self.view._cursorVisible = True
+        self.bridge.setBattleHudVisible(False)
+        self.bridge.receive_sample_input(self.view, args)
+        self.assertEqual(self.view._sampleSequence, 1)
+        self.bridge.stop()
+        self.assertIsNone(self.view._sampleInput)
+        self.assertEqual(self.view._sampleSequence, 0)
 
     def test_native_click_normalization_is_independent_of_visual_size(self):
         read = self.policy.native_click_sample
@@ -719,13 +766,14 @@ class ProbeTests(RuntimeTest):
         self.resource_id = 123
         dependencies = {
             'Driftkings.core.tactical_minimap_probe': self.policy,
+            'GUI': module(mcursor=lambda: Owner(visible=fixture.cursor_visible)),
             'Driftkings.views.battle.tactical_minimap': module(native_adapter=lambda *args: None, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: [], native_strategic_point=lambda component, record: None),
             'Driftkings.views.hangar.common': module(publish_card=lambda *args: None),
             'frameworks.wulf': module(ViewModel=BaseModel),
             'gui.impl.pub.view_component': module(ViewComponent=BaseView),
             'gui.impl.battle.random.hud': module(RandomHUDView=NativeHUD),
             'gui.Scaleform.daapi.view.battle.shared.minimap.component': module(MinimapComponent=NativeMap),
-            'gui.shared': module(events=module(GameEvent=module(GUI_VISIBILITY=1)), EVENT_BUS_SCOPE=module(BATTLE=2)),
+            'gui.shared': module(events=module(GameEvent=module(GUI_VISIBILITY=1, SHOW_CURSOR=2, HIDE_CURSOR=3)), EVENT_BUS_SCOPE=module(BATTLE=2, GLOBAL=3)),
             'Driftkings.core.hooks': module(override=override, on_event=lambda signal, fn: events.append((signal, fn))),
             'Driftkings.core.battle_events': module(battleEvents=module(started=1, loaded=2, visibility=3, ended=4)),
             'Driftkings.ui.gameface': module(attach_assets=lambda *args: None, resource_id=lambda key: self.resource_id),
@@ -755,8 +803,13 @@ class ProbeTests(RuntimeTest):
         self.assertIn(123, children)
         view = children[123]()
         self.assertIsNotNone(view)
-        self.assertEqual(view.model.sizes, {'properties': 3, 'commands': 1})
-        self.assertEqual(len(view._getEvents()), 1)
+        self.assertEqual(view.model.sizes, {'properties': 3, 'commands': 2})
+        self.assertEqual(len(view._getEvents()), 2)
+        self.assertEqual(len(view._getListeners()), 3)
+        view._showCursor(None)
+        self.assertTrue(view._cursorVisible)
+        view._hideCursor(None)
+        self.assertFalse(view._cursorVisible)
         self.resource_id = -1
         self.assertIs(hooks['_getChildComponents'](lambda parent: native, Owner()), native)
 

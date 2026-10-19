@@ -69,7 +69,7 @@ data.alliedPoint = {x: .25, y: .5}; refresh();
 alignment = body.children.filter(function (child) { return child.id === 'dk-tactical-minimap-alignment'; })[0];
 assert.strictEqual(alignment.children.length, 5);
 var mapImage = box.children.filter(function (child) { return child.className === 'dk-probe-cartography'; })[0].children[1];
-assert.strictEqual(mapImage.children.length, 10);
+assert.strictEqual(mapImage.children.length, 11);
 var grid = mapImage.children[0];
 assert.strictEqual(grid.children.filter(function (child) { return child.className === 'dk-probe-grid-column'; }).map(function (child) { return child.textContent; }).join(''), '1234567890');
 assert.strictEqual(grid.children.filter(function (child) { return child.className === 'dk-probe-grid-row'; }).map(function (child) { return child.textContent; }).join(''), 'ABCDEFGHJK');
@@ -121,7 +121,10 @@ Element.prototype.setAttribute = function (key, value) {
     if (!this.attributes) { this.attributes = {}; }
     this.attributes[key] = value;
 };
+var documentEvents = {}, sampleCommands = [];
 var graphicsDoc = {body: body, createElement: function () { return new Element(); },
+    addEventListener: function (name, fn, capture) { assert.strictEqual(capture, true); assert(!documentEvents[name]); documentEvents[name] = fn; },
+    removeEventListener: function (name, fn, capture) { assert.strictEqual(capture, true); assert.strictEqual(documentEvents[name], fn); delete documentEvents[name]; },
     createElementNS: function (namespace, tag) {
         assert.strictEqual(namespace, 'http://www.w3.org/2000/svg');
         svgNodesCreated++; var element = new Element(); element.tag = tag; return element;
@@ -129,7 +132,8 @@ var graphicsDoc = {body: body, createElement: function () { return new Element()
 win.DKTacticalGraphics = require('../../mod/res/gui/gameface/mods/Driftkings/TacticalMinimap/graphics.js');
 data = {enabled: true, protocol: 1, generation: 3, effectiveMode: 'vanilla', available: false, acknowledged: false};
 model = {DriftkingsUI: {name: 'DriftkingsTacticalMinimapProbe'}, payload: JSON.stringify(data),
-    onProbeReady: function (args) { acknowledgements.push(args); }};
+    onProbeReady: function (args) { acknowledgements.push(args); },
+    onSampleInput: function (args) { sampleCommands.push(args); }};
 vm.runInNewContext(script, {window: win, document: graphicsDoc, engine: engine, viewEnv: viewEnv,
     console: {error: function () { errors.push(true); }}});
 var report = acknowledgements[acknowledgements.length - 1];
@@ -222,6 +226,40 @@ assert.strictEqual(inputMarker.style.left, '80%');
 data.nativeInput.sizeIndex = 6; refresh();
 assert.strictEqual(inputLayer.children.length, 0);
 data.nativeInput = null;
+data.available = true; data.acknowledged = true;
+data.calibration = {available: true, sizeIndex: 2}; data.sampleInputEnabled = true;
+iconImage.getBoundingClientRect = function () { return {left: 100, top: 100, width: 200, height: 200}; };
+refresh();
+assert.strictEqual(iconImage.style.pointerEvents, 'auto');
+var prevented = 0, stopped = 0;
+function sampleClick(x, y, button) {
+    documentEvents.mousedown({clientX: x, clientY: y, button: button, target: iconImage,
+        preventDefault: function () { prevented++; }, stopPropagation: function () { stopped++; }});
+}
+sampleClick(200, 150, 0);
+assert.strictEqual(sampleCommands.length, 1);
+assert.strictEqual(JSON.stringify(sampleCommands[0]), JSON.stringify({protocol: 1, generation: 3, x: .5, y: .25, button: 0}));
+assert.strictEqual(prevented, 1); assert.strictEqual(stopped, 1);
+documentEvents.mousedown({clientX: 200, clientY: 150, button: 0, target: body,
+    preventDefault: function () { throw new Error('Must not capture foreign elements'); },
+    stopPropagation: function () { throw new Error('Must not capture foreign elements'); }});
+assert.strictEqual(sampleCommands.length, 1);
+sampleClick(90, 150, 0); sampleClick(NaN, 150, 0); sampleClick(200, 150, 4);
+assert.strictEqual(sampleCommands.length, 1);
+sampleClick(200, 150, 2);
+assert.strictEqual(sampleCommands[1].button, 1); // Browser right -> native right.
+sampleClick(200, 150, 1);
+assert.strictEqual(sampleCommands[2].button, 2); // Browser middle -> native middle.
+data.sampleInputEnabled = false; refresh();
+sampleClick(200, 150, 0);
+assert.strictEqual(sampleCommands.length, 3);
+assert.strictEqual(iconImage.style.pointerEvents, 'none');
+data.gamefaceInput = {x: .5, y: .25, button: 0, sizeIndex: 2, sequence: 1, localX: 105, localY: 52.5}; refresh();
+var sampleMarker = iconImage.children[10].children[0];
+assert.strictEqual(sampleMarker.className, 'dk-probe-gameface-point');
+assert.strictEqual(sampleMarker.style.left, '50%');
+data.gamefaceInput = null; refresh();
+assert.strictEqual(iconImage.children[10].children.length, 0);
 assert.strictEqual(livePoints.children.length, 2);
 var firstAlly = livePoints.children[0], created = svgNodesCreated;
 data.enemyPoints = [{x: .8, y: .2, vehicleClass: 'heavyTank', side: 'enemy', label: '<b>KV-2</b>'}]; refresh();
@@ -337,6 +375,7 @@ assert.strictEqual(iconImage.children[1].children.length, 0);
 win.__dkTacticalMinimapProbe.dispose();
 assert.strictEqual(body.children.length, 0);
 assert.strictEqual(Object.keys(callbacks).length, 0);
+assert.strictEqual(Object.keys(documentEvents).length, 0);
 assert.strictEqual(Object.keys(listeners).length, 0);
 console.log('PASS: shared SVG glyphs, three scales, missing-API fallback and cached graphic samples');
 

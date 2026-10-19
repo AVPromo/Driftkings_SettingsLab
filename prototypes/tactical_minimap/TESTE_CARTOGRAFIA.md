@@ -1,5 +1,13 @@
 # Cartografia e calibração — diagnóstico
 
+## Cliques na amostra Gameface — percurso de diagnóstico
+
+A amostra aceita mousedown apenas com handshake atual, geometria/tamanho nativos válidos, adaptador disponível, HUD visível, cursor nativo visível e ausência de janela modal. Reutiliza `SHOW_CURSOR`/`HIDE_CURSOR` e `GUI.mcursor().visible`, como o painel de marcas; não força cursor ou foco. O listener de captura verifica que o alvo pertence à imagem da amostra e que as coordenadas cabem no seu getBoundingClientRect. Só esse caso consome o evento. Botões DOM esquerdo/meio/direito são convertidos para os índices nativos 0/2/1.
+
+`onSampleInput` é um segundo comando exclusivamente diagnóstico. O backend confirma propriedade da view, geração/protocolo, cursor real, dimensões clássicas, geometria e modal; converte a posição normalizada para MINIMAP_SIZE e devolve x/y local em pixels. Não chama `onMinimapClicked`, comandos de chat ou APIs de disparo. Guarda apenas a última posição clicada pelo utilizador por view, reiniciada em cada batalha. A cruz turquesa representa a confirmação do Python; a magenta continua a representar cliques feitos no original. Um único listener é removido em dispose/reload. Sem suporte às APIs DOM necessárias, não se ativa input.
+
+Teste: com a build nova, mostrar o cursor com Ctrl esquerdo e clicar **na amostra** junto a cantos/centro. Deve aparecer a cruz turquesa e o texto `Gameface → Python`, com valores entre 0 e 210. Soltar Ctrl e confirmar que a amostra deixa de captar cliques; clicar fora dela deve manter o comportamento habitual. Abrir uma janela modal para confirmar bloqueio. Não esperar pings no original nesta etapa. Pode ser testado num replay, pois o comando diagnóstico não depende do plugin de pings. Confirmar no runtime real receção, escalas/DPI, foco e ausência de interferências; os testes DOM não comprovam estes pontos.
+
 ## Diagnóstico do input nativo e do tamanho
 
 Etapa de observação antes de ligar input ao Gameface. Um nono hook, instalado apenas com tacticalDiagnostics ativo, acompanha `MinimapComponent.onMinimapClicked(x, y, buttonIdx, mapScaleIndex)`. Chama o original exatamente uma vez, antes da observação, preserva o resultado e deixa propagar falhas do próprio cliente. Falhas do diagnóstico são contidas. Não chama comandos, não reenvia cliques e não altera foco, teclas ou pointer-events.

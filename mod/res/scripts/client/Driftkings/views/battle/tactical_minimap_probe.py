@@ -3,7 +3,7 @@
 import logging
 import weakref
 
-from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits, strategic_area_response, native_click_sample
+from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits, strategic_area_response, native_click_sample, gameface_click_sample
 from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points, native_camera_line, native_yaw_lines, native_strategic_point
 from Driftkings.views.hangar.common import publish_card
 
@@ -92,6 +92,8 @@ class ProbeBridge(object):
         for view in self.views:
             view._acknowledged = False
             view._graphicsResult = None
+            view._sampleInput = None
+            view._sampleSequence = 0
         self.active = True
         self._start_geometry_poll()
         hudVisibility.attach(self)
@@ -109,6 +111,8 @@ class ProbeBridge(object):
         for view in self.views:
             view._acknowledged = False
             view._graphicsResult = None
+            view._sampleInput = None
+            view._sampleSequence = 0
         hudVisibility.detach(self)
         self._close_adapter()
         self._native = None
@@ -150,6 +154,36 @@ class ProbeBridge(object):
         if self._last_input is not None:
             self._input_sequence = self._last_input['sequence']
         self.refresh()
+
+    def sample_input_enabled(self, view):
+        ready = bool(self.active and self.enabled() and self.hudVisible and view in self.views and
+                    view._ready and view._guiVisible and view._acknowledged and
+                    getattr(view, '_cursorVisible', False) and self._native is not None and self._native() is not None and
+                    (self._calibration or {}).get('available') and 'sizeIndex' in self._calibration and
+                    self._adapter is not None and not self._native_failed)
+        if not ready:
+            return False
+        try:
+            return not self._native().isModalViewShown()
+        except Exception:
+            return False
+
+    def receive_sample_input(self, view, args):
+        if not self.sample_input_enabled(view):
+            return
+        try:
+            import GUI
+            from gui.battle_control.minimap_utils import MINIMAP_SIZE
+            if not GUI.mcursor().visible or self._native().getMinimapDimensions() != 10:
+                return
+            value = gameface_click_sample(args, self.generation, self._calibration['sizeIndex'],
+                                          MINIMAP_SIZE, getattr(view, '_sampleSequence', 0) + 1)
+            if value is not None:
+                view._sampleInput = value
+                view._sampleSequence = value['sequence']
+                self.refresh()
+        except Exception:
+            LOG.debug('Gameface input diagnostic unavailable', exc_info=True)
 
     def _start_geometry_poll(self):
         if self._schedule is None:
@@ -251,6 +285,9 @@ class ProbeBridge(object):
             try:
                 data = payload(enabled and view._guiVisible, view._acknowledged, snapshot, self.generation,
                                getattr(view, '_graphicsResult', None), self._calibration)
+                data['sampleInputEnabled'] = bool(data.get('available') and self.sample_input_enabled(view))
+                if data.get('enabled') and data.get('acknowledged') and data.get('calibration', {}).get('available'):
+                    data['gamefaceInput'] = getattr(view, '_sampleInput', None)
                 state = (data['allyStatus'], data['reason'], 'ready' if (self._calibration or {}).get('available') else (self._calibration or {}).get('reason', 'no-native-geometry'), data['playerAvailable'])
                 if enabled and state != self._ally_log_state and self._ally_log_count < 8:
                     self._ally_log_state = state
@@ -289,12 +326,13 @@ class ProbeBridge(object):
 
         class ProbeModel(ViewModel):
             def __init__(self):
-                super(ProbeModel, self).__init__(properties=3, commands=1)
+                super(ProbeModel, self).__init__(properties=3, commands=2)
 
             def _initialize(self):
                 super(ProbeModel, self)._initialize()
                 self._addStringProperty('payload', '{}')
                 self.onProbeReady = self._addCommand('onProbeReady')
+                self.onSampleInput = self._addCommand('onSampleInput')
                 attach_assets(self, FEATURE)
 
         class ProbeView(ViewComponent):
@@ -303,26 +341,45 @@ class ProbeBridge(object):
                 self._guiVisible = True
                 self._acknowledged = False
                 self._graphicsResult = None
+                self._cursorVisible = False
+                self._sampleInput = None
+                self._sampleSequence = 0
                 self._lastPayload = None
                 super(ProbeView, self).__init__(layoutID=layout_id, model=ProbeModel)
                 bridge.views.add(self)
 
             def _onLoaded(self, *args, **kwargs):
                 super(ProbeView, self)._onLoaded(*args, **kwargs)
+                import GUI
+                self._cursorVisible = bool(GUI.mcursor().visible)
                 self._ready = True
                 LOG.info('Gameface diagnostic view loaded; awaiting handshake')
                 bridge.refresh()
 
             def _getEvents(self):
                 return tuple(super(ProbeView, self)._getEvents()) + (
-                    (self.getViewModel().onProbeReady, self._ack),)
+                    (self.getViewModel().onProbeReady, self._ack),
+                    (self.getViewModel().onSampleInput, self._input))
 
             def _ack(self, args):
                 bridge.acknowledge(self, args)
 
+            def _input(self, args):
+                bridge.receive_sample_input(self, args)
+
             def _getListeners(self):
                 return tuple(super(ProbeView, self)._getListeners()) + (
-                    (events.GameEvent.GUI_VISIBILITY, self._visibility, EVENT_BUS_SCOPE.BATTLE),)
+                    (events.GameEvent.GUI_VISIBILITY, self._visibility, EVENT_BUS_SCOPE.BATTLE),
+                    (events.GameEvent.SHOW_CURSOR, self._showCursor, EVENT_BUS_SCOPE.GLOBAL),
+                    (events.GameEvent.HIDE_CURSOR, self._hideCursor, EVENT_BUS_SCOPE.GLOBAL))
+
+            def _showCursor(self, event):
+                self._cursorVisible = True
+                bridge.refresh()
+
+            def _hideCursor(self, event):
+                self._cursorVisible = False
+                bridge.refresh()
 
             def _visibility(self, event):
                 self._guiVisible = bool(event.ctx['visible'])

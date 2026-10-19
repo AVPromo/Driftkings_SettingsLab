@@ -2,7 +2,7 @@
 """Bounded current native samples without identities or position history."""
 import re
 
-from Driftkings.core.tactical_minimap import CLASSES, finite
+from Driftkings.core.tactical_minimap import CLASSES, finite, native_click_point
 
 PROTOCOL = 1
 PING_SYMBOLS = {'MarkAttentionEntryUI': 'attention', 'MarkGoingToPositionEntryUI': 'going',
@@ -267,6 +267,20 @@ def input_sample(value):
             return None
         point[key] = int(number)
     return point if point['sequence'] > 0 else None
+
+
+def gameface_click_sample(args, generation, size_index, native_size, sequence):
+    """Validate a dry-run input; only calculate native pixels, never dispatch."""
+    if not accepts_ack(args, generation):
+        return None
+    try:
+        local_x, local_y = native_click_point(args.get('x'), args.get('y'), native_size)
+        result = native_click_sample(local_x, local_y, args.get('button'), size_index, native_size, sequence)
+        if result is not None:
+            result.update(localX=local_x, localY=local_y)
+        return result
+    except (ValueError, TypeError, OverflowError):
+        return None
 
 
 def native_click_sample(x, y, button, size_index, native_size, sequence):
