@@ -1,5 +1,15 @@
 # Cartografia e calibração — diagnóstico
 
+## Roda do rato e tamanho nativo
+
+Com cursor visível, ponte pronta e «seguir tamanho nativo» ativo, a roda sobre a amostra pede um passo de tamanho nativo. Usa o comando Gameface já existente, com protocolo/geração e sequência partilhada com cliques. O backend valida novamente cursor, HUD, geometria, janela modal, preferência e identidade do plugin nativo de tamanho. O request é consumido antes do setter para impedir duplicação reentrante. Não se alteram o mapeamento das teclas ou as configurações do mod pela roda.
+
+Auditoria: `GlobalSettingsPlugin.__setSizeByStep` usa `as_setSizeS(newIndex)`; o Flash confirma o tamanho por `applyNewSize`, que guarda via plugin nativo. A ponte reutiliza apenas o setter, sem chamar manualmente o save ou editar `_sizeIndex`. Suporta GlobalSettingsPlugin clássico e MapsTrainingGlobalSettingsPlugin; tamanhos limitados a 0–5 e recusa XVM/plugin desconhecido. No limite não chama o setter. Falhas não são repetidas. A roda em tamanho fixo ou fora da amostra passa sem ser capturada.
+
+Teste em Topography: ativar «seguir tamanho nativo», voltar à missão e, com Ctrl esquerdo/cursor sobre a amostra, rodar para cima/baixo. Confirmar que original e amostra mudam de tamanho, atingem os limites e mantêm coordenadas, ícones, linhas e cliques alinhados. Confirmar também as teclas nativas de aumentar/diminuir e que o tamanho se mantém ao reentrar no modo. Desativar «seguir tamanho nativo» deve impedir a roda de alterar o original a partir da amostra. A persistência é a do jogo e pode diferir entre Topography e batalha clássica.
+
+Testes automatizados cobrem direção, limites, protocolos inválidos, pedidos duplicados, cursor/modal, tamanho fixo, plugins desconhecidos, encaminhamento clássico/Topography e falha sem retry. Confirmação visual pendente; a substituição continua bloqueada.
+
 ## Atualização incremental da apresentação
 
 O diagnóstico reutiliza agora os nós das linhas de texto e só altera texto/classe quando necessário. O mapa e a amostra de glifos permanecem ligados ao DOM nas atualizações correntes; linhas condicionais são inseridas/removidas sem retirar o mapa. A limpeza por falha, fim de missão e troca de modelo mantém-se. Testes verificam identidade dos nós, ausência de remoção do mapa e conclusão de um clique atravessado por uma atualização de dados.

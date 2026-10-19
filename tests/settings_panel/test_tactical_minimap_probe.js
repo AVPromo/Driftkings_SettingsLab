@@ -467,6 +467,29 @@ assert.strictEqual(pingLayer.children[0].style.left, '25%');
 assert.strictEqual(pingLayer.children[0].style.top, '75%');
 data.pings = []; refresh();
 assert.strictEqual(pingLayer.children.length, 0);
+// Wheel events share the click request sequence and are scoped to this image.
+data.sampleInputEnabled = true; refresh();
+var wheelCount = sampleCommands.length;
+function wheel(target, delta) {
+    documentEvents.mousewheel({target: target, wheelDelta: delta,
+        preventDefault: function () {}, stopPropagation: function () {}});
+}
+wheel(body, 120); wheel(iconImage, 0); wheel(iconImage, NaN);
+assert.strictEqual(sampleCommands.length, wheelCount);
+wheel(iconImage, 120); wheel(iconImage, -120);
+assert.strictEqual(sampleCommands.length, wheelCount + 2);
+assert.strictEqual(sampleCommands[wheelCount].action, 'resize');
+assert.strictEqual(sampleCommands[wheelCount].step, 1);
+assert.strictEqual(sampleCommands[wheelCount + 1].step, -1);
+assert.strictEqual(sampleCommands[wheelCount + 1].request, sampleCommands[wheelCount].request + 1);
+data.visualConfig = {followNativeSize: false}; refresh();
+wheel(iconImage, 120);
+assert.strictEqual(sampleCommands.length, wheelCount + 2);
+delete data.visualConfig;
+data.sampleInputEnabled = false; refresh();
+wheel(iconImage, 120);
+assert.strictEqual(sampleCommands.length, wheelCount + 2);
+
 // Preferences alter presentation only; input remains tied to native geometry.
 data.visualConfig = {theme: 'military', followNativeSize: false, size: 360,
     mapOpacity: .4, iconScale: 2, fontSize: 18, showGrid: false,

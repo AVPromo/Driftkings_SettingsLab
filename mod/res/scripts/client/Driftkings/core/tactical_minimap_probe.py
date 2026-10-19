@@ -294,6 +294,14 @@ def input_request(args, previous):
     return int(value)
 
 
+def resize_step(args, generation):
+    """One explicit resize step, with the same battle protocol as clicks."""
+    if not accepts_ack(args, generation) or args.get('action') != 'resize':
+        return None
+    step = args.get('step')
+    return step if type(step) is int and step in (-1, 1) else None
+
+
 def gameface_click_sample(args, generation, size_index, native_size, sequence):
     """Validate sample input and calculate native pixels; never dispatch here."""
     if not accepts_ack(args, generation):

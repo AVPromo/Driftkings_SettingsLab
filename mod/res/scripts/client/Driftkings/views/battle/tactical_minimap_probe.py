@@ -7,8 +7,8 @@ from Driftkings.core.diagnostics import Diagnostics
 
 from Driftkings.core.tactical_minimap import preferences, selection
 
-from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits, strategic_area_response, native_click_sample, gameface_click_sample, input_request
-from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points, native_camera_line, native_yaw_lines, native_strategic_point, forward_native_position_input
+from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits, strategic_area_response, native_click_sample, gameface_click_sample, input_request, resize_step
+from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points, native_camera_line, native_yaw_lines, native_strategic_point, forward_native_position_input, forward_native_resize
 from Driftkings.views.hangar.common import publish_card
 
 LOG = logging.getLogger('Driftkings.TacticalMinimapProbe')
@@ -100,6 +100,7 @@ class ProbeBridge(object):
             view._acknowledged = False
             view._graphicsResult = None
             view._sampleInput = None
+            view._sampleResize = None
             view._sampleSequence = 0
             view._sampleRequest = 0
         self.active = True
@@ -122,6 +123,7 @@ class ProbeBridge(object):
             view._acknowledged = False
             view._graphicsResult = None
             view._sampleInput = None
+            view._sampleResize = None
             view._sampleSequence = 0
             view._sampleRequest = 0
         hudVisibility.detach(self)
@@ -203,6 +205,18 @@ class ProbeBridge(object):
                 return
             self._read_geometry()
             if not self.sample_input_enabled(view):
+                return
+            if isinstance(args, dict) and args.get('action') == 'resize':
+                step = resize_step(args, self.generation)
+                if step is None or not preferences(self._settings(self.config).get('tactical'))['followNativeSize']:
+                    return
+                view._sampleRequest = request
+                result = {'request': request, 'step': step}
+                view._sampleResize = result
+                result['dispatch'] = forward_native_resize(self._native(), step)
+                self.refresh()
+                return
+            if isinstance(args, dict) and args.get('action', 'click') != 'click':
                 return
             value = gameface_click_sample(args, self.generation, self._calibration['sizeIndex'],
                                           MINIMAP_SIZE, getattr(view, '_sampleSequence', 0) + 1)
@@ -329,6 +343,7 @@ class ProbeBridge(object):
                 data['sampleInputRequest'] = getattr(view, '_sampleRequest', 0)
                 if data.get('enabled') and data.get('acknowledged') and data.get('calibration', {}).get('available'):
                     data['gamefaceInput'] = getattr(view, '_sampleInput', None)
+                    data['resizeResult'] = getattr(view, '_sampleResize', None)
                 state = (data['allyStatus'], data['reason'], 'ready' if (self._calibration or {}).get('available') else (self._calibration or {}).get('reason', 'no-native-geometry'), data['playerAvailable'])
                 if enabled and state != self._ally_log_state and self._ally_log_count < 8:
                     self._ally_log_state = state
@@ -385,6 +400,7 @@ class ProbeBridge(object):
                 self._graphicsResult = None
                 self._cursorVisible = False
                 self._sampleInput = None
+                self._sampleResize = None
                 self._sampleSequence = 0
                 self._sampleRequest = 0
                 self._lastPayload = None
