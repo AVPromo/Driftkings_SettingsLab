@@ -82,16 +82,16 @@
         var records = points._dkAllies || {}, seen = {};
         if (!Array.isArray(allies)) { allies = []; }
         allies.slice(0, 64).forEach(function (ally, index) {
-            if (!validAlly(ally) || (ally.side && ally.side !== 'ally' && ally.side !== 'platoon')) { return; }
+            if (!validAlly(ally) || (ally.side && ally.side !== 'player' && ally.side !== 'ally' && ally.side !== 'platoon')) { return; }
             var key = 'slot' + index;
             seen[key] = true;
-            var color = ally.side === 'platoon' ? '#ffc45b' : '#67cf69';
-            var kind = allyClass(ally) ? ally.vehicleClass : null;
+            var color = ally.side === 'player' ? '#ffffff' : ally.side === 'platoon' ? '#ffc45b' : '#67cf69';
+            var kind = ally.side === 'player' ? 'player' : allyClass(ally) ? ally.vehicleClass : null;
             var signature = String(kind) + color, record = records[key];
             if (!record || record.signature !== signature) {
                 if (record) { points.removeChild(record.node); }
                 var marker = document.createElement('div');
-                marker.className = 'dk-probe-ally'; marker.textContent = 'A';
+                marker.className = 'dk-probe-ally'; marker.textContent = ally.side === 'player' ? 'TU' : 'A';
                 if (kind && window.DKTacticalGraphics) {
                     try {
                         var glyph = window.DKTacticalGraphics.createGlyph(document, kind, color, 18);
@@ -190,7 +190,7 @@
         line('Marcador aliado no mapa de teste: ' + (data.allyStatus || 'a aguardar'));
         if (validAlly(data.alliedPoint)) {
             line('Referência (primeiro aliado): ' + (allyClass(data.alliedPoint) || 'indisponível (A)') +
-                (data.alliedPoint.side === 'platoon' ? ' | Pelotão' : ' | Aliado'));
+                (data.alliedPoint.side === 'player' ? ' | Tu (seta sem direção)' : data.alliedPoint.side === 'platoon' ? ' | Pelotão' : ' | Aliado'));
             line('Célula nativa: ' + (/^[A-HJK][1-90]$/.test(data.alliedPoint.cell || '') ? data.alliedPoint.cell : 'indisponível'));
             line('Aliado: ' + (100 * data.alliedPoint.x).toFixed(1) + '% horizontal / ' +
                 (100 * data.alliedPoint.y).toFixed(1) + '% vertical');
@@ -199,7 +199,7 @@
         alignNativeArea(data.calibration);
         line('Calibração: NO/NE/SO/SE nos cantos; + no centro nativo.');
         var allies = Array.isArray(data.alliedPoints) ? data.alliedPoints : (data.alliedPoint ? [data.alliedPoint] : []);
-        line('Aliados na amostra: ' + allies.length + ' | verde: aliado; amarelo: pelotão');
+        line('Veículos na amostra: ' + allies.length + ' | branco: tu; verde: aliado; amarelo: pelotão');
         var map = mapSample(data.textureUri, allies);
         if (map) { node.appendChild(map); }
         line('Amostras fixas — 16 / 24 / 32 px; confirmar visualmente.');

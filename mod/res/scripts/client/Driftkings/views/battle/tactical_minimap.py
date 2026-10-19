@@ -53,6 +53,8 @@ class NativeMinimapAdapter(object):
             if arena_dp is None:
                 raise ValueError('Missing native arena data provider')
             entries = list(plugin._entries.items())
+            get_player_id = getattr(arena_dp, 'getPlayerVehicleID', None)
+            player_id = get_player_id() if get_player_id is not None else None
         except Exception:
             result['reason'] = 'native-contract-unavailable'
             return result
@@ -83,7 +85,8 @@ class NativeMinimapAdapter(object):
                     result['entryAudit']['bounds'] += 1
                     continue
                 enemy = entry.isEnemy()
-                side = 'enemy' if enemy else 'platoon' if arena_dp.isSquadMan(vID=vehicle_id) else 'ally'
+                side = ('enemy' if enemy else 'player' if player_id is not None and vehicle_id == player_id else
+                        'platoon' if arena_dp.isSquadMan(vID=vehicle_id) else 'ally')
                 info = arena_dp.getVehicleInfo(vehicle_id)
                 name = info.getDisplayedName() if info is not None else u''
                 native_cell = None

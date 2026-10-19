@@ -48,6 +48,15 @@ class NativeAdapterTests(RuntimeTest):
         self.assertNotIn('heading', rows[1])
         self.assertFalse(frame['lostContactAvailable'])
 
+    def test_player_relation_uses_native_id_and_never_relabels_an_enemy(self):
+        self.dp.getPlayerVehicleID = lambda: 2
+        self.plugin._entries = {1: self.entry(enemy=False), 2: self.entry(enemy=False)}
+        rows = dict((row['id'], row) for row in self.adapter.capture()['markers'])
+        self.assertEqual(rows[1]['side'], 'ally')
+        self.assertEqual(rows[2]['side'], 'player')
+        self.plugin._entries[2] = self.entry(enemy=True)
+        self.assertEqual(dict((row['id'], row['side']) for row in self.adapter.capture()['markers'])[2], 'enemy')
+
     def test_hidden_lost_transitional_dead_and_inactive_entries_never_read_matrices(self):
         entries = [self.entry(active=False), self.entry(alive=False), self.entry(aoi=False),
                    self.entry(location=0), self.entry(location=2), self.entry(location=3)]

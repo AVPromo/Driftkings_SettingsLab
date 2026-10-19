@@ -163,6 +163,15 @@ class ProbeTests(RuntimeTest):
         self.assertEqual(self.policy.allied_calibration_points([]), [])
         self.assertEqual(self.policy.allied_calibration_points(None), [])
 
+    def test_own_published_vehicle_keeps_player_relation_without_identity(self):
+        marker = dict(side='player', visible=True, state='visible', vehicleClass='mediumTank',
+                      x=.25, y=.5, id=666, name='private')
+        point = self.policy.allied_calibration_points([marker])[0]
+        self.assertEqual(point['side'], 'player')
+        self.assertNotIn('id', point)
+        self.assertNotIn('name', point)
+        self.assertEqual(self.policy.allied_calibration_points([dict(marker, visible=False)]), [])
+
     def test_default_off_creates_no_adapter_and_starts_no_diagnostic(self):
         self.bridge.bind_native(self.component)
         self.bridge.start()

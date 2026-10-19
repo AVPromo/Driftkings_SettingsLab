@@ -124,7 +124,7 @@ def allied_calibration_point(markers):
         return None
     for marker in markers[:64]:
         if (not isinstance(marker, dict) or marker.get('visible') is not True or
-                marker.get('state') != 'visible' or marker.get('side') not in ('ally', 'platoon')):
+                marker.get('state') != 'visible' or marker.get('side') not in ('player', 'ally', 'platoon')):
             continue
         try:
             x, y = finite(marker['x']), finite(marker['y'])

@@ -69,3 +69,9 @@ Classe/cor/posição do marcador individual confirmadas pelo utilizador. A etapa
 Não transporta IDs/nome/histórico. Usa slots do snapshot atual para reutilizar os nós de classe/cor, atualiza posições a cada 250 ms e remove slots ausentes. Uma lista vazia elimina todos os ícones, mesmo se existir a referência individual antiga no payload. A célula/classe escrita continua a referir-se ao primeiro aliado, não a cada ícone.
 
 Confirmar vários ícones na pequena amostra, posições em movimento e cores de equipa/pelotão. Confirmar remoção quando o aliado morre ou deixa AoI, ocultação do HUD e fim de replay. O minimapa original permanece ativo; a paridade do minimapa alternativo ainda não está concluída.
+
+## Ícone do próprio veículo
+
+O adapter compara o ID da entrada publicada com `arenaDP.getPlayerVehicleID()` e marca `side=player`. O transportador preserva esta relação sem enviar o ID. O renderer usa o chevron branco `player` em vez da classe; mantém verde para aliados e amarelo para pelotão. Sem suporte SVG, usa TU.
+
+A orientação ainda não está ligada: a matriz das entradas de veículos foi verificada apenas para translação. A seta é atualmente um identificador fixo, não um indicador de direção. Não se infere rotação a partir de deslocamento. Só se desenha o próprio veículo quando existe uma entrada elegível no plugin de veículos; a entrada pessoal/câmara, usada pelo cliente em outros modos, continua por integrar. Confirmar o chevron no replay testado. A classificação usa o veículo do jogador, não transforma o veículo observado em jogador após morte.
