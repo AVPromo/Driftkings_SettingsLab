@@ -27,3 +27,7 @@ Os testes atuais cobrem a política bloqueada, não simulam um handoff real entr
 ## Etapa 4 — biblioteca de glifos partilhada
 
 A biblioteca gráfica foi movida para a pasta Gameface e declarada no manifesto/catálogo. O preview reutiliza-a, e o diagnóstico usa apenas createGlyph para amostras fixas. O handshake existente transporta opcionalmente svgApi/glyphCount, validados no backend; não foram criados hooks, listeners ou comandos adicionais. A grelha é conservada entre mudanças de metadados e libertada ao ocultar/finalizar o diagnóstico. Não há ligação entre o renderer sintético e os snapshots nativos.
+
+## Calibração de coordenadas — estado atual
+
+O diagnóstico recebeu cartografia original, geometria Flash e contorno Gameface. O utilizador confirmou a textura e o alinhamento dos cantos/centro com redimensionamento. A amostra seguinte transporta apenas x/y de um aliado atualmente publicado, após handshake e com geometria válida, para testar a conversão mundo/mapa. Reutiliza o timer Flash existente de 250 ms; não acrescenta scheduler. As descrições anteriores de transporte sem posições correspondem às etapas iniciais. Não são enviados IDs, nomes, inimigos ou histórico. O renderer sintético permanece isolado e a substituição do minimapa continua bloqueada.

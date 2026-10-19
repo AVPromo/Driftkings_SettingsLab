@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Small diagnostic transport contract. Never publishes vehicle identities/positions."""
+"""Small diagnostic transport contract. Never publishes identities or enemy positions; one current ally calibrates coordinates."""
 import re
 
 from Driftkings.core.tactical_minimap import finite
@@ -37,6 +37,10 @@ def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, c
     except (KeyError, ValueError, TypeError, OverflowError):
         data['reason'] = 'invalid-native-metadata'
         return data
+    if acknowledged and data.get('calibration', {}).get('available') is True:
+        point = allied_calibration_point(snapshot.get('markers', []))
+        if point is not None:
+            data['alliedPoint'] = point
     uri = texture_uri(texture)
     if uri is not None:
         data['textureUri'] = uri
@@ -105,3 +109,20 @@ def calibration_result(data):
     return dict(values, available=True, normalized={
         'x': values['x'] / width, 'y': values['y'] / height,
         'width': values['width'] / width, 'height': values['height'] / height})
+
+
+def allied_calibration_point(markers):
+    """One currently published ally only; no identity, history or enemy coordinates."""
+    if not isinstance(markers, list):
+        return None
+    for marker in markers[:64]:
+        if (not isinstance(marker, dict) or marker.get('visible') is not True or
+                marker.get('state') != 'visible' or marker.get('side') not in ('ally', 'platoon')):
+            continue
+        try:
+            x, y = finite(marker['x']), finite(marker['y'])
+        except (KeyError, TypeError, ValueError, OverflowError):
+            continue
+        if 0 <= x <= 1 and 0 <= y <= 1:
+            return {'x': x, 'y': y}
+    return None

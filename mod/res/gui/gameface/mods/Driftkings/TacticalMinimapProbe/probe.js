@@ -1,4 +1,4 @@
-/* Diagnostic text and fixed glyph samples; no battle markers or native UI changes. */
+/* Opt-in glyph/geometry diagnostics and one current allied coordinate sample; native UI unchanged. */
 (function () {
     'use strict';
     var OWNER = '__dkTacticalMinimapProbe', FEATURE = 'DriftkingsTacticalMinimapProbe';
@@ -70,7 +70,7 @@
         if (alignment && alignment.parentNode) { alignment.parentNode.removeChild(alignment); }
         alignment = null;
     }
-    function alignNativeArea(data) {
+    function alignNativeArea(data, ally) {
         clearAlignment();
         if (!data || data.available !== true) { return; }
         var keys = ['x', 'y', 'width', 'height', 'stageWidth', 'stageHeight'];
@@ -90,6 +90,13 @@
             mark.style.left = point[0] + '%'; mark.style.top = point[1] + '%';
             mark.textContent = point[2]; alignment.appendChild(mark);
         });
+        if (ally && typeof ally.x === 'number' && isFinite(ally.x) && ally.x >= 0 && ally.x <= 1 &&
+                typeof ally.y === 'number' && isFinite(ally.y) && ally.y >= 0 && ally.y <= 1) {
+            var marker = document.createElement('div');
+            marker.className = 'dk-probe-ally'; marker.textContent = 'A';
+            marker.style.left = (100 * ally.x) + '%'; marker.style.top = (100 * ally.y) + '%';
+            alignment.appendChild(marker);
+        }
         document.body.appendChild(alignment);
     }
     function calibration(data) {
@@ -121,9 +128,9 @@
         } else {
             line('Fonte nativa: ' + (data.reason || 'indisponível'), 'dk-probe-pending');
         }
-        line('Sem substituição do minimapa, posições de veículos ou Lost Contact.');
+        line('Um aliado para calibração; sem inimigos ou Lost Contact.');
         calibration(data.calibration);
-        alignNativeArea(data.calibration);
+        alignNativeArea(data.calibration, data.alliedPoint);
         line('Calibração: NO/NE/SO/SE nos cantos; + no centro nativo.');
         var map = mapSample(data.textureUri);
         if (map) { node.appendChild(map); }

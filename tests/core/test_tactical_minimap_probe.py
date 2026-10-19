@@ -77,6 +77,37 @@ class ProbeTests(RuntimeTest):
         self.bridge.on_geometry(second, raw)
         self.assertIsNone(self.bridge._calibration)
 
+    def test_ally_probe_requires_handshake_geometry_and_current_publication(self):
+        geometry = dict(available=True, x=800, y=400, width=200, height=200,
+                        stageWidth=1000, stageHeight=800)
+        marker = dict(id=666, name='secret-marker', side='ally', visible=True,
+                      state='visible', x=.25, y=.5)
+        self.snapshot['markers'] = [marker]
+        self.assertNotIn('alliedPoint', self.policy.payload(True, False, self.snapshot, calibration=geometry))
+        self.assertNotIn('alliedPoint', self.policy.payload(True, True, self.snapshot))
+        data = self.policy.payload(True, True, self.snapshot, calibration=geometry)
+        self.assertEqual(data['alliedPoint'], {'x': .25, 'y': .5})
+        self.assertNotIn('secret-marker', json.dumps(data))
+        for changes in ({'side': 'enemy'}, {'visible': False}, {'state': 'lost'},
+                        {'x': float('nan')}, {'y': 1.1}):
+            invalid = dict(marker, **changes)
+            self.assertIsNone(self.policy.allied_calibration_point([invalid]))
+        self.snapshot['markers'] = []
+        self.assertNotIn('alliedPoint', self.policy.payload(True, True, self.snapshot, calibration=geometry))
+
+    def test_geometry_tick_recaptures_current_native_entries(self):
+        self.settings['tacticalDiagnostics'] = True
+        self.bridge.bind_native(self.component)
+        self.bridge.start()
+        owner = Owner()
+        self.bridge.register_geometry_source(owner)
+        raw = dict(available=True, x=800, y=400, width=200, height=200,
+                   stageWidth=1000, stageHeight=800)
+        self.bridge.on_geometry(owner, raw)
+        count = len(self.frames)
+        self.bridge.on_geometry(owner, raw)
+        self.assertEqual(len(self.frames), count + 1)
+
     def test_default_off_creates_no_adapter_and_starts_no_diagnostic(self):
         self.bridge.bind_native(self.component)
         self.bridge.start()

@@ -25,7 +25,6 @@ package driftkings.battle.components.minimap
     {
         public var onTacticalGeometry:Function;
         private var probeEnabled:Boolean = false;
-        private var probeSignature:String;
         private var minimap:BaseMinimap;
         private var options:Object;
         private var vehicles:Object = {};
@@ -58,7 +57,6 @@ package driftkings.battle.components.minimap
         public function as_minimapProbe(enabled:Boolean):void
         {
             probeEnabled = enabled;
-            probeSignature = null;
             reportProbeGeometry();
         }
 
@@ -92,12 +90,9 @@ package driftkings.battle.components.minimap
                 catch (error:Error) { data = {available:false, reason:"map-area-unavailable"}; }
             }
             else if (minimap) data.reason = "stage-unavailable";
-            var signature:String = data.available ?
-                [data.x,data.y,data.width,data.height,data.stageWidth,data.stageHeight].join("|") : data.reason;
-            if (signature == probeSignature) return;
-            probeSignature = signature;
+            // Existing 250 ms timer also drives the opt-in ally coordinate probe.
             try { onTacticalGeometry(data); }
-            catch (callbackError:Error) { probeEnabled = false; probeSignature = null; }
+            catch (callbackError:Error) { probeEnabled = false; }
         }
 
         public function as_minimapPresentation(value:Object):void
@@ -447,7 +442,6 @@ package driftkings.battle.components.minimap
         override protected function onDispose():void
         {
             probeEnabled = false;
-            probeSignature = null;
             onTacticalGeometry = null;
             artilleryAim.dispose();
             timer.stop();

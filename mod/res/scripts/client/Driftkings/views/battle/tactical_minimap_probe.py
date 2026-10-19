@@ -98,9 +98,9 @@ class ProbeBridge(object):
         if (not self.enabled() or self._geometry_source is None or self._geometry_source() is not view):
             return
         result = calibration_result(data)
-        if result != self._calibration:
-            self._calibration = result
-            self.refresh()
+        self._calibration = result
+        # Reuse the existing Flash refresh tick for a fresh, stateless ally sample.
+        self.refresh()
 
     def setBattleHudVisible(self, visible):
         self.hudVisible = bool(visible)
