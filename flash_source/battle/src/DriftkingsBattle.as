@@ -1,6 +1,7 @@
 package {
 import driftkings.battle.factory.ComponentFactory;
 import driftkings.battle.components.minimap.TacticalGeometry;
+import driftkings.battle.components.minimap.TacticalPresentationTrial;
 import net.wg.gui.battle.views.minimap.BaseMinimap;
 import net.wg.gui.battle.views.BaseBattlePage;
 import net.wg.infrastructure.base.AbstractView;
@@ -8,6 +9,9 @@ import net.wg.infrastructure.base.AbstractView;
 // One library, with a separate factory contract for each root surface.
 public class DriftkingsBattle extends AbstractView {
     private static function registerCreators():void {
+        BaseMinimap.prototype.as_DriftkingsPresentationTrial = function(action:String):String {
+            return TacticalPresentationTrial.command(this as BaseMinimap, action);
+        };
         BaseMinimap.prototype.as_DriftkingsPresentationAudit = function():String {
             return TacticalGeometry.presentationAudit(this as BaseMinimap);
         };

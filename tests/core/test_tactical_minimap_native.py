@@ -33,6 +33,28 @@ class NativeAdapterTests(RuntimeTest):
                       getLocation=lambda: location, isEnemy=lambda: enemy,
                       getClassTag=lambda: 'mediumTank', getMatrix=lambda: matrix)
 
+    def test_presentation_trial_requires_exact_topography_and_live_owner(self):
+        native_module = 'gui.Scaleform.daapi.view.battle.maps_training.minimap'
+        Component = type('MapsTrainingMinimapComponent', (Owner,), {'__module__': native_module})
+        Plugin = type('BotAppearNotificationPlugin', (Owner,), {'__module__': native_module})
+        common = module(xvmInstalled=False)
+        session = Owner(arenaVisitor=Owner(gui=Owner(guiType=99)))
+        component = Component(getPlugin=lambda name: Plugin(), sessionProvider=session,
+                              isModalViewShown=lambda: False)
+        api = source('views/battle/tactical_minimap.py', {
+            'Driftkings.core.tactical_minimap': self.load('core.tactical_minimap'),
+            'Driftkings.common': common, 'constants': module(ARENA_GUI_TYPE=Owner(MAPS_TRAINING=99))})
+        api['owns_player_marker'] = lambda owner: True
+        self.assertTrue(api['presentation_trial_allowed'](component))
+        session.arenaVisitor.gui.guiType = 1
+        self.assertFalse(api['presentation_trial_allowed'](component))
+        session.arenaVisitor.gui.guiType = 99
+        common.xvmInstalled = True
+        self.assertFalse(api['presentation_trial_allowed'](component))
+        common.xvmInstalled = False
+        api['owns_player_marker'] = lambda owner: False
+        self.assertFalse(api['presentation_trial_allowed'](component))
+
     def test_native_map_and_visible_entries_are_read_without_orientation_or_world_reads(self):
         self.plugin._entries = {1: self.entry(), 2: self.entry(enemy=False)}
         frame = self.adapter.capture()

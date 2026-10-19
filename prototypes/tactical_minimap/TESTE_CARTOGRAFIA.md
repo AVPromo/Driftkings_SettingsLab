@@ -1,5 +1,11 @@
 # Cartografia e calibração — diagnóstico
 
+## Ensaio temporário da apresentação nativa
+
+Novo controlo opt-in “Training only: test native presentation restoration (3 seconds)” nas melhorias do minimapa. Default desligado. Com diagnóstico ativo, ativar, guardar e entrar numa missão Topography após instalar/reiniciar a build nova. Quando a amostra estiver confirmada, o original deverá ficar recortado durante três segundos e regressar automaticamente pelo Timer Flash. Confirmar também teclas de tamanho, seta, câmara, ângulos, pings e saída da missão. Desativar o teste depois da confirmação.
+
+Apenas ensaio da separação gráfica e da reposição: não é uma troca permanente para Driftkings. Ver detalhes, precondições e limites em `TRANSICAO_SEGURA.md`. Não há roda do rato. Confirmação in-game pendente.
+
 ## Tamanho apenas pelas teclas nativas
 
 A experiência de redimensionamento pela roda foi removida integralmente a pedido do utilizador. A amostra não regista wheel/mousewheel nem envia pedidos de resize. Mantêm-se os cliques e as teclas nativas; «seguir tamanho nativo» só acompanha o tamanho publicado pelo original. Com tamanho fixo, prevalece o valor das configurações.

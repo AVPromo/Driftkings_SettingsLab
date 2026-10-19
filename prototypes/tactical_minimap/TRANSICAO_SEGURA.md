@@ -38,4 +38,17 @@ Testar falha de carregamento, falha de desenho, ausência de confirmações, per
 
 ## O que esta etapa não comprova
 
-Ainda não há ocultação nem lease nativo implementados. Os testes existentes cobrem a amostra e a política bloqueada. A seleção específica de veículos continua sem contrato confirmado; não será inventada nem convertida silenciosamente em ping de posição. Compatibilidade EU/NA/ASIA não pode ser deduzida apenas do SRC EU ou dos testes NA/Topography.
+Não há troca permanente nem lease de produção implementados. Existe apenas o ensaio de recorte temporário descrito abaixo. Os testes existentes cobrem a amostra e a política bloqueada. A seleção específica de veículos continua sem contrato confirmado; não será inventada nem convertida silenciosamente em ping de posição. Compatibilidade EU/NA/ASIA não pode ser deduzida apenas do SRC EU ou dos testes NA/Topography.
+
+
+## Ensaio opt-in de recorte e reposição — Topography
+
+A sondagem real NA de 2026-10-19 19:58:00 mostrou 12 ramos diretos: background, seis foregrounds, entriesContainer, entriesContainerMask, minimapHint, clickAreaSpr e mapHit. Fundo/entradas/input foram identificados separadamente (`coupledInput=false`). Isto permite ensaiar um recorte da apresentação; não prova que a substituição completa seja possível.
+
+A opção `tacticalPresentationTrial` nasce falsa e aparece nas melhorias do minimapa como “Training only: test native presentation restoration (3 seconds)”. Só atua com `tacticalDiagnostics=true`, na próxima missão Topography, com veículo próprio vivo, geometria válida, confirmação SVG 21/21, sondagem separada e classes nativas exatas. Não depende da preferência Vanilla/Driftkings nem a modifica. Recusa batalhas normais, espectador, XVM e janela modal. Catálogos i18n não são alterados nesta entrega; o controlo usa texto inglês.
+
+`TacticalPresentationTrial` guarda os scrollRect dos ramos do fundo, entradas, foregrounds e hint. Recorta-os para uma área vazia durante três segundos, sem mudar visible, alpha, pais, rato, plugins ou configurações do jogo. Não toca em clickAreaSpr/mapHit nem no componente inteiro. A leitura de geometria e entradas continua; é necessário confirmar no cliente que o desenho C++ respeita o recorte e que pings/mira continuam publicados.
+
+Um Timer de uma execução no próprio Flash repõe os recortes. A remoção do componente do palco e stop/unbind Python também pedem reposição. A função evita repetir o ensaio no mesmo componente e tenta desfazer alterações parciais se o início falhar. A reposição preserva um scrollRect diferente entretanto escolhido pelo cliente. Um falhanço ao restaurar é identificado como `restore-failed`; não se declara sucesso nesse caso. Não existe ainda confirmação de execução real deste novo temporizador nem prova de recuperação de uma substituição permanente.
+
+Procedimento: instalar a build recompilada e reiniciar; ativar o controlo acima; guardar e entrar em Topography. A apresentação original deverá desaparecer durante três segundos e regressar sozinha, mantendo a amostra. Confirmar o regresso do original com textura, ícones, linhas e teclas de tamanho funcionais. Sair da missão e consultar `Presentation trial: active` e `Presentation trial: restored` no log. Depois desativar o controlo. Não é necessário nem permitido testar esta opção numa batalha normal; a guarda independente do backend rejeita esse modo.
