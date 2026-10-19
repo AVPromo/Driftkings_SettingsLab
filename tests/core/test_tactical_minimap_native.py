@@ -60,6 +60,7 @@ class NativeAdapterTests(RuntimeTest):
         frame = self.adapter.capture()
         self.assertEqual(frame['markers'], [])
         self.assertEqual(self.reads, [])
+        self.assertEqual(frame['entryAudit']['unpublished'], len(entries))
 
     def test_snapshot_does_not_retain_positions_after_native_entry_disappears(self):
         self.plugin._entries = {1: self.entry()}

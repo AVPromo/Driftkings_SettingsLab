@@ -58,23 +58,28 @@ class NativeMinimapAdapter(object):
         result.update(available=True, bounds=bounds, texture=texture,
                       nativeSize=self._native_size, partial=True,
                       limitations=['aoi-alive-vehicles-only', 'no-player-camera-entry',
-                                   'no-pings-zones-or-ranges', 'no-orientation'])
+                                   'no-pings-zones-or-ranges', 'no-orientation'],
+                      entryAudit={'total': len(entries), 'unpublished': 0, 'class': 0, 'matrix': 0, 'bounds': 0, 'errors': 0})
         for vehicle_id, entry in entries:
             try:
                 # Check native publication state BEFORE accessing any matrix.
                 # AOI_TO_FAR is a transitional copied position; never publish it.
                 if (not entry.isActive() or not entry.isAlive() or not entry.isInAoI() or
                         entry.getLocation() != self._aoi_location):
+                    result['entryAudit']['unpublished'] += 1
                     continue
                 vehicle_class = entry.getClassTag()
                 if vehicle_class not in CLASSES:
+                    result['entryAudit']['class'] += 1
                     continue
                 provider = entry.getMatrix()
                 if provider is None:
+                    result['entryAudit']['matrix'] += 1
                     continue
                 x, z = self._matrix_position(provider)
                 point = coordinates(x, z, bounds)
                 if point is None:
+                    result['entryAudit']['bounds'] += 1
                     continue
                 enemy = entry.isEnemy()
                 side = 'enemy' if enemy else 'platoon' if arena_dp.isSquadMan(vID=vehicle_id) else 'ally'
@@ -85,6 +90,7 @@ class NativeMinimapAdapter(object):
                                           'name': name, 'x': point[0], 'y': point[1]})
             except Exception:
                 # One expired native entry must not invalidate other entries.
+                result['entryAudit']['errors'] += 1
                 continue
         return result
 

@@ -129,6 +129,7 @@
             line('Fonte nativa: ' + (data.reason || 'indisponível'), 'dk-probe-pending');
         }
         line('Um aliado para calibração; sem inimigos ou Lost Contact.');
+        line('Ponto A: ' + (data.allyStatus || 'a aguardar'));
         calibration(data.calibration);
         alignNativeArea(data.calibration, data.alliedPoint);
         line('Calibração: NO/NE/SO/SE nos cantos; + no centro nativo.');

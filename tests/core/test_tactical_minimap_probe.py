@@ -87,6 +87,9 @@ class ProbeTests(RuntimeTest):
         self.assertNotIn('alliedPoint', self.policy.payload(True, True, self.snapshot))
         data = self.policy.payload(True, True, self.snapshot, calibration=geometry)
         self.assertEqual(data['alliedPoint'], {'x': .25, 'y': .5})
+        self.assertEqual(data['allyStatus'], 'ready')
+        self.assertEqual(self.policy.payload(True, False, self.snapshot)['allyStatus'], 'waiting-handshake')
+        self.assertEqual(self.policy.payload(True, True, self.snapshot)['allyStatus'], 'waiting-geometry')
         self.assertNotIn('secret-marker', json.dumps(data))
         for changes in ({'side': 'enemy'}, {'visible': False}, {'state': 'lost'},
                         {'x': float('nan')}, {'y': 1.1}):

@@ -28,6 +28,8 @@ class ProbeBridge(object):
         self._adapter = None
         self._geometry_source = None
         self._calibration = None
+        self._ally_log_state = None
+        self._ally_log_count = 0
 
     def enabled(self):
         if self.disposed:
@@ -60,6 +62,8 @@ class ProbeBridge(object):
             return
         from Driftkings.core.hud_visibility import hudVisibility
         self.generation += 1
+        self._ally_log_state = None
+        self._ally_log_count = 0
         for view in self.views:
             view._acknowledged = False
             view._graphicsResult = None
@@ -137,8 +141,15 @@ class ProbeBridge(object):
                     LOG.exception('Native diagnostic adapter unavailable; Vanilla unchanged')
         for view in ready_views:
             try:
-                self._publish(view, payload(enabled and view._guiVisible, view._acknowledged, snapshot, self.generation,
-                                            getattr(view, '_graphicsResult', None), self._calibration))
+                data = payload(enabled and view._guiVisible, view._acknowledged, snapshot, self.generation,
+                               getattr(view, '_graphicsResult', None), self._calibration)
+                state = (data['allyStatus'], data['reason'])
+                if enabled and state != self._ally_log_state and self._ally_log_count < 8:
+                    self._ally_log_state = state
+                    self._ally_log_count += 1
+                    LOG.info('Allied calibration: status=%s native=%s entries=%d audit=%s',
+                             state[0], state[1], data['markerCount'], (snapshot or {}).get('entryAudit', {}))
+                self._publish(view, data)
             except Exception:
                 LOG.exception('Cannot publish minimap diagnostic; Vanilla unchanged')
 

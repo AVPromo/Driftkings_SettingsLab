@@ -11,8 +11,9 @@ def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, c
     data = {'enabled': bool(enabled), 'protocol': PROTOCOL, 'generation': generation, 'effectiveMode': 'vanilla',
             'acknowledged': bool(acknowledged), 'nativePresentationChanged': False,
             'available': False, 'partial': True, 'markerCount': 0,
-            'reason': 'waiting-native', 'lostContactAvailable': False}
+            'reason': 'waiting-native', 'lostContactAvailable': False, 'allyStatus': 'waiting-native'}
     if not enabled:
+        data['allyStatus'] = 'disabled'
         data['reason'] = 'disabled'
         return data
     if calibration is not None:
@@ -37,10 +38,14 @@ def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, c
     except (KeyError, ValueError, TypeError, OverflowError):
         data['reason'] = 'invalid-native-metadata'
         return data
+    data['allyStatus'] = ('waiting-handshake' if not acknowledged else
+                          'waiting-geometry' if not data.get('calibration', {}).get('available') else
+                          'no-current-ally')
     if acknowledged and data.get('calibration', {}).get('available') is True:
         point = allied_calibration_point(snapshot.get('markers', []))
         if point is not None:
             data['alliedPoint'] = point
+            data['allyStatus'] = 'ready'
     uri = texture_uri(texture)
     if uri is not None:
         data['textureUri'] = uri
