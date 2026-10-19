@@ -48,6 +48,11 @@ def validate_types(defaults, values, path=''):
 
 def migrate_values(component, values):
     """Normalize legacy representation before validating against current defaults."""
+    if component == 'third_person_zoom':
+        from Driftkings.core.camera_settings import migrate
+        values = migrate(values)
+    elif component == 'sniper_camera':
+        values.pop('dynamicZoom', None)
     if component == 'hangar_marks_of_excellence':
         card = values.get('card')
         if isinstance(card, dict):

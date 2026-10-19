@@ -2,10 +2,6 @@
   "disableCamAfterShot": false,
   "disableCamAfterShotLatency": 1,
   "disableCamAfterShotSkipClip": true,
-  "dynamicZoom": {
-    "enabled": false,
-    "stepsOnly": false
-  },
   "enabled": true,
   "noBinoculars": true,
   "noFlashBang": true,

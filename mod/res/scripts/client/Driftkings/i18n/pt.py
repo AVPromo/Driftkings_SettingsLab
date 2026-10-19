@@ -66,7 +66,13 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                                                   "src='img://gui/AimingAngles/4/Bottom.png'>\t<img "
                                                   "src='img://gui/AimingAngles/5/Bottom.png'>\t<img "
                                                   "src='img://gui/AimingAngles/6/Bottom.png'>"},
- 'third_person_zoom': {'UI_description': 'Zoom da câmara exterior',
+ 'third_person_zoom': {
+                      'UI_camera_arcade': 'Arcade',
+                      'UI_camera_postmortem': 'Pós-destruição',
+                      'UI_camera_strategic': 'Artilharia estratégica',
+                      'UI_camera_arty': 'Artilharia alternativa',
+                      'UI_camera_native': 'Usar valores nativos do cliente',
+'UI_description': 'Zoom da câmara exterior',
  'UI_setting_max_text': 'Diminuir o zoom máximo',
  'UI_setting_max_tooltip': 'Distância máxima da câmara do veículo',
  'UI_setting_min_text': 'Diminuir zoom mínimo',

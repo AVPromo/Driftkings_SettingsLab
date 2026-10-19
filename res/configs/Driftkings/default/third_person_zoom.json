@@ -1,7 +1,27 @@
 {
   "enabled": true,
-  "max": 400,
-  "min": 10,
-  "scrollSensitivity": 11,
-  "startDeadDist": 60
+  "arcade": {
+    "min": 10,
+    "max": 400,
+    "scrollSensitivity": 11,
+    "startDist": 60
+  },
+  "postmortem": {
+    "min": 10,
+    "max": 400,
+    "scrollSensitivity": 11,
+    "startDist": 60
+  },
+  "strategic": {
+    "useClientDefaults": true,
+    "min": 40,
+    "max": 120,
+    "scrollSensitivity": 5
+  },
+  "arty": {
+    "useClientDefaults": true,
+    "min": 40,
+    "max": 120,
+    "scrollSensitivity": 5
+  }
 }

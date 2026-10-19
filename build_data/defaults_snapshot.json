@@ -16,7 +16,7 @@
     {
       "path": "default/third_person_zoom.json",
       "source_sha256": "3d44b8311a6f1ae900c385038f7968abb0d4a0c8089e891d9a8ecaebe433ac33",
-      "sha256": "36cb5c0e811d51dff3fc9b8bbdca6e9f0d8de2c705fc2cc1f3f44eaa96d412b6"
+      "sha256": "ff180c0e0cdba8b7a76d188d1a55eda60833cab208fb55577c2a8dd80da5d465"
     },
     {
       "path": "default/penetration_indicator.json",
@@ -231,7 +231,7 @@
     {
       "path": "default/sniper_camera.json",
       "source_sha256": "15dceed77850de5eecf0f5e378fc8033fd6f083d98048e6aedb056bcf56c9cf6",
-      "sha256": "c1bd04dac8d2dbaa21f5a6ada5c225a1e936b57770947a50659b4f565a3ff1d1"
+      "sha256": "e42ceac15e96ed8906f13b0120fb5cb99045a76b1c1e8349c98392df41c916ce"
     }
   ],
   "transformations": [
