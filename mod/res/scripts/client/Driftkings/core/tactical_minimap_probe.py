@@ -11,6 +11,53 @@ OBJECTIVE_SYMBOLS = {'AllyTeamBaseEntry': 'allyBase', 'EnemyTeamBaseEntry': 'ene
                      'ControlPointEntry': 'controlPoint'}
 
 
+def presentation_response(value):
+    """Bounded structural metadata, never a capability to hide native UI."""
+    unavailable = {'available': False, 'reason': 'invalid-presentation-audit'}
+    if not isinstance(value, (str, type(u''))) or len(value) > 8192:
+        return unavailable
+    try:
+        rows = value.split(';')
+        header = rows[0].split('|')
+        if len(header) != 10 or header[0] != '1':
+            return unavailable
+        def bit(text):
+            if text not in ('0', '1'):
+                raise ValueError('Invalid structural flag')
+            return text == '1'
+        def integer(text, maximum):
+            if not re.match(r'^[0-9]{1,5}\Z', text):
+                raise ValueError('Invalid structural count')
+            number = int(text)
+            if number > maximum:
+                raise ValueError('Structural count outside bound')
+            return number
+        def alpha(text):
+            number = finite(text)
+            if not 0 <= number <= 1:
+                raise ValueError('Invalid structural alpha')
+            return number
+        count = integer(header[5], 32)
+        if len(rows) != count + 1:
+            return unavailable
+        result = dict(available=True, visible=bit(header[1]), alpha=alpha(header[2]),
+                      mouseEnabled=bit(header[3]), mouseChildren=bit(header[4]),
+                      childCount=count, background=bit(header[6]), entries=bit(header[7]),
+                      hitArea=bit(header[8]), coupledInput=bit(header[9]), children=[])
+        for row in rows[1:]:
+            fields = row.split('|')
+            if len(fields) != 8 or not re.match(r'^[A-Za-z0-9_:.-]{1,64}\Z', fields[0]) or not re.match(r'^[A-Za-z0-9_:.-]{1,128}\Z', fields[1]):
+                return unavailable
+            result['children'].append(dict(name=fields[0], className=fields[1],
+                visible=bit(fields[2]), alpha=alpha(fields[3]), childCount=integer(fields[4], 65535),
+                roles=integer(fields[5], 7), mouseEnabled=bit(fields[6]), mouseChildren=bit(fields[7])))
+        # Structural separation is evidence for an audit, never parity/readiness.
+        result['replacementAllowed'] = False
+        return result
+    except (ValueError, TypeError, OverflowError):
+        return unavailable
+
+
 def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, calibration=None):
     data = {'enabled': bool(enabled), 'protocol': PROTOCOL, 'generation': generation, 'effectiveMode': 'vanilla',
             'acknowledged': bool(acknowledged), 'nativePresentationChanged': False,

@@ -96,6 +96,39 @@ class ProbeTests(RuntimeTest):
         self.assertGreater(records['tactical_minimap.skipped']['count'], 0)
         self.assertNotIn('tactical_minimap.published', records)
 
+    def test_presentation_audit_is_bounded_read_only_and_never_grants_replacement(self):
+        read = self.policy.presentation_response
+        wire = '1|1|0.9|1|1|1|1|1|1|0;entries|flash.display::Sprite|1|1|12|2|0|1'
+        result = read(wire)
+        self.assertTrue(result['available'])
+        self.assertFalse(result['replacementAllowed'])
+        self.assertFalse(result['coupledInput'])
+        self.assertEqual(result['children'][0]['roles'], 2)
+        self.assertEqual(result['children'][0]['className'], 'flash.display::Sprite')
+        for value in (None, [], 'x' * 8193, '0|unavailable',
+                      wire.replace('0.9', 'NaN'), wire.replace('|12|', '|65536|'),
+                      wire.replace('|12|2|', '|12|8|'), wire.replace('entries|', 'bad name|'),
+                      wire.replace('|1|1|1|0;', '|1|1|true|0;'), wire + ';extra'):
+            self.assertFalse(read(value)['available'])
+        self.settings['tacticalDiagnostics'] = True
+        calls = []
+        self.component.flashObject.as_DriftkingsPresentationAudit = lambda: calls.append(True) or wire
+        self.bridge.bind_native(self.component)
+        self.bridge._read_geometry()
+        self.bridge._read_geometry()
+        self.assertEqual(calls, [True])
+        self.assertFalse(self.bridge._presentation_audit['replacementAllowed'])
+        # Rebind audits the new owner; no audit is repeated every 250ms.
+        self.bridge.bind_native(self.component)
+        self.assertEqual(calls, [True, True])
+
+    def test_missing_presentation_audit_does_not_invalidate_native_geometry(self):
+        self.settings['tacticalDiagnostics'] = True
+        self.bridge.bind_native(self.component)
+        self.assertTrue(self.bridge._calibration['available'])
+        self.assertFalse(self.bridge._presentation_audit['available'])
+        self.assertEqual(self.bridge._presentation_audit['reason'], 'presentation-method-unavailable')
+
     def test_preferences_publish_separately_without_enabling_replacement(self):
         self.settings.update(tacticalDiagnostics=True, minimapMode='driftkings',
                              tactical={'theme': 'military', 'size': 400})

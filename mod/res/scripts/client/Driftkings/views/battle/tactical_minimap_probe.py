@@ -7,7 +7,7 @@ from Driftkings.core.diagnostics import Diagnostics
 
 from Driftkings.core.tactical_minimap import preferences, selection
 
-from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits, strategic_area_response, native_click_sample, gameface_click_sample, input_request
+from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits, strategic_area_response, native_click_sample, gameface_click_sample, input_request, presentation_response
 from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points, native_camera_line, native_yaw_lines, native_strategic_point, forward_native_position_input
 from Driftkings.views.hangar.common import publish_card
 
@@ -40,6 +40,7 @@ class ProbeBridge(object):
         self._native = None
         self._adapter = None
         self._calibration = None
+        self._presentation_audit = None
         self._ally_log_state = None
         self._ally_log_count = 0
         self._ping_log_state = None
@@ -63,6 +64,7 @@ class ProbeBridge(object):
             self._adapter = None
 
     def bind_native(self, component):
+        self._presentation_audit = None
         self._last_input = None
         self._close_adapter()
         self._native_failed = False
@@ -148,6 +150,7 @@ class ProbeBridge(object):
             data = component.flashObject.as_DriftkingsMinimapGeometry()
             self._calibration = geometry_response(data)
             if self._calibration.get('available'):
+                self._audit_presentation(component)
                 try:
                     own = native_player_point(component, self._personal_entries.get(component))
                     if own is not None:
@@ -164,6 +167,25 @@ class ProbeBridge(object):
                     LOG.debug('Personal minimap matrix unavailable', exc_info=True)
         except Exception:
             self._calibration = {'available': False, 'reason': 'native-geometry-unavailable'}
+
+    def _audit_presentation(self, component):
+        if self._presentation_audit is not None:
+            return
+        try:
+            result = presentation_response(component.flashObject.as_DriftkingsPresentationAudit())
+        except Exception:
+            result = {'available': False, 'reason': 'presentation-method-unavailable'}
+        self._presentation_audit = result
+        if result.get('available'):
+            LOG.info('Native presentation audit: children=%d background=%s entries=%s hitArea=%s coupledInput=%s visible=%s alpha=%s; read-only, replacement blocked',
+                     result['childCount'], result['background'], result['entries'], result['hitArea'],
+                     result['coupledInput'], result['visible'], result['alpha'])
+            for child in result['children']:
+                LOG.info('Native presentation branch: name=%s class=%s roles=%d visible=%s alpha=%s children=%d mouse=%s/%s',
+                         child['name'], child['className'], child['roles'], child['visible'], child['alpha'],
+                         child['childCount'], child['mouseEnabled'], child['mouseChildren'])
+        else:
+            LOG.info('Native presentation audit unavailable: %s; Vanilla unchanged', result['reason'])
 
     def observe_native_click(self, component, x, y, button, size_index):
         if (not self.active or not self.enabled() or not self.hudVisible or

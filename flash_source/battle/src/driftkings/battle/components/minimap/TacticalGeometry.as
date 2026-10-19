@@ -6,12 +6,53 @@ package driftkings.battle.components.minimap
     import net.wg.gui.battle.views.minimap.components.entries.personal.SimpleAttentionToFlashMinimapEntry;
     import net.wg.gui.battle.views.minimap.components.entries.personal.StrategicCameraMinimapEntry;
     import flash.geom.Point;
+    import flash.display.InteractiveObject;
+    import flash.utils.getQualifiedClassName;
     import flash.geom.Rectangle;
     import net.wg.gui.battle.views.minimap.BaseMinimap;
 
     // Read-only geometry on the actual native component, independent of our view.
     public class TacticalGeometry
     {
+        // Structural audit only: never change visibility, alpha, input or parents.
+        public static function presentationAudit(minimap:BaseMinimap):String
+        {
+            if (!minimap || !minimap.stage || minimap.numChildren > 32) return "0|unavailable";
+            var source:Object = minimap;
+            var background:DisplayObject = source.hasOwnProperty("background") ? source["background"] as DisplayObject : null;
+            var entries:DisplayObjectContainer = source.hasOwnProperty("entriesContainer") ? source["entriesContainer"] as DisplayObjectContainer : null;
+            var hit:DisplayObject = source.hasOwnProperty("mapHit") ? source["mapHit"] as DisplayObject : null;
+            var coupled:Boolean = !background || !entries || !hit || background == hit || entries == hit;
+            if (entries && hit && entries.contains(hit)) coupled = true;
+            var backdrop:DisplayObjectContainer = background as DisplayObjectContainer;
+            if (backdrop && hit && backdrop.contains(hit)) coupled = true;
+            var header:Array = ["1", minimap.visible ? 1 : 0, minimap.alpha,
+                minimap.mouseEnabled ? 1 : 0, minimap.mouseChildren ? 1 : 0,
+                minimap.numChildren, background ? 1 : 0, entries ? 1 : 0, hit ? 1 : 0, coupled ? 1 : 0];
+            var rows:Array = [header.join("|")];
+            for (var i:int = 0; i < minimap.numChildren; ++i)
+            {
+                var child:DisplayObject = minimap.getChildAt(i);
+                var branch:DisplayObjectContainer = child as DisplayObjectContainer;
+                var input:InteractiveObject = child as InteractiveObject;
+                var roles:int = 0;
+                if (background && (child == background || branch && branch.contains(background))) roles |= 1;
+                if (entries && (child == entries || branch && branch.contains(entries))) roles |= 2;
+                if (hit && (child == hit || branch && branch.contains(hit))) roles |= 4;
+                rows.push([clean(child.name, 64), clean(getQualifiedClassName(child), 128),
+                    child.visible ? 1 : 0, child.alpha, branch ? branch.numChildren : 0,
+                    roles, input && input.mouseEnabled ? 1 : 0,
+                    branch && branch.mouseChildren ? 1 : 0].join("|"));
+            }
+            return rows.join(";");
+        }
+
+        private static function clean(value:String, maximum:int):String
+        {
+            var safe:String = value.replace(/[^A-Za-z0-9_:.\-]/g, "_").substr(0, maximum);
+            return safe.length ? safe : "unnamed";
+        }
+
         public static function strategicArea(minimap:BaseMinimap):String
         {
             var area:Object = capture(minimap);

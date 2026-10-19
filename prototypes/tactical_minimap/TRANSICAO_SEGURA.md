@@ -10,6 +10,16 @@ Não usar simplesmente `as_setVisibleS(false)` ou alpha zero no componente compl
 
 A primeira entrega desta fase deve, por isso, auditar a árvore e as superfícies gráficas do Flash real, identificar quais podem ser ocultadas e guardar os valores exatos a restaurar. A alteração só pode ser aplicada ao componente proprietário dessa batalha, nunca globalmente aos outros mapas ou às preferências do jogo. Se a superfície não puder ser separada com segurança, a substituição permanece indisponível.
 
+## Sondagem estrutural implementada
+
+O método Flash `as_DriftkingsPresentationAudit`, registado em BaseMinimap pela biblioteca compilada, lê apenas metadados. Identifica `background`, `entriesContainer` e `mapHit` por referência, assinala se a área de input está contida nas superfícies gráficas e enumera até 32 ramos diretos. Não chama setters, não move objetos nem muda alpha, visible, mouseEnabled ou mouseChildren. A geometria continua pela via existente.
+
+O parser Python valida comprimento, contagens, flags, alfa e nomes/classes antes de registar no log. O resultado nunca permite a substituição (`replacementAllowed=false`), mesmo quando há separação estrutural. Uma superfície separada na árvore não prova que ocultá-la preserve o desenho C++/Flash ou todas as interações. Métodos ausentes ou respostas inválidas não impedem o diagnóstico normal do mapa.
+
+A leitura é feita uma vez quando a geometria fica disponível, por ligação ao componente; não acrescenta timer ou hook. O log contém `Native presentation audit` e `Native presentation branch`. Roles é uma máscara: 1=fundo, 2=entradas, 4=área de input; um ramo com 3 ou 6 contém mais de uma destas funções. Só guarda nomes/classes de superfícies da interface, sem IDs ou posições de veículos.
+
+Para recolher: instalar o pacote recompilado, reiniciar o jogo, entrar numa missão Topography e voltar ao hangar. Consultar o log e comparar com a árvore auditada do SRC/SWF. A confirmação seguinte é estrutural; não se espera mudança visual nesta entrega. A ocultação e a recuperação independente continuam por implementar.
+
 ## Condições para assumir a apresentação
 
 - Escolha Driftkings guardada antes do início da batalha, sem troca durante combate nesta primeira versão.
