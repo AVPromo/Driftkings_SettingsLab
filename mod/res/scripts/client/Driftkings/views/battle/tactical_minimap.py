@@ -11,12 +11,13 @@ from Driftkings.core.tactical_minimap import CLASSES, coordinates, finite
 
 
 class NativeMinimapAdapter(object):
-    def __init__(self, component, session, matrix_position, aoi_location, native_size, plugin_type=None, cell_name=None):
+    def __init__(self, component, session, matrix_position, aoi_location, native_size, plugin_type=None, cell_name=None, far_location=2):
         # Native component lifecycle remains owned by Scaleform. Never retain it.
         self._component = weakref.ref(component)
         self._session = weakref.ref(session)
         self._matrix_position = matrix_position
         self._aoi_location = aoi_location
+        self._far_location = far_location
         self._native_size = tuple(native_size)
         self._plugin_type = plugin_type
         self._cell_name = cell_name
@@ -60,15 +61,20 @@ class NativeMinimapAdapter(object):
             return result
         result.update(available=True, bounds=bounds, texture=texture,
                       nativeSize=self._native_size, partial=True,
-                      limitations=['aoi-alive-vehicles-only', 'no-player-camera-entry',
+                      limitations=['alive-published-allies-and-aoi-enemies', 'personal-player-separate',
                                    'no-pings-zones-or-ranges', 'no-orientation'],
                       entryAudit={'total': len(entries), 'unpublished': 0, 'class': 0, 'matrix': 0, 'bounds': 0, 'errors': 0})
         for vehicle_id, entry in entries:
             try:
-                # Check native publication state BEFORE accessing any matrix.
-                # AOI_TO_FAR is a transitional copied position; never publish it.
-                if (not entry.isActive() or not entry.isAlive() or not entry.isInAoI() or
-                        entry.getLocation() != self._aoi_location):
+                # FAR is accepted only for allies still published by the native
+                # minimap. Never access a matrix for an enemy outside AoI.
+                if not entry.isActive() or not entry.isAlive():
+                    result['entryAudit']['unpublished'] += 1
+                    continue
+                enemy, location = entry.isEnemy(), entry.getLocation()
+                allowed = (entry.isInAoI() and location == self._aoi_location or
+                           not enemy and location == self._far_location)
+                if not allowed:
                     result['entryAudit']['unpublished'] += 1
                     continue
                 vehicle_class = entry.getClassTag()
@@ -84,7 +90,6 @@ class NativeMinimapAdapter(object):
                 if point is None:
                     result['entryAudit']['bounds'] += 1
                     continue
-                enemy = entry.isEnemy()
                 side = ('enemy' if enemy else 'player' if player_id is not None and vehicle_id == player_id else
                         'platoon' if arena_dp.isSquadMan(vID=vehicle_id) else 'ally')
                 info = arena_dp.getVehicleInfo(vehicle_id)
@@ -129,7 +134,7 @@ def native_adapter(component, session):
     def cell_name(x, z, bounds):
         return getCellName(getCellIdFromPosition(Math.Vector3(x, 0, z), bounds, 10), 10)
 
-    return NativeMinimapAdapter(component, session, position, VEHICLE_LOCATION.AOI, MINIMAP_SIZE, type(plugin), cell_name)
+    return NativeMinimapAdapter(component, session, position, VEHICLE_LOCATION.AOI, MINIMAP_SIZE, type(plugin), cell_name, VEHICLE_LOCATION.FAR)
 
 
 def owns_player_marker(component):
@@ -148,3 +153,24 @@ def owns_player_marker(component):
                     info.isAlive() and not info.isObserver())
     except Exception:
         return False
+
+
+def native_player_point(component, record):
+    """Read the current native personal matrix, never Flash screen coordinates."""
+    if not record or not record.get('active') or not owns_player_marker(component):
+        return None
+    personal = component.getPlugin('personal')
+    if personal._getViewPointID() != record.get('id') or record.get('matrix') is None:
+        return None
+    import Math
+    from math import degrees
+    from gui.battle_control.minimap_utils import getCellIdFromPosition, getCellName
+    matrix = Math.Matrix(record['matrix'])
+    position = matrix.translation
+    lower, upper = component.getBoundingBox()
+    point = coordinates(position.x, position.z, (lower[0], lower[1], upper[0], upper[1]))
+    if point is None:
+        return None
+    yaw = finite(matrix.yaw)
+    return {'x': point[0], 'y': point[1], 'heading': degrees(yaw) % 360, 'side': 'player',
+            'cell': getCellName(getCellIdFromPosition(position, (lower, upper), 10), 10)}

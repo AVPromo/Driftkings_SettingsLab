@@ -4,7 +4,7 @@ import logging
 import weakref
 
 from Driftkings.core.tactical_minimap_probe import accepts_ack, geometry_response, graphics_result, payload
-from Driftkings.views.battle.tactical_minimap import native_adapter, owns_player_marker
+from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point
 from Driftkings.views.hangar.common import publish_card
 
 LOG = logging.getLogger('Driftkings.TacticalMinimapProbe')
@@ -20,6 +20,7 @@ class ProbeBridge(object):
         self._schedule, self._cancel = schedule, cancel
         self._geometry_callback = None
         self.views = weakref.WeakSet()
+        self._personal_entries = weakref.WeakKeyDictionary()
         self.active = False
         self.generation = 0
         self._native_failed = False
@@ -57,6 +58,7 @@ class ProbeBridge(object):
         if self._native is not None and self._native() is component:
             self._close_adapter()
             self._native = None
+            self._personal_entries.pop(component, None)
             self._calibration = None
             self.refresh()
 
@@ -88,6 +90,7 @@ class ProbeBridge(object):
         hudVisibility.detach(self)
         self._close_adapter()
         self._native = None
+        self._personal_entries.clear()
         self._calibration = None
         self.refresh()
 
@@ -97,8 +100,15 @@ class ProbeBridge(object):
         if component is None or not self.enabled():
             return
         try:
-            data = component.flashObject.as_DriftkingsMinimapGeometry(owns_player_marker(component))
+            data = component.flashObject.as_DriftkingsMinimapGeometry()
             self._calibration = geometry_response(data)
+            if self._calibration.get('available'):
+                try:
+                    own = native_player_point(component, self._personal_entries.get(component))
+                    if own is not None:
+                        self._calibration['player'] = own
+                except Exception:
+                    LOG.debug('Personal minimap matrix unavailable', exc_info=True)
         except Exception:
             self._calibration = {'available': False, 'reason': 'native-geometry-unavailable'}
 
@@ -261,6 +271,37 @@ class ProbeBridge(object):
             except Exception:
                 LOG.exception('Cannot attach diagnostic child; native HUD unchanged')
                 return native
+
+        @override(MinimapComponent, 'addEntry')
+        def add_entry(original, component, symbol, container, matrix=None, active=False, *args, **kwargs):
+            entry_id = original(component, symbol, container, matrix, active, *args, **kwargs)
+            if bridge.enabled() and symbol == 'ViewPointEntry' and container == 'personal' and entry_id:
+                bridge._personal_entries[component] = {'id': entry_id, 'matrix': matrix, 'active': bool(active)}
+            return entry_id
+
+        @override(MinimapComponent, 'setMatrix')
+        def set_matrix(original, component, entry_id, matrix):
+            result = original(component, entry_id, matrix)
+            record = bridge._personal_entries.get(component)
+            if record is not None and record['id'] == entry_id:
+                record['matrix'] = matrix
+            return result
+
+        @override(MinimapComponent, 'setActive')
+        def set_active(original, component, entry_id, active):
+            result = original(component, entry_id, active)
+            record = bridge._personal_entries.get(component)
+            if record is not None and record['id'] == entry_id:
+                record['active'] = bool(active)
+            return result
+
+        @override(MinimapComponent, 'delEntry')
+        def del_entry(original, component, entry_id):
+            result = original(component, entry_id)
+            record = bridge._personal_entries.get(component)
+            if record is not None and record['id'] == entry_id:
+                bridge._personal_entries.pop(component, None)
+            return result
 
         @override(MinimapComponent, '_populate')
         def populate(original, component, *args, **kwargs):

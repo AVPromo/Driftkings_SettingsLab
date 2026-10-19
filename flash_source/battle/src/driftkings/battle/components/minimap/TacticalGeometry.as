@@ -1,8 +1,5 @@
 package driftkings.battle.components.minimap
 {
-    import flash.display.DisplayObject;
-    import flash.display.DisplayObjectContainer;
-    import net.wg.gui.battle.views.minimap.components.entries.personal.ViewPointMinimapEntry;
     import flash.geom.Point;
     import flash.geom.Rectangle;
     import net.wg.gui.battle.views.minimap.BaseMinimap;
@@ -10,33 +7,6 @@ package driftkings.battle.components.minimap
     // Read-only geometry on the actual native component, independent of our view.
     public class TacticalGeometry
     {
-        public static function player(minimap:BaseMinimap, area:Object):Object
-        {
-            var pending:Array = [minimap], budget:int = 4000;
-            while (pending.length && --budget > 0)
-            {
-                var item:DisplayObject = pending.pop() as DisplayObject;
-                if (!item || !item.visible || item.alpha <= 0) continue;
-                var point:ViewPointMinimapEntry = item as ViewPointMinimapEntry;
-                if (point && point.arrowPlaceholder && point.arrowPlaceholder.visible && point.arrowPlaceholder.alpha > 0)
-                {
-                    var arrow:DisplayObject = point.arrowPlaceholder;
-                    var center:Point = arrow.localToGlobal(new Point(0, 0));
-                    var forward:Point = arrow.localToGlobal(new Point(0, -1));
-                    var x:Number = (center.x - area.x) / area.width;
-                    var y:Number = (center.y - area.y) / area.height;
-                    var dx:Number = (forward.x - center.x) / area.width;
-                    var dy:Number = (forward.y - center.y) / area.height;
-                    if (x >= 0 && x <= 1 && y >= 0 && y <= 1 && (dx != 0 || dy != 0))
-                        return {x:x, y:y, heading:(Math.atan2(dx, -dy) * 180 / Math.PI + 360) % 360};
-                    return null;
-                }
-                var container:DisplayObjectContainer = item as DisplayObjectContainer;
-                if (container) for (var i:int = 0; i < container.numChildren; ++i) pending.push(container.getChildAt(i));
-            }
-            return null;
-        }
-
         public static function capture(minimap:BaseMinimap):Object
         {
             var data:Object = {available:false, reason:"minimap-unavailable"};

@@ -153,16 +153,11 @@ def geometry_response(value):
     parts = value.split('|')
     if len(parts) == 2 and parts[0] == '0':
         return calibration_result({'available': False, 'reason': parts[1]})
-    if len(parts) not in (7, 10) or parts[0] != '1':
+    if len(parts) != 7 or parts[0] != '1':
         return calibration_result(None)
     data = dict(zip(('x', 'y', 'width', 'height', 'stageWidth', 'stageHeight'), parts[1:]))
     data['available'] = True
-    result = calibration_result(data)
-    if result.get('available') and len(parts) == 10:
-        own = player_point(dict(zip(('x', 'y', 'heading'), parts[7:])))
-        if own is not None:
-            result['player'] = own
-    return result
+    return calibration_result(data)
 
 
 def allied_calibration_points(markers):
@@ -186,4 +181,8 @@ def player_point(value):
         return None
     if not (0 <= x <= 1 and 0 <= y <= 1 and 0 <= heading < 360):
         return None
-    return {'x': x, 'y': y, 'heading': heading, 'side': 'player'}
+    result = {'x': x, 'y': y, 'heading': heading, 'side': 'player'}
+    cell = value.get('cell')
+    if isinstance(cell, (str, type(u''))) and re.match(r'^[A-HJK][1-90]\Z', cell):
+        result['cell'] = cell
+    return result

@@ -34,7 +34,7 @@ class ProbeTests(RuntimeTest):
         self.scheduled, self.cancelled = [], []
         self.api = source('views/battle/tactical_minimap_probe.py', {
             'Driftkings.core.tactical_minimap_probe': self.policy,
-            'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory, owns_player_marker=lambda component: False),
+            'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory, native_player_point=lambda component, record: None),
             'Driftkings.views.hangar.common': module(publish_card=publish),
             'Driftkings.core.hud_visibility': module(hudVisibility=hud)})
         self.bridge = self.api['ProbeBridge'](object(), lambda config: self.settings,
@@ -173,19 +173,40 @@ class ProbeTests(RuntimeTest):
         self.assertEqual(self.policy.allied_calibration_points([dict(marker, visible=False)]), [])
 
     def test_personal_player_protocol_is_validated_and_replaces_duplicate(self):
-        geometry = self.policy.geometry_response('1|0|0|200|200|1000|800|0.25|0.75|90')
+        geometry = self.policy.geometry_response('1|0|0|200|200|1000|800')
+        geometry['player'] = self.policy.player_point({'x': .25, 'y': .75, 'heading': 90})
         self.assertEqual(geometry['player'], {'x': .25, 'y': .75, 'heading': 90, 'side': 'player'})
         self.snapshot['markers'] = [dict(side='player', visible=True, state='visible',
                                         vehicleClass='mediumTank', x=.2, y=.7)]
         data = self.policy.payload(True, True, self.snapshot, calibration=geometry)
         self.assertEqual(data['alliedPoints'], [geometry['player']])
-        for suffix in ('nan|.5|90', '.5|.5|360', '2|.5|90'):
-            result = self.policy.geometry_response('1|0|0|200|200|1000|800|' + suffix)
-            self.assertTrue(result['available'])
-            self.assertNotIn('player', result)
+        for value in ({'x': float('nan'), 'y': .5, 'heading': 90},
+                      {'x': .5, 'y': .5, 'heading': 360}, {'x': 2, 'y': .5, 'heading': 90}):
+            self.assertIsNone(self.policy.player_point(value))
         geometry = self.policy.geometry_response('1|0|0|200|200|1000|800')
         self.snapshot['markers'] = []
         self.assertEqual(self.policy.payload(True, True, self.snapshot, calibration=geometry)['alliedPoints'], [])
+
+    def test_personal_publication_tracks_matrix_active_and_delete_without_history(self):
+        self.settings['tacticalDiagnostics'] = True
+        bridge, hooks, events = self.install_runtime_stubs()
+        bridge.install()
+        component, matrix = Owner(), object()
+        calls = []
+        def add(original_component, symbol, container, provider, active, *args, **kwargs):
+            calls.append((symbol, container, provider, active))
+            return 123
+        self.assertEqual(hooks['addEntry'](add, component, 'ViewPointEntry', 'personal', matrix, True), 123)
+        self.assertEqual(bridge._personal_entries[component], {'id': 123, 'matrix': matrix, 'active': True})
+        replacement = object()
+        self.assertEqual(hooks['setMatrix'](lambda *args: 'native', component, 123, replacement), 'native')
+        self.assertIs(bridge._personal_entries[component]['matrix'], replacement)
+        hooks['setActive'](lambda *args: None, component, 123, False)
+        self.assertFalse(bridge._personal_entries[component]['active'])
+        hooks['delEntry'](lambda *args: None, component, 123)
+        self.assertNotIn(component, bridge._personal_entries)
+        hooks['addEntry'](add, component, 'VehicleEntry', 'aliveVehicles', matrix, True)
+        self.assertNotIn(component, bridge._personal_entries)
 
     def test_default_off_creates_no_adapter_and_starts_no_diagnostic(self):
         self.bridge.bind_native(self.component)
@@ -325,7 +346,7 @@ class ProbeTests(RuntimeTest):
         self.resource_id = 123
         dependencies = {
             'Driftkings.core.tactical_minimap_probe': self.policy,
-            'Driftkings.views.battle.tactical_minimap': module(native_adapter=lambda *args: None, owns_player_marker=lambda component: False),
+            'Driftkings.views.battle.tactical_minimap': module(native_adapter=lambda *args: None, native_player_point=lambda component, record: None),
             'Driftkings.views.hangar.common': module(publish_card=lambda *args: None),
             'frameworks.wulf': module(ViewModel=BaseModel),
             'gui.impl.pub.view_component': module(ViewComponent=BaseView),
@@ -352,7 +373,7 @@ class ProbeTests(RuntimeTest):
         bridge, hooks, events = self.install_runtime_stubs()
         bridge.install()
         bridge.install()
-        self.assertEqual(len(hooks), 3)
+        self.assertEqual(len(hooks), 7)
         self.assertEqual(len(events), 4)
         native = {7: object()}
         children = hooks['_getChildComponents'](lambda parent: native, Owner())

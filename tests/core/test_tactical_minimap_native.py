@@ -77,6 +77,46 @@ class NativeAdapterTests(RuntimeTest):
         personal._ctrlVehicleID = 3
         self.assertFalse(self.api['owns_player_marker'](self.component))
 
+    def test_published_far_allies_remain_but_far_enemies_never_read_matrices(self):
+        self.plugin._entries = {1: self.entry(enemy=False, aoi=False, location=2)}
+        self.assertEqual(len(self.adapter.capture()['markers']), 1)
+        self.plugin._entries[1] = self.entry(enemy=True, aoi=False, location=2)
+        self.reads[:] = []
+        self.assertEqual(self.adapter.capture()['markers'], [])
+        self.assertEqual(self.reads, [])
+
+    def test_personal_matrix_uses_world_bounds_and_yaw_not_flash_pixels(self):
+        from math import pi
+        Personal = type('Personal', (object,), {
+            '__module__': 'gui.Scaleform.daapi.view.battle.shared.minimap.plugins'})
+        personal = Personal()
+        personal._ctrlVehicleID = 2
+        personal._getPlayerVehicleID = lambda: 2
+        personal._getViewPointID = lambda: 99
+        self.dp.getPlayerVehicleID = lambda: 2
+        self.dp.getVehicleInfo = lambda vehicle_id: Owner(isAlive=lambda: True, isObserver=lambda: False)
+        self.component.sessionProvider = self.session
+        self.component.getPlugin = lambda name: personal
+        providers = []
+        def matrix(provider):
+            providers.append(provider)
+            return Owner(translation=Owner(x=100, z=200), yaw=pi / 2)
+        api = source('views/battle/tactical_minimap.py', {
+            'Driftkings.core.tactical_minimap': self.load('core.tactical_minimap'),
+            'Math': module(Matrix=matrix),
+            'gui.battle_control.minimap_utils': module(getCellIdFromPosition=lambda *args: 54,
+                                                       getCellName=lambda *args: 'E6')})
+        record = {'id': 99, 'matrix': object(), 'active': True}
+        point = api['native_player_point'](self.component, record)
+        self.assertEqual((point['x'], point['y'], point['heading']), (.5, .5, 90))
+        self.assertEqual(point['cell'], 'E6')
+        record['active'] = False
+        self.assertIsNone(api['native_player_point'](self.component, record))
+        self.assertEqual(len(providers), 1)
+        record['active'], record['id'] = True, 100
+        self.assertIsNone(api['native_player_point'](self.component, record))
+        self.assertEqual(len(providers), 1)
+
     def test_hidden_lost_transitional_dead_and_inactive_entries_never_read_matrices(self):
         entries = [self.entry(active=False), self.entry(alive=False), self.entry(aoi=False),
                    self.entry(location=0), self.entry(location=2), self.entry(location=3)]
@@ -151,7 +191,7 @@ class NativeAdapterTests(RuntimeTest):
             'Driftkings.common': module(xvmInstalled=False),
             'Math': module(Matrix=lambda provider: module(translation=module(x=provider[0], z=provider[1])),
                            Vector3=lambda x, y, z: (x, y, z)),
-            'gui.battle_control.battle_constants': module(VEHICLE_LOCATION=module(AOI=1)),
+            'gui.battle_control.battle_constants': module(VEHICLE_LOCATION=module(AOI=1, FAR=2)),
             'gui.battle_control.minimap_utils': module(MINIMAP_SIZE=(210, 210),
                 getCellIdFromPosition=cell_id, getCellName=lambda value, dimensions: 'K9' if (value, dimensions) == (89, 10) else None)}
         api = source('views/battle/tactical_minimap.py', dependencies)
