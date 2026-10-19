@@ -72,7 +72,7 @@ class BattleMarksAdapter(object):
 
             def _getEvents(self):
                 return tuple(super(MarksView, self)._getEvents()) + (
-                    (self.getViewModel().onSavePosition, self._savePosition))
+                    (self.getViewModel().onSavePosition, self._savePosition),)
 
             def _savePosition(self, args):
                 settings = settings_service.getComponentDict(_component().config)

@@ -43,3 +43,11 @@ A ponte usa referências fracas, remove o adapter na saída/recriação do minim
 - Settings: 25 testes em cada Python. JS existente, preview e novo protocolo passam; lint ES5 e sintaxe verificados. Defaults/catálogos continuam sincronizados.
 - Não foi efetuada instalação, abertura do jogo ou teste real desta ponte. Nenhuma confirmação in-game é presumida.
 - Os dois testes do instalador anteriormente identificados continuam fora desta etapa; não foram alterados para contornar as imagens locais das fixtures.
+
+## Confirmação no cliente NA — 19-10-2026
+
+O game.log confirma carregamento do view e handshake aceite em duas sessões de replay: 01:34:17.566 e 01:36:08.960 (hora local registada). O utilizador confirmou o texto diagnóstico e o funcionamento das restantes funções do minimapa. Não foram encontrados erros do TacticalMinimapProbe nestas sessões.
+
+Isto confirma a ponte no replay NA testado, não valida todos os mapas/modos, desempenho ou substituição do renderer. O log não confirma, por si só, a disponibilidade completa dos dados nativos nem a contagem apresentada.
+
+Foi também identificado um erro independente no view de marcas de excelência: a extensão de `_getEvents()` devolvia um comando e um handler soltos, em vez de uma sequência de pares. A vírgula em falta foi corrigida e foi acrescentada uma verificação portátil deste contrato. A ausência desse erro no cliente precisa de novo teste com o WOTMOD recompilado.
