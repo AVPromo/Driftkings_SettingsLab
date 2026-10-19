@@ -10,6 +10,7 @@ from nations import NAMES
 from Driftkings._constants import GLOBAL, TARGET_INFORMATION
 from Driftkings.common import getPlayer, getTarget, checkKeys
 from Driftkings.core.battle_events import battleEvents
+from Driftkings.core.gun_stats import damage_per_minute, reload_with_equipment
 from Driftkings.core.hooks import override
 from Driftkings.common import callback, cancelCallback
 from Driftkings.settings.service import settings_service, affects
@@ -91,13 +92,13 @@ class DataConstants(object):
     def _get_gun_dpm_for_descriptor(self, typeDescriptor, cache_key):
         if cache_key in self._cachedResults:
             return self._cachedResults[cache_key]
-        if not typeDescriptor:
+        if not typeDescriptor or not typeDescriptor.gun.shots:
             return None
-        reload_time = typeDescriptor.gun.reloadTime + (typeDescriptor.gun.clip[0] - 1) * typeDescriptor.gun.clip[1]
-        if reload_time <= 0 or not typeDescriptor.gun.shots:
+        gun = typeDescriptor.gun
+        dpm = damage_per_minute(gun.reloadTime, gun.clip[0], gun.clip[1], self._get_shell_damage(gun.shots[0].shell))
+        if dpm is None:
             return None
-        shell = typeDescriptor.gun.shots[0].shell
-        result = '%d' % round(typeDescriptor.gun.clip[0] / reload_time * 60 * self._get_shell_damage(shell), 0)
+        result = '%d' % dpm
         self._cachedResults[cache_key] = result
         return result
 
@@ -106,39 +107,22 @@ class DataConstants(object):
             return self._cachedResults[cache_key]
         if not typeDescriptor:
             return None
-        reload_orig = typeDescriptor.gun.reloadTime
-        rammer = 0.9 if typeDescriptor.gun.clip[0] == 1 and eq1 == 1 else 1
-        if eq2 == 1 and eq3 == 1 and eq4 == 1:
-            crew = 1.32
-        elif eq2 == 1 and eq3 == 1 and eq4 == 0:
-            crew = 1.27
-        elif eq2 == 1 and eq3 == 0 and eq4 == 1:
-            crew = 1.21
-        elif eq2 == 1 and eq3 == 0 and eq4 == 0:
-            crew = 1.16
-        elif eq2 == 0 and eq3 == 1 and eq4 == 1:
-            crew = 1.27
-        elif eq2 == 0 and eq3 == 1 and eq4 == 0:
-            crew = 1.21
-        elif eq2 == 0 and eq3 == 0 and eq4 == 1:
-            crew = 1.16
-        else:
-            crew = 1.1
-        result = '%.2f' % round(reload_orig / (0.57 + 0.43 * crew) * rammer, 2)
+        gun = typeDescriptor.gun
+        result = '%.2f' % reload_with_equipment(gun.reloadTime, gun.clip[0], eq1, eq2, eq3, eq4)
         self._cachedResults[cache_key] = result
         return result
 
     def _get_gun_dpm_equip_for_descriptor(self, typeDescriptor, cache_key, eq1=1, eq2=1, eq3=1, eq4=1):
         if cache_key in self._cachedResults:
             return self._cachedResults[cache_key]
-        if not typeDescriptor:
+        if not typeDescriptor or not typeDescriptor.gun.shots:
             return None
-        reload_equip = float(self._get_gun_reload_equip_for_descriptor(typeDescriptor, cache_key + '_reload', eq1, eq2, eq3, eq4))
-        reload_time = reload_equip + (typeDescriptor.gun.clip[0] - 1) * typeDescriptor.gun.clip[1]
-        if reload_time <= 0 or not typeDescriptor.gun.shots:
+        gun = typeDescriptor.gun
+        reload_equip = reload_with_equipment(gun.reloadTime, gun.clip[0], eq1, eq2, eq3, eq4)
+        dpm = damage_per_minute(reload_equip, gun.clip[0], gun.clip[1], self._get_shell_damage(gun.shots[0].shell))
+        if dpm is None:
             return None
-        shell = typeDescriptor.gun.shots[0].shell
-        result = '%d' % round(typeDescriptor.gun.clip[0] / reload_time * 60 * self._get_shell_damage(shell), 0)
+        result = '%d' % dpm
         self._cachedResults[cache_key] = result
         return result
 
