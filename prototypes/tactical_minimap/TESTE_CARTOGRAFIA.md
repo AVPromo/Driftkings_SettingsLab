@@ -1,5 +1,11 @@
 # Cartografia e calibração — diagnóstico
 
+## Limites visuais da câmara estratégica
+
+A ponte Flash lê o retângulo local `getRect(entry)` de uma única `StrategicCameraMinimapEntry` visível e transforma os quatro cantos com localToGlobal, preservando rotação e escala nativas. É o contorno dos limites visuais da entrada, ainda não uma prova de equivalência à área completa de visão. Só é consultado quando a entrada Python estratégica selecionada é válida. Varredura limitada a 4000 nós, sem cache de posições, retorno primitivo de quatro pares; ambiguidades, geometria vazia ou exceder o limite de procura devolvem vazio.
+
+O backend valida quatro pontos finitos dentro de margens limitadas e área não nula. A amostra reutiliza um polígono SVG azul e recorta o exterior ao mapa. Ao ocultar/sair do modo, desaparece sem TTL. Confirmar no replay de artilharia o contorno contra o original, incluindo rotação, zoom e mira próxima das margens. Se não coincidir com o desenho nativo, esta etapa deve ser revista antes de considerar paridade. O minimapa original permanece ativo. Etiquetas, limites e destruídos continuam pendentes de confirmação explícita, tal como a mira/contorno estratégico.
+
 ## Ponto de mira da câmara estratégica
 
 A entrada nativa `StrategicCameraEntry`/`personal` usa `makeStrategicCameraMatrix()`, cuja translação vem da aimMatrix do cliente. A amostra acompanha apenas essa posição com uma mira azul, sem calcular dispersão, trajetória ou impacto. Requer propriedade do jogador vivo, ID selecionado e confirmado no plugin, modo estratégico/arty, entrada ativa e matriz publicada. Trocas de modo, desativação, remoção e fim de batalha retiram a mira. Reutiliza hooks/callbacks existentes.

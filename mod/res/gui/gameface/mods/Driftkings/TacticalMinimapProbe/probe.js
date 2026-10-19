@@ -252,7 +252,31 @@
         }
         marker.style.left = (100 * value.x) + '%'; marker.style.top = (100 * value.y) + '%';
     }
-    function mapSample(uri, allies, objectives, circles, pings, camera, yawLines, strategicPoint) {
+    function mapStrategicArea(layer, values) {
+        var valid = Array.isArray(values) && values.length === 4 && values.every(function (point) {
+            return point && ['x', 'y'].every(function (key) {
+                return typeof point[key] === 'number' && isFinite(point[key]) && point[key] >= -4 && point[key] <= 5;
+            });
+        });
+        if (!valid || !document.createElementNS) {
+            if (layer.firstChild) { layer.removeChild(layer.firstChild); }
+            layer._dkPolygon = null;
+            return;
+        }
+        if (!layer._dkPolygon) {
+            var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', '0 0 100 100'); svg.setAttribute('preserveAspectRatio', 'none');
+            svg.style.width = '100%'; svg.style.height = '100%';
+            var polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            polygon.setAttribute('stroke', '#70dfff'); polygon.setAttribute('stroke-width', '.5');
+            polygon.setAttribute('fill', 'none'); svg.appendChild(polygon); layer.appendChild(svg);
+            layer._dkPolygon = polygon;
+        }
+        layer._dkPolygon.setAttribute('points', values.map(function (point) {
+            return (100 * point.x) + ',' + (100 * point.y);
+        }).join(' '));
+    }
+    function mapSample(uri, allies, objectives, circles, pings, camera, yawLines, strategicPoint, strategicArea) {
         if (typeof uri !== 'string' || uri.length > 262 ||
                 !/^img:\/\/(spaces\/[A-Za-z0-9_/-]+\.(dds|png)|gui\/maps\/icons\/map\/[A-Za-z0-9_-]+\.png)$/.test(uri) ||
                 uri.indexOf('//', 6) !== -1) { return null; }
@@ -264,6 +288,7 @@
             mapCamera(cartography.camera, camera);
             mapYawLimits(cartography.yaw, yawLines);
             mapStrategic(cartography.strategic, strategicPoint);
+            mapStrategicArea(cartography.area, strategicPoint ? strategicArea : []);
             return cartography.node;
         }
         var root = document.createElement('div');
@@ -288,7 +313,9 @@
         image.appendChild(yawLayer); mapYawLimits(yawLayer, yawLines);
         var strategicLayer = document.createElement('div'); strategicLayer.className = 'dk-probe-strategic';
         image.appendChild(strategicLayer); mapStrategic(strategicLayer, strategicPoint);
-        cartography = {uri: uri, node: root, points: points, objectives: objectiveLayer, circles: circleLayer, pings: pingLayer, camera: cameraLayer, yaw: yawLayer, strategic: strategicLayer};
+        var areaLayer = document.createElement('div'); areaLayer.className = 'dk-probe-strategic-area';
+        image.appendChild(areaLayer); mapStrategicArea(areaLayer, strategicPoint ? strategicArea : []);
+        cartography = {uri: uri, node: root, points: points, objectives: objectiveLayer, circles: circleLayer, pings: pingLayer, camera: cameraLayer, yaw: yawLayer, strategic: strategicLayer, area: areaLayer};
         return root;
     }
     function clearAlignment() {
@@ -374,7 +401,8 @@
         line('Direção da câmara arcade: ' + (data.cameraLine ? 'publicada' : 'indisponível/oculta'));
         line('Limites do canhão: ' + (Array.isArray(data.yawLines) && data.yawLines.length === 2 ? 'publicados (azul)' : 'indisponíveis/ocultos'));
         line('Ponto de mira estratégico: ' + (data.strategicPoint ? 'publicado (mira azul)' : 'indisponível/oculto'));
-        var map = mapSample(data.textureUri, vehicles, data.objectives, data.circles, data.pings, data.cameraLine, data.yawLines, data.strategicPoint);
+        line('Contorno estratégico: ' + (Array.isArray(data.strategicArea) && data.strategicArea.length === 4 ? 'publicado' : 'indisponível/oculto'));
+        var map = mapSample(data.textureUri, vehicles, data.objectives, data.circles, data.pings, data.cameraLine, data.yawLines, data.strategicPoint, data.strategicArea);
         if (map) { node.appendChild(map); }
         line('Amostras fixas — 16 / 24 / 32 px; confirmar visualmente.');
         var sample = graphicsSample();

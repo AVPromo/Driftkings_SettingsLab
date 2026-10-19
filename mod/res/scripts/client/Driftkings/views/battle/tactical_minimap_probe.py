@@ -3,7 +3,7 @@
 import logging
 import weakref
 
-from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits
+from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits, strategic_area_response
 from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points, native_camera_line, native_yaw_lines, native_strategic_point
 from Driftkings.views.hangar.common import publish_card
 
@@ -181,6 +181,11 @@ class ProbeBridge(object):
                             snapshot['strategicPoint'] = native_strategic_point(component, self._strategic_entries.get(component))
                         except Exception:
                             snapshot['strategicPoint'] = None
+                        try:
+                            snapshot['strategicArea'] = (strategic_area_response(component.flashObject.as_DriftkingsStrategicArea())
+                                                         if snapshot['strategicPoint'] else [])
+                        except Exception:
+                            snapshot['strategicArea'] = []
                         try:
                             snapshot['yawLines'] = native_yaw_lines(component, self._personal_entries.get(component))
                         except Exception:

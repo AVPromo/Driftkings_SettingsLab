@@ -4,6 +4,7 @@ package driftkings.battle.components.minimap
     import flash.display.DisplayObjectContainer;
     import flash.display.MovieClip;
     import net.wg.gui.battle.views.minimap.components.entries.personal.SimpleAttentionToFlashMinimapEntry;
+    import net.wg.gui.battle.views.minimap.components.entries.personal.StrategicCameraMinimapEntry;
     import flash.geom.Point;
     import flash.geom.Rectangle;
     import net.wg.gui.battle.views.minimap.BaseMinimap;
@@ -11,6 +12,40 @@ package driftkings.battle.components.minimap
     // Read-only geometry on the actual native component, independent of our view.
     public class TacticalGeometry
     {
+        public static function strategicArea(minimap:BaseMinimap):String
+        {
+            var area:Object = capture(minimap);
+            if (!area.available || !minimap.visible || minimap.alpha <= 0) return "";
+            var pending:Array = [minimap], budget:int = 4000, found:Boolean = false, result:Array = [];
+            while (pending.length && --budget > 0)
+            {
+                var item:DisplayObject = pending.pop() as DisplayObject;
+                if (!item || !item.visible || item.alpha <= 0) continue;
+                var entry:StrategicCameraMinimapEntry = item as StrategicCameraMinimapEntry;
+                if (entry)
+                {
+                    if (found) return "";
+                    found = true;
+                    var rect:Rectangle = entry.getRect(entry);
+                    if (rect.width <= 0 || rect.height <= 0) return "";
+                    var corners:Array = [new Point(rect.left, rect.top), new Point(rect.right, rect.top),
+                        new Point(rect.right, rect.bottom), new Point(rect.left, rect.bottom)];
+                    for each (var corner:Point in corners)
+                    {
+                        var position:Point = entry.localToGlobal(corner);
+                        var x:Number = (position.x - area.x) / area.width;
+                        var y:Number = (position.y - area.y) / area.height;
+                        if (!isFinite(x) || !isFinite(y) || x < -4 || x > 5 || y < -4 || y > 5) return "";
+                        result.push(x + "," + y);
+                    }
+                    continue;
+                }
+                var container:DisplayObjectContainer = item as DisplayObjectContainer;
+                if (container) for (var i:int = 0; i < container.numChildren; ++i) pending.push(container.getChildAt(i));
+            }
+            return pending.length ? "" : result.join(";");
+        }
+
         public static function cellPings(minimap:BaseMinimap):String
         {
             var area:Object = capture(minimap);

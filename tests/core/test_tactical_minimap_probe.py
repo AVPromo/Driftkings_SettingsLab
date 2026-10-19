@@ -110,6 +110,32 @@ class ProbeTests(RuntimeTest):
         hooks['delEntry'](original, component, 7)
         self.assertNotIn(component, bridge._personal_entries)
 
+    def test_strategic_area_protocol_rejects_malformed_and_degenerate_shapes(self):
+        read = self.policy.strategic_area_response
+        points = read('0,0;1,0;1,1;0,1')
+        self.assertEqual(len(points), 4)
+        self.assertEqual(points[2], dict(x=1, y=1))
+        self.assertEqual(len(read('-.1,0;1,0;1,1;-.1,1')), 4)
+        for value in (None, {}, '', '0,0;1,1', 'nan,0;1,0;1,1;0,1',
+                      '0,0;0,0;0,0;0,0', '-5,0;1,0;1,1;0,1', 'x' * 1025):
+            self.assertEqual(read(value), [])
+
+    def test_strategic_area_follows_native_visibility_without_previous_frame(self):
+        self.settings['tacticalDiagnostics'] = True
+        self.api['native_strategic_point'] = lambda component, record: dict(x=.5, y=.5)
+        self.component.flashObject.as_DriftkingsStrategicArea = lambda: '0,0;1,0;1,1;0,1'
+        self.bridge.bind_native(self.component)
+        self.bridge.start()
+        self.bridge.acknowledge(self.view, {'protocol': 1, 'generation': 1})
+        self.assertEqual(len(self.frames[-1]['strategicArea']), 4)
+        self.api['native_strategic_point'] = lambda component, record: None
+        self.bridge.refresh()
+        self.assertEqual(self.frames[-1]['strategicArea'], [])
+        self.api['native_strategic_point'] = lambda component, record: dict(x=.5, y=.5)
+        self.component.flashObject.as_DriftkingsStrategicArea = lambda: ''
+        self.bridge.refresh()
+        self.assertEqual(self.frames[-1]['strategicArea'], [])
+
     def test_strategic_point_contract_rejects_invalid_and_strips_details(self):
         self.assertEqual(self.policy.strategic_point(dict(x=.3, y=.7, matrix='private')), dict(x=.3, y=.7))
         for value in (None, {}, dict(x=float('nan'), y=0), dict(x=2, y=0)):

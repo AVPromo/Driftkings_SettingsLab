@@ -59,6 +59,7 @@ def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, c
         data['destroyedPoints'] = destroyed_calibration_points(snapshot.get('destroyedMarkers', []))
         data['cameraLine'] = camera_line(snapshot.get('cameraLine'))
         data['strategicPoint'] = strategic_point(snapshot.get('strategicPoint'))
+        data['strategicArea'] = strategic_area(snapshot.get('strategicArea')) if data['strategicPoint'] else []
         values = snapshot.get('yawLines')
         lines = [camera_line(value) for value in values] if isinstance(values, list) and len(values) == 2 else []
         data['yawLines'] = lines if len(lines) == 2 and all(lines) else []
@@ -241,6 +242,36 @@ def player_point(value):
     if isinstance(cell, (str, type(u''))) and re.match(r'^[A-HJK][1-90]\Z', cell):
         result['cell'] = cell
     return result
+
+
+def strategic_area(value):
+    if not isinstance(value, list) or len(value) != 4:
+        return []
+    result = []
+    try:
+        for point in value:
+            x, y = finite(point['x']), finite(point['y'])
+            if not (-4 <= x <= 5 and -4 <= y <= 5):
+                return []
+            result.append({'x': x, 'y': y})
+    except (KeyError, ValueError, TypeError, OverflowError):
+        return []
+    twice_area = sum(result[i]['x'] * result[(i + 1) % 4]['y'] -
+                     result[(i + 1) % 4]['x'] * result[i]['y'] for i in range(4))
+    return result if abs(twice_area) > 1e-8 else []
+
+
+def strategic_area_response(value):
+    if not isinstance(value, (str, type(u''))) or len(value) > 1024:
+        return []
+    try:
+        points = []
+        for pair in value.split(';'):
+            x, y = pair.split(',')
+            points.append({'x': x, 'y': y})
+        return strategic_area(points)
+    except (ValueError, TypeError):
+        return []
 
 
 def strategic_point(value):
