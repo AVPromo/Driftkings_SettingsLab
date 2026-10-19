@@ -34,7 +34,7 @@ class ProbeTests(RuntimeTest):
         self.scheduled, self.cancelled = [], []
         self.api = source('views/battle/tactical_minimap_probe.py', {
             'Driftkings.core.tactical_minimap_probe': self.policy,
-            'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None),
+            'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: []),
             'Driftkings.views.hangar.common': module(publish_card=publish),
             'Driftkings.core.hud_visibility': module(hudVisibility=hud)})
         self.bridge = self.api['ProbeBridge'](object(), lambda config: self.settings,
@@ -79,6 +79,36 @@ class ProbeTests(RuntimeTest):
         for changes in ({'visible': False}, {'state': 'visible'}, {'side': 'unknown'}, {'x': float('nan')}):
             self.assertEqual(self.policy.destroyed_calibration_points([dict(wreck, **changes)]), [])
         self.assertEqual(self.policy.destroyed_calibration_points([]), [])
+
+    def test_yaw_commands_validate_limits_and_clear_previous_state(self):
+        record = {}
+        update = self.policy.update_yaw_limits
+        update(record, ('setYawLimit', -20, 30))
+        self.assertEqual(record['yawLimits'], (-20, 30))
+        update(record, ('unrelated',))
+        self.assertIn('yawLimits', record)
+        update(record, ('clearYawLimit',))
+        self.assertNotIn('yawLimits', record)
+        for limits in ((float('nan'), 30), (-181, 20), (30, -20), (False, 20), ('-20', 20)):
+            update(record, ('setYawLimit', -20, 30))
+            update(record, ('setYawLimit',) + limits)
+            self.assertNotIn('yawLimits', record)
+
+    def test_yaw_hooks_reuse_personal_entry_and_native_clear_command(self):
+        self.settings['tacticalDiagnostics'] = True
+        bridge, hooks, events = self.install_runtime_stubs()
+        bridge.install()
+        component = Owner()
+        original = lambda *args: 7
+        hooks['addEntry'](original, component, 'ViewPointEntry', 'personal', object(), True)
+        hooks['invoke'](original, component, 8, 'setYawLimit', -20, 30)
+        self.assertNotIn('yawLimits', bridge._personal_entries[component])
+        hooks['invoke'](original, component, 7, 'setYawLimit', -20, 30)
+        self.assertEqual(bridge._personal_entries[component]['yawLimits'], (-20, 30))
+        hooks['invoke'](original, component, 7, 'clearYawLimit')
+        self.assertNotIn('yawLimits', bridge._personal_entries[component])
+        hooks['delEntry'](original, component, 7)
+        self.assertNotIn(component, bridge._personal_entries)
 
     def test_camera_contract_is_bounded_and_removes_private_fields(self):
         value = dict(x=.5, y=.5, x2=1, y2=.5)
@@ -557,7 +587,7 @@ class ProbeTests(RuntimeTest):
         self.resource_id = 123
         dependencies = {
             'Driftkings.core.tactical_minimap_probe': self.policy,
-            'Driftkings.views.battle.tactical_minimap': module(native_adapter=lambda *args: None, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None),
+            'Driftkings.views.battle.tactical_minimap': module(native_adapter=lambda *args: None, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: []),
             'Driftkings.views.hangar.common': module(publish_card=lambda *args: None),
             'frameworks.wulf': module(ViewModel=BaseModel),
             'gui.impl.pub.view_component': module(ViewComponent=BaseView),

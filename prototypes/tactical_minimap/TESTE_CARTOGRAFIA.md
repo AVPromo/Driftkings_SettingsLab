@@ -1,5 +1,11 @@
 # Cartografia e calibração — diagnóstico
 
+## Limites de rotação do canhão
+
+Direção da câmara arcade e remoção ao mudar de modo confirmadas pelo utilizador. A etapa seguinte acompanha `setYawLimit(left, right)` e `clearYawLimit` na entrada `ViewPointEntry`, sem novos hooks/timers. O cliente converte os limites da torre para graus e só os publica conforme os modos, tipo de veículo e opção `SHOW_SECTOR_ON_MAP`. O Flash aplica esses ângulos à orientação da entrada pessoal (a correção de 180° é própria do desenho do atlas); a amostra usa diretamente yaw mundial do casco + offset em graus.
+
+Os dois raios azuis são recortados à borda, respeitando mapas retangulares. Requer jogador vivo e proprietário da entrada, matriz ativa e limites válidos; clear/removal/fim de batalha retiram-nos, sem persistência. Testar com replay de artilharia com rotação limitada, rodar o casco e comparar as direções com o original; alterar a opção nativa de setores e verificar remoção. Uma torre sem limites publicados não deve produzir raios. Não se inferem limites de outros veículos. Câmaras estratégica/vídeo e setores de visão continuam pendentes; os destruídos continuam sem confirmação visual explícita.
+
 ## Linha de direção da câmara arcade
 
 Acrescentada a entrada `ArcadeCameraEntry`/`personal` aos oito hooks existentes. O cliente usa `makeArcadeCameraMatrix()` com translação do veículo e rotação da câmara; a ponte lê só o provider já publicado, sem consultar BigWorld. Requer jogador vivo/não observador, ownership nativo, ID da câmara arcade selecionado, entrada ativa e comando `showDirectionLine`. `hideDirectionLine`, troca de modo, remoção, ocultação do HUD e finalização retiram a linha. Não são criados timers ou comandos de input.

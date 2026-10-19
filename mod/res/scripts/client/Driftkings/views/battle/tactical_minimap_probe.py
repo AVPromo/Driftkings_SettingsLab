@@ -3,8 +3,8 @@
 import logging
 import weakref
 
-from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges
-from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points, native_camera_line
+from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits
+from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points, native_camera_line, native_yaw_lines
 from Driftkings.views.hangar.common import publish_card
 
 LOG = logging.getLogger('Driftkings.TacticalMinimapProbe')
@@ -174,6 +174,10 @@ class ProbeBridge(object):
                         self._adapter = self._factory(component, component.sessionProvider)
                     snapshot = self._adapter.capture()
                     if snapshot.get('available'):
+                        try:
+                            snapshot['yawLines'] = native_yaw_lines(component, self._personal_entries.get(component))
+                        except Exception:
+                            snapshot['yawLines'] = []
                         try:
                             snapshot['cameraLine'] = native_camera_line(component, self._camera_entries.get(component))
                         except Exception:
@@ -383,6 +387,9 @@ class ProbeBridge(object):
         @override(MinimapComponent, 'invoke')
         def invoke_entry(original, component, entry_id, *signature):
             result = original(component, entry_id, *signature)
+            personal = bridge._personal_entries.get(component)
+            if personal is not None and personal['id'] == entry_id:
+                update_yaw_limits(personal, signature)
             camera = bridge._camera_entries.get(component)
             if camera is not None and camera['id'] == entry_id and signature in (('showDirectionLine',), ('hideDirectionLine',)):
                 camera['direction'] = signature[0] == 'showDirectionLine'

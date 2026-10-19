@@ -183,6 +183,31 @@ class NativeAdapterTests(RuntimeTest):
         api['owns_player_marker'] = lambda component: False
         self.assertIsNone(api['native_camera_line'](self.component, record))
 
+    def test_yaw_limits_follow_hull_matrix_and_native_entry_ownership(self):
+        from math import pi
+        yaw, reads = [0], []
+        self.component.getPlugin = lambda name: Owner(_getViewPointID=lambda: 7)
+        api = source('views/battle/tactical_minimap.py', {
+            'Driftkings.core.tactical_minimap': self.load('core.tactical_minimap'),
+            'Math': module(Matrix=lambda provider: reads.append(provider) or Owner(
+                translation=Owner(x=100, z=200), yaw=yaw[0]))})
+        api['owns_player_marker'] = lambda component: True
+        record = dict(id=7, active=True, matrix=object(), yawLimits=(-45, 45))
+        lines = api['native_yaw_lines'](self.component, record)
+        self.assertAlmostEqual(lines[0]['x2'], 0)
+        self.assertAlmostEqual(lines[0]['y2'], .25)
+        self.assertAlmostEqual(lines[1]['x2'], 1)
+        self.assertAlmostEqual(lines[1]['y2'], .25)
+        yaw[0] = pi
+        lines = api['native_yaw_lines'](self.component, record)
+        self.assertAlmostEqual(lines[0]['y2'], .75)
+        for changes in ({'active': False}, {'id': 8}, {'yawLimits': None}, {'matrix': None}):
+            reads[:] = []
+            self.assertEqual(api['native_yaw_lines'](self.component, dict(record, **changes)), [])
+            self.assertEqual(reads, [])
+        api['owns_player_marker'] = lambda component: False
+        self.assertEqual(api['native_yaw_lines'](self.component, record), [])
+
     def test_native_objectives_read_only_active_publication_and_world_bounds(self):
         reads = []
         def matrix(provider):

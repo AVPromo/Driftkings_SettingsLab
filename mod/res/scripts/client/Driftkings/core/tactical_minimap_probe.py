@@ -58,6 +58,9 @@ def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, c
         data['enemyPoints'] = enemy_calibration_points(snapshot.get('markers', []))
         data['destroyedPoints'] = destroyed_calibration_points(snapshot.get('destroyedMarkers', []))
         data['cameraLine'] = camera_line(snapshot.get('cameraLine'))
+        values = snapshot.get('yawLines')
+        lines = [camera_line(value) for value in values] if isinstance(values, list) and len(values) == 2 else []
+        data['yawLines'] = lines if len(lines) == 2 and all(lines) else []
         point = points[0] if points else None
         if point is not None:
             data['alliedPoint'] = point
@@ -235,6 +238,21 @@ def camera_line(value):
     except (KeyError, ValueError, TypeError, OverflowError):
         return None
     return result if all(0 <= number <= 1 for number in result.values()) else None
+
+
+def update_yaw_limits(record, signature):
+    if signature == ('clearYawLimit',):
+        record.pop('yawLimits', None)
+    elif len(signature) == 3 and signature[0] == 'setYawLimit':
+        record.pop('yawLimits', None)
+        try:
+            if any(isinstance(value, bool) or not isinstance(value, (int, float)) for value in signature[1:]):
+                return
+            left, right = [finite(value) for value in signature[1:]]
+            if -180 <= left <= right <= 180:
+                record['yawLimits'] = (left, right)
+        except (ValueError, TypeError, OverflowError):
+            pass
 
 
 def objective_points(values):

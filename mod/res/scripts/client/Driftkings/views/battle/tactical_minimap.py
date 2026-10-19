@@ -188,7 +188,6 @@ def native_camera_line(component, record):
             personal._getSelectedCameraID() != record.get('id') or record.get('matrix') is None):
         return None
     import Math
-    from math import sin, cos
     matrix = Math.Matrix(record['matrix'])
     position = matrix.translation
     lower, upper = component.getBoundingBox()
@@ -196,7 +195,11 @@ def native_camera_line(component, record):
     point = coordinates(position.x, position.z, bounds)
     if point is None:
         return None
-    yaw = finite(matrix.yaw)
+    return _world_direction_line(point, finite(matrix.yaw), bounds)
+
+
+def _world_direction_line(point, yaw, bounds):
+    from math import sin, cos
     dx, dy = sin(yaw) / (bounds[2] - bounds[0]), -cos(yaw) / (bounds[3] - bounds[1])
     distances = []
     for origin, direction in ((point[0], dx), (point[1], dy)):
@@ -207,6 +210,25 @@ def native_camera_line(component, record):
     distance = min(distances)
     return {'x': point[0], 'y': point[1], 'x2': max(0, min(1, point[0] + distance * dx)),
             'y2': max(0, min(1, point[1] + distance * dy))}
+
+
+def native_yaw_lines(component, record):
+    """Hull-relative limits explicitly enabled on the native personal entry."""
+    if not record or not record.get('active') or not record.get('yawLimits') or not owns_player_marker(component):
+        return []
+    if component.getPlugin('personal')._getViewPointID() != record.get('id') or record.get('matrix') is None:
+        return []
+    import Math
+    from math import radians
+    matrix = Math.Matrix(record['matrix'])
+    position = matrix.translation
+    lower, upper = component.getBoundingBox()
+    bounds = tuple(finite(value) for value in (lower[0], lower[1], upper[0], upper[1]))
+    point = coordinates(position.x, position.z, bounds)
+    if point is None:
+        return []
+    yaw = finite(matrix.yaw)
+    return [_world_direction_line(point, yaw + radians(offset), bounds) for offset in record['yawLimits']]
 
 
 def native_objective_points(component, records):

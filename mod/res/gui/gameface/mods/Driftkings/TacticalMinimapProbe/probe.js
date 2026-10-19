@@ -222,7 +222,19 @@
             layer._dkLine.setAttribute(index === 0 ? 'x1' : index === 1 ? 'y1' : key, 100 * value[key]);
         });
     }
-    function mapSample(uri, allies, objectives, circles, pings, camera) {
+    function mapYawLimits(layer, values) {
+        if (!Array.isArray(values) || values.length !== 2) { values = []; }
+        while (layer.children.length > values.length) { layer.removeChild(layer.children[layer.children.length - 1]); }
+        values.forEach(function (value, index) {
+            var child = layer.children[index];
+            if (!child) {
+                child = document.createElement('div'); child.className = 'dk-probe-camera'; layer.appendChild(child);
+            }
+            mapCamera(child, value);
+            if (child._dkLine) { child._dkLine.setAttribute('stroke', '#70dfff'); }
+        });
+    }
+    function mapSample(uri, allies, objectives, circles, pings, camera, yawLines) {
         if (typeof uri !== 'string' || uri.length > 262 ||
                 !/^img:\/\/(spaces\/[A-Za-z0-9_/-]+\.(dds|png)|gui\/maps\/icons\/map\/[A-Za-z0-9_-]+\.png)$/.test(uri) ||
                 uri.indexOf('//', 6) !== -1) { return null; }
@@ -232,6 +244,7 @@
             mapCircles(cartography.circles, circles);
             mapPings(cartography.pings, pings);
             mapCamera(cartography.camera, camera);
+            mapYawLimits(cartography.yaw, yawLines);
             return cartography.node;
         }
         var root = document.createElement('div');
@@ -252,7 +265,9 @@
         image.appendChild(pingLayer); mapPings(pingLayer, pings);
         var cameraLayer = document.createElement('div'); cameraLayer.className = 'dk-probe-camera';
         image.appendChild(cameraLayer); mapCamera(cameraLayer, camera);
-        cartography = {uri: uri, node: root, points: points, objectives: objectiveLayer, circles: circleLayer, pings: pingLayer, camera: cameraLayer};
+        var yawLayer = document.createElement('div'); yawLayer.className = 'dk-probe-camera';
+        image.appendChild(yawLayer); mapYawLimits(yawLayer, yawLines);
+        cartography = {uri: uri, node: root, points: points, objectives: objectiveLayer, circles: circleLayer, pings: pingLayer, camera: cameraLayer, yaw: yawLayer};
         return root;
     }
     function clearAlignment() {
@@ -336,7 +351,8 @@
         line('Círculos nativos: ' + (Array.isArray(data.circles) ? data.circles.length : 0));
         line('Pings nativos: ' + (Array.isArray(data.pings) ? data.pings.length : 0) + ' | quadrado: célula; ! atenção; > destino; + artilharia; ponto vermelho: impacto; R resposta');
         line('Direção da câmara arcade: ' + (data.cameraLine ? 'publicada' : 'indisponível/oculta'));
-        var map = mapSample(data.textureUri, vehicles, data.objectives, data.circles, data.pings, data.cameraLine);
+        line('Limites do canhão: ' + (Array.isArray(data.yawLines) && data.yawLines.length === 2 ? 'publicados (azul)' : 'indisponíveis/ocultos'));
+        var map = mapSample(data.textureUri, vehicles, data.objectives, data.circles, data.pings, data.cameraLine, data.yawLines);
         if (map) { node.appendChild(map); }
         line('Amostras fixas — 16 / 24 / 32 px; confirmar visualmente.');
         var sample = graphicsSample();
