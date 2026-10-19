@@ -41,6 +41,42 @@ class ProbeTests(RuntimeTest):
         self.bridge.views.add(self.view)
         self.component = Owner(sessionProvider=Owner())
 
+    def test_map_uri_accepts_only_virtual_cartography(self):
+        for path in ('spaces/01_karelia/mmap.dds', 'gui/maps/icons/map/01_karelia.png'):
+            self.assertEqual(self.policy.texture_uri(path), 'img://' + path)
+        for path in ('https://example.com/map.png', 'spaces/../secret.dds',
+                     'spaces//map.dds', 'mods/configs/map.png', 'spaces/map.dds\n'):
+            self.assertIsNone(self.policy.texture_uri(path))
+
+    def test_calibration_is_bounded_and_contains_only_geometry(self):
+        raw = dict(available=True, x=800, y=400, width=200, height=200,
+                   stageWidth=1000, stageHeight=800, markers=['secret'])
+        result = self.policy.calibration_result(raw)
+        self.assertTrue(result['available'])
+        self.assertEqual(result['normalized']['x'], .8)
+        self.assertNotIn('markers', result)
+        raw['width'] = float('nan')
+        self.assertFalse(self.policy.calibration_result(raw)['available'])
+        self.assertNotIn('calibration', self.policy.payload(False, False, calibration=raw))
+
+    def test_geometry_source_ignores_stale_callbacks_and_clears_on_stop(self):
+        self.settings['tacticalDiagnostics'] = True
+        first, second = Owner(), Owner()
+        raw = dict(available=True, x=800, y=400, width=200, height=200,
+                   stageWidth=1000, stageHeight=800)
+        self.bridge.register_geometry_source(first)
+        self.bridge.on_geometry(first, raw)
+        self.assertTrue(self.bridge._calibration['available'])
+        self.bridge.register_geometry_source(second)
+        self.bridge.on_geometry(first, raw)
+        self.assertIsNone(self.bridge._calibration)
+        self.bridge.on_geometry(second, raw)
+        self.bridge.clear_geometry_source(first)
+        self.assertTrue(self.bridge._calibration['available'])
+        self.bridge.stop()
+        self.bridge.on_geometry(second, raw)
+        self.assertIsNone(self.bridge._calibration)
+
     def test_default_off_creates_no_adapter_and_starts_no_diagnostic(self):
         self.bridge.bind_native(self.component)
         self.bridge.start()

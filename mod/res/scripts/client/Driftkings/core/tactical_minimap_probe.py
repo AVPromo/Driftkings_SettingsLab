@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 """Small diagnostic transport contract. Never publishes vehicle identities/positions."""
+import re
+
 from Driftkings.core.tactical_minimap import finite
 
 PROTOCOL = 1
 
 
-def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None):
+def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, calibration=None):
     data = {'enabled': bool(enabled), 'protocol': PROTOCOL, 'generation': generation, 'effectiveMode': 'vanilla',
             'acknowledged': bool(acknowledged), 'nativePresentationChanged': False,
             'available': False, 'partial': True, 'markerCount': 0,
@@ -13,6 +15,8 @@ def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None):
     if not enabled:
         data['reason'] = 'disabled'
         return data
+    if calibration is not None:
+        data['calibration'] = calibration_result(calibration)
     if graphics is not None:
         result = graphics_result(graphics)
         if result is not None:
@@ -33,6 +37,11 @@ def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None):
     except (KeyError, ValueError, TypeError, OverflowError):
         data['reason'] = 'invalid-native-metadata'
         return data
+    uri = texture_uri(texture)
+    if uri is not None:
+        data['textureUri'] = uri
+    else:
+        data['cartographyReason'] = 'unsupported-texture-path'
     data.update(available=True, bounds=bounds, nativeSize=size, texture=texture[:256],
                 markerCount=count, reason='ready' if acknowledged else 'waiting-handshake')
     return data
@@ -57,3 +66,42 @@ def graphics_result(args):
     if args['svgApi'] and count != 21:
         return None
     return {'svgApi': args['svgApi'], 'glyphCount': int(count)}
+
+
+def texture_uri(path):
+    """Only bounded virtual map resources; no filesystem, network or CSS fragments."""
+    if not isinstance(path, (str, type(u''))) or len(path) > 256:
+        return None
+    if path.startswith('img://'):
+        path = path[6:]
+    if not re.match(r'^(?:spaces/[A-Za-z0-9_/-]+\.(?:dds|png)|gui/maps/icons/map/[A-Za-z0-9_-]+\.png)\Z', path):
+        return None
+    if any(part in ('', '.', '..') for part in path.split('/')):
+        return None
+    return 'img://' + path
+
+
+def calibration_result(data):
+    """UI background rectangle only; not a vehicle coordinate or an input route."""
+    unavailable = {'available': False, 'reason': 'invalid-geometry'}
+    if not isinstance(data, dict):
+        return unavailable
+    if data.get('available') is False:
+        reason = data.get('reason')
+        allowed = ('minimap-unavailable', 'background-unavailable', 'stage-unavailable', 'empty-background', 'map-area-unavailable', 'empty-map-area')
+        return {'available': False, 'reason': reason if reason in allowed else 'unavailable'}
+    if data.get('available') is not True:
+        return unavailable
+    try:
+        values = dict((key, finite(data[key])) for key in
+                      ('x', 'y', 'width', 'height', 'stageWidth', 'stageHeight'))
+        width, height = values['stageWidth'], values['stageHeight']
+        if not (0 < width <= 32768 and 0 < height <= 32768 and
+                0 < values['width'] <= 4 * width and 0 < values['height'] <= 4 * height and
+                -4 * width <= values['x'] <= 4 * width and -4 * height <= values['y'] <= 4 * height):
+            return unavailable
+    except (KeyError, TypeError, ValueError, OverflowError):
+        return unavailable
+    return dict(values, available=True, normalized={
+        'x': values['x'] / width, 'y': values['y'] / height,
+        'width': values['width'] / width, 'height': values['height'] / height})

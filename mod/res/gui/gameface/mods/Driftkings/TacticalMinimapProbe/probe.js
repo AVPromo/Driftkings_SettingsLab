@@ -3,10 +3,10 @@
     'use strict';
     var OWNER = '__dkTacticalMinimapProbe', FEATURE = 'DriftkingsTacticalMinimapProbe';
     if (window[OWNER]) { window[OWNER].dispose(); }
-    var disposed = false, node = null, binding = null, graphics = null;
+    var disposed = false, node = null, binding = null, graphics = null, cartography = null;
     function hide() {
         if (node && node.parentNode) { node.parentNode.removeChild(node); }
-        node = null; graphics = null;
+        node = null; graphics = null; cartography = null;
     }
     function release() {
         if (binding && binding.callback !== null) { viewEnv.removeDataChangedCallback(binding.callback, binding.id); }
@@ -49,6 +49,32 @@
         }
         return graphics;
     }
+    function mapSample(uri) {
+        if (typeof uri !== 'string' || uri.length > 262 ||
+                !/^img:\/\/(spaces\/[A-Za-z0-9_/-]+\.(dds|png)|gui\/maps\/icons\/map\/[A-Za-z0-9_-]+\.png)$/.test(uri) ||
+                uri.indexOf('//', 6) !== -1) { return null; }
+        if (cartography && cartography.uri === uri) { return cartography.node; }
+        var root = document.createElement('div');
+        root.className = 'dk-probe-cartography';
+        var caption = document.createElement('div');
+        caption.textContent = 'Amostra da textura — confirmar visualmente';
+        var image = document.createElement('div');
+        image.className = 'dk-probe-map-image';
+        image.style.backgroundImage = 'url("' + uri + '")';
+        root.appendChild(caption); root.appendChild(image);
+        cartography = {uri: uri, node: root};
+        return root;
+    }
+    function calibration(data) {
+        if (!data || data.available !== true) {
+            line('Geometria Flash: ' + (data && data.reason || 'a aguardar'));
+            return;
+        }
+        var keys = ['x', 'y', 'width', 'height', 'stageWidth', 'stageHeight'];
+        if (!keys.every(function (key) { return typeof data[key] === 'number' && isFinite(data[key]); })) { return; }
+        line('Área Flash: ' + data.x + ', ' + data.y + ' | ' + data.width + ' × ' + data.height +
+            ' | palco ' + data.stageWidth + ' × ' + data.stageHeight);
+    }
     function render(data) {
         if (!data || data.enabled !== true || data.protocol !== 1 || data.effectiveMode !== 'vanilla') {
             hide(); return;
@@ -68,7 +94,10 @@
         } else {
             line('Fonte nativa: ' + (data.reason || 'indisponível'), 'dk-probe-pending');
         }
-        line('Sem substituição do minimapa, posições ou Lost Contact.');
+        line('Sem substituição do minimapa, posições de veículos ou Lost Contact.');
+        calibration(data.calibration);
+        var map = mapSample(data.textureUri);
+        if (map) { node.appendChild(map); }
         line('Amostras fixas — 16 / 24 / 32 px; confirmar visualmente.');
         var sample = graphicsSample();
         node.appendChild(sample.node);

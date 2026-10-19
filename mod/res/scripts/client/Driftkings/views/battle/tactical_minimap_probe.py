@@ -3,7 +3,7 @@
 import logging
 import weakref
 
-from Driftkings.core.tactical_minimap_probe import accepts_ack, graphics_result, payload
+from Driftkings.core.tactical_minimap_probe import accepts_ack, calibration_result, graphics_result, payload
 from Driftkings.views.battle.tactical_minimap import native_adapter
 from Driftkings.views.hangar.common import publish_card
 
@@ -26,6 +26,8 @@ class ProbeBridge(object):
         self.installed = False
         self._native = None
         self._adapter = None
+        self._geometry_source = None
+        self._calibration = None
 
     def enabled(self):
         if self.disposed:
@@ -75,7 +77,30 @@ class ProbeBridge(object):
         hudVisibility.detach(self)
         self._close_adapter()
         self._native = None
+        self._geometry_source = None
+        self._calibration = None
         self.refresh()
+
+    def register_geometry_source(self, view):
+        if not self.enabled():
+            return False
+        self._geometry_source = weakref.ref(view)
+        self._calibration = None
+        return True
+
+    def clear_geometry_source(self, view):
+        if self._geometry_source is not None and self._geometry_source() is view:
+            self._geometry_source = None
+            self._calibration = None
+            self.refresh()
+
+    def on_geometry(self, view, data):
+        if (not self.enabled() or self._geometry_source is None or self._geometry_source() is not view):
+            return
+        result = calibration_result(data)
+        if result != self._calibration:
+            self._calibration = result
+            self.refresh()
 
     def setBattleHudVisible(self, visible):
         self.hudVisible = bool(visible)
@@ -113,7 +138,7 @@ class ProbeBridge(object):
         for view in ready_views:
             try:
                 self._publish(view, payload(enabled and view._guiVisible, view._acknowledged, snapshot, self.generation,
-                                            getattr(view, '_graphicsResult', None)))
+                                            getattr(view, '_graphicsResult', None), self._calibration))
             except Exception:
                 LOG.exception('Cannot publish minimap diagnostic; Vanilla unchanged')
 

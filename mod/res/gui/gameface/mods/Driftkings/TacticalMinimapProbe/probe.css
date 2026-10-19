@@ -6,3 +6,6 @@
 #dk-tactical-minimap-probe .dk-probe-glyphs { margin-top:6rem; }
 #dk-tactical-minimap-probe .dk-probe-glyph-column { display:inline-block; width:48rem; vertical-align:top; text-align:center; }
 #dk-tactical-minimap-probe .dk-probe-glyph-column svg { display:block; margin:5rem auto; }
+
+.dk-probe-cartography { position: absolute; left: 100%; top: 0; width: 120rem; padding: 8rem; background: rgba(0,0,0,.8); }
+.dk-probe-map-image { width: 120rem; height: 120rem; background-size: contain; background-repeat: no-repeat; background-position: center; }

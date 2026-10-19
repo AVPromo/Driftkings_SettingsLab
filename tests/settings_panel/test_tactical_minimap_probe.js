@@ -3,7 +3,7 @@
 var assert = require('assert'), fs = require('fs'), vm = require('vm'), path = require('path');
 var listeners = {}, callbacks = {}, acknowledgements = [], removed = [], errors = [];
 var serial = 0, model = null, callbackAdds = 0;
-function Element() { this.children = []; this.parentNode = null; }
+function Element() { this.children = []; this.parentNode = null; this.style = {}; }
 Object.defineProperty(Element.prototype, 'firstChild', {get: function () { return this.children[0] || null; }});
 Element.prototype.appendChild = function (child) { this.children.push(child); child.parentNode = this; };
 Element.prototype.removeChild = function (child) {
@@ -46,6 +46,15 @@ assert.strictEqual(acknowledgements.length, 1);
 assert.strictEqual(callbackAdds, 1);
 data.acknowledged = true; refresh();
 assert.strictEqual(box.children[1].className, 'dk-probe-ready');
+data.textureUri = 'img://spaces/01_karelia/mmap.dds'; refresh();
+var maps = box.children.filter(function (child) { return child.className === 'dk-probe-cartography'; });
+assert.strictEqual(maps.length, 1);
+assert.strictEqual(maps[0].children[1].style.backgroundImage, 'url("img://spaces/01_karelia/mmap.dds")');
+var originalMap = maps[0];
+data.markerCount++; refresh();
+assert.strictEqual(box.children.filter(function (child) { return child.className === 'dk-probe-cartography'; })[0], originalMap);
+data.textureUri = 'https://example.com/map.png'; refresh();
+assert.strictEqual(box.children.filter(function (child) { return child.className === 'dk-probe-cartography'; }).length, 0);
 var validPayload = model.payload;
 ['{', 'null', '[]'].forEach(function (bad) {
     model.payload = bad; listeners['viewEnv.onDataChanged'](); assert.strictEqual(body.children.length, 0);

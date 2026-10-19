@@ -2,7 +2,7 @@
 from Driftkings._constants import GLOBAL, MINIMAP_ENHANCEMENTS
 from Driftkings.settings.service import settings_service
 """Presentation adapter for MinimapPlugins; gameplay state stays in its component."""
-from Driftkings.common import xvmInstalled
+from Driftkings.common import logError, xvmInstalled
 from Driftkings.common.utils.game import checkKeys
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.meta.battle.minimap import MinimapMeta
@@ -35,8 +35,10 @@ class MinimapCentredView(MinimapMeta):
         for plugin in list(_component().PERSONAL):
             if hasattr(plugin, '_ranges'):
                 self.onRanges(plugin._ranges)
+        self._bindTacticalProbe()
 
     def _dispose(self):
+        self._releaseTacticalProbe()
         # AS disposal restores zoom; arena data may already be gone here.
         if self._releaseCallback is not None:
             cancelCallback(self._releaseCallback)
@@ -47,6 +49,31 @@ class MinimapCentredView(MinimapMeta):
         g_events.onAltKey -= self.onAltKey
         # noinspection PyProtectedMember
         super(MinimapCentredView, self)._dispose()
+
+    def _bindTacticalProbe(self):
+        bridge = _component()._probe_bridge
+        if bridge is not None:
+            try:
+                if bridge.register_geometry_source(self):
+                    self.as_minimapProbeS(True)
+            except Exception as error:
+                logError(self.section, 'Tactical calibration unavailable: ' + repr(error))
+
+    def _releaseTacticalProbe(self):
+        bridge = _component()._probe_bridge
+        if bridge is not None:
+            try:
+                bridge.clear_geometry_source(self)
+            except Exception as error:
+                logError(self.section, 'Tactical calibration cleanup failed: ' + repr(error))
+
+    def onTacticalGeometry(self, data):
+        bridge = _component()._probe_bridge
+        if bridge is not None:
+            try:
+                bridge.on_geometry(self, data)
+            except Exception as error:
+                logError(self.section, 'Tactical geometry rejected: ' + repr(error))
 
     def _checkRelease(self):
         self._releaseCallback = None
