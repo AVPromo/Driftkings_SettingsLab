@@ -8,6 +8,7 @@ import time
 import weakref
 from copy import deepcopy
 import BigWorld
+from realm import CURRENT_REALM
 from Driftkings.meta.battle.players_panel import PlayersPanelMeta
 from gui.Scaleform.daapi.view.battle.classic.players_panel import PlayersPanel
 from gui.Scaleform.daapi.view.meta.BattleStatisticDataControllerMeta import BattleStatisticDataControllerMeta
@@ -247,6 +248,11 @@ class RatingViews(object):
         arena=getattr(player,'arena',None)
         if arena is None: return []
         data=settings_service.getComponentDict(self.config)
+        translations = {'Destroyed': self.config.i18n['UI_panel_destroyed']}
+        if self.model.translations != translations:
+            self.model.translations = translations
+            self.rowCache.clear()
+            self.screenCache.clear()
         if not data[TEAM_PANELS.PERFORMANCE].get('diagnostics',False): self.invalidationCauses.clear()
         if arena is not self.cacheArena or data!=self.cacheConfig:
             changes = SettingsChanges(data, changed_paths(self.cacheConfig or {}, data))
@@ -291,7 +297,7 @@ class RatingViews(object):
         contexts={}
         ownID=getattr(player,'playerVehicleID',0)
         self.resolvedRows=0
-        shared=(ownID,getattr(player,'team',0),self.model.mode,self.model.widths,getattr(arena,'guiType',None),
+        shared=(ownID,getattr(player,'team',0),self.model.mode,self.model.widths,getattr(arena,'guiType',None),CURRENT_REALM,
                 any(m.get('hasSelectedBadge') for m in self.model.metadata.values()))
         for ident,vehicle in arena.vehicles.items():
             stats=self.stats.getPlayersInfo(vehicle.get('accountDBID',0))
@@ -302,7 +308,7 @@ class RatingViews(object):
             cached=self.contextCache.get(ident)
             if cached is None or cached[0]!=stamp:
                 values=self.model.values(ident,vehicle,stats,ownID,getattr(player,'team',0),data,getStatisticColor)
-                values['frags']=stamp[6]; values['region']='EU'; values['battletype-key']=getattr(arena,'guiType',None)
+                values['frags']=stamp[6]; values['region']=CURRENT_REALM; values['battletype-key']=getattr(arena,'guiType',None)
                 # Vehicle descriptors are engine objects; snapshot the mutable
                 # dictionaries, but keep the immutable descriptor by reference.
                 snapshot=(shared,dict(vehicle),deepcopy(stats),deepcopy(stamp[3]),stamp[4],deepcopy(stamp[5]),stamp[6],typeStamp)

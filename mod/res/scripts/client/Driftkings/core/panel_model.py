@@ -7,7 +7,8 @@ ROMAN=('','I','II','III','IV','V','VI','VII','VIII','IX','X','XI')
 TYPES={'lightTank':'LT','mediumTank':'MT','heavyTank':'HT','AT-SPG':'TD','SPG':'SPG'}
 
 class Roster(object):
-    def __init__(self):
+    def __init__(self, translations=None):
+        self.translations = translations or {}
         self.reset()
 
     def reset(self):
@@ -140,7 +141,7 @@ class Roster(object):
         return values
 
     def screen(self,settings,values,data,side,dependencies=None):
-        macros=Macros(values,data,{'Destroyed':'Destruido'},dependencies)
+        macros=Macros(values,data,self.translations,dependencies)
         if dependencies is not None: dependencies.add('xvm-stat')
         result=macros.resolve(settings)
         result['enabled']=bool(settings.get('enabled',True) and (truth(values['xvm-stat']) or settings.get('showUnavailable',True)))
