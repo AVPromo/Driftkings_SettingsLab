@@ -103,7 +103,8 @@ package driftkings.battle.components.minimap
                             y:Math.round(top * 100) / 100,
                             width:Math.round((Math.max(a.x,b.x,c.x,d.x) - left) * 100) / 100,
                             height:Math.round((Math.max(a.y,b.y,c.y,d.y) - top) * 100) / 100,
-                            stageWidth:minimap.stage.stageWidth, stageHeight:minimap.stage.stageHeight};
+                            stageWidth:minimap.stage.stageWidth, stageHeight:minimap.stage.stageHeight,
+                            sizeIndex:minimap.currentSizeIndex};
                     }
                     else data.reason = "empty-map-area";
                 }

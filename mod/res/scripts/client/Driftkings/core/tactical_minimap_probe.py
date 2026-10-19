@@ -59,6 +59,7 @@ def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, c
         data['destroyedPoints'] = destroyed_calibration_points(snapshot.get('destroyedMarkers', []))
         data['cameraLine'] = camera_line(snapshot.get('cameraLine'))
         data['strategicPoint'] = strategic_point(snapshot.get('strategicPoint'))
+        data['nativeInput'] = input_sample(snapshot.get('nativeInput'))
         data['strategicArea'] = strategic_area(snapshot.get('strategicArea')) if data['strategicPoint'] else []
         values = snapshot.get('yawLines')
         lines = [camera_line(value) for value in values] if isinstance(values, list) and len(values) == 2 else []
@@ -132,6 +133,13 @@ def calibration_result(data):
             return unavailable
     except (KeyError, TypeError, ValueError, OverflowError):
         return unavailable
+    if 'sizeIndex' in data:
+        try:
+            index = finite(data['sizeIndex'])
+            if 0 <= index <= 5 and int(index) == index:
+                values['sizeIndex'] = int(index)
+        except (ValueError, TypeError, OverflowError):
+            pass  # Optional diagnostic metadata does not invalidate geometry.
     return dict(values, available=True, normalized={
         'x': values['x'] / width, 'y': values['y'] / height,
         'width': values['width'] / width, 'height': values['height'] / height})
@@ -184,9 +192,11 @@ def geometry_response(value):
     parts = value.split('|')
     if len(parts) == 2 and parts[0] == '0':
         return calibration_result({'available': False, 'reason': parts[1]})
-    if len(parts) != 7 or parts[0] != '1':
+    if len(parts) not in (7, 8) or parts[0] != '1':
         return calibration_result(None)
     data = dict(zip(('x', 'y', 'width', 'height', 'stageWidth', 'stageHeight'), parts[1:]))
+    if len(parts) == 8:
+        data['sizeIndex'] = parts[7]
     data['available'] = True
     return calibration_result(data)
 
@@ -242,6 +252,33 @@ def player_point(value):
     if isinstance(cell, (str, type(u''))) and re.match(r'^[A-HJK][1-90]\Z', cell):
         result['cell'] = cell
     return result
+
+
+def input_sample(value):
+    if not isinstance(value, dict):
+        return None
+    point = strategic_point(value)
+    if point is None:
+        return None
+    for key, maximum in (('button', 4), ('sizeIndex', 5), ('sequence', 2147483647)):
+        number = value.get(key)
+        if (isinstance(number, bool) or not isinstance(number, (int, float)) or
+                not 0 <= number <= maximum or int(number) != number):
+            return None
+        point[key] = int(number)
+    return point if point['sequence'] > 0 else None
+
+
+def native_click_sample(x, y, button, size_index, native_size, sequence):
+    """Observe native logical pixels; never invoke clicks or chat commands."""
+    try:
+        width, height = [finite(value) for value in native_size]
+        if width <= 0 or height <= 0:
+            return None
+        return input_sample({'x': finite(x) / width, 'y': finite(y) / height,
+                             'button': button, 'sizeIndex': size_index, 'sequence': sequence})
+    except (ValueError, TypeError, OverflowError):
+        return None
 
 
 def strategic_area(value):

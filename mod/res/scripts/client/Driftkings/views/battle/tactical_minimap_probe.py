@@ -3,7 +3,7 @@
 import logging
 import weakref
 
-from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits, strategic_area_response
+from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits, strategic_area_response, native_click_sample
 from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points, native_camera_line, native_yaw_lines, native_strategic_point
 from Driftkings.views.hangar.common import publish_card
 
@@ -39,6 +39,8 @@ class ProbeBridge(object):
         self._ally_log_count = 0
         self._ping_log_state = None
         self._ping_log_count = 0
+        self._last_input = None
+        self._input_sequence = 0
 
     def enabled(self):
         if self.disposed:
@@ -55,6 +57,7 @@ class ProbeBridge(object):
             self._adapter = None
 
     def bind_native(self, component):
+        self._last_input = None
         self._close_adapter()
         self._native_failed = False
         self._native = weakref.ref(component)
@@ -65,6 +68,7 @@ class ProbeBridge(object):
         if self._native is not None and self._native() is component:
             self._close_adapter()
             self._native = None
+            self._last_input = None
             self._personal_entries.pop(component, None)
             self._camera_entries.pop(component, None)
             self._strategic_entries.pop(component, None)
@@ -79,6 +83,8 @@ class ProbeBridge(object):
             return
         from Driftkings.core.hud_visibility import hudVisibility
         self.generation += 1
+        self._last_input = None
+        self._input_sequence = 0
         self._ally_log_state = None
         self._ally_log_count = 0
         self._ping_log_state = None
@@ -94,6 +100,8 @@ class ProbeBridge(object):
     def stop(self, *args):
         from Driftkings.core.hud_visibility import hudVisibility
         self.active = False
+        self._last_input = None
+        self._input_sequence = 0
         if self._geometry_callback is not None:
             self._cancel(self._geometry_callback)
             self._geometry_callback = None
@@ -130,6 +138,18 @@ class ProbeBridge(object):
                     LOG.debug('Personal minimap matrix unavailable', exc_info=True)
         except Exception:
             self._calibration = {'available': False, 'reason': 'native-geometry-unavailable'}
+
+    def observe_native_click(self, component, x, y, button, size_index):
+        if (not self.active or not self.enabled() or not self.hudVisible or
+                self._native is None or self._native() is not component):
+            return
+        from gui.battle_control.minimap_utils import MINIMAP_SIZE
+        if component.getMinimapDimensions() != 10:
+            return
+        self._last_input = native_click_sample(x, y, button, size_index, MINIMAP_SIZE, self._input_sequence + 1)
+        if self._last_input is not None:
+            self._input_sequence = self._last_input['sequence']
+        self.refresh()
 
     def _start_geometry_poll(self):
         if self._schedule is None:
@@ -177,6 +197,7 @@ class ProbeBridge(object):
                         self._adapter = self._factory(component, component.sessionProvider)
                     snapshot = self._adapter.capture()
                     if snapshot.get('available'):
+                        snapshot['nativeInput'] = self._last_input
                         try:
                             snapshot['strategicPoint'] = native_strategic_point(component, self._strategic_entries.get(component))
                         except Exception:
@@ -357,6 +378,15 @@ class ProbeBridge(object):
                 if entry_id in records or len(records) < 32:
                     records[entry_id] = {'kind': PING_SYMBOLS[symbol], 'matrix': matrix, 'active': bool(active), 'state': 'attack'}
             return entry_id
+
+        @override(MinimapComponent, 'onMinimapClicked')
+        def minimap_clicked(original, component, x, y, button_index, size_index):
+            result = original(component, x, y, button_index, size_index)
+            try:
+                bridge.observe_native_click(component, x, y, button_index, size_index)
+            except Exception:
+                LOG.debug('Native minimap input diagnostic unavailable', exc_info=True)
+            return result
 
         @override(MinimapComponent, 'setMatrix')
         def set_matrix(original, component, entry_id, matrix):

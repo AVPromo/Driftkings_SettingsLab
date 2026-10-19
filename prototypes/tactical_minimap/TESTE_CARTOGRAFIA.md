@@ -1,5 +1,15 @@
 # Cartografia e calibração — diagnóstico
 
+## Diagnóstico do input nativo e do tamanho
+
+Etapa de observação antes de ligar input ao Gameface. Um nono hook, instalado apenas com tacticalDiagnostics ativo, acompanha `MinimapComponent.onMinimapClicked(x, y, buttonIdx, mapScaleIndex)`. Chama o original exatamente uma vez, antes da observação, preserva o resultado e deixa propagar falhas do próprio cliente. Falhas do diagnóstico são contidas. Não chama comandos, não reenvia cliques e não altera foco, teclas ou pointer-events.
+
+O cliente clássico converte coordenadas lógicas por `MINIMAP_SIZE`, não pelo tamanho visual do mapa; a ponte usa essa constante importada, valida os limites e publica apenas o último clique, botão, índice e sequência. A cruz magenta é uma referência diagnóstica persistente até outro clique ou fim/troca de batalha, não é um ping nem guarda posições de veículos. A geometria Flash acrescenta opcionalmente o índice `currentSizeIndex` (0–5), mantendo leitura do formato antigo. Não se escreve AccountSettings.
+
+Teste: no minimapa **original**, usar Ctrl esquerdo e o rato como habitualmente, clicar em pontos reconhecíveis e comparar a cruz magenta na amostra. Usar as teclas nativas de aumentar/diminuir e confirmar o índice de tamanho no texto do diagnóstico. Repetir os cliques após redimensionar: a posição normalizada deve coincidir. A amostra mantém 200rem; o índice mede o tamanho original, não redimensiona a amostra. Confirmar que cada clique produz apenas a ação nativa habitual, sem duplicação, e que a saída da batalha limpa a referência.
+
+Em replay, `ClassicMinimapComponent._setupPlugins()` não instala o plugin `pinging`; o hook pode observar chamadas que o Flash ainda publique, mas ausência de chamadas/pings nesse contexto não prova falha. O teste completo de comandos exige batalha real. Cliques sobre veículos/bases podem seguir callbacks específicos e ainda não são cobertos. Mouseover, atalhos, foco e encaminhamento Gameface permanecem pendentes. Mira/contorno estratégico aguardam o teste de artilharia indicado pelo utilizador.
+
 ## Limites visuais da câmara estratégica
 
 A ponte Flash lê o retângulo local `getRect(entry)` de uma única `StrategicCameraMinimapEntry` visível e transforma os quatro cantos com localToGlobal, preservando rotação e escala nativas. É o contorno dos limites visuais da entrada, ainda não uma prova de equivalência à área completa de visão. Só é consultado quando a entrada Python estratégica selecionada é válida. Varredura limitada a 4000 nós, sem cache de posições, retorno primitivo de quatro pares; ambiguidades, geometria vazia ou exceder o limite de procura devolvem vazio.

@@ -1,5 +1,13 @@
 # Compatibilidade WoT 2.4.1 — estado da entrega
 
+## Atualização após testes NA de 19/10/2026
+
+O estado inicial abaixo é histórico. O diagnóstico opt-in já tem transporte de posições publicadas, SVG, cartografia/grelha, geometria, bases/captura, círculos, pings de célula/posição/artilharia, impactos inimigos e inimigos próximos/distantes confirmados pelo utilizador em replay. A linha de direção da câmara arcade também foi confirmada. Destruídos, etiquetas, limites do canhão e mira/contorno estratégico têm código e testes, mas ainda carecem de confirmação visual explícita; o utilizador fará o teste de artilharia numa batalha.
+
+A etapa atual acrescenta observação de cliques no original e leitura do índice de tamanho, ainda por validar no jogo. Não recebe input no Gameface nem envia comandos. A substituição permanece bloqueada: faltam paridade de interação, modos, recuperação e medições reais. `TESTE_CARTOGRAFIA.md` contém o procedimento e as limitações atuais; nenhum destes testes permite declarar suporte global EU/NA/ASIA ou Lost Contact.
+
+## Registo inicial da auditoria
+
 | Área | Estado | Evidência / teste pendente |
 | --- | --- | --- |
 | Cliente EU 2.4.1.0 #977 | Auditado | version.xml, SRC e recursos SWF gui-part*.pkg |

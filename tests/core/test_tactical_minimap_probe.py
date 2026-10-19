@@ -34,6 +34,7 @@ class ProbeTests(RuntimeTest):
         self.scheduled, self.cancelled = [], []
         self.api = source('views/battle/tactical_minimap_probe.py', {
             'Driftkings.core.tactical_minimap_probe': self.policy,
+            'gui.battle_control.minimap_utils': module(MINIMAP_SIZE=(210, 210)),
             'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: [], native_strategic_point=lambda component, record: None),
             'Driftkings.views.hangar.common': module(publish_card=publish),
             'Driftkings.core.hud_visibility': module(hudVisibility=hud)})
@@ -158,6 +159,74 @@ class ProbeTests(RuntimeTest):
         hooks['addEntry'](original, component, 'StrategicCameraEntry', 'personal', 'matrix', True)
         bridge.stop()
         self.assertEqual(len(bridge._strategic_entries), 0)
+
+    def test_native_click_normalization_is_independent_of_visual_size(self):
+        read = self.policy.native_click_sample
+        self.assertEqual(read(105, 52.5, 0, 5, (210, 210), 1),
+                         dict(x=.5, y=.25, button=0, sizeIndex=5, sequence=1))
+        self.assertEqual(read(420, 160, 1, 0, (840, 320), 2)['x'], .5)
+        for x, y in ((0, 0), (210, 210), (0, 210), (210, 0)):
+            self.assertIsNotNone(read(x, y, 0, 0, (210, 210), 1))
+        for args in ((-1, 0, 0, 0, (210, 210), 1), (0, 211, 0, 0, (210, 210), 1),
+                     (0, 0, False, 0, (210, 210), 1), (0, 0, 0, 6, (210, 210), 1),
+                     (0, 0, 0, 0, (0, 210), 1), (0, 0, 0, 0, (210, 210), 0),
+                     (float('nan'), 0, 0, 0, (210, 210), 1)):
+            self.assertIsNone(read(*args))
+
+    def test_click_observation_requires_current_battle_and_clears_on_stop(self):
+        self.settings['tacticalDiagnostics'] = True
+        self.component.getMinimapDimensions = lambda: 10
+        self.bridge.bind_native(self.component)
+        self.bridge.observe_native_click(self.component, 105, 105, 0, 2)
+        self.assertIsNone(self.bridge._last_input)
+        self.bridge.start()
+        self.bridge.acknowledge(self.view, {'protocol': 1, 'generation': 1})
+        self.bridge.observe_native_click(self.component, 105, 105, 0, 2)
+        self.assertEqual(self.frames[-1]['nativeInput'], dict(x=.5, y=.5, button=0, sizeIndex=2, sequence=1))
+        self.bridge.observe_native_click(Owner(), 0, 0, 0, 2)
+        self.assertEqual(self.bridge._last_input['sequence'], 1)
+        self.bridge.setBattleHudVisible(False)
+        self.bridge.observe_native_click(self.component, 0, 0, 0, 2)
+        self.assertEqual(self.bridge._last_input['sequence'], 1)
+        self.bridge.setBattleHudVisible(True)
+        self.bridge.observe_native_click(self.component, 210, 210, 1, 5)
+        self.assertEqual(self.frames[-1]['nativeInput']['sequence'], 2)
+        self.bridge.stop()
+        self.assertIsNone(self.bridge._last_input)
+        self.assertEqual(self.bridge._input_sequence, 0)
+
+    def test_geometry_optional_size_index_preserves_legacy_protocol(self):
+        read = self.policy.geometry_response
+        old = '1|800|400|200|200|1000|800'
+        self.assertTrue(read(old)['available'])
+        self.assertNotIn('sizeIndex', read(old))
+        self.assertEqual(read(old + '|5')['sizeIndex'], 5)
+        self.assertNotIn('sizeIndex', read(old + '|6'))
+        self.assertNotIn('sizeIndex', read(old + '|nan'))
+
+    def test_native_click_hook_preserves_original_call_result_and_failure(self):
+        self.settings['tacticalDiagnostics'] = True
+        bridge, hooks, events = self.install_runtime_stubs()
+        bridge.install()
+        calls, observed = [], []
+        component, token = Owner(), object()
+        def original(*args):
+            calls.append(args)
+            return token
+        bridge.observe_native_click = lambda *args: observed.append((len(calls), args))
+        args = (component, 105, 105, 0, 2)
+        self.assertIs(hooks['onMinimapClicked'](original, *args), token)
+        self.assertEqual(calls, [args])
+        self.assertEqual(observed, [(1, args)])
+        def broken_observer(*args):
+            raise RuntimeError('Simulated diagnostic failure')
+        bridge.observe_native_click = broken_observer
+        self.assertIs(hooks['onMinimapClicked'](original, *args), token)
+        self.assertEqual(len(calls), 2)
+        def broken_original(*args):
+            raise RuntimeError('Native failure must propagate')
+        with self.assertRaises(RuntimeError):
+            hooks['onMinimapClicked'](broken_original, *args)
 
     def test_camera_contract_is_bounded_and_removes_private_fields(self):
         value = dict(x=.5, y=.5, x2=1, y2=.5)
@@ -677,7 +746,7 @@ class ProbeTests(RuntimeTest):
         bridge, hooks, events = self.install_runtime_stubs()
         bridge.install()
         bridge.install()
-        self.assertEqual(len(hooks), 8)
+        self.assertEqual(len(hooks), 9)
         self.assertEqual(len(events), 4)
         native = {7: object()}
         children = hooks['_getChildComponents'](lambda parent: native, Owner())
