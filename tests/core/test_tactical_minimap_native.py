@@ -94,6 +94,25 @@ class NativeAdapterTests(RuntimeTest):
         observer[0] = False
         personal._ctrlVehicleID = None
         self.assertFalse(self.api['owns_player_marker'](self.component))
+        personal._isInArcadeMode = lambda: True  # Native helper includes sniper.
+        self.assertTrue(self.api['owns_player_marker'](self.component))
+        personal._isInArcadeMode = lambda: False
+        personal._isInStrategicMode = lambda: True
+        self.assertTrue(self.api['owns_player_marker'](self.component))
+        personal._isInStrategicMode = lambda: False
+        self.assertFalse(self.api['owns_player_marker'](self.component))
+        personal._isInArcadeMode = lambda: True
+        for name in ('_isInPostmortemMode', '_isInVideoMode', '_isInFreeCamMode'):
+            setattr(personal, name, lambda: True)
+            self.assertFalse(self.api['owns_player_marker'](self.component))
+            setattr(personal, name, lambda: False)
+        alive[0] = False
+        self.assertFalse(self.api['owns_player_marker'](self.component))
+        alive[0], observer[0] = True, True
+        self.assertFalse(self.api['owns_player_marker'](self.component))
+        observer[0] = False
+        personal._getPlayerVehicleID = lambda: 3
+        self.assertFalse(self.api['owns_player_marker'](self.component))
 
     def test_published_far_allies_remain_but_far_enemies_never_read_matrices(self):
         self.plugin._entries = {1: self.entry(enemy=False, aoi=False, location=2)}

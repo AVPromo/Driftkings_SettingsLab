@@ -172,13 +172,14 @@ def owns_player_marker(component):
         dp = component.sessionProvider.getArenaDP()
         vehicle_id = dp.getPlayerVehicleID()
         info = dp.getVehicleInfo(vehicle_id)
-        # initControlMode publishes the own matrix before updateControlMode fills
-        # _ctrlVehicleID (initially 0). Do not mistake this native startup state
-        # for spectating another vehicle, especially in Maps Training.
+        # Native control IDs are 0 at startup and may be None in own-camera
+        # updates (observed entering sniper). None is accepted only in native
+        # arcade/sniper or strategic modes, with live own identity checked below.
         controlled = personal._ctrlVehicleID
-        initial_own = (controlled == 0 and not personal._isInPostmortemMode() and
-                       not personal._isInVideoMode() and not personal._isInFreeCamMode())
-        return bool(vehicle_id and (controlled == vehicle_id or initial_own) and
+        unassigned_own = (controlled in (0, None) and not personal._isInPostmortemMode() and
+                          not personal._isInVideoMode() and not personal._isInFreeCamMode() and
+                          (controlled == 0 or personal._isInArcadeMode() or personal._isInStrategicMode()))
+        return bool(vehicle_id and (controlled == vehicle_id or unassigned_own) and
                     personal._getPlayerVehicleID() == vehicle_id and info is not None and
                     info.isAlive() and not info.isObserver())
     except Exception:
