@@ -133,6 +133,51 @@ def _topography_context(component, session, plugin):
     return session.arenaVisitor.gui.guiType == ARENA_GUI_TYPE.MAPS_TRAINING
 
 
+def native_surface_audit(component):
+    """Read the exact C++ surface created by MinimapComponent; never mutate it.
+
+    The private field name is audited against the local 2.4.1 SRC. Unknown
+    engine types are rejected before any rendering properties are inspected.
+    """
+    surface = getattr(component, '_MinimapComponent__component', None)
+    if surface is None:
+        return {'available': False, 'reason': 'native-surface-unavailable'}
+    if (type(surface).__module__, type(surface).__name__) != ('GUI', 'WGMinimapFlashAS3'):
+        return {'available': False, 'reason': 'unsupported-native-surface'}
+    result = dict(available=True, className='GUI.WGMinimapFlashAS3', visible=None,
+                  colour=None, size=None, inputMode=None, missing=[])
+    try:
+        value = surface.visible
+        if type(value) is not bool:
+            raise ValueError('Invalid visibility')
+        result['visible'] = value
+    except Exception:
+        result['missing'].append('visible')
+    try:
+        value = surface.colour
+        colour = [finite(getattr(value, name)) for name in ('x', 'y', 'z', 'w')]
+        if not all(0 <= channel <= 255 for channel in colour):
+            raise ValueError('Invalid colour channels')
+        result['colour'] = colour
+    except Exception:
+        result['missing'].append('colour')
+    try:
+        size = [finite(surface.width), finite(surface.height)]
+        if not all(0 <= dimension <= 1000000 for dimension in size):
+            raise ValueError('Invalid surface dimensions')
+        result['size'] = size
+    except Exception:
+        result['missing'].append('size')
+    try:
+        value = surface.wg_inputKeyMode
+        if type(value) is not int or not 0 <= value <= 32:
+            raise ValueError('Invalid input mode')
+        result['inputMode'] = value
+    except Exception:
+        result['missing'].append('inputMode')
+    return result
+
+
 def native_adapter(component, session):
     """Factory using contracts verified in the local 2.4.1 SRC, called explicitly.
 

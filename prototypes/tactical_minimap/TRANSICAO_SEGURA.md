@@ -30,6 +30,16 @@ Este resultado invalida esta implementação de ocultação. Não se repete nem 
 
 Após instalar o pacote corrigido é necessário reiniciar o cliente para recriar as superfícies nativas; remover a opção ou restaurar propriedades em memória não prova que uma superfície já afetada fique recuperada. Confirmar que o original regressa normal, sem vermelho ou linhas a sair do mapa.
 
+## Auditoria da superfície C++ — alternativa em estudo
+
+O SRC EU 2.4.1 cria `GUI.WGMinimapFlashAS3` em `MinimapComponent.__createComponent`, guarda-o em `__component` e acrescenta-o à aplicação. É este objeto que recebe addEntry, entryInvoke, entrySetMatrix e entrySetActive. A API local em `wot-src-EU/_stubs/GUI.py` identifica-o como subclasse de Flash/Simple e expõe visible, colour, width, height e wg_inputKeyMode. O stub descreve a existência destas propriedades; não prova que uma alteração preserve as animações/dados nem que a reposição funcione.
+
+A ponte lê agora o campo `_MinimapComponent__component` uma vez por ligação, quando a geometria fica pronta. Só inspeciona propriedades se o tipo exato for GUI.WGMinimapFlashAS3; variantes PvE/Scrolling ou proprietários desconhecidos são recusados. O resultado contém classe, visibilidade, cor RGBA, dimensões e modo de input, com limites e indicação de propriedades indisponíveis. Não inclui posições de veículos, IDs ou referências ao objeto.
+
+O log `Native C++ surface audit` não muda propriedades, não oculta a apresentação e não adiciona timer/hook. A ausência da superfície ou de uma propriedade não invalida a geometria existente. Testes Python usam uma superfície que recusa qualquer escrita e um proprietário desconhecido cujas propriedades não podem ser lidas. É necessário recolher o resultado real no NA antes de escolher uma alternativa. Nenhum novo ensaio de ocultação é ativado nesta entrega.
+
+Procedimento: instalar o pacote corrigido com esta auditoria, reiniciar o cliente e entrar/sair de Topography. Confirmar primeiro que o original regressou normal após o ensaio anterior e recolher `Native C++ surface audit` no log. A próxima decisão depende desses valores, não de uma suposição baseada apenas no stub.
+
 ## Condições para assumir a apresentação
 
 - Escolha Driftkings guardada antes do início da batalha, sem troca durante combate nesta primeira versão.

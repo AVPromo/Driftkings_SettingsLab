@@ -8,7 +8,7 @@ from Driftkings.core.diagnostics import Diagnostics
 from Driftkings.core.tactical_minimap import preferences, selection
 
 from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits, strategic_area_response, native_click_sample, gameface_click_sample, input_request, presentation_response
-from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points, native_camera_line, native_yaw_lines, native_strategic_point, forward_native_position_input
+from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points, native_camera_line, native_yaw_lines, native_strategic_point, forward_native_position_input, native_surface_audit
 from Driftkings.views.hangar.common import publish_card
 
 LOG = logging.getLogger('Driftkings.TacticalMinimapProbe')
@@ -171,6 +171,11 @@ class ProbeBridge(object):
     def _audit_presentation(self, component):
         if self._presentation_audit is not None:
             return
+        try:
+            surface = native_surface_audit(component)
+            LOG.info('Native C++ surface audit: %s; read-only, no visibility or colour changes', surface)
+        except Exception:
+            LOG.info('Native C++ surface audit unavailable; Vanilla unchanged')
         try:
             result = presentation_response(component.flashObject.as_DriftkingsPresentationAudit())
         except Exception:

@@ -33,6 +33,43 @@ class NativeAdapterTests(RuntimeTest):
                       getLocation=lambda: location, isEnemy=lambda: enemy,
                       getClassTag=lambda: 'mediumTank', getMatrix=lambda: matrix)
 
+    def test_native_surface_audit_reads_only_known_engine_surface_without_writes(self):
+        class Surface(object):
+            __module__ = 'GUI'
+            __name__ = 'WGMinimapFlashAS3'
+            def __getattribute__(self, name):
+                values = dict(visible=True, colour=Owner(x=255, y=255, z=255, w=255),
+                              width=.5, height=.5, wg_inputKeyMode=0)
+                return values[name] if name in values else object.__getattribute__(self, name)
+            def __setattr__(self, name, value):
+                raise AssertionError('Read-only audit must not write ' + name)
+        Surface.__name__ = 'WGMinimapFlashAS3'
+        component = Owner(_MinimapComponent__component=Surface())
+        result = self.api['native_surface_audit'](component)
+        self.assertTrue(result['available'])
+        self.assertTrue(result['visible'])
+        self.assertEqual(result['colour'], [255, 255, 255, 255])
+        self.assertEqual(result['size'], [.5, .5])
+        self.assertEqual(result['inputMode'], 0)
+        self.assertEqual(result['missing'], [])
+        self.assertFalse(self.api['native_surface_audit'](Owner())['available'])
+        class Foreign(object):
+            @property
+            def visible(self):
+                raise AssertionError('Unknown surfaces must not be inspected')
+        component._MinimapComponent__component = Foreign()
+        self.assertEqual(self.api['native_surface_audit'](component)['reason'], 'unsupported-native-surface')
+
+    def test_native_surface_invalid_optional_properties_do_not_break_geometry(self):
+        Surface = type('WGMinimapFlashAS3', (Owner,), {'__module__': 'GUI'})
+        component = Owner(_MinimapComponent__component=Surface(visible=1,
+            colour=Owner(x=255, y=255, z=255, w=float('nan')), width=-1, height=1,
+            wg_inputKeyMode='unknown'))
+        result = self.api['native_surface_audit'](component)
+        self.assertTrue(result['available'])
+        self.assertEqual(result['missing'], ['visible', 'colour', 'size', 'inputMode'])
+        self.assertIsNone(result['colour'])
+
     def test_native_map_and_visible_entries_are_read_without_orientation_or_world_reads(self):
         self.plugin._entries = {1: self.entry(), 2: self.entry(enemy=False)}
         frame = self.adapter.capture()

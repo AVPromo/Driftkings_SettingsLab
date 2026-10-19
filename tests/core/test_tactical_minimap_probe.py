@@ -37,7 +37,7 @@ class ProbeTests(RuntimeTest):
             'Driftkings.core.tactical_minimap_probe': self.policy,
             'gui.battle_control.minimap_utils': module(MINIMAP_SIZE=(210, 210)),
             'GUI': module(mcursor=lambda: Owner(visible=self.cursor_visible)),
-            'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: [], native_strategic_point=lambda component, record: None, forward_native_position_input=lambda component, value: 'diagnostic-replay'),
+            'Driftkings.views.battle.tactical_minimap': module(native_surface_audit=lambda component: {'available': False}, native_adapter=factory, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: [], native_strategic_point=lambda component, record: None, forward_native_position_input=lambda component, value: 'diagnostic-replay'),
             'Driftkings.views.hangar.common': module(publish_card=publish),
             'Driftkings.core.hud_visibility': module(hudVisibility=hud)})
         self.bridge = self.api['ProbeBridge'](object(), lambda config: self.settings,
@@ -922,7 +922,7 @@ class ProbeTests(RuntimeTest):
         dependencies = {
             'Driftkings.core.tactical_minimap_probe': self.policy,
             'GUI': module(mcursor=lambda: Owner(visible=fixture.cursor_visible)),
-            'Driftkings.views.battle.tactical_minimap': module(native_adapter=lambda *args: None, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: [], native_strategic_point=lambda component, record: None, forward_native_position_input=lambda component, value: 'diagnostic-replay'),
+            'Driftkings.views.battle.tactical_minimap': module(native_surface_audit=lambda component: {'available': False}, native_adapter=lambda *args: None, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: [], native_strategic_point=lambda component, record: None, forward_native_position_input=lambda component, value: 'diagnostic-replay'),
             'Driftkings.views.hangar.common': module(publish_card=lambda *args: None),
             'frameworks.wulf': module(ViewModel=BaseModel),
             'gui.impl.pub.view_component': module(ViewComponent=BaseView),
