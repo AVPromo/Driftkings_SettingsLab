@@ -54,6 +54,12 @@ class ProbeTests(RuntimeTest):
         self.assertEqual(self.policy.ping_points(read('.25,.75')), [expected])
         self.assertLessEqual(len(read(';'.join('%s,0' % (i / 40.0) for i in range(40)))), 32)
 
+    def test_artillery_ping_uses_native_aim_area_symbol(self):
+        self.assertEqual(self.policy.PING_SYMBOLS['ArtyMarkerMinimapEntry'], 'artillery')
+        value = dict(kind='artillery', x=.4, y=.6, state='attack', sender='private')
+        self.assertEqual(self.policy.ping_points([value]),
+                         [dict(kind='artillery', x=.4, y=.6, state='attack')])
+
     def test_cell_flashes_follow_current_native_frame_without_history(self):
         self.settings['tacticalDiagnostics'] = True
         self.component.getMinimapDimensions = lambda: 10
@@ -336,6 +342,10 @@ class ProbeTests(RuntimeTest):
         hooks['addEntry'](original, component, 'UnspottedMarkerUI', 'equipments', provider, True)
         self.assertEqual(bridge._ping_entries[component], {})
         hooks['addEntry'](original, component, 'MarkGoingToPositionEntryUI', 'equipments', provider, True)
+        hooks['addEntry'](original, component, 'ArtyMarkerMinimapEntry', 'equipments', provider, True)
+        self.assertEqual(bridge._ping_entries[component][9]['kind'], 'artillery')
+        hooks['delEntry'](original, component, 9)
+        self.assertEqual(bridge._ping_entries[component], {})
         bridge.stop()
         self.assertEqual(len(bridge._ping_entries), 0)
 

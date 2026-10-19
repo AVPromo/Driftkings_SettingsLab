@@ -43,5 +43,6 @@
 .dk-probe-ping { position:absolute; transform:translate(-50%,-50%); border:1px solid; border-radius:50%; background:rgba(0,0,0,.7); padding:1px 3px; font:bold 12px/14px Arial,sans-serif; }
 .dk-probe-ping-attention { color:#ffc45b; }
 .dk-probe-ping-going { color:#70dfff; }
+.dk-probe-ping-artillery { color:#ffad45; width:18px; height:18px; padding:0; text-align:center; font:bold 20px/18px Arial,sans-serif; }
 
 .dk-probe-ping-cell { width:10%; height:10%; padding:0; border-radius:0; box-sizing:border-box; color:#ffc45b; background:rgba(255,196,91,.2); }

@@ -128,6 +128,10 @@ Testar no replay comparando centro, tamanho e cores com os círculos originais. 
 
 ## Receção de pings nativos
 
+### Zona de mira da artilharia
+
+Células a piscar confirmadas no jogo. Acrescentado `ArtyMarkerMinimapEntry`, mapeado pelo cliente de `SPG_AIM_AREA_SUBTYPE` em `AreaStaticMarkerPlugin`. Usa o contentor `equipments` e a matriz publicada, com os mesmos hooks existentes e remoção nativa. A amostra desenha uma mira laranja (+); não calcula dispersão, raio, previsão de impacto ou posições de artilharia inimiga. Confirmar posição e desaparecimento contra o marcador original num replay que contenha esse evento. Não inclui os efeitos de consumíveis de artilharia nem indicadores de disparos inimigos.
+
 ### Correção das células a piscar
 
 O utilizador confirmou que as células piscavam no original mas faltavam na amostra. Essas animações usam `SimpleAttentionToFlashMinimapEntry`, separadamente dos marcadores estáticos descritos abaixo. A ponte Flash lê apenas animações atualmente visíveis e ainda em curso, limitada a 4000 nós e 32 células. Converte o centro dos limites visuais para o centro de uma célula da grelha 10×10; outras dimensões não são aceites.
