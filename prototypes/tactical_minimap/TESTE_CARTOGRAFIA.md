@@ -128,6 +128,12 @@ Testar no replay comparando centro, tamanho e cores com os círculos originais. 
 
 ## Receção de pings nativos
 
+### Correção das células a piscar
+
+O utilizador confirmou que as células piscavam no original mas faltavam na amostra. Essas animações usam `SimpleAttentionToFlashMinimapEntry`, separadamente dos marcadores estáticos descritos abaixo. A ponte Flash lê apenas animações atualmente visíveis e ainda em curso, limitada a 4000 nós e 32 células. Converte o centro dos limites visuais para o centro de uma célula da grelha 10×10; outras dimensões não são aceites.
+
+A amostra mostra um quadrado amarelo com a largura e altura de uma célula. Reutiliza a amostragem existente, sem criar TTL, histórico ou comandos. Quando a animação desaparece ou termina, o destaque é removido no próximo frame amostrado. O log `Ping diagnostics: static=… visibleCellAnimations=…` ajuda a confirmar a leitura. Compilação e testes automatizados não substituem a confirmação visual: comparar posição, início e remoção num replay com células a piscar no original.
+
 Círculos confirmados pelo utilizador. A etapa seguinte espelha as entradas `MarkAttentionEntryUI` e `MarkGoingToPositionEntryUI` no contentor `equipments`, publicadas por AreaStaticMarkerPlugin a partir das comunicações do cliente. As fontes auditadas são shared/minimap/plugins.py (`_LOCATION_SUBTYPE_TO_FLASH_SYMBOL_NAME`, `__addStaticMarker`, `__delStaticMarker`) e settings.py. O segundo símbolo também é usado pelo waypoint nativo de pré-batalha; não se inventa uma distinção que o símbolo não fornece.
 
 Reutiliza os oito hooks e o callback de amostragem existentes. Estado attack/idle/reply vem de setState. A duração pertence ao cliente: a amostra remove quando há setActive(false)/delEntry e não cria TTL, relógio ou animação própria. Limite de 32 entradas; payload apenas tipo/x/y/estado, sem remetente, texto ou ID. Exclui símbolos não auditados, incluindo UnspottedMarkerUI. O fim de batalha/dispose liberta todas as referências de matriz.

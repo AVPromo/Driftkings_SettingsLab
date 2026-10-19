@@ -3,7 +3,7 @@
 import logging
 import weakref
 
-from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, geometry_response, graphics_result, payload, update_ranges
+from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges
 from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points
 from Driftkings.views.hangar.common import publish_card
 
@@ -35,6 +35,8 @@ class ProbeBridge(object):
         self._calibration = None
         self._ally_log_state = None
         self._ally_log_count = 0
+        self._ping_log_state = None
+        self._ping_log_count = 0
 
     def enabled(self):
         if self.disposed:
@@ -75,6 +77,8 @@ class ProbeBridge(object):
         self.generation += 1
         self._ally_log_state = None
         self._ally_log_count = 0
+        self._ping_log_state = None
+        self._ping_log_count = 0
         for view in self.views:
             view._acknowledged = False
             view._graphicsResult = None
@@ -169,6 +173,20 @@ class ProbeBridge(object):
                     if snapshot.get('available'):
                         try:
                             snapshot['pings'] = native_ping_points(component, self._ping_entries.get(component, {}))
+                            static_count = len(snapshot['pings'])
+                            try:
+                                if component.getMinimapDimensions() == 10:
+                                    cells = cell_ping_response(component.flashObject.as_DriftkingsCellPings())
+                                    snapshot['pings'] = cells + snapshot['pings']
+                                else:
+                                    cells = []
+                            except Exception:
+                                cells = []
+                            ping_state = (static_count, len(cells))
+                            if ping_state != self._ping_log_state and self._ping_log_count < 16:
+                                self._ping_log_state = ping_state
+                                self._ping_log_count += 1
+                                LOG.info('Ping diagnostics: static=%d visibleCellAnimations=%d', *ping_state)
                         except Exception:
                             snapshot['pings'] = []
                         try:

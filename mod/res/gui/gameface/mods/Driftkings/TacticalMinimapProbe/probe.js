@@ -181,12 +181,12 @@
         if (!Array.isArray(values)) { values = []; }
         var records = layer._dkPings || {}, seen = {};
         values.slice(0, 32).forEach(function (value, index) {
-            if (!validAlly(value) || ['attention', 'going'].indexOf(value.kind) === -1 ||
+            if (!validAlly(value) || ['attention', 'going', 'cell'].indexOf(value.kind) === -1 ||
                     ['attack', 'idle', 'reply'].indexOf(value.state) === -1) { return; }
             var key = 'ping' + index, node = records[key]; seen[key] = true;
             if (!node) { node = records[key] = document.createElement('div'); layer.appendChild(node); }
             node.className = 'dk-probe-ping dk-probe-ping-' + value.kind;
-            node.textContent = value.kind === 'attention' ? '!' : '>';
+            node.textContent = value.kind === 'cell' ? '' : value.kind === 'attention' ? '!' : '>';
             if (value.state === 'reply') { node.textContent += 'R'; }
             node.style.opacity = value.state === 'idle' ? .65 : 1;
             node.style.left = (100 * value.x) + '%'; node.style.top = (100 * value.y) + '%';
@@ -298,7 +298,7 @@
         line('Veículos na amostra: ' + allies.length + ' | branco: tu; verde: aliado; amarelo: pelotão');
         line('Bases/objetivos: ' + (Array.isArray(data.objectives) ? data.objectives.length : 0) + ' (captura publicada pelo cliente)');
         line('Círculos nativos: ' + (Array.isArray(data.circles) ? data.circles.length : 0));
-        line('Pings nativos: ' + (Array.isArray(data.pings) ? data.pings.length : 0) + ' | ! atenção; > destino; R resposta');
+        line('Pings nativos: ' + (Array.isArray(data.pings) ? data.pings.length : 0) + ' | quadrado: célula; ! atenção; > destino; R resposta');
         var map = mapSample(data.textureUri, allies, data.objectives, data.circles, data.pings);
         if (map) { node.appendChild(map); }
         line('Amostras fixas — 16 / 24 / 32 px; confirmar visualmente.');

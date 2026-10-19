@@ -8,6 +8,9 @@ import net.wg.infrastructure.base.AbstractView;
 // One library, with a separate factory contract for each root surface.
 public class DriftkingsBattle extends AbstractView {
     private static function registerCreators():void {
+        BaseMinimap.prototype.as_DriftkingsCellPings = function():String {
+            return TacticalGeometry.cellPings(this as BaseMinimap);
+        };
         BaseMinimap.prototype.as_DriftkingsMinimapGeometry = function():String {
             var data:Object = TacticalGeometry.capture(this as BaseMinimap);
             if (!data.available) return "0|" + data.reason;

@@ -283,7 +283,7 @@ def ping_points(values):
     if not isinstance(values, list):
         return result
     for value in values[:32]:
-        if not isinstance(value, dict) or value.get('kind') not in PING_SYMBOLS.values():
+        if not isinstance(value, dict) or value.get('kind') not in tuple(PING_SYMBOLS.values()) + ('cell',):
             continue
         try:
             x, y = finite(value['x']), finite(value['y'])
@@ -292,4 +292,23 @@ def ping_points(values):
         state = value.get('state', 'attack')
         if 0 <= x <= 1 and 0 <= y <= 1 and state in ('attack', 'idle', 'reply'):
             result.append({'x': x, 'y': y, 'kind': value['kind'], 'state': state})
+    return result
+
+
+def cell_ping_response(value):
+    """Read-only samples of native visible cell animations, not a timed cache."""
+    if not isinstance(value, (str, type(u''))) or len(value) > 4096:
+        return []
+    result, seen = [], set()
+    for pair in value.split(';')[:32]:
+        parts = pair.split(',')
+        if len(parts) != 2:
+            continue
+        try:
+            x, y = [finite(part) for part in parts]
+        except (ValueError, TypeError, OverflowError):
+            continue
+        if 0 <= x <= 1 and 0 <= y <= 1 and (x, y) not in seen:
+            seen.add((x, y))
+            result.append({'x': x, 'y': y, 'kind': 'cell', 'state': 'attack'})
     return result

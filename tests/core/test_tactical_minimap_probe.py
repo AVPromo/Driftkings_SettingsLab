@@ -45,6 +45,31 @@ class ProbeTests(RuntimeTest):
         self.component = Owner(sessionProvider=Owner(),
             flashObject=Owner(as_DriftkingsMinimapGeometry=lambda *args: '1|800|400|200|200|1000|800'))
 
+    def test_cell_ping_response_rejects_invalid_and_duplicate_samples(self):
+        read = self.policy.cell_ping_response
+        expected = dict(x=.25, y=.75, kind='cell', state='attack')
+        self.assertEqual(read('.25,.75;.25,.75;nan,.5;2,0;bad'), [expected])
+        for value in (None, {}, '', 'x' * 4097, 'inf,0', '0,-1'):
+            self.assertEqual(read(value), [])
+        self.assertEqual(self.policy.ping_points(read('.25,.75')), [expected])
+        self.assertLessEqual(len(read(';'.join('%s,0' % (i / 40.0) for i in range(40)))), 32)
+
+    def test_cell_flashes_follow_current_native_frame_without_history(self):
+        self.settings['tacticalDiagnostics'] = True
+        self.component.getMinimapDimensions = lambda: 10
+        self.component.flashObject.as_DriftkingsCellPings = lambda: '.25,.75'
+        self.bridge.bind_native(self.component)
+        self.bridge.start()
+        self.bridge.acknowledge(self.view, {'protocol': 1, 'generation': 1})
+        self.assertEqual(self.frames[-1]['pings'][0]['kind'], 'cell')
+        self.component.flashObject.as_DriftkingsCellPings = lambda: ''
+        self.bridge.refresh()
+        self.assertEqual(self.frames[-1]['pings'], [])
+        self.component.flashObject.as_DriftkingsCellPings = lambda: '.25,.75'
+        self.component.getMinimapDimensions = lambda: 12
+        self.bridge.refresh()
+        self.assertEqual(self.frames[-1]['pings'], [])
+
     def test_map_uri_accepts_only_virtual_cartography(self):
         for path in ('spaces/01_karelia/mmap.dds', 'gui/maps/icons/map/01_karelia.png'):
             self.assertEqual(self.policy.texture_uri(path), 'img://' + path)
