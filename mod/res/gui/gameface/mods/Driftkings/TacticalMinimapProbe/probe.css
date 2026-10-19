@@ -59,3 +59,7 @@
 .dk-probe-ping-artillery { color:#ffad45; width:18px; height:18px; padding:0; text-align:center; font:bold 20px/18px Arial,sans-serif; }
 
 .dk-probe-ping-cell { width:10%; height:10%; padding:0; border-radius:0; box-sizing:border-box; color:#ffc45b; background:rgba(255,196,91,.2); }
+
+.dk-probe-theme-dark { background:rgba(12,20,22,.9); color:#e9e2bf; }
+.dk-probe-theme-military { background:rgba(28,38,22,.9); color:#d9e2b5; }
+.dk-probe-theme-minimal { background:rgba(0,0,0,.45); color:#fff; }

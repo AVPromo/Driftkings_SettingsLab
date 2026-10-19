@@ -5,6 +5,7 @@ Production replacement is intentionally unavailable until native input/entry
 parity and renderer recovery are verified. Nothing in this module hides Flash.
 """
 import math
+import re
 
 MODES = ('vanilla', 'driftkings')
 THEMES = ('dark', 'military', 'minimal')
@@ -12,7 +13,8 @@ CLASSES = ('lightTank', 'mediumTank', 'heavyTank', 'AT-SPG', 'SPG')
 SIDES = ('player', 'ally', 'enemy', 'platoon')
 DEFAULTS = {'minimapMode': 'vanilla', 'theme': 'dark', 'size': 320,
             'mapOpacity': 0.85, 'iconScale': 1.0, 'showGrid': True,
-            'showVehicleNames': True, 'fontSize': 12}
+            'showVehicleNames': True, 'fontSize': 12, 'followNativeSize': True,
+            'allyColor': '#67cf69', 'enemyColor': '#ee6868', 'platoonColor': '#ffc45b'}
 # This is a release gate, not a user setting. Tests must never imply it is enabled.
 PRODUCTION_REPLACEMENT_VERIFIED = False
 LOST_CONTACT_VERIFIED = False
@@ -28,6 +30,41 @@ def finite(value):
     if math.isnan(value) or math.isinf(value):
         raise ValueError('Non-finite numeric value')
     return value
+
+
+def preferences(values=None):
+    """Validate optional visual overrides without mutating stored configuration."""
+    if values is None:
+        values = {}
+    if not isinstance(values, dict):
+        raise ValueError('Invalid tactical preferences')
+    result = dict((key, value) for key, value in DEFAULTS.items() if key != 'minimapMode')
+    for key in result:
+        if key in values:
+            result[key] = values[key]
+    if result['theme'] not in THEMES:
+        raise ValueError('Unknown tactical theme')
+    for key in ('followNativeSize', 'showGrid', 'showVehicleNames'):
+        if type(result[key]) is not bool:
+            raise ValueError('Invalid tactical switch: ' + key)
+    for key, low, high in (('size', 160, 640), ('fontSize', 8, 24),
+                           ('mapOpacity', 0, 1), ('iconScale', .5, 3)):
+        value = result[key]
+        if type(value) not in (int, float) or not low <= finite(value) <= high:
+            raise ValueError('Invalid tactical number: ' + key)
+        if key in ('size', 'fontSize') and value != int(value):
+            raise ValueError('Expected tactical integer: ' + key)
+    for key in ('allyColor', 'enemyColor', 'platoonColor'):
+        value = result[key]
+        if not isinstance(value, (str, type(u''))) or not re.match(r'^#[0-9a-fA-F]{6}\Z', value):
+            raise ValueError('Invalid tactical color: ' + key)
+    return result
+
+
+def validate_settings(data):
+    if data.get('minimapMode', 'vanilla') not in MODES:
+        raise ValueError('Unknown minimap mode')
+    preferences(data.get('tactical'))
 
 
 def coordinates(x, z, bounds):

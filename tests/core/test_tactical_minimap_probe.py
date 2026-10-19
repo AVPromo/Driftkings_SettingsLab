@@ -48,6 +48,21 @@ class ProbeTests(RuntimeTest):
         self.component = Owner(sessionProvider=Owner(), isModalViewShown=lambda: False,
             flashObject=Owner(as_DriftkingsMinimapGeometry=lambda *args: '1|800|400|200|200|1000|800'))
 
+    def test_preferences_publish_separately_without_enabling_replacement(self):
+        self.settings.update(tacticalDiagnostics=True, minimapMode='driftkings',
+                             tactical={'theme': 'military', 'size': 400})
+        self.bridge.start()
+        data = self.frames[-1]
+        self.assertEqual(data['visualConfig']['theme'], 'military')
+        self.assertEqual(data['visualConfig']['size'], 400)
+        self.assertEqual(data['rendererSelection']['requestedMode'], 'driftkings')
+        self.assertEqual(data['rendererSelection']['effectiveMode'], 'vanilla')
+        self.assertTrue(data['rendererSelection']['nativeVisible'])
+        self.assertFalse(data['rendererSelection']['rendererVisible'])
+        self.assertEqual(self.settings['tactical'], {'theme': 'military', 'size': 400})
+        self.settings['tacticalDiagnostics'] = False
+        self.assertFalse(self.bridge.enabled())  # Renderer preference does not opt into diagnostics.
+
     def test_cell_ping_response_rejects_invalid_and_duplicate_samples(self):
         read = self.policy.cell_ping_response
         expected = dict(x=.25, y=.75, kind='cell', state='attack')

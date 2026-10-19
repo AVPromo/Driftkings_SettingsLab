@@ -3,6 +3,8 @@
 import logging
 import weakref
 
+from Driftkings.core.tactical_minimap import preferences, selection
+
 from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits, strategic_area_response, native_click_sample, gameface_click_sample, input_request
 from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points, native_camera_line, native_yaw_lines, native_strategic_point, forward_native_position_input
 from Driftkings.views.hangar.common import publish_card
@@ -298,6 +300,10 @@ class ProbeBridge(object):
             try:
                 data = payload(enabled and view._guiVisible, view._acknowledged, snapshot, self.generation,
                                getattr(view, '_graphicsResult', None), self._calibration)
+                settings = self._settings(self.config)
+                data['visualConfig'] = preferences(settings.get('tactical'))
+                data['rendererSelection'] = selection(settings.get('minimapMode', 'vanilla'),
+                                                      renderer_ready=bool(data.get('available')))
                 data['sampleInputEnabled'] = bool(data.get('available') and self.sample_input_enabled(view))
                 data['sampleInputRequest'] = getattr(view, '_sampleRequest', 0)
                 if data.get('enabled') and data.get('acknowledged') and data.get('calibration', {}).get('available'):

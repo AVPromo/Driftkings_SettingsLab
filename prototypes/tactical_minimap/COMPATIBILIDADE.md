@@ -1,5 +1,9 @@
 # Compatibilidade WoT 2.4.1 — estado da entrega
 
+## Etapa atual — preferências persistidas
+
+Escolha Vanilla/Driftkings e preferências visuais integradas no gestor Settings existente e nos JSON canónicos, com defaults gerados e snapshot atualizado. A amostra lê tema, tamanho, cores e apresentação; a seleção efetiva continua bloqueada em Vanilla. A preferência não ativa o diagnóstico nem substitui o original. Faltam confirmação visual desta etapa, seleção nativa de veículos, handoff/recuperação real, testes de artilharia e medições de desempenho. As tabelas históricas seguintes descrevem o estado inicial, não a integração atual.
+
 ## Atualização após testes NA de 19/10/2026
 
 O utilizador confirmou o redimensionamento. A etapa atual acrescenta realce/identificação de ícones ao passar o rato e separa o clique em veículo do clique em posição. Veículos ficam em diagnóstico sem comandos, pois não há contrato específico de seleção confirmado na auditoria; posições livres mantêm o handler nativo. Falta confirmação visual desta etapa.

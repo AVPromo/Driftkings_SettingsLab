@@ -3,7 +3,7 @@ import json
 
 from Driftkings._constants import GLOBAL, MINIMAP_ENHANCEMENTS
 from Driftkings.core import minimap as policy
-from Driftkings.settings.controls_schema import color, control, hotkey, slider
+from Driftkings.settings.controls_schema import caption, color, control, hotkey, slider
 from Driftkings.settings.controls_schema import field as nested_field
 from Driftkings.settings.definitions.base import SectionDefinition
 
@@ -55,6 +55,29 @@ class MinimapEnhancementsSettings(SectionDefinition):
                 slider(MINIMAP_ENHANCEMENTS.ZOOM_FACTOR_MAX, 1.0, 3.0, 0.1, '{{value}}.Px/Py')
             ]
         )
+
+        # These controls configure only the opt-in sample until native parity is verified.
+        columns[0][0:0] = [
+            caption('Tactical Minimap V2'),
+            nested_field(['minimapMode'], 'Minimap renderer', 'Dropdown',
+                         choices=['vanilla', 'driftkings'], choice_labels=['Vanilla', 'Driftkings (preview)']),
+            caption('Driftkings replacement is not available yet. Vanilla remains active.'),
+            caption('The tactical preferences below apply only to the diagnostic sample.'),
+            nested_field(['tactical', 'theme'], 'Tactical theme', 'Dropdown',
+                         choices=['dark', 'military', 'minimal'],
+                         choice_labels=['Dark Tactical', 'Military Green', 'Minimal']),
+            nested_field(['tactical', 'followNativeSize'], 'Follow native minimap size'),
+            nested_field(['tactical', 'size'], 'Tactical size', 'Slider', 160, 640, step=20)
+        ]
+        for key, title, low, high, step in (
+                ('mapOpacity', 'Map opacity', 0, 1, .05),
+                ('iconScale', 'Icon scale', .5, 3, .1),
+                ('fontSize', 'Font size', 8, 24, 1)):
+            columns[0].append(nested_field(['tactical', key], title, 'Slider', low, high, step=step))
+        for key, title in (('showGrid', 'Show tactical grid'), ('showVehicleNames', 'Show vehicle names')):
+            columns[0].append(nested_field(['tactical', key], title))
+        for key, title in (('allyColor', 'Allies'), ('enemyColor', 'Enemies'), ('platoonColor', 'Platoon')):
+            columns[0].append(nested_field(['tactical', key], title, 'ColorChoice'))
 
         def nested(section, key, kind='CheckBox', low=None, high=None, choices=None):
             title = self.i18n.get('UI_setting_' + section + '_' + key + '_text', key)

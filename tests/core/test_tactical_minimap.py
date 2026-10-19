@@ -1,12 +1,82 @@
 # -*- coding: utf-8 -*-
 import copy
-from support import RuntimeTest
+import io
+import json
+import os
+import shutil
+import sys
+import tempfile
+from support import ROOT, RuntimeTest, module, source
 
 
 class TacticalMinimapTests(RuntimeTest):
     def setUp(self):
         super(TacticalMinimapTests, self).setUp()
         self.api = self.load('core.tactical_minimap')
+
+    def test_visual_preferences_validate_without_mutating_configuration(self):
+        values = {'theme': 'military', 'size': 440, 'followNativeSize': False,
+                  'allyColor': '#12ABef', 'showGrid': False}
+        original = copy.deepcopy(values)
+        result = self.api.preferences(values)
+        self.assertEqual(values, original)
+        self.assertEqual(result['size'], 440)
+        self.assertEqual(result['theme'], 'military')
+        self.assertFalse(result['followNativeSize'])
+        self.assertFalse(result['showGrid'])
+        self.assertEqual(result['fontSize'], 12)
+        result['fontSize'] = 20
+        self.assertEqual(self.api.preferences()['fontSize'], 12)
+        self.api.validate_settings({})  # Existing configurations remain valid.
+        for value in ([], False, 'invalid'):
+            with self.assertRaises(ValueError):
+                self.api.preferences(value)
+        for key, values in (
+                ('size', [True, '320', 159, 641, 200.5, float('inf')]),
+                ('fontSize', [7, 25, 12.5]), ('mapOpacity', [-.1, 1.1, float('nan')]),
+                ('iconScale', [.4, 3.1]), ('theme', ['unknown']),
+                ('showGrid', [0, 'false']), ('followNativeSize', [1]),
+                ('allyColor', ['red', '#12345', '#123456\n'])):
+            for value in values:
+                with self.assertRaises(ValueError):
+                    self.api.preferences({key: value})
+        with self.assertRaises(ValueError):
+            self.api.validate_settings({'minimapMode': 'unsupported'})
+        self.api.validate_settings({'minimapMode': 'driftkings', 'tactical': original})
+        self.assertEqual(self.api.selection('driftkings', renderer_ready=True)['effectiveMode'], 'vanilla')
+
+    def test_preferences_survive_split_store_save_and_existing_file_merge(self):
+        sys.modules['Driftkings.settings'] = module(__path__=[os.path.join(
+            ROOT, 'mod', 'res', 'scripts', 'client', 'Driftkings', 'settings')])
+        store_api = self.load('settings.store')
+        store = source('settings/minimap_store.py', {
+            'Driftkings.settings.store': store_api,
+            'Driftkings.settings.loader': module(validate_types=lambda *args: None),
+            'Driftkings.core.minimap': self.load('core.minimap')})
+        with io.open(os.path.join(ROOT, 'res', 'configs', 'Driftkings', 'default',
+                                  'minimap_enhancements.json'), encoding='utf-8') as stream:
+            defaults = json.load(stream)
+        directory = tempfile.mkdtemp(prefix='dk-minimap-')
+        self.addCleanup(shutil.rmtree, directory)
+        documents = store['MinimapStore'](directory)
+        data = copy.deepcopy(defaults)
+        data['minimapMode'] = 'driftkings'
+        data['tactical'].update(theme='minimal', followNativeSize=False, size=420)
+        documents.save(data)
+        self.assertEqual(documents.load(defaults), data)
+        general_path = os.path.join(directory, 'minimap.json')
+        with io.open(general_path, encoding='utf-8') as stream:
+            general = json.load(stream)
+        # Simulate an existing installation predating tactical preferences.
+        general.pop('minimapMode')
+        general.pop('tactical')
+        general['zoomFactor'] = 2.1
+        with io.open(general_path, 'w', encoding='utf-8') as stream:
+            stream.write(type(u'')(json.dumps(general)))
+        loaded = documents.load(defaults)
+        self.assertEqual(loaded['zoomFactor'], 2.1)
+        self.assertEqual(loaded['minimapMode'], 'vanilla')
+        self.assertEqual(loaded['tactical'], defaults['tactical'])
 
     def marker(self, **changes):
         marker = dict(id=1, visible=True, state='visible', side='enemy', vehicleClass='heavyTank',

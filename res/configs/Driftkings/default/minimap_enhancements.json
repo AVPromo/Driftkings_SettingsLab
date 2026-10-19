@@ -136,5 +136,19 @@
   "viewRadius": true,
   "yaw": true,
   "zoomFactor": 1.1,
-  "zoomFactorMax": 2.0
+  "zoomFactorMax": 2.0,
+  "minimapMode": "vanilla",
+  "tactical": {
+    "theme": "dark",
+    "size": 320,
+    "mapOpacity": 0.85,
+    "iconScale": 1.0,
+    "showGrid": true,
+    "showVehicleNames": true,
+    "fontSize": 12,
+    "followNativeSize": true,
+    "allyColor": "#67cf69",
+    "enemyColor": "#ee6868",
+    "platoonColor": "#ffc45b"
+  }
 }

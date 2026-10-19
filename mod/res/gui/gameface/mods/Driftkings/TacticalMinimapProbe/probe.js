@@ -7,6 +7,31 @@
     var inputListening = false, interaction = null;
     var sampleCalibration = null;
     var hoveredVehicle = null;
+    var visual = null, followNativeSize = true;
+    function configureVisual(value) {
+        visual = null; followNativeSize = true;
+        if (!value || !window.DKTacticalGraphics || !window.DKTacticalGraphics.options) { return; }
+        visual = window.DKTacticalGraphics.options({size: value.size, theme: value.theme,
+            opacity: value.mapOpacity, iconScale: value.iconScale, fontSize: value.fontSize,
+            showVehicleNames: value.showVehicleNames, showGrid: value.showGrid,
+            ally: value.allyColor, enemy: value.enemyColor, platoon: value.platoonColor});
+        followNativeSize = value.followNativeSize !== false;
+    }
+    function styleSample() {
+        if (!cartography) { return; }
+        var uri = cartography.uri;
+        if (!visual) {
+            cartography.node.className = 'dk-probe-cartography';
+            cartography.image.children[0].style.display = '';
+            cartography.image.style.backgroundImage = 'url("' + uri + '")';
+            return;
+        }
+        cartography.node.className = 'dk-probe-cartography dk-probe-theme-' + visual.theme;
+        cartography.image.children[0].style.display = visual.showGrid ? '' : 'none';
+        // Shade the map texture only; vehicle icons and input layers retain full opacity.
+        var shade = 'rgba(0,0,0,' + (1 - visual.opacity) + ')';
+        cartography.image.style.backgroundImage = 'linear-gradient(' + shade + ',' + shade + '), url("' + uri + '")';
+    }
     function hide() {
         setHoveredVehicle(null);
         interaction = null;
@@ -93,10 +118,12 @@
             var key = 'slot' + index;
             seen[key] = true;
             var color = ally.side === 'player' ? '#ffffff' : ally.side === 'enemy' ? '#ee6868' : ally.side === 'platoon' ? '#ffc45b' : '#67cf69';
+            if (visual && visual[ally.side]) { color = visual[ally.side]; }
             if (ally.side === 'training') { color = ally.goal === true ? '#ffc45b' : '#ff9f5a'; }
             var destroyed = ally.state === 'destroyed';
             var kind = destroyed ? 'destroyed' : ally.side === 'player' ? 'player' : allyClass(ally) ? ally.vehicleClass : null;
-            var signature = String(kind) + color, record = records[key];
+            var iconSize = 18 * (visual ? visual.iconScale : 1);
+            var signature = String(kind) + color + iconSize, record = records[key];
             if (!record || record.signature !== signature) {
                 if (record) { points.removeChild(record.node); }
                 var marker = document.createElement('div');
@@ -104,19 +131,23 @@
                 marker.className = 'dk-probe-ally'; marker.textContent = destroyed ? 'X' : ally.side === 'player' ? 'TU' : ally.side === 'enemy' ? 'E' : ally.side === 'training' ? 'T' : 'A';
                 if (kind && window.DKTacticalGraphics) {
                     try {
-                        var glyph = window.DKTacticalGraphics.createGlyph(document, kind, color, 18);
+                        var glyph = window.DKTacticalGraphics.createGlyph(document, kind, color, iconSize);
                         marker.textContent = ''; marker.appendChild(glyph.node);
                         glyphNode = glyph.node;
                         marker.className += ' dk-probe-ally-icon';
                     } catch (error) { /* Keep A when SVG cannot be constructed. */ }
                 }
                 marker.style.color = color;
+                marker.style.width = iconSize + 'px'; marker.style.height = iconSize + 'px';
                 var label = document.createElement('span'); label.className = 'dk-probe-vehicle-label';
                 marker.appendChild(label);
                 points.appendChild(marker);
                 record = records[key] = {node: marker, signature: signature, glyph: glyphNode, label: label};
             }
             record.label.textContent = typeof ally.label === 'string' ? ally.label.replace(/[\x00-\x1f\x7f]/g, '').slice(0, 64) : '';
+            record.label.style.display = visual && !visual.showVehicleNames ? 'none' : '';
+            record.label.style.fontSize = (visual ? visual.fontSize : 10) + 'px';
+            record.label.style.lineHeight = (visual ? visual.fontSize + 2 : 12) + 'px';
             record.node._dkVehicle = {label: record.label.textContent, vehicleClass: ally.vehicleClass,
                 side: ally.side, state: destroyed ? 'destroyed' : ally.side === 'training' ? 'training' : 'visible'};
             record.label.className = 'dk-probe-vehicle-label' + (ally.x > .7 ? ' dk-probe-label-left' : '');
@@ -357,6 +388,7 @@
         var cfg = sampleCalibration || {}, index = cfg.sizeIndex, ratio = 1, unit = 1;
         var width = cfg.available === true && typeof index === 'number' && isFinite(index) &&
             index >= 0 && index <= 5 && Math.floor(index) === index ? 200 + index * 40 : 200;
+        if (visual && !followNativeSize) { width = visual.size; }
         if (cfg.available === true && typeof cfg.width === 'number' && typeof cfg.height === 'number' &&
                 isFinite(cfg.width) && isFinite(cfg.height) && cfg.width > 0 && cfg.height > 0) {
             var candidate = cfg.height / cfg.width;
@@ -471,8 +503,12 @@
             node = document.createElement('div'); node.id = 'dk-tactical-minimap-probe';
             document.body.appendChild(node);
         }
+        configureVisual(data.visualConfig);
         while (node.firstChild) { node.removeChild(node.firstChild); }
         line('Tactical Minimap — diagnóstico | Vanilla preservado', 'dk-probe-title');
+        if (data.rendererSelection && data.rendererSelection.requestedMode === 'driftkings') {
+            line('Preferência Driftkings guardada; Vanilla ativo: interação e recuperação por concluir.', 'dk-probe-pending');
+        }
         line(data.acknowledged ? 'Gameface: ligação confirmada' : 'Gameface: a confirmar ligação',
             data.acknowledged ? 'dk-probe-ready' : 'dk-probe-pending');
         if (data.available) {
@@ -541,6 +577,7 @@
         var map = mapSample(data.textureUri, vehicles, data.objectives, data.circles, data.pings, data.cameraLine, data.yawLines, data.strategicPoint, data.strategicArea, input, sample);
         sampleCalibration = data.calibration || null;
         resizeSample();
+        styleSample();
         if (cartography) {
             cartography.image.style.pointerEvents = interactive ? 'auto' : 'none';
             cartography.image.className = 'dk-probe-map-image' + (interactive ? ' dk-probe-input-enabled' : '');

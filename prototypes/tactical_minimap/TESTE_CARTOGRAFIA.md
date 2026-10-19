@@ -1,5 +1,19 @@
 # Cartografia e calibração — diagnóstico
 
+## Preferências no painel e configurações
+
+O painel de melhorias do minimapa contém agora a escolha Vanilla/Driftkings e as preferências `tactical`: tema, seguir o tamanho nativo ou tamanho fixo, opacidade da textura, escala dos ícones, grelha, nomes, tamanho de letra e cores de aliados/inimigos/pelotão. São guardadas pelo gestor existente em `minimap_enhancements/minimap.json`, incluindo perfis e reposição de valores. Os defaults antigos recebem os campos em falta pelo merge existente; não se substituem escolhas do jogador.
+
+A escolha Driftkings é apenas uma preferência persistida. O modo efetivo permanece Vanilla; não oculta o original nem ativa automaticamente `tacticalDiagnostics`. Os controlos mostram este limite. As preferências visuais aplicam-se somente à amostra com diagnóstico ativo. As novas legendas têm fallback inglês; catálogos i18n não foram alterados nesta etapa.
+
+Teste em Topography, após instalar o pacote e voltar a entrar na missão:
+1. Nas melhorias do minimapa, guardar tema Military Green, grelha desligada, nomes desligados e cores distintas. Confirmar a apresentação na amostra e o minimapa original intacto.
+2. Desativar seguir tamanho nativo e escolher um tamanho fixo. Confirmar que a amostra mantém esse tamanho ao alterar a escala nativa; cliques continuam baseados na geometria nativa, sem deslocamento.
+3. Reativar seguir tamanho nativo e nomes/grelha; variar letra, escala dos ícones e opacidade. Apenas a textura deve escurecer; ícones continuam legíveis.
+4. Guardar Driftkings, reabrir as configurações e confirmar a preferência. A mensagem deve indicar que Vanilla continua ativo. Verificar também guardar/carregar perfil e reposição por opção.
+
+A temporização destas opções continua «próxima batalha», como as restantes opções do módulo. Confirmação visual no cliente pendente. Testes automatizados cobrem limites, valores inválidos, defaults independentes, payload separado da política de seleção e apresentação/restauro em DOM simulado.
+
 ## Identificação de ícones e separação do clique em posição
 
 Redimensionamento confirmado pelo utilizador. A auditoria seguinte confirmou que `MinimapMeta.onMinimapClicked`/`MinimapComponent.onMinimapClicked` recebem x/y/botão/escala, sem ID de veículo. No Flash auditado, `VehicleMinimapEntry` expõe informação visual e highlight, mas não um onClick público; `Minimap.onMouseClickHandler` trata posições e entidades IHoverableEntity (implementação encontrada para W2GTBattleZoneMinimapEntry). Não foi encontrado um contrato verificável de seleção de veículo para reproduzir pelo Gameface nesta etapa. Não se inventou um comando de alvo.

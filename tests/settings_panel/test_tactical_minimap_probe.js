@@ -411,6 +411,24 @@ assert.strictEqual(pingLayer.children[0].style.left, '25%');
 assert.strictEqual(pingLayer.children[0].style.top, '75%');
 data.pings = []; refresh();
 assert.strictEqual(pingLayer.children.length, 0);
+// Preferences alter presentation only; input remains tied to native geometry.
+data.visualConfig = {theme: 'military', followNativeSize: false, size: 360,
+    mapOpacity: .4, iconScale: 2, fontSize: 18, showGrid: false,
+    showVehicleNames: false, allyColor: '#123456'};
+data.alliedPoints = [{x: .25, y: .5, side: 'ally', vehicleClass: 'mediumTank', label: 'Ally'}];
+refresh();
+assert.strictEqual(iconImage.children[0].style.display, 'none');
+assert.strictEqual(livePoints.children[0].style.color, '#123456');
+assert.strictEqual(livePoints.children[0].style.width, '36px');
+assert.strictEqual(livePoints.children[0].children[1].style.display, 'none');
+assert.strictEqual(livePoints.children[0].children[1].style.fontSize, '18px');
+assert.ok(iconImage.style.backgroundImage.indexOf('rgba(0,0,0,0.6)') >= 0);
+assert.ok(iconImage.parentNode.className.indexOf('dk-probe-theme-military') >= 0);
+// Restore defaults on the next frame, without stale colours or hidden labels.
+delete data.visualConfig; refresh();
+assert.strictEqual(livePoints.children[0].style.color, '#67cf69');
+assert.strictEqual(livePoints.children[0].children[1].style.display, '');
+
 data.alliedPoints = []; refresh();
 assert.strictEqual(livePoints.children.length, 0); // Empty frame overrides the legacy reference.
 delete data.alliedPoints;
