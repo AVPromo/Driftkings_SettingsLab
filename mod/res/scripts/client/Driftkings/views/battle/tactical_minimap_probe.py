@@ -40,6 +40,7 @@ class ProbeBridge(object):
         self._ally_log_state = None
         self._ally_log_count = 0
         self._ping_log_state = None
+        self._missing_player_logged = False
         self._ping_log_count = 0
         self._last_input = None
         self._input_sequence = 0
@@ -90,6 +91,7 @@ class ProbeBridge(object):
         self._ally_log_state = None
         self._ally_log_count = 0
         self._ping_log_state = None
+        self._missing_player_logged = False
         self._ping_log_count = 0
         for view in self.views:
             view._acknowledged = False
@@ -142,6 +144,14 @@ class ProbeBridge(object):
                     own = native_player_point(component, self._personal_entries.get(component))
                     if own is not None:
                         self._calibration['player'] = own
+                    elif not self._missing_player_logged:
+                        personal = component.getPlugin('personal')
+                        record = self._personal_entries.get(component) or {}
+                        LOG.info('Own marker unavailable: plugin=%s controlMode=%s controlID=%s record=%s active=%s matrix=%s',
+                                 type(personal).__module__, getattr(personal, '_ctrlMode', None),
+                                 getattr(personal, '_ctrlVehicleID', None), bool(record),
+                                 record.get('active'), record.get('matrix') is not None)
+                        self._missing_player_logged = True
                 except Exception:
                     LOG.debug('Personal minimap matrix unavailable', exc_info=True)
         except Exception:

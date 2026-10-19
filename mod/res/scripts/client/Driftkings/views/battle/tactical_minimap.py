@@ -172,7 +172,13 @@ def owns_player_marker(component):
         dp = component.sessionProvider.getArenaDP()
         vehicle_id = dp.getPlayerVehicleID()
         info = dp.getVehicleInfo(vehicle_id)
-        return bool(vehicle_id and personal._ctrlVehicleID == vehicle_id and
+        # initControlMode publishes the own matrix before updateControlMode fills
+        # _ctrlVehicleID (initially 0). Do not mistake this native startup state
+        # for spectating another vehicle, especially in Maps Training.
+        controlled = personal._ctrlVehicleID
+        initial_own = (controlled == 0 and not personal._isInPostmortemMode() and
+                       not personal._isInVideoMode() and not personal._isInFreeCamMode())
+        return bool(vehicle_id and (controlled == vehicle_id or initial_own) and
                     personal._getPlayerVehicleID() == vehicle_id and info is not None and
                     info.isAlive() and not info.isObserver())
     except Exception:
