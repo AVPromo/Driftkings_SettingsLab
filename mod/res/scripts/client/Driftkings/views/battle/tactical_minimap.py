@@ -179,6 +179,36 @@ def native_player_point(component, record):
             'cell': getCellName(getCellIdFromPosition(position, (lower, upper), 10), 10)}
 
 
+def native_camera_line(component, record):
+    """Only the active arcade direction entry owned by the live player."""
+    if not record or not record.get('active') or not record.get('direction') or not owns_player_marker(component):
+        return None
+    personal = component.getPlugin('personal')
+    if (personal._getCameraIDs().get('ArcadeCameraEntry') != record.get('id') or
+            personal._getSelectedCameraID() != record.get('id') or record.get('matrix') is None):
+        return None
+    import Math
+    from math import sin, cos
+    matrix = Math.Matrix(record['matrix'])
+    position = matrix.translation
+    lower, upper = component.getBoundingBox()
+    bounds = tuple(finite(value) for value in (lower[0], lower[1], upper[0], upper[1]))
+    point = coordinates(position.x, position.z, bounds)
+    if point is None:
+        return None
+    yaw = finite(matrix.yaw)
+    dx, dy = sin(yaw) / (bounds[2] - bounds[0]), -cos(yaw) / (bounds[3] - bounds[1])
+    distances = []
+    for origin, direction in ((point[0], dx), (point[1], dy)):
+        if abs(direction) > 1e-12:
+            distances.append(((1 if direction > 0 else 0) - origin) / direction)
+    if not distances:
+        return None
+    distance = min(distances)
+    return {'x': point[0], 'y': point[1], 'x2': max(0, min(1, point[0] + distance * dx)),
+            'y2': max(0, min(1, point[1] + distance * dy))}
+
+
 def native_objective_points(component, records):
     """Positions of currently active bases/control points published via addEntry."""
     import Math

@@ -4,7 +4,7 @@ import logging
 import weakref
 
 from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges
-from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points
+from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points, native_camera_line
 from Driftkings.views.hangar.common import publish_card
 
 LOG = logging.getLogger('Driftkings.TacticalMinimapProbe')
@@ -21,6 +21,7 @@ class ProbeBridge(object):
         self._geometry_callback = None
         self.views = weakref.WeakSet()
         self._personal_entries = weakref.WeakKeyDictionary()
+        self._camera_entries = weakref.WeakKeyDictionary()
         self._objective_entries = weakref.WeakKeyDictionary()
         self._circle_entries = weakref.WeakKeyDictionary()
         self._ping_entries = weakref.WeakKeyDictionary()
@@ -64,6 +65,7 @@ class ProbeBridge(object):
             self._close_adapter()
             self._native = None
             self._personal_entries.pop(component, None)
+            self._camera_entries.pop(component, None)
             self._objective_entries.pop(component, None)
             self._circle_entries.pop(component, None)
             self._ping_entries.pop(component, None)
@@ -101,6 +103,7 @@ class ProbeBridge(object):
         self._close_adapter()
         self._native = None
         self._personal_entries.clear()
+        self._camera_entries.clear()
         self._objective_entries.clear()
         self._circle_entries.clear()
         self._ping_entries.clear()
@@ -171,6 +174,10 @@ class ProbeBridge(object):
                         self._adapter = self._factory(component, component.sessionProvider)
                     snapshot = self._adapter.capture()
                     if snapshot.get('available'):
+                        try:
+                            snapshot['cameraLine'] = native_camera_line(component, self._camera_entries.get(component))
+                        except Exception:
+                            snapshot['cameraLine'] = None
                         try:
                             snapshot['pings'] = native_ping_points(component, self._ping_entries.get(component, {}))
                             static_count = len(snapshot['pings'])
@@ -316,6 +323,8 @@ class ProbeBridge(object):
         @override(MinimapComponent, 'addEntry')
         def add_entry(original, component, symbol, container, matrix=None, active=False, *args, **kwargs):
             entry_id = original(component, symbol, container, matrix, active, *args, **kwargs)
+            if bridge.enabled() and symbol == 'ArcadeCameraEntry' and container == 'personal' and entry_id:
+                bridge._camera_entries[component] = {'id': entry_id, 'matrix': matrix, 'active': bool(active), 'direction': False}
             if bridge.enabled() and symbol == 'ViewPointEntry' and container == 'personal' and entry_id:
                 bridge._personal_entries[component] = {'id': entry_id, 'matrix': matrix, 'active': bool(active)}
             if bridge.enabled() and symbol == 'ViewRangeCirclesEntry' and container == 'personal' and entry_id:
@@ -334,6 +343,9 @@ class ProbeBridge(object):
         @override(MinimapComponent, 'setMatrix')
         def set_matrix(original, component, entry_id, matrix):
             result = original(component, entry_id, matrix)
+            camera = bridge._camera_entries.get(component)
+            if camera is not None and camera['id'] == entry_id:
+                camera['matrix'] = matrix
             record = bridge._personal_entries.get(component)
             if record is not None and record['id'] == entry_id:
                 record['matrix'] = matrix
@@ -351,6 +363,9 @@ class ProbeBridge(object):
         @override(MinimapComponent, 'setActive')
         def set_active(original, component, entry_id, active):
             result = original(component, entry_id, active)
+            camera = bridge._camera_entries.get(component)
+            if camera is not None and camera['id'] == entry_id:
+                camera['active'] = bool(active)
             record = bridge._personal_entries.get(component)
             if record is not None and record['id'] == entry_id:
                 record['active'] = bool(active)
@@ -368,6 +383,9 @@ class ProbeBridge(object):
         @override(MinimapComponent, 'invoke')
         def invoke_entry(original, component, entry_id, *signature):
             result = original(component, entry_id, *signature)
+            camera = bridge._camera_entries.get(component)
+            if camera is not None and camera['id'] == entry_id and signature in (('showDirectionLine',), ('hideDirectionLine',)):
+                camera['direction'] = signature[0] == 'showDirectionLine'
             circle = bridge._circle_entries.get(component)
             if circle is not None and circle['id'] == entry_id:
                 update_ranges(circle, signature)
@@ -384,6 +402,9 @@ class ProbeBridge(object):
         @override(MinimapComponent, 'delEntry')
         def del_entry(original, component, entry_id):
             result = original(component, entry_id)
+            camera = bridge._camera_entries.get(component)
+            if camera is not None and camera['id'] == entry_id:
+                bridge._camera_entries.pop(component, None)
             record = bridge._personal_entries.get(component)
             if record is not None and record['id'] == entry_id:
                 bridge._personal_entries.pop(component, None)

@@ -200,7 +200,29 @@
         });
         layer._dkPings = records;
     }
-    function mapSample(uri, allies, objectives, circles, pings) {
+    function mapCamera(layer, value) {
+        var keys = ['x', 'y', 'x2', 'y2'];
+        var valid = value && keys.every(function (key) {
+            return typeof value[key] === 'number' && isFinite(value[key]) && value[key] >= 0 && value[key] <= 1;
+        });
+        if (!valid || !document.createElementNS) {
+            if (layer.firstChild) { layer.removeChild(layer.firstChild); }
+            layer._dkLine = null;
+            return;
+        }
+        if (!layer._dkLine) {
+            var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', '0 0 100 100'); svg.setAttribute('preserveAspectRatio', 'none');
+            svg.style.width = '100%'; svg.style.height = '100%';
+            var lineNode = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            lineNode.setAttribute('stroke', '#ffc45b'); lineNode.setAttribute('stroke-width', '.5');
+            svg.appendChild(lineNode); layer.appendChild(svg); layer._dkLine = lineNode;
+        }
+        keys.forEach(function (key, index) {
+            layer._dkLine.setAttribute(index === 0 ? 'x1' : index === 1 ? 'y1' : key, 100 * value[key]);
+        });
+    }
+    function mapSample(uri, allies, objectives, circles, pings, camera) {
         if (typeof uri !== 'string' || uri.length > 262 ||
                 !/^img:\/\/(spaces\/[A-Za-z0-9_/-]+\.(dds|png)|gui\/maps\/icons\/map\/[A-Za-z0-9_-]+\.png)$/.test(uri) ||
                 uri.indexOf('//', 6) !== -1) { return null; }
@@ -209,6 +231,7 @@
             mapObjectives(cartography.objectives, objectives);
             mapCircles(cartography.circles, circles);
             mapPings(cartography.pings, pings);
+            mapCamera(cartography.camera, camera);
             return cartography.node;
         }
         var root = document.createElement('div');
@@ -227,7 +250,9 @@
         image.appendChild(circleLayer); mapCircles(circleLayer, circles);
         var pingLayer = document.createElement('div'); pingLayer.className = 'dk-probe-pings';
         image.appendChild(pingLayer); mapPings(pingLayer, pings);
-        cartography = {uri: uri, node: root, points: points, objectives: objectiveLayer, circles: circleLayer, pings: pingLayer};
+        var cameraLayer = document.createElement('div'); cameraLayer.className = 'dk-probe-camera';
+        image.appendChild(cameraLayer); mapCamera(cameraLayer, camera);
+        cartography = {uri: uri, node: root, points: points, objectives: objectiveLayer, circles: circleLayer, pings: pingLayer, camera: cameraLayer};
         return root;
     }
     function clearAlignment() {
@@ -310,7 +335,8 @@
         line('Bases/objetivos: ' + (Array.isArray(data.objectives) ? data.objectives.length : 0) + ' (captura publicada pelo cliente)');
         line('Círculos nativos: ' + (Array.isArray(data.circles) ? data.circles.length : 0));
         line('Pings nativos: ' + (Array.isArray(data.pings) ? data.pings.length : 0) + ' | quadrado: célula; ! atenção; > destino; + artilharia; ponto vermelho: impacto; R resposta');
-        var map = mapSample(data.textureUri, vehicles, data.objectives, data.circles, data.pings);
+        line('Direção da câmara arcade: ' + (data.cameraLine ? 'publicada' : 'indisponível/oculta'));
+        var map = mapSample(data.textureUri, vehicles, data.objectives, data.circles, data.pings, data.cameraLine);
         if (map) { node.appendChild(map); }
         line('Amostras fixas — 16 / 24 / 32 px; confirmar visualmente.');
         var sample = graphicsSample();

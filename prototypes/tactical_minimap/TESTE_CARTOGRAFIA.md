@@ -1,5 +1,11 @@
 # Cartografia e calibração — diagnóstico
 
+## Linha de direção da câmara arcade
+
+Acrescentada a entrada `ArcadeCameraEntry`/`personal` aos oito hooks existentes. O cliente usa `makeArcadeCameraMatrix()` com translação do veículo e rotação da câmara; a ponte lê só o provider já publicado, sem consultar BigWorld. Requer jogador vivo/não observador, ownership nativo, ID da câmara arcade selecionado, entrada ativa e comando `showDirectionLine`. `hideDirectionLine`, troca de modo, remoção, ocultação do HUD e finalização retiram a linha. Não são criados timers ou comandos de input.
+
+O raio segue o yaw nativo, com x normalizado pela largura mundial e z pela altura mundial; termina na interseção com a borda do mapa. A amostra usa uma linha SVG amarela reutilizada. Confirmar rotação norte/este/sul/oeste, câmara livre em arcade e redimensionamento; desativar a opção nativa de vetor e mudar para mira/estratégico para confirmar remoção conforme o original. Setores de visão/limites do canhão e câmaras estratégica/vídeo continuam pendentes. Esta etapa e os destruídos ainda aguardam confirmação visual explícita.
+
 ## Veículos destruídos publicados
 
 Inimigos próximos e distantes confirmados no jogo. A etapa seguinte usa `destroyedMarkers` do mesmo plugin nativo, separados dos veículos vivos. `VehiclesPlugin.__setDestroyed()` mantém a entrada ativa e chama `setDead` apenas conforme as opções nativas; o callback de expiração desativa-a. O adaptador aceita somente entradas ativas, mortas, com sinal nativo de publicação e localização AOI/FAR; não lê matrizes de destroços ocultos, de localização indefinida ou em transição. Não conserva posições nem cria TTL.

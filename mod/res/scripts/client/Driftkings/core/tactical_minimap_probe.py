@@ -57,6 +57,7 @@ def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, c
         data['alliedPoints'] = points
         data['enemyPoints'] = enemy_calibration_points(snapshot.get('markers', []))
         data['destroyedPoints'] = destroyed_calibration_points(snapshot.get('destroyedMarkers', []))
+        data['cameraLine'] = camera_line(snapshot.get('cameraLine'))
         point = points[0] if points else None
         if point is not None:
             data['alliedPoint'] = point
@@ -224,6 +225,16 @@ def player_point(value):
     if isinstance(cell, (str, type(u''))) and re.match(r'^[A-HJK][1-90]\Z', cell):
         result['cell'] = cell
     return result
+
+
+def camera_line(value):
+    if not isinstance(value, dict):
+        return None
+    try:
+        result = dict((key, finite(value[key])) for key in ('x', 'y', 'x2', 'y2'))
+    except (KeyError, ValueError, TypeError, OverflowError):
+        return None
+    return result if all(0 <= number <= 1 for number in result.values()) else None
 
 
 def objective_points(values):

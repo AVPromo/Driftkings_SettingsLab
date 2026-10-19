@@ -151,6 +151,38 @@ class NativeAdapterTests(RuntimeTest):
         self.assertIsNone(api['native_player_point'](self.component, record))
         self.assertEqual(len(providers), 1)
 
+    def test_camera_line_uses_selected_published_matrix_and_rectangular_bounds(self):
+        from math import pi
+        yaw, reads = [0], []
+        selected = [7]
+        self.component.getPlugin = lambda name: Owner(_getCameraIDs=lambda: {'ArcadeCameraEntry': 7},
+                                                     _getSelectedCameraID=lambda: selected[0])
+        api = source('views/battle/tactical_minimap.py', {
+            'Driftkings.core.tactical_minimap': self.load('core.tactical_minimap'),
+            'Math': module(Matrix=lambda provider: reads.append(provider) or Owner(
+                translation=Owner(x=100, z=200), yaw=yaw[0]))})
+        api['owns_player_marker'] = lambda component: True
+        record = dict(id=7, active=True, direction=True, matrix=object())
+        line = api['native_camera_line'](self.component, record)
+        self.assertEqual(line, dict(x=.5, y=.5, x2=.5, y2=0))
+        yaw[0] = pi / 2
+        line = api['native_camera_line'](self.component, record)
+        self.assertAlmostEqual(line['x2'], 1)
+        self.assertAlmostEqual(line['y2'], .5)
+        yaw[0] = pi / 4
+        line = api['native_camera_line'](self.component, record)
+        self.assertAlmostEqual(line['x2'], 1)
+        self.assertAlmostEqual(line['y2'], .25)
+        for changes in ({'active': False}, {'direction': False}, {'id': 8}, {'matrix': None}):
+            reads[:] = []
+            self.assertIsNone(api['native_camera_line'](self.component, dict(record, **changes)))
+            self.assertEqual(reads, [])
+        selected[0] = 8
+        self.assertIsNone(api['native_camera_line'](self.component, record))
+        selected[0] = 7
+        api['owns_player_marker'] = lambda component: False
+        self.assertIsNone(api['native_camera_line'](self.component, record))
+
     def test_native_objectives_read_only_active_publication_and_world_bounds(self):
         reads = []
         def matrix(provider):
