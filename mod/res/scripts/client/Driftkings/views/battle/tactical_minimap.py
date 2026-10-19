@@ -287,37 +287,6 @@ def forward_native_position_input(component, value):
         return 'failed'
 
 
-def forward_native_resize(component, step):
-    """Use the stock Flash size setter; its native callback persists the setting."""
-    if type(step) is not int or step not in (-1, 1):
-        return 'invalid-input'
-    try:
-        from Driftkings.common import xvmInstalled
-        from gui import GUI_SETTINGS
-        if xvmInstalled:
-            return 'third-party-owner'
-        if component.isModalViewShown():
-            return 'modal-view'
-        if component.getMinimapDimensions() != 10 or not GUI_SETTINGS.minimapSize:
-            return 'unsupported-mode'
-        plugin = component.getPlugin('settings')
-        identity = (type(plugin).__module__, type(plugin).__name__)
-        allowed = (('gui.Scaleform.daapi.view.battle.classic.minimap', 'GlobalSettingsPlugin'),
-                   ('gui.Scaleform.daapi.view.battle.maps_training.minimap', 'MapsTrainingGlobalSettingsPlugin'))
-        if identity not in allowed:
-            return 'third-party-owner'
-        current = plugin._sizeIndex
-        if type(current) is not int or not 0 <= current <= 5:
-            return 'native-input-unavailable'
-        new_index = max(0, min(5, current + step))
-        if new_index == current:
-            return 'size-limit'
-        component.as_setSizeS(new_index)
-        return 'forwarded'
-    except Exception:
-        return 'failed'
-
-
 def native_strategic_point(component, record):
     """Aim-matrix translation already published for the strategic camera."""
     if not record or not record.get('active') or not owns_player_marker(component):

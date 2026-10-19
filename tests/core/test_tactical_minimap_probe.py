@@ -37,7 +37,7 @@ class ProbeTests(RuntimeTest):
             'Driftkings.core.tactical_minimap_probe': self.policy,
             'gui.battle_control.minimap_utils': module(MINIMAP_SIZE=(210, 210)),
             'GUI': module(mcursor=lambda: Owner(visible=self.cursor_visible)),
-            'Driftkings.views.battle.tactical_minimap': module(forward_native_resize=lambda component, step: 'forwarded', native_adapter=factory, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: [], native_strategic_point=lambda component, record: None, forward_native_position_input=lambda component, value: 'diagnostic-replay'),
+            'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: [], native_strategic_point=lambda component, record: None, forward_native_position_input=lambda component, value: 'diagnostic-replay'),
             'Driftkings.views.hangar.common': module(publish_card=publish),
             'Driftkings.core.hud_visibility': module(hudVisibility=hud)})
         self.bridge = self.api['ProbeBridge'](object(), lambda config: self.settings,
@@ -95,38 +95,6 @@ class ProbeTests(RuntimeTest):
         records = self.bridge._metrics.snapshot()['records']
         self.assertGreater(records['tactical_minimap.skipped']['count'], 0)
         self.assertNotIn('tactical_minimap.published', records)
-
-    def test_resize_requests_are_validated_deduplicated_and_cursor_gated(self):
-        self.settings['tacticalDiagnostics'] = True
-        self.view._cursorVisible = True
-        self.cursor_visible = True
-        self.component.getMinimapDimensions = lambda: 10
-        self.component.flashObject.as_DriftkingsMinimapGeometry = lambda: '1|800|400|200|200|1000|800|2'
-        self.bridge.bind_native(self.component)
-        self.bridge.start()
-        self.bridge.acknowledge(self.view, {'protocol': 1, 'generation': 1})
-        calls = []
-        self.api['forward_native_resize'] = lambda component, step: calls.append(step) or 'forwarded'
-        args = dict(protocol=1, generation=1, action='resize', request=1, step=1)
-        for changes in ({'generation': 2}, {'step': True}, {'step': 2}, {'step': 1.0}, {'protocol': 2}):
-            self.bridge.receive_sample_input(self.view, dict(args, **changes))
-        self.assertEqual(calls, [])
-        self.bridge.receive_sample_input(self.view, args)
-        self.bridge.receive_sample_input(self.view, args)
-        self.assertEqual(calls, [1])
-        self.assertEqual(self.frames[-1]['resizeResult']['dispatch'], 'forwarded')
-        self.assertIsNone(self.view._sampleInput)
-        self.settings['tactical'] = {'followNativeSize': False}
-        self.bridge.receive_sample_input(self.view, dict(args, request=2))
-        self.assertEqual(calls, [1])
-        self.settings['tactical']['followNativeSize'] = True
-        self.cursor_visible = False
-        self.bridge.receive_sample_input(self.view, dict(args, request=2))
-        self.assertEqual(calls, [1])
-        self.cursor_visible = True
-        self.component.isModalViewShown = lambda: True
-        self.bridge.receive_sample_input(self.view, dict(args, request=2))
-        self.assertEqual(calls, [1])
 
     def test_preferences_publish_separately_without_enabling_replacement(self):
         self.settings.update(tacticalDiagnostics=True, minimapMode='driftkings',
@@ -921,7 +889,7 @@ class ProbeTests(RuntimeTest):
         dependencies = {
             'Driftkings.core.tactical_minimap_probe': self.policy,
             'GUI': module(mcursor=lambda: Owner(visible=fixture.cursor_visible)),
-            'Driftkings.views.battle.tactical_minimap': module(forward_native_resize=lambda component, step: 'forwarded', native_adapter=lambda *args: None, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: [], native_strategic_point=lambda component, record: None, forward_native_position_input=lambda component, value: 'diagnostic-replay'),
+            'Driftkings.views.battle.tactical_minimap': module(native_adapter=lambda *args: None, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: [], native_strategic_point=lambda component, record: None, forward_native_position_input=lambda component, value: 'diagnostic-replay'),
             'Driftkings.views.hangar.common': module(publish_card=lambda *args: None),
             'frameworks.wulf': module(ViewModel=BaseModel),
             'gui.impl.pub.view_component': module(ViewComponent=BaseView),

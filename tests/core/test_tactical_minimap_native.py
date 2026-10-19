@@ -33,56 +33,6 @@ class NativeAdapterTests(RuntimeTest):
                       getLocation=lambda: location, isEnemy=lambda: enemy,
                       getClassTag=lambda: 'mediumTank', getMatrix=lambda: matrix)
 
-    def test_resize_uses_native_size_setter_and_preserves_limits_and_ownership(self):
-        Plugin = type('GlobalSettingsPlugin', (object,), {
-            '__module__': 'gui.Scaleform.daapi.view.battle.classic.minimap'})
-        plugin = Plugin()
-        plugin._sizeIndex = 2
-        calls, modal = [], [False]
-        common, settings = module(xvmInstalled=False), Owner(minimapSize=True)
-        component = Owner(getPlugin=lambda name: plugin, getMinimapDimensions=lambda: 10,
-                          isModalViewShown=lambda: modal[0], as_setSizeS=lambda index: calls.append(index))
-        api = source('views/battle/tactical_minimap.py', {
-            'Driftkings.core.tactical_minimap': self.load('core.tactical_minimap'),
-            'Driftkings.common': common, 'gui': module(GUI_SETTINGS=settings)})
-        send = api['forward_native_resize']
-        self.assertEqual(send(component, 1), 'forwarded')
-        self.assertEqual(calls, [3])
-        self.assertEqual(plugin._sizeIndex, 2)  # The native callback owns persistence.
-        self.assertEqual(send(component, -1), 'forwarded')
-        self.assertEqual(calls[-1], 1)
-        for value in (True, 0, 2, 1.0, '1'):
-            self.assertEqual(send(component, value), 'invalid-input')
-        calls[:] = []
-        for index, step in ((5, 1), (0, -1)):
-            plugin._sizeIndex = index
-            self.assertEqual(send(component, step), 'size-limit')
-        self.assertEqual(calls, [])
-        plugin._sizeIndex = 2
-        modal[0] = True
-        self.assertEqual(send(component, 1), 'modal-view')
-        modal[0], common.xvmInstalled = False, True
-        self.assertEqual(send(component, 1), 'third-party-owner')
-        common.xvmInstalled, settings.minimapSize = False, False
-        self.assertEqual(send(component, 1), 'unsupported-mode')
-        settings.minimapSize = True
-        component.getPlugin = lambda name: Owner(_sizeIndex=2)
-        self.assertEqual(send(component, 1), 'third-party-owner')
-        self.assertEqual(calls, [])
-        Training = type('MapsTrainingGlobalSettingsPlugin', (object,), {
-            '__module__': 'gui.Scaleform.daapi.view.battle.maps_training.minimap'})
-        training = Training()
-        training._sizeIndex = 3
-        component.getPlugin = lambda name: training
-        self.assertEqual(send(component, -1), 'forwarded')
-        self.assertEqual(calls, [2])
-        def failing_setter(index):
-            calls.append(index)
-            raise RuntimeError('Simulated native resize failure')
-        component.as_setSizeS = failing_setter
-        self.assertEqual(send(component, 1), 'failed')
-        self.assertEqual(calls, [2, 4])  # One call; no fallback/retry.
-
     def test_native_map_and_visible_entries_are_read_without_orientation_or_world_reads(self):
         self.plugin._entries = {1: self.entry(), 2: self.entry(enemy=False)}
         frame = self.adapter.capture()

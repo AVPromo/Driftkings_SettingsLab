@@ -5,7 +5,6 @@
     if (window[OWNER]) { window[OWNER].dispose(); }
     var disposed = false, node = null, binding = null, graphics = null, cartography = null, alignment = null;
     var inputListening = false, interaction = null;
-    var wheelEvent = 'onwheel' in document ? 'wheel' : 'mousewheel';
     var sampleCalibration = null, pendingClick = null;
     var hoveredVehicle = null;
     var textLines = [], desiredNodes = null, lineIndex = 0;
@@ -347,33 +346,6 @@
         mapStrategic(layer, value);
         if (value && layer.firstChild) { layer.firstChild.className = 'dk-probe-input-point'; }
     }
-    function nextSampleRequest() {
-        if (binding.inputGeneration !== interaction.generation) {
-            binding.inputGeneration = interaction.generation; binding.inputSequence = 0;
-        }
-        binding.inputSequence = Math.max(binding.inputSequence, interaction.request) + 1;
-        return binding.inputSequence <= 2147483647 ? binding.inputSequence : null;
-    }
-    function sampleWheel(event) {
-        if (disposed || !interaction || !binding || !cartography || !followNativeSize ||
-                typeof binding.model.onSampleInput !== 'function') { return; }
-        var target = event.target, budget = 64;
-        while (target && target !== cartography.image && --budget > 0) { target = target.parentNode; }
-        if (target !== cartography.image) { return; }
-        var delta = typeof event.deltaY === 'number' ? -event.deltaY : event.wheelDelta;
-        if (typeof delta !== 'number' || !isFinite(delta) || delta === 0) { return; }
-        cancelClick();
-        event.preventDefault(); event.stopPropagation();
-        var request = nextSampleRequest();
-        if (request === null) { return; }
-        try {
-            binding.model.onSampleInput({protocol: 1, generation: interaction.generation,
-                request: request, action: 'resize', step: delta > 0 ? 1 : -1});
-        } catch (error) {
-            interaction = null;
-            console.error('[Driftkings] Sample resize failed', error);
-        }
-    }
     function cancelClick() { pendingClick = null; }
     function samplePress(event) {
         pendingClick = null;
@@ -412,10 +384,13 @@
                 press.left !== rect.left || press.top !== rect.top || press.width !== rect.width || press.height !== rect.height) { return; }
         event.preventDefault(); event.stopPropagation();
         try {
-            var request = nextSampleRequest();
-            if (request === null) { return; }
+            if (binding.inputGeneration !== interaction.generation) {
+                binding.inputGeneration = interaction.generation; binding.inputSequence = 0;
+            }
+            binding.inputSequence = Math.max(binding.inputSequence, interaction.request) + 1;
+            if (binding.inputSequence > 2147483647) { return; }
             binding.model.onSampleInput({protocol: 1, generation: interaction.generation,
-                request: request, x: x, y: y, button: button === 1 ? 2 : button === 2 ? 1 : 0,
+                request: binding.inputSequence, x: x, y: y, button: button === 1 ? 2 : button === 2 ? 1 : 0,
                 target: vehicle ? 'vehicle' : 'position'});
         } catch (error) {
             interaction = null; pendingClick = null; image.style.pointerEvents = 'none';
@@ -609,13 +584,6 @@
         if (!interactive || pendingClick && pendingClick.generation !== data.generation) { pendingClick = null; }
         interaction = interactive ? {generation: data.generation, request: request} : null;
         line('Input da amostra: ' + (interactive ? 'esquerdo/direito via cliente; botão do meio em diagnóstico' : 'inativo'));
-        line('Roda do rato: ' + (followNativeSize ? 'alterar tamanho nativo com cursor sobre a amostra' : 'inativa com tamanho fixo'));
-        if (data.resizeResult) {
-            var resizeStatus = {forwarded: 'entregue ao cliente', 'size-limit': 'limite de tamanho',
-                'third-party-owner': 'outro componente controla o tamanho', 'modal-view': 'janela modal aberta',
-                'unsupported-mode': 'modo não suportado', 'native-input-unavailable': 'tamanho indisponível', failed: 'falha nativa'};
-            line('Redimensionamento: ' + (resizeStatus[data.resizeResult.dispatch] || 'indisponível'));
-        }
         if (sample && typeof sample.localX === 'number' && isFinite(sample.localX) &&
                 typeof sample.localY === 'number' && isFinite(sample.localY)) {
             line('Gameface → Python #' + sample.sequence + ': ' + sample.localX.toFixed(1) + ', ' + sample.localY.toFixed(1) + ' px nativos (cruz turquesa)');
@@ -724,10 +692,7 @@
         window.removeEventListener('resize', resizeSample);
         window.removeEventListener('blur', cancelClick);
         if (inputListening) { document.removeEventListener('mousedown', samplePress, true); document.removeEventListener('mouseup', sampleRelease, true); inputListening = false; }
-        if (document.removeEventListener) {
-            document.removeEventListener('mousemove', sampleHover, true);
-            document.removeEventListener(wheelEvent, sampleWheel, true);
-        }
+        if (document.removeEventListener) { document.removeEventListener('mousemove', sampleHover, true); }
         release(); hide();
         if (window[OWNER] && window[OWNER].dispose === dispose) { delete window[OWNER]; }
     }
@@ -742,7 +707,6 @@
         if (document.addEventListener && document.removeEventListener) {
             document.addEventListener('mousedown', samplePress, true); document.addEventListener('mouseup', sampleRelease, true); inputListening = true;
             document.addEventListener('mousemove', sampleHover, true);
-            document.addEventListener(wheelEvent, sampleWheel, true);
         }
         refresh();
     });
