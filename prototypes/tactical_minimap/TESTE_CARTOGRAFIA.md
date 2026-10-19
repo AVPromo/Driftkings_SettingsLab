@@ -109,3 +109,11 @@ A captura vem de `session.shared.teamBases`, restringindo o contrato ao módulo 
 A amostra mostra percentagem/barra durante captura, PAUSA quando bloqueada, OK após captura e ? se o contrato não estiver confirmado. Os valores são limitados e validados; estados ausentes nunca são tratados como captura livre. Reset nativo volta a idle e oculta a barra. Ainda não suporta captura de objetivos especiais de Frontline/outros modos nem ações de clique.
 
 Teste: comparar número, percentagem e bloqueio com o painel de captura do jogo num replay com captura. Confirmar reset após saída dos invasores e conclusão a 100%. Não é necessário fazer uma batalha real para tentar este teste, mas o replay precisa de conter estes eventos. Testes automáticos cobrem leitura atual, captura/bloqueio/conclusão/reset, controlo neutro e limites do contrato; confirmação visual pendente.
+
+## Novos SVG fornecidos pelo utilizador
+
+Identificação/captura testadas e confirmadas pelo utilizador. A biblioteca passa a usar os desenhos completos de `prototypes/tactical_minimap/icons`: grupos, retângulos, caminhos, círculos, transformações e gradientes, com viewBox 64 × 64. Os tons claros são adaptados à cor da relação (verde/amarelo/branco); detalhes escuros e acentos de estado mantêm a cor original. Cada instância recebe IDs de gradiente únicos. Bases e pontos de controlo conservam os símbolos anteriores.
+
+As definições são geradas no bloco identificado de `TacticalMinimap/graphics.js`, sem parser XML em runtime nem nova dependência de carregamento. Após editar os SVG: `python build_tools/generate_tactical_icons.py --write`; para verificar: `python build_tools/generate_tactical_icons.py --check`. O teste Node compara hashes dos ficheiros de referência e geometria completa dos paths, retângulos, transformações, cores e referências de gradiente. O renderer conserva o nó SVG quando só muda a posição.
+
+O desenho de destruído foi atualizado para o preview; a amostra de batalha continua a mostrar veículos vivos. Lost Contact foi guardado apenas como referência e continua excluído da biblioteca/runtime. Confirmar no Gameface real a pintura dos gradientes, legibilidade a 18 px e rotação da nova seta. A construção DOM por si só não comprova a pintura.

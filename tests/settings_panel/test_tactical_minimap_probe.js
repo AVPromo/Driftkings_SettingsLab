@@ -135,7 +135,8 @@ vm.runInNewContext(script, {window: win, document: graphicsDoc, engine: engine, 
 var report = acknowledgements[acknowledgements.length - 1];
 assert.strictEqual(report.svgApi, true);
 assert.strictEqual(report.glyphCount, 21);
-assert.strictEqual(svgNodesCreated, 42); // 21 svg nodes plus 21 path nodes.
+var sampleNodeCount = svgNodesCreated;
+assert(sampleNodeCount > 42); // Complete artwork includes groups, gradients and multiple shapes.
 var sample = body.children[0].children.filter(function (child) { return child.className === 'dk-probe-glyphs'; })[0];
 assert.strictEqual(sample.children.length, 7);
 var medium = sample.children[1];
@@ -144,9 +145,10 @@ assert.strictEqual(medium.children[1].attributes.width, 16);
 assert.strictEqual(medium.children[2].attributes.width, 24);
 assert.strictEqual(medium.children[3].attributes.width, 32);
 assert.strictEqual(medium.children[1].children[0].attributes.stroke, '#ffc45b');
-assert(medium.children[1].children[0].attributes.d.indexOf('M10 21 L22 10') !== -1);
+assert.strictEqual(medium.children[1].attributes.viewBox, '0 0 64 64');
+assert.strictEqual(medium.children[1].children[0].attributes['data-kind'], 'mediumTank');
 data.acknowledged = true; data.graphics = {svgApi: true, glyphCount: 21}; refresh();
-assert.strictEqual(svgNodesCreated, 42); // No graphic rebuild for a metadata change.
+assert.strictEqual(svgNodesCreated, sampleNodeCount); // No graphic rebuild for a metadata change.
 assert.strictEqual(body.children[0].children.filter(function (child) { return child.className === 'dk-probe-glyphs'; })[0], sample);
 data.textureUri = 'img://spaces/01_karelia/mmap.dds';
 ['lightTank', 'mediumTank', 'heavyTank', 'AT-SPG', 'SPG'].forEach(function (kind) {
@@ -156,8 +158,7 @@ data.textureUri = 'img://spaces/01_karelia/mmap.dds';
     var points = image.children[1], marker = points.children[0];
     assert(marker.className.indexOf('dk-probe-ally-icon') !== -1);
     assert.strictEqual(marker.children[0].children[0].attributes.stroke, '#67cf69');
-    var expected = win.DKTacticalGraphics.createGlyph(graphicsDoc, kind, '#67cf69', 18);
-    assert.strictEqual(marker.children[0].children[0].attributes.d, expected.path.attributes.d);
+    assert.strictEqual(marker.children[0].children[0].attributes['data-kind'], kind);
     var count = svgNodesCreated;
     data.alliedPoint.x = .75; refresh();
     assert.strictEqual(points.children[0], marker);
@@ -186,7 +187,7 @@ data.alliedPoints = [{x: .5, y: .75, vehicleClass: 'mediumTank', side: 'player',
 var ownIcon = livePoints.children[0].children[0].children[0];
 assert.strictEqual(ownIcon.attributes.stroke, '#ffffff');
 assert.strictEqual(livePoints.children[0].children[0].style.transform, 'rotate(90deg)');
-assert.strictEqual(ownIcon.attributes.d, win.DKTacticalGraphics.createGlyph(graphicsDoc, 'player', '#ffffff', 18).path.attributes.d);
+assert.strictEqual(ownIcon.attributes['data-kind'], 'player');
 data.objectives = [{kind: 'allyBase', x: .2, y: .1, number: 2, state: 'capturing', progress: 42}, {kind: 'enemyBase', x: .8, y: .9},
     {kind: 'controlPoint', x: .5, y: .5}]; refresh();
 var objectiveLayer = iconImage.children[2];
