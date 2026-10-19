@@ -34,7 +34,7 @@ class ProbeTests(RuntimeTest):
         self.scheduled, self.cancelled = [], []
         self.api = source('views/battle/tactical_minimap_probe.py', {
             'Driftkings.core.tactical_minimap_probe': self.policy,
-            'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: []),
+            'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: []),
             'Driftkings.views.hangar.common': module(publish_card=publish),
             'Driftkings.core.hud_visibility': module(hudVisibility=hud)})
         self.bridge = self.api['ProbeBridge'](object(), lambda config: self.settings,
@@ -254,6 +254,46 @@ class ProbeTests(RuntimeTest):
         self.assertEqual(clean['state'], 'unknown')
         self.assertNotIn('progress', clean)
 
+    def test_native_circle_commands_add_update_remove_and_clear(self):
+        record = {'circles': {}}
+        self.policy.update_ranges(record, ('as_addDynamicViewRange', 0x67cf69, 50, 400))
+        self.assertEqual(record['circles']['view'], {'color': '#67cf69', 'alpha': .5, 'radius': 400})
+        self.policy.update_ranges(record, ('as_updateDynRange', 450))
+        self.assertEqual(record['circles']['view']['radius'], 450)
+        self.policy.update_ranges(record, ('as_delDynRange',))
+        self.assertEqual(record['circles'], {})
+        for method in self.policy.RANGE_ADD:
+            self.policy.update_ranges(record, (method, 0xffffff, 100, 50))
+        self.assertEqual(len(record['circles']), 4)
+        self.policy.update_ranges(record, ('as_removeAllCircles',))
+        self.assertEqual(record['circles'], {})
+        self.policy.update_ranges(record, ('as_addDrawRange', 0, 101, float('nan')))
+        self.assertEqual(record['circles'], {})
+
+    def test_circle_contract_rejects_invalid_values_and_strips_radius(self):
+        value = dict(kind='view', x=.5, y=.5, rx=.4, ry=.2, alpha=.5, color='#ffffff', radius=400)
+        self.assertNotIn('radius', self.policy.circle_points([value])[0])
+        self.assertEqual(len(self.policy.circle_points([value, value])), 1)
+        self.assertEqual(self.policy.circle_points([dict(value, rx=float('nan'))]), [])
+        self.assertEqual(self.policy.circle_points([dict(value, alpha=0)]), [])
+
+    def test_circle_publication_tracks_native_entry_and_lifecycle(self):
+        self.settings['tacticalDiagnostics'] = True
+        bridge, hooks, events = self.install_runtime_stubs()
+        bridge.install()
+        component, provider = Owner(), object()
+        original = lambda *args: 7
+        hooks['addEntry'](original, component, 'ViewRangeCirclesEntry', 'personal', provider, True)
+        hooks['invoke'](original, component, 7, 'as_addDrawRange', 0xffffff, 50, 500)
+        self.assertEqual(bridge._circle_entries[component]['circles']['draw']['radius'], 500)
+        hooks['setActive'](original, component, 7, False)
+        self.assertFalse(bridge._circle_entries[component]['active'])
+        hooks['delEntry'](original, component, 7)
+        self.assertNotIn(component, bridge._circle_entries)
+        hooks['addEntry'](original, component, 'ViewRangeCirclesEntry', 'personal', provider, True)
+        bridge.stop()
+        self.assertEqual(len(bridge._circle_entries), 0)
+
     def test_default_off_creates_no_adapter_and_starts_no_diagnostic(self):
         self.bridge.bind_native(self.component)
         self.bridge.start()
@@ -392,7 +432,7 @@ class ProbeTests(RuntimeTest):
         self.resource_id = 123
         dependencies = {
             'Driftkings.core.tactical_minimap_probe': self.policy,
-            'Driftkings.views.battle.tactical_minimap': module(native_adapter=lambda *args: None, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: []),
+            'Driftkings.views.battle.tactical_minimap': module(native_adapter=lambda *args: None, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: []),
             'Driftkings.views.hangar.common': module(publish_card=lambda *args: None),
             'frameworks.wulf': module(ViewModel=BaseModel),
             'gui.impl.pub.view_component': module(ViewComponent=BaseView),

@@ -117,3 +117,11 @@ Identificação/captura testadas e confirmadas pelo utilizador. A biblioteca pas
 As definições são geradas no bloco identificado de `TacticalMinimap/graphics.js`, sem parser XML em runtime nem nova dependência de carregamento. Após editar os SVG: `python build_tools/generate_tactical_icons.py --write`; para verificar: `python build_tools/generate_tactical_icons.py --check`. O teste Node compara hashes dos ficheiros de referência e geometria completa dos paths, retângulos, transformações, cores e referências de gradiente. O renderer conserva o nó SVG quando só muda a posição.
 
 O desenho de destruído foi atualizado para o preview; a amostra de batalha continua a mostrar veículos vivos. Lost Contact foi guardado apenas como referência e continua excluído da biblioteca/runtime. Confirmar no Gameface real a pintura dos gradientes, legibilidade a 18 px e rotação da nova seta. A construção DOM por si só não comprova a pintura.
+
+## Círculos de alcance publicados pelo cliente
+
+Acrescentada a entrada nativa `ViewRangeCirclesEntry`/`personal`, acompanhada pelos hooks já existentes de criação, matriz, ativação, invoke e eliminação. Não foram acrescentados hooks nem timers. As chamadas as_addDrawRange/as_addDynamicViewRange/as_addMaxViewRage/as_addMinSpottingRange fornecem raio, cor e alpha; as_updateDynRange atualiza visão dinâmica; as_del*/as_removeAllCircles removem os desenhos.
+
+O centro vem da matriz mundial publicada para a entrada. Raio horizontal = metros/largura dos bounds; vertical = metros/altura. A amostra desenha elipses em percentagens e recorta o exterior ao mapa, mantendo veículos/objetivos por cima. Respeita o estado ativo e as remoções do cliente, sem completar raios por defaults ou previsões. O payload limita-se aos quatro tipos conhecidos e valida cores/raios/opacidade.
+
+Testar no replay comparando centro, tamanho e cores com os círculos originais. Alterar as opções nativas de círculos, testar visão dinâmica e confirmar que desaparecem quando o original é desativado/oculto. O contador «Círculos nativos» indica quantos foram publicados. Não inclui círculos adicionais personalizados, setores de câmara/canhão ou ações de rato. Testes Python/Node cobrem comandos, ciclo de vida, limites, movimento e proporções retangulares; pintura no Gameface pendente. A validação visual dos novos gradientes SVG também continua pendente.

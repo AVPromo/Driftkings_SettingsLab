@@ -153,13 +153,38 @@
         });
         layer._dkObjectives = records;
     }
-    function mapSample(uri, allies, objectives) {
+    function mapCircles(layer, values) {
+        var records = layer._dkCircles || {}, seen = {};
+        if (!Array.isArray(values)) { values = []; }
+        values.slice(0, 4).forEach(function (value) {
+            if (!validAlly(value) || ['draw', 'view', 'maxView', 'proximity'].indexOf(value.kind) === -1 ||
+                    !/^#[0-9a-f]{6}$/i.test(value.color || '') || seen[value.kind] ||
+                    !['rx', 'ry', 'alpha'].every(function (key) { return typeof value[key] === 'number' && isFinite(value[key]) && value[key] > 0; }) ||
+                    value.rx > 100 || value.ry > 100 || value.alpha > 1) { return; }
+            seen[value.kind] = true;
+            var circle = records[value.kind];
+            if (!circle) {
+                circle = document.createElement('div'); circle.className = 'dk-probe-range-circle';
+                layer.appendChild(circle); records[value.kind] = circle;
+            }
+            circle.style.left = (100 * (value.x - value.rx)) + '%';
+            circle.style.top = (100 * (value.y - value.ry)) + '%';
+            circle.style.width = (200 * value.rx) + '%'; circle.style.height = (200 * value.ry) + '%';
+            circle.style.borderColor = value.color; circle.style.opacity = value.alpha;
+        });
+        Object.keys(records).forEach(function (key) {
+            if (!seen[key]) { layer.removeChild(records[key]); delete records[key]; }
+        });
+        layer._dkCircles = records;
+    }
+    function mapSample(uri, allies, objectives, circles) {
         if (typeof uri !== 'string' || uri.length > 262 ||
                 !/^img:\/\/(spaces\/[A-Za-z0-9_/-]+\.(dds|png)|gui\/maps\/icons\/map\/[A-Za-z0-9_-]+\.png)$/.test(uri) ||
                 uri.indexOf('//', 6) !== -1) { return null; }
         if (cartography && cartography.uri === uri) {
             mapPoints(cartography.points, allies);
             mapObjectives(cartography.objectives, objectives);
+            mapCircles(cartography.circles, circles);
             return cartography.node;
         }
         var root = document.createElement('div');
@@ -174,7 +199,9 @@
         mapPoints(points, allies);
         var objectiveLayer = document.createElement('div'); objectiveLayer.className = 'dk-probe-objectives';
         image.appendChild(objectiveLayer); mapObjectives(objectiveLayer, objectives);
-        cartography = {uri: uri, node: root, points: points, objectives: objectiveLayer};
+        var circleLayer = document.createElement('div'); circleLayer.className = 'dk-probe-range-layer';
+        image.appendChild(circleLayer); mapCircles(circleLayer, circles);
+        cartography = {uri: uri, node: root, points: points, objectives: objectiveLayer, circles: circleLayer};
         return root;
     }
     function clearAlignment() {
@@ -248,7 +275,8 @@
         var allies = Array.isArray(data.alliedPoints) ? data.alliedPoints : (data.alliedPoint ? [data.alliedPoint] : []);
         line('Veículos na amostra: ' + allies.length + ' | branco: tu; verde: aliado; amarelo: pelotão');
         line('Bases/objetivos: ' + (Array.isArray(data.objectives) ? data.objectives.length : 0) + ' (captura publicada pelo cliente)');
-        var map = mapSample(data.textureUri, allies, data.objectives);
+        line('Círculos nativos: ' + (Array.isArray(data.circles) ? data.circles.length : 0));
+        var map = mapSample(data.textureUri, allies, data.objectives, data.circles);
         if (map) { node.appendChild(map); }
         line('Amostras fixas — 16 / 24 / 32 px; confirmar visualmente.');
         var sample = graphicsSample();

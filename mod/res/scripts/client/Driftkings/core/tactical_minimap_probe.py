@@ -50,6 +50,7 @@ def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, c
             points = [player] + [point for point in points if point.get('side') != 'player']
         data['playerAvailable'] = any(point.get('side') == 'player' for point in points)
         data['objectives'] = objective_points(snapshot.get('objectives', []))
+        data['circles'] = circle_points(snapshot.get('circles', []))
         data['alliedPoints'] = points
         point = points[0] if points else None
         if point is not None:
@@ -217,4 +218,59 @@ def objective_points(values):
             except (ValueError, TypeError, OverflowError):
                 pass
             result.append(item)
+    return result
+
+
+RANGE_ADD = {'as_addDrawRange': 'draw', 'as_addDynamicViewRange': 'view',
+             'as_addMaxViewRage': 'maxView', 'as_addMinSpottingRange': 'proximity'}
+RANGE_REMOVE = {'as_delDrawRange': 'draw', 'as_delDynRange': 'view',
+                'as_delMaxViewRage': 'maxView', 'as_delMinSpottingRange': 'proximity'}
+
+
+def update_ranges(record, signature):
+    if not signature:
+        return
+    circles, method = record['circles'], signature[0]
+    if method == 'as_removeAllCircles':
+        circles.clear()
+    elif method in RANGE_REMOVE:
+        circles.pop(RANGE_REMOVE[method], None)
+    elif method in RANGE_ADD and len(signature) == 4:
+        try:
+            color, alpha, radius = [finite(value) for value in signature[1:]]
+            if int(color) == color and 0 <= color <= 16777215 and 0 <= alpha <= 100 and 0 < radius <= 100000:
+                circles[RANGE_ADD[method]] = {'color': '#%06x' % int(color), 'alpha': alpha / 100, 'radius': radius}
+        except (ValueError, TypeError, OverflowError):
+            return
+    elif method == 'as_updateDynRange' and len(signature) == 2 and 'view' in circles:
+        try:
+            radius = finite(signature[1])
+            if 0 < radius <= 100000:
+                circles['view']['radius'] = radius
+            else:
+                circles.pop('view', None)
+        except (ValueError, TypeError, OverflowError):
+            circles.pop('view', None)
+
+
+def circle_points(values):
+    result = []
+    if not isinstance(values, list):
+        return result
+    seen = set()
+    for value in values[:4]:
+        if not isinstance(value, dict) or value.get('kind') not in RANGE_ADD.values() or value['kind'] in seen:
+            continue
+        try:
+            clean = dict((key, finite(value[key])) for key in ('x', 'y', 'rx', 'ry', 'alpha'))
+            color = value['color']
+            if not (0 <= clean['x'] <= 1 and 0 <= clean['y'] <= 1 and 0 < clean['rx'] <= 100 and
+                    0 < clean['ry'] <= 100 and 0 < clean['alpha'] <= 1 and
+                    isinstance(color, (str, type(u''))) and re.match(r'^#[0-9a-fA-F]{6}\Z', color)):
+                continue
+        except (KeyError, ValueError, TypeError, OverflowError):
+            continue
+        clean.update(kind=value['kind'], color=color)
+        seen.add(value['kind'])
+        result.append(clean)
     return result

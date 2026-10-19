@@ -241,3 +241,18 @@ def native_objective_capture(component, record, position):
         return max(states, key=lambda value: priority[value['state']]) if states else unknown
     except Exception:
         return unknown
+
+
+def native_circle_points(component, record):
+    if not record or not record.get('active') or record.get('matrix') is None:
+        return []
+    import Math
+    lower, upper = component.getBoundingBox()
+    bounds = tuple(finite(value) for value in (lower[0], lower[1], upper[0], upper[1]))
+    position = Math.Matrix(record['matrix']).translation
+    center = coordinates(position.x, position.z, bounds)
+    if center is None:
+        return []
+    return [dict(value, kind=kind, x=center[0], y=center[1],
+                 rx=value['radius'] / (bounds[2] - bounds[0]), ry=value['radius'] / (bounds[3] - bounds[1]))
+            for kind, value in record['circles'].items()]

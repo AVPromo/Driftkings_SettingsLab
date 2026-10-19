@@ -168,6 +168,18 @@ class NativeAdapterTests(RuntimeTest):
         record['kind'], record['number'] = 'allyBase', 9
         self.assertEqual(read(), {'state': 'unknown'})
 
+    def test_circle_world_radius_uses_both_dimensions_and_respects_native_active(self):
+        reads = []
+        api = source('views/battle/tactical_minimap.py', {
+            'Driftkings.core.tactical_minimap': self.load('core.tactical_minimap'),
+            'Math': module(Matrix=lambda provider: reads.append(provider) or Owner(translation=Owner(x=100, z=200)))})
+        record = dict(active=True, matrix=object(), circles={'view': dict(radius=100, color='#ffffff', alpha=.5)})
+        value = api['native_circle_points'](self.component, record)[0]
+        self.assertEqual((value['x'], value['y'], value['rx'], value['ry']), (.5, .5, .25, .125))
+        record['active'] = False
+        self.assertEqual(api['native_circle_points'](self.component, record), [])
+        self.assertEqual(len(reads), 1)
+
     def test_hidden_lost_transitional_dead_and_inactive_entries_never_read_matrices(self):
         entries = [self.entry(active=False), self.entry(alive=False), self.entry(aoi=False),
                    self.entry(location=0), self.entry(location=2), self.entry(location=3)]
