@@ -21,7 +21,7 @@ from Driftkings.views.marks_model import compact_model
 from Driftkings.core.marks_state import marks_state
 
 from Driftkings._constants import GLOBAL, BATTLE_MARKS_OF_EXCELLENCE, DAMAGE_EVENTS, BATTLE_EVENT_TYPE
-from Driftkings.common import loadJson, checkKeys, getPlayer, sendPanelMessage, getStatisticColor
+from Driftkings.common import loadJson, checkKeys, getPlayer, sendPanelMessage, getStatisticColor, getMoeDamageColor
 from Driftkings.common.utils.achievement_dossiers import getAchievementDossier
 from Driftkings.core.cache import cache_directory
 from Driftkings.core.callbacks import callback
