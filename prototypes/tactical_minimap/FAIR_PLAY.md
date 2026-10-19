@@ -19,3 +19,5 @@ O código nativo contém `convertToLastSpottedVehicleMP` e condições de visibi
 - Uma futura integração terá de reproduzir exclusivamente o que o cliente publica e remover de imediato o que deixa de estar autorizado. Verificação específica por região e versão antes de disponibilizar.
 
 O bloqueio descrito aplica-se apenas ao Tactical Minimap V2. Não é uma revisão de conformidade nem uma alteração silenciosa dos recursos legados do minimapa já existentes.
+
+Etapa 3: a ponte diagnóstica só publica contagem, textura, limites do mapa e estado. Não transfere posições, IDs ou nomes de veículos para a interface; o renderer sintético continua separado. O gating de Lost Contact e de substituição do nativo mantém-se.

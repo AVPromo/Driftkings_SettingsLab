@@ -1,4 +1,5 @@
 {
+  "tacticalDiagnostics": false,
   "alpha": 90,
   "artilleryAim": {
     "alpha": 100,

@@ -461,5 +461,29 @@ def getBattleViews():
     return ((AS_BATTLE, MinimapCentredView, config),)
 
 
+_probe_bridge = None
+
+
+def init():
+    global _probe_bridge
+    if settings_service.getComponentDict(config).get('tacticalDiagnostics', False) is True:
+        try:
+            from Driftkings.views.battle.tactical_minimap_probe import ProbeBridge
+            _probe_bridge = ProbeBridge(config, settings_service.getComponentDict)
+            _probe_bridge.install()
+        except Exception as error:
+            if _probe_bridge is not None:
+                try:
+                    _probe_bridge.dispose()
+                except Exception as cleanup_error:
+                    logError(config.NAME, 'Tactical diagnostic cleanup failed: ' + repr(cleanup_error))
+                _probe_bridge = None
+            logError(config.NAME, 'Tactical diagnostics unavailable: ' + repr(error))
+
+
 def fini():
-    controller.dispose()
+    try:
+        if _probe_bridge is not None:
+            _probe_bridge.dispose()
+    finally:
+        controller.dispose()

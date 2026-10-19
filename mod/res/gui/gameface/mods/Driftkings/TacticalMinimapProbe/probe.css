@@ -1,0 +1,4 @@
+#dk-tactical-minimap-probe { position:absolute; left:50%; top:110rem; transform:translateX(-50%); max-width:420rem; padding:8rem 12rem; border:1rem solid #8ba1a1; background:rgba(12,20,22,.88); color:#e9e2bf; font:13rem/17rem "Warhelios",Arial,sans-serif; pointer-events:none; }
+#dk-tactical-minimap-probe .dk-probe-title { color:#e8c55a; }
+#dk-tactical-minimap-probe .dk-probe-ready { color:#28f09c; }
+#dk-tactical-minimap-probe .dk-probe-pending { color:#b2aca0; }

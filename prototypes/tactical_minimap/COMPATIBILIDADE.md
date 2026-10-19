@@ -37,3 +37,7 @@ Uma fase em produção só pode ser marcada concluída com prova do contrato rea
 ## Etapa 2
 
 A convenção x/direita, z/norte e a área lógica de clique de 210×210 foram confirmadas no SRC do minimapa clássico. Existe agora um adaptador de leitura parcial não instalado e sem ligação ao renderer; ver CONTRATOS_NATIVOS.md. O transporte de rotação não é fornecido pelas matrizes de veículos auditadas. A validação em combate, modos diferentes, input completo e fallback de ponta a ponta continua pendente.
+
+## Etapa 3
+
+Foi implementada a ponte diagnóstica para RandomHUDView, desligada por defeito. O recurso R e os assets são empacotados e a factory, os handlers e o protocolo foram testados com stubs/DOM falso. Não há ainda confirmação de carregamento no cliente, em batalha ou replay. A seleção de renderer continua bloqueada. Ver TESTE_GAMEFACE.md para o procedimento de teste e resultados esperados.

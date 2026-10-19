@@ -19,3 +19,7 @@ Os SVG são fontes próprias: LT losango, MT losango com uma faixa, HT com duas,
 7. Partilhar um contrato de dados pequeno, limitado a informação autorizada; reconciliar incrementalmente no cliente visual, sem trabalho gráfico intensivo em Python.
 
 Os testes atuais cobrem a política bloqueada, não simulam um handoff real entre Flash e Gameface. Não há código de ocultação do nativo neste protótipo.
+
+## Etapa 3 — ponte diagnóstica opt-in
+
+`views/battle/tactical_minimap_probe.py` liga um ViewComponent ao HUD aleatório, via catálogo e gen_resources existentes, apenas com tacticalDiagnostics=true. Reutiliza HookRegistry, on_event, BattleEvents, hudVisibility e publish_card. `core/tactical_minimap_probe.py` reduz o snapshot a metadados sem IDs/posições. O JS não usa SVG/Canvas: mostra apenas texto e confirma o protocolo por geração. Não se liga o renderer do protótipo a estes dados. Ver TESTE_GAMEFACE.md.

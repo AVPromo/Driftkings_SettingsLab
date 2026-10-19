@@ -1,0 +1,239 @@
+# -*- coding: utf-8 -*-
+import json
+import io
+import os
+
+from support import ROOT, RuntimeTest, module, source
+
+
+class Owner(object):
+    def __init__(self, **values):
+        self.__dict__.update(values)
+
+
+class ProbeTests(RuntimeTest):
+    def setUp(self):
+        super(ProbeTests, self).setUp()
+        self.policy = self.load('core.tactical_minimap_probe')
+        self.settings = {'enabled': True, 'tacticalDiagnostics': False}
+        self.frames, self.factory_calls, self.closed = [], [], []
+        self.snapshot = {'source': 'native-minimap-audit', 'available': True,
+                         'bounds': [-1, -1, 1, 1], 'nativeSize': [210, 210], 'texture': 'test.dds',
+                         'markers': [{'id': 666, 'x': .25, 'y': .5, 'name': 'secret-marker'}]}
+        self.fail_factory = False
+        self.attached = []
+        hud = Owner(attach=lambda view: self.attached.append(view),
+                    detach=lambda view: self.attached.remove(view) if view in self.attached else None)
+        def factory(component, session):
+            self.factory_calls.append(component)
+            if self.fail_factory:
+                raise ValueError('Simulated unavailable Gameface/native contract')
+            return Owner(capture=lambda: self.snapshot, close=lambda: self.closed.append(True))
+        def publish(view, data):
+            self.frames.append(data)
+        self.api = source('views/battle/tactical_minimap_probe.py', {
+            'Driftkings.core.tactical_minimap_probe': self.policy,
+            'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory),
+            'Driftkings.views.hangar.common': module(publish_card=publish),
+            'Driftkings.core.hud_visibility': module(hudVisibility=hud)})
+        self.bridge = self.api['ProbeBridge'](object(), lambda config: self.settings)
+        self.view = Owner(_ready=True, _guiVisible=True, _acknowledged=False, destroy=lambda: None)
+        self.bridge.views.add(self.view)
+        self.component = Owner(sessionProvider=Owner())
+
+    def test_default_off_creates_no_adapter_and_starts_no_diagnostic(self):
+        self.bridge.bind_native(self.component)
+        self.bridge.start()
+        self.assertFalse(self.bridge.active)
+        self.assertEqual(self.factory_calls, [])
+        self.assertEqual(self.attached, [])
+        self.assertFalse(self.frames[-1]['enabled'])
+
+    def test_summary_never_transports_vehicle_ids_names_or_coordinates(self):
+        data = self.policy.payload(True, True, self.snapshot, 1)
+        self.assertEqual(data['markerCount'], 1)
+        self.assertNotIn('markers', data)
+        encoded = json.dumps(data)
+        self.assertNotIn('secret-marker', encoded)
+        self.assertNotIn('666', encoded)
+        self.assertEqual(data['effectiveMode'], 'vanilla')
+        self.assertFalse(data['nativePresentationChanged'])
+        self.assertFalse(data['lostContactAvailable'])
+
+    def test_disabled_or_malformed_metadata_returns_no_map_information(self):
+        self.assertNotIn('texture', self.policy.payload(False, True, self.snapshot))
+        self.snapshot['bounds'][0] = float('nan')
+        result = self.policy.payload(True, False, self.snapshot)
+        self.assertFalse(result['available'])
+        self.assertEqual(result['reason'], 'invalid-native-metadata')
+
+    def test_handshake_is_once_per_generation_and_stale_commands_are_rejected(self):
+        self.settings['tacticalDiagnostics'] = True
+        self.bridge.bind_native(self.component)
+        self.bridge.start()
+        self.bridge.start()
+        self.assertEqual(self.bridge.generation, 1)
+        for args in ({'protocol': True, 'generation': 1}, {'protocol': 2, 'generation': 1},
+                     {'protocol': 1, 'generation': 0}, None):
+            self.bridge.acknowledge(self.view, args)
+            self.assertFalse(self.view._acknowledged)
+        self.bridge.acknowledge(self.view, {'protocol': 1, 'generation': 1})
+        self.assertTrue(self.view._acknowledged)
+        self.assertEqual(self.frames[-1]['reason'], 'ready')
+        frame_count = len(self.frames)
+        self.bridge.acknowledge(self.view, {'protocol': 1, 'generation': 1})
+        self.assertEqual(len(self.frames), frame_count)
+        self.bridge.stop()
+        self.bridge.start()
+        self.assertEqual(self.bridge.generation, 2)
+        self.assertFalse(self.view._acknowledged)
+        self.bridge.acknowledge(self.view, {'protocol': 1, 'generation': 1})
+        self.assertFalse(self.view._acknowledged)
+        self.bridge.acknowledge(self.view, {'protocol': 1.0, 'generation': 2.0})
+        self.assertTrue(self.view._acknowledged)
+
+    def test_native_failure_is_isolated_and_not_retried_on_every_event(self):
+        self.settings['tacticalDiagnostics'] = True
+        self.fail_factory = True
+        self.bridge.bind_native(self.component)
+        self.bridge.start()
+        self.bridge.refresh()
+        self.assertEqual(len(self.factory_calls), 1)
+        self.assertFalse(self.frames[-1]['available'])
+        self.assertEqual(self.frames[-1]['reason'], 'native-adapter-unavailable')
+        self.assertFalse(self.frames[-1]['nativePresentationChanged'])
+
+    def test_stale_native_disposal_does_not_remove_new_component(self):
+        self.settings['tacticalDiagnostics'] = True
+        self.bridge.start()
+        old = self.component
+        self.bridge.bind_native(old)
+        self.component = Owner(sessionProvider=Owner())
+        self.bridge.bind_native(self.component)
+        self.bridge.unbind_native(old)
+        self.assertIs(self.bridge._native(), self.component)
+        self.bridge.unbind_native(self.component)
+        self.assertIsNone(self.bridge._native)
+        self.assertTrue(self.closed)
+
+    def test_no_capture_when_hud_hidden_or_no_loaded_view_and_dispose_releases(self):
+        self.settings['tacticalDiagnostics'] = True
+        self.view._ready = False
+        self.bridge.bind_native(self.component)
+        self.bridge.start()
+        self.assertEqual(self.factory_calls, [])
+        self.view._ready = True
+        self.bridge.setBattleHudVisible(False)
+        self.assertEqual(self.factory_calls, [])
+        self.bridge.setBattleHudVisible(True)
+        self.assertEqual(len(self.factory_calls), 1)
+        self.bridge.dispose()
+        self.bridge.dispose()
+        self.assertFalse(self.bridge.active)
+        self.assertFalse(self.bridge.enabled())
+        self.assertEqual(len(self.bridge.views), 0)
+        self.assertEqual(self.attached, [])
+        self.assertEqual(len(self.closed), 1)
+
+
+    def install_runtime_stubs(self):
+        hooks, events = {}, []
+        fixture = self
+        class BaseModel(object):
+            def __init__(self, **kwargs):
+                self.sizes = kwargs
+            def _initialize(self):
+                pass
+            def _addStringProperty(self, *args):
+                pass
+            def _addCommand(self, name):
+                return object()
+        class BaseView(object):
+            def __init__(self, layoutID, model):
+                if fixture.fail_construction:
+                    raise RuntimeError('Simulated failed Gameface construction')
+                self.model = model()
+                self.model._initialize()
+            def _onLoaded(self, *args):
+                pass
+            def _finalize(self):
+                pass
+            def getViewModel(self):
+                return self.model
+            def _getEvents(self):
+                return ()
+            def _getListeners(self):
+                return ()
+            def destroy(self):
+                self._finalize()
+        class NativeHUD(object):
+            pass
+        class NativeMap(object):
+            pass
+        def override(target, name):
+            def decorate(fn):
+                hooks[name] = fn
+                return fn
+            return decorate
+        self.fail_construction = False
+        self.resource_id = 123
+        dependencies = {
+            'Driftkings.core.tactical_minimap_probe': self.policy,
+            'Driftkings.views.battle.tactical_minimap': module(native_adapter=lambda *args: None),
+            'Driftkings.views.hangar.common': module(publish_card=lambda *args: None),
+            'frameworks.wulf': module(ViewModel=BaseModel),
+            'gui.impl.pub.view_component': module(ViewComponent=BaseView),
+            'gui.impl.battle.random.hud': module(RandomHUDView=NativeHUD),
+            'gui.Scaleform.daapi.view.battle.shared.minimap.component': module(MinimapComponent=NativeMap),
+            'gui.shared': module(events=module(GameEvent=module(GUI_VISIBILITY=1)), EVENT_BUS_SCOPE=module(BATTLE=2)),
+            'Driftkings.core.hooks': module(override=override, on_event=lambda signal, fn: events.append((signal, fn))),
+            'Driftkings.core.battle_events': module(battleEvents=module(started=1, loaded=2, visibility=3, ended=4)),
+            'Driftkings.ui.gameface': module(attach_assets=lambda *args: None, resource_id=lambda key: self.resource_id),
+            'Driftkings.interface_catalog': module(gameface_spec=lambda key: {'resource': 'mods/Driftkings/TacticalMinimapProbe/model'})}
+        bridge = source('views/battle/tactical_minimap_probe.py', dependencies)['ProbeBridge'](
+            object(), lambda config: self.settings)
+        return bridge, hooks, events
+
+    def test_default_off_installs_no_hooks_or_event_subscriptions(self):
+        bridge, hooks, events = self.install_runtime_stubs()
+        bridge.install()
+        self.assertFalse(bridge.installed)
+        self.assertEqual(hooks, {})
+        self.assertEqual(events, [])
+
+    def test_hud_hook_preserves_native_children_and_missing_resource(self):
+        self.settings['tacticalDiagnostics'] = True
+        bridge, hooks, events = self.install_runtime_stubs()
+        bridge.install()
+        bridge.install()
+        self.assertEqual(len(hooks), 3)
+        self.assertEqual(len(events), 4)
+        native = {7: object()}
+        children = hooks['_getChildComponents'](lambda parent: native, Owner())
+        self.assertIs(children[7], native[7])
+        self.assertNotIn(123, native)
+        self.assertIn(123, children)
+        view = children[123]()
+        self.assertIsNotNone(view)
+        self.assertEqual(view.model.sizes, {'properties': 3, 'commands': 1})
+        self.assertEqual(len(view._getEvents()), 1)
+        self.resource_id = -1
+        self.assertIs(hooks['_getChildComponents'](lambda parent: native, Owner()), native)
+
+    def test_failed_probe_construction_is_skipped_without_raising_into_native_hud(self):
+        self.settings['tacticalDiagnostics'] = True
+        bridge, hooks, events = self.install_runtime_stubs()
+        bridge.install()
+        self.fail_construction = True
+        native = (7, 8)
+        children = hooks['_getChildComponents'](lambda parent: native, Owner())
+        self.assertEqual(children[7], None)
+        self.assertEqual(children[8], None)
+        self.assertIsNone(children[123]())
+
+
+    def test_canonical_defaults_keep_probe_off_for_legacy_and_split_storage(self):
+        for relative in ('res/configs/Driftkings/default/minimap_enhancements.json',
+                         'res/configs/Driftkings/default/minimap_enhancements/minimap.json'):
+            with io.open(os.path.join(ROOT, *relative.split('/')), encoding='utf-8') as stream:
+                self.assertIs(json.load(stream)['tacticalDiagnostics'], False)
