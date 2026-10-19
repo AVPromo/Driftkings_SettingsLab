@@ -371,6 +371,11 @@
           "source": "mod/res/gui/gen_resources/driftkings.DriftkingsTacticalMinimapProbe.json",
           "target": "res/gui/gen_resources/driftkings.DriftkingsTacticalMinimapProbe.json",
           "generator": null
+        },
+        {
+          "source": "mod/res/gui/gameface/mods/Driftkings/TacticalMinimap/**",
+          "target": "res/gui/gameface/mods/Driftkings/TacticalMinimap/**",
+          "generator": null
         }
       ]
     },

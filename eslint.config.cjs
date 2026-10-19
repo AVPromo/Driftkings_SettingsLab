@@ -30,7 +30,7 @@ module.exports = [
         }
     },
     {
-        files: ["prototypes/tactical_minimap/renderer.js",
+        files: ["mod/res/gui/gameface/mods/Driftkings/TacticalMinimap/graphics.js",
             "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel_layout.js",
             "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel_native.js"],
         languageOptions: { globals: { module: "readonly" } }

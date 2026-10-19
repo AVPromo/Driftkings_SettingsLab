@@ -101,6 +101,7 @@
         "DriftkingsTacticalMinimapProbe": {
             "owner": "__dkTacticalMinimapProbe",
             "scripts": [
+                "coui://gui/gameface/mods/Driftkings/TacticalMinimap/graphics.js",
                 "coui://gui/gameface/mods/Driftkings/TacticalMinimapProbe/probe.js"
             ],
             "styles": [

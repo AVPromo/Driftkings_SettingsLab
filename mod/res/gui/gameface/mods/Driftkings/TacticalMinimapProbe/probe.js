@@ -1,12 +1,12 @@
-/* Diagnostic text only. Never renders markers or manipulates native minimap UI. */
+/* Diagnostic text and fixed glyph samples; no battle markers or native UI changes. */
 (function () {
     'use strict';
     var OWNER = '__dkTacticalMinimapProbe', FEATURE = 'DriftkingsTacticalMinimapProbe';
     if (window[OWNER]) { window[OWNER].dispose(); }
-    var disposed = false, node = null, binding = null;
+    var disposed = false, node = null, binding = null, graphics = null;
     function hide() {
         if (node && node.parentNode) { node.parentNode.removeChild(node); }
-        node = null;
+        node = null; graphics = null;
     }
     function release() {
         if (binding && binding.callback !== null) { viewEnv.removeDataChangedCallback(binding.callback, binding.id); }
@@ -17,6 +17,37 @@
         child.className = className || '';
         child.textContent = text;
         node.appendChild(child);
+    }
+    function graphicsSample() {
+        if (graphics) { return graphics; }
+        var root = document.createElement('div');
+        root.className = 'dk-probe-glyphs';
+        graphics = {node: root, report: {svgApi: false, glyphCount: 0}};
+        var definitions = [
+            ['lightTank', 'LT', '#67cf69'], ['mediumTank', 'MT', '#ffc45b'],
+            ['heavyTank', 'HT', '#ee6868'], ['AT-SPG', 'TD', '#67cf69'],
+            ['SPG', 'SPG', '#ee6868'], ['player', 'TU', '#ffffff'], ['destroyed', 'X', '#8c8c7e']
+        ];
+        try {
+            if (!window.DKTacticalGraphics || typeof window.DKTacticalGraphics.createGlyph !== 'function') {
+                throw new Error('Tactical glyph library unavailable');
+            }
+            definitions.forEach(function (definition) {
+                var column = document.createElement('div'); column.className = 'dk-probe-glyph-column';
+                var title = document.createElement('div'); title.textContent = definition[1]; column.appendChild(title);
+                [16, 24, 32].forEach(function (size) {
+                    column.appendChild(window.DKTacticalGraphics.createGlyph(
+                        document, definition[0], definition[2], size).node);
+                    graphics.report.glyphCount++;
+                });
+                root.appendChild(column);
+            });
+            graphics.report.svgApi = true;
+        } catch (error) {
+            while (root.firstChild) { root.removeChild(root.firstChild); }
+            root.textContent = 'SVG DOM indisponível: teste gráfico omitido.';
+        }
+        return graphics;
     }
     function render(data) {
         if (!data || data.enabled !== true || data.protocol !== 1 || data.effectiveMode !== 'vanilla') {
@@ -38,6 +69,13 @@
             line('Fonte nativa: ' + (data.reason || 'indisponível'), 'dk-probe-pending');
         }
         line('Sem substituição do minimapa, posições ou Lost Contact.');
+        line('Amostras fixas — 16 / 24 / 32 px; confirmar visualmente.');
+        var sample = graphicsSample();
+        node.appendChild(sample.node);
+        if (data.graphics) {
+            line('SVG DOM: ' + (data.graphics.svgApi ? 'disponível' : 'indisponível') +
+                ' | nós construídos: ' + data.graphics.glyphCount + '/21');
+        }
     }
     function update() {
         if (disposed || !window.subViews) { return; }
@@ -64,7 +102,11 @@
             if (data.enabled === true && data.protocol === 1 && data.effectiveMode === 'vanilla' &&
                     typeof data.generation === 'number' && binding.sentGeneration !== data.generation && typeof model.onProbeReady === 'function') {
                 binding.sentGeneration = data.generation;
-                try { model.onProbeReady({protocol: 1, generation: data.generation}); }
+                try {
+                    var report = graphicsSample().report;
+                    model.onProbeReady({protocol: 1, generation: data.generation,
+                        svgApi: report.svgApi, glyphCount: report.glyphCount});
+                }
                 catch (error) { binding.sentGeneration = null; console.error('[Driftkings] Diagnostic handshake failed', error); }
             }
             break;

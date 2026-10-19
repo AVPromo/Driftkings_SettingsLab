@@ -68,3 +68,61 @@ assert.strictEqual(Object.keys(windowEvents).length, 0);
 assert.strictEqual(win.__dkTacticalMinimapProbe, undefined);
 assert.strictEqual(errors.length, 0);
 console.log('PASS: Gameface probe handshake, per-battle generation, safe text, recovery and disposal');
+
+// First run deliberately had no graphics API: basic diagnostics must still work.
+assert.strictEqual(acknowledgements[0].svgApi, false);
+assert.strictEqual(acknowledgements[0].glyphCount, 0);
+
+// Run the real shared glyph implementation against an SVG-capable DOM stub.
+var svgNodesCreated = 0;
+Element.prototype.setAttribute = function (key, value) {
+    if (!this.attributes) { this.attributes = {}; }
+    this.attributes[key] = value;
+};
+var graphicsDoc = {body: body, createElement: function () { return new Element(); },
+    createElementNS: function (namespace, tag) {
+        assert.strictEqual(namespace, 'http://www.w3.org/2000/svg');
+        svgNodesCreated++; var element = new Element(); element.tag = tag; return element;
+    }};
+win.DKTacticalGraphics = require('../../mod/res/gui/gameface/mods/Driftkings/TacticalMinimap/graphics.js');
+data = {enabled: true, protocol: 1, generation: 3, effectiveMode: 'vanilla', available: false, acknowledged: false};
+model = {DriftkingsUI: {name: 'DriftkingsTacticalMinimapProbe'}, payload: JSON.stringify(data),
+    onProbeReady: function (args) { acknowledgements.push(args); }};
+vm.runInNewContext(script, {window: win, document: graphicsDoc, engine: engine, viewEnv: viewEnv,
+    console: {error: function () { errors.push(true); }}});
+var report = acknowledgements[acknowledgements.length - 1];
+assert.strictEqual(report.svgApi, true);
+assert.strictEqual(report.glyphCount, 21);
+assert.strictEqual(svgNodesCreated, 42); // 21 svg nodes plus 21 path nodes.
+var sample = body.children[0].children.filter(function (child) { return child.className === 'dk-probe-glyphs'; })[0];
+assert.strictEqual(sample.children.length, 7);
+var medium = sample.children[1];
+assert.strictEqual(medium.children[0].textContent, 'MT');
+assert.strictEqual(medium.children[1].attributes.width, 16);
+assert.strictEqual(medium.children[2].attributes.width, 24);
+assert.strictEqual(medium.children[3].attributes.width, 32);
+assert.strictEqual(medium.children[1].children[0].attributes.stroke, '#ffc45b');
+assert(medium.children[1].children[0].attributes.d.indexOf('M10 21 L22 10') !== -1);
+data.acknowledged = true; data.graphics = {svgApi: true, glyphCount: 21}; refresh();
+assert.strictEqual(svgNodesCreated, 42); // No graphic rebuild for a metadata change.
+assert.strictEqual(body.children[0].children.filter(function (child) { return child.className === 'dk-probe-glyphs'; })[0], sample);
+win.__dkTacticalMinimapProbe.dispose();
+assert.strictEqual(body.children.length, 0);
+assert.strictEqual(Object.keys(callbacks).length, 0);
+assert.strictEqual(Object.keys(listeners).length, 0);
+console.log('PASS: shared SVG glyphs, three scales, missing-API fallback and cached graphic samples');
+
+// A DOM method may exist but reject SVG: contain this failure inside the probe.
+graphicsDoc.createElementNS = function () { throw new Error('SVG namespace unsupported'); };
+data.generation = 4; data.acknowledged = false;
+model.payload = JSON.stringify(data);
+vm.runInNewContext(script, {window: win, document: graphicsDoc, engine: engine, viewEnv: viewEnv,
+    console: {error: function () { errors.push(true); }}});
+report = acknowledgements[acknowledgements.length - 1];
+assert.strictEqual(report.svgApi, false);
+assert.strictEqual(report.glyphCount, 0);
+assert.strictEqual(body.children.length, 1);
+assert.strictEqual(errors.length, 0);
+win.__dkTacticalMinimapProbe.dispose();
+assert.strictEqual(body.children.length, 0);
+assert.strictEqual(Object.keys(callbacks).length, 0);

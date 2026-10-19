@@ -1,7 +1,7 @@
 /* Fake DOM verifies preview contracts; it is not a Gameface runtime test. */
 'use strict';
 var assert = require('assert');
-var api = require('../../prototypes/tactical_minimap/renderer.js');
+var api = require('../../mod/res/gui/gameface/mods/Driftkings/TacticalMinimap/graphics.js');
 function Element(doc) {
     this.ownerDocument = doc; this.children = []; this.style = {}; this.attributes = {};
 }
@@ -59,3 +59,19 @@ renderer.render(frame, {});
 renderer.dispose(); renderer.dispose(); renderer.render(frame, {});
 assert.strictEqual(host.children.length, 0);
 console.log('PASS: Tactical Minimap isolated preview, incremental DOM, safe filtering and disposal');
+
+var glyph = api.createGlyph(doc, 'mediumTank', '#ffcc00', 32);
+assert(glyph.path.attributes.d.indexOf('M10 21 L22 10') !== -1);
+assert.strictEqual(glyph.path.attributes.stroke, '#ffcc00');
+assert.strictEqual(glyph.node.attributes.width, 32);
+assert.throws(function () { api.createGlyph(doc, 'lost', '#ffffff', 24); });
+assert.throws(function () { api.createGlyph(doc, 'heavyTank', 'url(unsafe)', 24); });
+assert.throws(function () { api.createGlyph(doc, 'heavyTank', '#ffffff', Infinity); });
+assert.throws(function () { api.createGlyph({}, 'heavyTank', '#ffffff', 24); });
+
+var fs = require('fs'), path = require('path');
+['lightTank', 'mediumTank', 'heavyTank', 'AT-SPG', 'SPG', 'player', 'destroyed'].forEach(function (kind) {
+    var reference = fs.readFileSync(path.join(__dirname, '../../prototypes/tactical_minimap/icons', kind + '.svg'), 'utf8');
+    var expectedPath = /<path d="([^"]+)"/.exec(reference)[1];
+    assert.strictEqual(api.createGlyph(doc, kind, '#ffffff', 24).path.attributes.d, expectedPath);
+});

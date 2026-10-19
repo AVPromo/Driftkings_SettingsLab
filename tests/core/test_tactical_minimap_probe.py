@@ -237,3 +237,29 @@ class ProbeTests(RuntimeTest):
                          'res/configs/Driftkings/default/minimap_enhancements/minimap.json'):
             with io.open(os.path.join(ROOT, *relative.split('/')), encoding='utf-8') as stream:
                 self.assertIs(json.load(stream)['tacticalDiagnostics'], False)
+
+
+    def test_graphics_report_is_bounded_and_does_not_imply_production_support(self):
+        result = self.policy.graphics_result({'svgApi': True, 'glyphCount': 21, 'positions': ['private']})
+        self.assertEqual(result, {'svgApi': True, 'glyphCount': 21})
+        self.assertEqual(self.policy.graphics_result({'svgApi': False, 'glyphCount': 0}),
+                         {'svgApi': False, 'glyphCount': 0})
+        for args in ({'svgApi': True, 'glyphCount': 20}, {'svgApi': 'yes', 'glyphCount': 21},
+                     {'svgApi': False, 'glyphCount': True}, {'svgApi': True, 'glyphCount': 22},
+                     {'svgApi': False, 'glyphCount': float('nan')}, {'svgApi': False, 'glyphCount': 2.5}):
+            self.assertIsNone(self.policy.graphics_result(args))
+        data = self.policy.payload(True, True, self.snapshot, 1, result)
+        self.assertEqual(data['graphics'], result)
+        self.assertEqual(data['effectiveMode'], 'vanilla')
+        self.assertFalse(data['lostContactAvailable'])
+
+    def test_graphics_ack_is_owned_by_current_battle_and_cleared_on_stop(self):
+        self.settings['tacticalDiagnostics'] = True
+        self.bridge.bind_native(self.component)
+        self.bridge.start()
+        self.bridge.acknowledge(self.view, {'protocol': 1, 'generation': 0, 'svgApi': True, 'glyphCount': 21})
+        self.assertIsNone(self.view._graphicsResult)
+        self.bridge.acknowledge(self.view, {'protocol': 1, 'generation': 1, 'svgApi': True, 'glyphCount': 21})
+        self.assertEqual(self.frames[-1]['graphics'], {'svgApi': True, 'glyphCount': 21})
+        self.bridge.stop()
+        self.assertIsNone(self.view._graphicsResult)

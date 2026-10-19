@@ -7,6 +7,7 @@ Abrir [preview.html](preview.html) num navegador para explorar os três temas, o
 - [Auditoria obrigatória, Fase 0](AUDITORIA.md).
 - [Arquitetura e fronteiras](ARQUITETURA.md).
 - [Compatibilidade e matriz de testes](COMPATIBILIDADE.md).
+- [Etapa 4: testar os ícones no Gameface](TESTE_GRAFICO.md).
 - [Etapa 3: testar a ponte diagnóstica no jogo](TESTE_GAMEFACE.md).
 - [Etapa 2: contratos e adaptador nativo](CONTRATOS_NATIVOS.md).
 - [Avaliação Fair Play](FAIR_PLAY.md).
@@ -15,7 +16,7 @@ Abrir [preview.html](preview.html) num navegador para explorar os três temas, o
 
 Protótipo HTML/CSS/JS ES5, SVG próprios em `icons/`, política pura Python 2.7/3 em `Driftkings/core/tactical_minimap.py`, transformação de coordenadas retangulares e orientação de referência, contrato sintético sem retenção de posições, seleção com fallback obrigatório Vanilla e testes Python/Node. O recurso gráfico Lost Contact é apenas uma referência, não é carregado pelo renderer.
 
-O protótipo visual, os SVG e os documentos ficam fora do WOTMOD. A etapa 3 acrescenta ao manifesto um recurso R, HTML/CSS/JS e uma ponte Python separados, apenas para diagnóstico opt-in. Estes não ativam o renderer nem a política de substituição.
+O HTML do protótipo, os SVG de referência e os documentos ficam fora do WOTMOD; a biblioteca gráfica partilhada passou a ser empacotada na etapa 4. A etapa 3 acrescenta ao manifesto um recurso R, HTML/CSS/JS e uma ponte Python separados, apenas para diagnóstico opt-in. Estes não ativam o renderer nem a política de substituição.
 
 ## O que falta para as Fases 1–9 em produção
 
@@ -38,3 +39,5 @@ A CI executa os testes novos juntamente com os existentes. A aparência não foi
 Etapa 2: foi acrescentado um adaptador de leitura nativo **não instalado**, com origem de snapshot diferente e recusada pelo preview. Ver CONTRATOS_NATIVOS.md para os filtros conservadores, a matemática de input e as limitações. A seleção em Settings e o renderer de batalha continuam por integrar.
 
 Etapa 3: a ponte Gameface transporta só um resumo de diagnóstico, nunca os snapshots/posições do adapter. Está desligada por defeito. A utilização do renderer como minimapa de batalha e a seleção de modo continuam pendentes.
+
+Etapa 4: o diagnóstico pode desenhar sete símbolos fixos em três escalas, usando a mesma biblioteca do preview. O relatório confirma apenas construção de elementos SVG; a pintura precisa de confirmação visual. Ver TESTE_GRAFICO.md.

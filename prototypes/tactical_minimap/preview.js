@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    var renderer = new window.DKTacticalPreview.Renderer(document.getElementById('map'));
+    var renderer = new window.DKTacticalGraphics.Renderer(document.getElementById('map'));
     var names = ['theme', 'size', 'opacity', 'iconScale', 'ally', 'enemy', 'platoon', 'names', 'grid'];
     var sample = {source: 'synthetic-preview', markers: [
         {id: 1, visible: true, state: 'visible', side: 'player', vehicleClass: 'mediumTank', x: 0.5, y: 0.7, heading: 45, name: 'Jogador'},

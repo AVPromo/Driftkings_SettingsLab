@@ -4,7 +4,7 @@
 
 `core/tactical_minimap.py` não importa BigWorld, GUI, Wulf, Settings ou eventos. Expõe política de seleção bloqueada, defaults do protótipo, transformação matemática e adapter exclusivo de fixtures sintéticas. Nunca oculta o nativo e não conserva coordenadas. `preview_snapshot()` rejeita fontes de batalha: ainda não existe um adapter de batalha completo. A etapa 2 acrescenta um leitor nativo parcial, não instalado, descrito em CONTRATOS_NATIVOS.md.
 
-`renderer.js` recebe apenas `source=synthetic-preview`, marcadores normalizados, relações e estados explícitos; descarta entradas invisíveis/lost antes de desenhar. Atualiza nós por ID e assinatura, remove nós ausentes, valida cores/tamanhos e torna dispose idempotente. Não tem timer de polling, listeners de batalha ou chamadas Python. O harness `preview.js` liga e desliga os controlos da página.
+`TacticalMinimap/graphics.js` (antes renderer.js) recebe apenas `source=synthetic-preview`, marcadores normalizados, relações e estados explícitos; descarta entradas invisíveis/lost antes de desenhar. Atualiza nós por ID e assinatura, remove nós ausentes, valida cores/tamanhos e torna dispose idempotente. Não tem timer de polling, listeners de batalha ou chamadas Python. O harness `preview.js` liga e desliga os controlos da página.
 
 Os SVG são fontes próprias: LT losango, MT losango com uma faixa, HT com duas, TD triângulo, SPG círculo/cruz, jogador chevron e destruído cruz. A relação equipa/pelotão é codificada por cor, mantendo a silhueta da classe. A orientação demonstrada é só a do chevron do jogador. Não há alegação de compatibilidade SVG com Gameface até teste real.
 
@@ -23,3 +23,7 @@ Os testes atuais cobrem a política bloqueada, não simulam um handoff real entr
 ## Etapa 3 — ponte diagnóstica opt-in
 
 `views/battle/tactical_minimap_probe.py` liga um ViewComponent ao HUD aleatório, via catálogo e gen_resources existentes, apenas com tacticalDiagnostics=true. Reutiliza HookRegistry, on_event, BattleEvents, hudVisibility e publish_card. `core/tactical_minimap_probe.py` reduz o snapshot a metadados sem IDs/posições. O JS não usa SVG/Canvas: mostra apenas texto e confirma o protocolo por geração. Não se liga o renderer do protótipo a estes dados. Ver TESTE_GAMEFACE.md.
+
+## Etapa 4 — biblioteca de glifos partilhada
+
+A biblioteca gráfica foi movida para a pasta Gameface e declarada no manifesto/catálogo. O preview reutiliza-a, e o diagnóstico usa apenas createGlyph para amostras fixas. O handshake existente transporta opcionalmente svgApi/glyphCount, validados no backend; não foram criados hooks, listeners ou comandos adicionais. A grelha é conservada entre mudanças de metadados e libertada ao ocultar/finalizar o diagnóstico. Não há ligação entre o renderer sintético e os snapshots nativos.

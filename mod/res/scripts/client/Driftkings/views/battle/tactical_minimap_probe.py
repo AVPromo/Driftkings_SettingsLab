@@ -3,7 +3,7 @@
 import logging
 import weakref
 
-from Driftkings.core.tactical_minimap_probe import accepts_ack, payload
+from Driftkings.core.tactical_minimap_probe import accepts_ack, graphics_result, payload
 from Driftkings.views.battle.tactical_minimap import native_adapter
 from Driftkings.views.hangar.common import publish_card
 
@@ -60,6 +60,7 @@ class ProbeBridge(object):
         self.generation += 1
         for view in self.views:
             view._acknowledged = False
+            view._graphicsResult = None
         self.active = True
         hudVisibility.attach(self)
         self.refresh()
@@ -70,6 +71,7 @@ class ProbeBridge(object):
         self._native_failed = False
         for view in self.views:
             view._acknowledged = False
+            view._graphicsResult = None
         hudVisibility.detach(self)
         self._close_adapter()
         self._native = None
@@ -83,6 +85,10 @@ class ProbeBridge(object):
         if (self.active and self.enabled() and view in self.views and
                 view._ready and accepts_ack(args, self.generation) and not view._acknowledged):
             view._acknowledged = True
+            view._graphicsResult = graphics_result(args)
+            if view._graphicsResult is not None:
+                LOG.info('Graphics diagnostic: SVG DOM=%s glyph nodes=%d/21; visual confirmation required',
+                         view._graphicsResult['svgApi'], view._graphicsResult['glyphCount'])
             LOG.info('Gameface diagnostic handshake confirmed (protocol 1); Vanilla unchanged')
             self.refresh()
 
@@ -106,7 +112,8 @@ class ProbeBridge(object):
                     LOG.exception('Native diagnostic adapter unavailable; Vanilla unchanged')
         for view in ready_views:
             try:
-                self._publish(view, payload(enabled and view._guiVisible, view._acknowledged, snapshot, self.generation))
+                self._publish(view, payload(enabled and view._guiVisible, view._acknowledged, snapshot, self.generation,
+                                            getattr(view, '_graphicsResult', None)))
             except Exception:
                 LOG.exception('Cannot publish minimap diagnostic; Vanilla unchanged')
 
@@ -151,6 +158,7 @@ class ProbeBridge(object):
                 self._ready = False
                 self._guiVisible = True
                 self._acknowledged = False
+                self._graphicsResult = None
                 self._lastPayload = None
                 super(ProbeView, self).__init__(layoutID=layout_id, model=ProbeModel)
                 bridge.views.add(self)

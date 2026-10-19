@@ -5,7 +5,7 @@ from Driftkings.core.tactical_minimap import finite
 PROTOCOL = 1
 
 
-def payload(enabled, acknowledged, snapshot=None, generation=0):
+def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None):
     data = {'enabled': bool(enabled), 'protocol': PROTOCOL, 'generation': generation, 'effectiveMode': 'vanilla',
             'acknowledged': bool(acknowledged), 'nativePresentationChanged': False,
             'available': False, 'partial': True, 'markerCount': 0,
@@ -13,6 +13,10 @@ def payload(enabled, acknowledged, snapshot=None, generation=0):
     if not enabled:
         data['reason'] = 'disabled'
         return data
+    if graphics is not None:
+        result = graphics_result(graphics)
+        if result is not None:
+            data['graphics'] = result
     if not snapshot:
         return data
     data['reason'] = snapshot.get('reason', 'native-contract-unavailable')
@@ -39,3 +43,17 @@ def accepts_ack(args, generation):
             isinstance(args.get('protocol'), (int, float)) and
             args['protocol'] == PROTOCOL and not isinstance(args.get('generation'), bool) and
             isinstance(args.get('generation'), (int, float)) and args['generation'] == generation)
+
+
+def graphics_result(args):
+    """A DOM capability report is not evidence of painted SVG or production parity."""
+    if not isinstance(args, dict) or type(args.get('svgApi')) is not bool:
+        return None
+    count = args.get('glyphCount')
+    if isinstance(count, bool) or not isinstance(count, (int, float)):
+        return None
+    if not 0 <= count <= 21 or int(count) != count:
+        return None
+    if args['svgApi'] and count != 21:
+        return None
+    return {'svgApi': args['svgApi'], 'glyphCount': int(count)}

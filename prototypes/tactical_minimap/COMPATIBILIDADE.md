@@ -41,3 +41,7 @@ A convenção x/direita, z/norte e a área lógica de clique de 210×210 foram c
 ## Etapa 3
 
 Foi implementada a ponte diagnóstica para RandomHUDView, desligada por defeito. O recurso R e os assets são empacotados e a factory, os handlers e o protocolo foram testados com stubs/DOM falso. Não há ainda confirmação de carregamento no cliente, em batalha ou replay. A seleção de renderer continua bloqueada. Ver TESTE_GAMEFACE.md para o procedimento de teste e resultados esperados.
+
+## Etapa 4
+
+SVG DOM será sondado por uma grelha diagnóstica opt-in. API ausente ou que falhe na criação é tratada localmente; o reporte não altera o modo efetivo Vanilla. A construção de nós e a escala lógica são testadas em Node, mas SVG, cores, rasterização e DPI precisam de confirmação visual no Gameface. Ver TESTE_GRAFICO.md.

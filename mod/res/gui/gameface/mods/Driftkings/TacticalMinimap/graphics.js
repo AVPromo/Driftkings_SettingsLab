@@ -1,4 +1,4 @@
-/* Browser-only preview. No battle attachment or native minimap manipulation. */
+/* Shared synthetic renderer and SVG capability probe; never controls native minimap UI. */
 (function (root) {
     'use strict';
     var shapes = {"lightTank": "M16 3 L27 16 L16 29 L5 16 Z", "mediumTank": "M16 3 L27 16 L16 29 L5 16 Z M10 21 L22 10", "heavyTank": "M16 3 L27 16 L16 29 L5 16 Z M8 18 L19 7 M13 25 L25 13", "AT-SPG": "M16 3 L29 28 L3 28 Z", "SPG": "M16 3 A13 13 0 1 0 16 29 A13 13 0 1 0 16 3 M9 16 L23 16 M16 9 L16 23", "player": "M16 2 L28 28 L16 22 L4 28 Z", "destroyed": "M7 7 L25 25 M25 7 L7 25"};
@@ -28,6 +28,23 @@
             (marker.state === 'visible' || marker.state === 'destroyed') &&
             typeof marker.x === 'number' && isFinite(marker.x) && marker.x >= 0 && marker.x <= 1 &&
             typeof marker.y === 'number' && isFinite(marker.y) && marker.y >= 0 && marker.y <= 1;
+    }
+    function createGlyph(doc, kind, color, size) {
+        if (!Object.prototype.hasOwnProperty.call(shapes, kind) ||
+                !/^#[0-9a-f]{6}$/i.test(color || '') || typeof size !== 'number' ||
+                !isFinite(size) || size < 8 || size > 128) {
+            throw new Error('Invalid tactical glyph');
+        }
+        if (typeof doc.createElementNS !== 'function') { throw new Error('SVG DOM unavailable'); }
+        var svg = doc.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 0 32 32');
+        svg.setAttribute('width', size); svg.setAttribute('height', size);
+        var path = doc.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', shapes[kind]);
+        path.setAttribute('fill', 'none'); path.setAttribute('stroke', color);
+        path.setAttribute('stroke-width', '2'); path.setAttribute('stroke-linejoin', 'round');
+        svg.appendChild(path);
+        return {node: svg, path: path};
     }
     function Renderer(host) {
         this.host = host;
@@ -61,13 +78,9 @@
             var signature = JSON.stringify(marker) + configKey;
             if (record && record.signature === signature) { return; }
             if (!record) {
-                var node = doc.createElement('div'), icon = doc.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                icon.setAttribute('viewBox', '0 0 32 32');
-                var path = doc.createElementNS('http://www.w3.org/2000/svg', 'path');
-                path.setAttribute('fill', 'none');
-                path.setAttribute('stroke', 'currentColor');
-                path.setAttribute('stroke-width', '2');
-                icon.appendChild(path);
+                var node = doc.createElement('div');
+                var glyph = createGlyph(doc, marker.vehicleClass, opts[marker.side], 24);
+                var icon = glyph.node, path = glyph.path;
                 var label = doc.createElement('span');
                 node.className = 'tm-marker';
                 node.appendChild(icon); node.appendChild(label); self.host.appendChild(node);
@@ -77,6 +90,7 @@
             record.node.style.left = (marker.x * 100) + '%';
             record.node.style.top = (marker.y * 100) + '%';
             record.node.style.color = opts[marker.side];
+            record.path.setAttribute('stroke', opts[marker.side]);
             record.node.style.opacity = marker.state === 'destroyed' ? '0.5' : '1';
             record.path.setAttribute('d', shapes[marker.state === 'destroyed' ? 'destroyed' :
                 marker.side === 'player' ? 'player' : marker.vehicleClass]);
@@ -101,7 +115,7 @@
         if (this.disposed) { return; }
         this.clear(); this.host.removeChild(this.grid); this.disposed = true;
     };
-    var api = {Renderer: Renderer, options: options, valid: valid};
+    var api = {Renderer: Renderer, options: options, valid: valid, createGlyph: createGlyph};
     if (typeof module !== 'undefined' && module.exports) { module.exports = api; }
-    else { root.DKTacticalPreview = api; }
-}(this));
+    else { root.DKTacticalGraphics = api; }
+}(typeof window !== 'undefined' ? window : this));
