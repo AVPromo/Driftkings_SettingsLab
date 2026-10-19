@@ -57,6 +57,26 @@ class NativeAdapterTests(RuntimeTest):
         self.plugin._entries[2] = self.entry(enemy=True)
         self.assertEqual(dict((row['id'], row['side']) for row in self.adapter.capture()['markers'])[2], 'enemy')
 
+    def test_personal_marker_gate_rejects_dead_observer_and_spectated_vehicle(self):
+        Personal = type('Personal', (object,), {
+            '__module__': 'gui.Scaleform.daapi.view.battle.shared.minimap.plugins'})
+        personal = Personal()
+        personal._ctrlVehicleID = 2
+        personal._getPlayerVehicleID = lambda: 2
+        alive, observer = [True], [False]
+        self.dp.getPlayerVehicleID = lambda: 2
+        self.dp.getVehicleInfo = lambda vehicle_id: Owner(isAlive=lambda: alive[0], isObserver=lambda: observer[0])
+        self.component.sessionProvider = self.session
+        self.component.getPlugin = lambda name: personal
+        self.assertTrue(self.api['owns_player_marker'](self.component))
+        alive[0] = False
+        self.assertFalse(self.api['owns_player_marker'](self.component))
+        alive[0], observer[0] = True, True
+        self.assertFalse(self.api['owns_player_marker'](self.component))
+        observer[0] = False
+        personal._ctrlVehicleID = 3
+        self.assertFalse(self.api['owns_player_marker'](self.component))
+
     def test_hidden_lost_transitional_dead_and_inactive_entries_never_read_matrices(self):
         entries = [self.entry(active=False), self.entry(alive=False), self.entry(aoi=False),
                    self.entry(location=0), self.entry(location=2), self.entry(location=3)]

@@ -130,3 +130,21 @@ def native_adapter(component, session):
         return getCellName(getCellIdFromPosition(Math.Vector3(x, 0, z), bounds, 10), 10)
 
     return NativeMinimapAdapter(component, session, position, VEHICLE_LOCATION.AOI, MINIMAP_SIZE, type(plugin), cell_name)
+
+
+def owns_player_marker(component):
+    """Only the live player's native personal entry, never a spectator/killer."""
+    try:
+        personal = component.getPlugin('personal')
+        allowed = ('gui.Scaleform.daapi.view.battle.shared.minimap.plugins',
+                   'Driftkings.battle.minimap_enhancements')
+        if personal is None or type(personal).__module__ not in allowed:
+            return False
+        dp = component.sessionProvider.getArenaDP()
+        vehicle_id = dp.getPlayerVehicleID()
+        info = dp.getVehicleInfo(vehicle_id)
+        return bool(vehicle_id and personal._ctrlVehicleID == vehicle_id and
+                    personal._getPlayerVehicleID() == vehicle_id and info is not None and
+                    info.isAlive() and not info.isObserver())
+    except Exception:
+        return False

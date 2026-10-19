@@ -11,7 +11,7 @@ def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, c
     data = {'enabled': bool(enabled), 'protocol': PROTOCOL, 'generation': generation, 'effectiveMode': 'vanilla',
             'acknowledged': bool(acknowledged), 'nativePresentationChanged': False,
             'available': False, 'partial': True, 'markerCount': 0,
-            'reason': 'waiting-native', 'lostContactAvailable': False, 'allyStatus': 'waiting-native'}
+            'reason': 'waiting-native', 'lostContactAvailable': False, 'allyStatus': 'waiting-native', 'playerAvailable': False}
     if not enabled:
         data['allyStatus'] = 'disabled'
         data['reason'] = 'disabled'
@@ -43,6 +43,10 @@ def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, c
                           'no-current-ally')
     if acknowledged and data.get('calibration', {}).get('available') is True:
         points = allied_calibration_points(snapshot.get('markers', []))
+        player = player_point((calibration or {}).get('player'))
+        if player is not None:
+            points = [player] + [point for point in points if point.get('side') != 'player']
+        data['playerAvailable'] = any(point.get('side') == 'player' for point in points)
         data['alliedPoints'] = points
         point = points[0] if points else None
         if point is not None:
@@ -149,11 +153,16 @@ def geometry_response(value):
     parts = value.split('|')
     if len(parts) == 2 and parts[0] == '0':
         return calibration_result({'available': False, 'reason': parts[1]})
-    if len(parts) != 7 or parts[0] != '1':
+    if len(parts) not in (7, 10) or parts[0] != '1':
         return calibration_result(None)
     data = dict(zip(('x', 'y', 'width', 'height', 'stageWidth', 'stageHeight'), parts[1:]))
     data['available'] = True
-    return calibration_result(data)
+    result = calibration_result(data)
+    if result.get('available') and len(parts) == 10:
+        own = player_point(dict(zip(('x', 'y', 'heading'), parts[7:])))
+        if own is not None:
+            result['player'] = own
+    return result
 
 
 def allied_calibration_points(markers):
@@ -166,3 +175,15 @@ def allied_calibration_points(markers):
         if point is not None:
             result.append(point)
     return result
+
+
+def player_point(value):
+    if not isinstance(value, dict):
+        return None
+    try:
+        x, y, heading = (finite(value[key]) for key in ('x', 'y', 'heading'))
+    except (KeyError, ValueError, TypeError, OverflowError):
+        return None
+    if not (0 <= x <= 1 and 0 <= y <= 1 and 0 <= heading < 360):
+        return None
+    return {'x': x, 'y': y, 'heading': heading, 'side': 'player'}

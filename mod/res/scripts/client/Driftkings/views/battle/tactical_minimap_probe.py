@@ -4,7 +4,7 @@ import logging
 import weakref
 
 from Driftkings.core.tactical_minimap_probe import accepts_ack, geometry_response, graphics_result, payload
-from Driftkings.views.battle.tactical_minimap import native_adapter
+from Driftkings.views.battle.tactical_minimap import native_adapter, owns_player_marker
 from Driftkings.views.hangar.common import publish_card
 
 LOG = logging.getLogger('Driftkings.TacticalMinimapProbe')
@@ -97,7 +97,7 @@ class ProbeBridge(object):
         if component is None or not self.enabled():
             return
         try:
-            data = component.flashObject.as_DriftkingsMinimapGeometry()
+            data = component.flashObject.as_DriftkingsMinimapGeometry(owns_player_marker(component))
             self._calibration = geometry_response(data)
         except Exception:
             self._calibration = {'available': False, 'reason': 'native-geometry-unavailable'}
@@ -156,12 +156,12 @@ class ProbeBridge(object):
             try:
                 data = payload(enabled and view._guiVisible, view._acknowledged, snapshot, self.generation,
                                getattr(view, '_graphicsResult', None), self._calibration)
-                state = (data['allyStatus'], data['reason'], 'ready' if (self._calibration or {}).get('available') else (self._calibration or {}).get('reason', 'no-native-geometry'))
+                state = (data['allyStatus'], data['reason'], 'ready' if (self._calibration or {}).get('available') else (self._calibration or {}).get('reason', 'no-native-geometry'), data['playerAvailable'])
                 if enabled and state != self._ally_log_state and self._ally_log_count < 8:
                     self._ally_log_state = state
                     self._ally_log_count += 1
-                    LOG.info('Allied calibration: status=%s native=%s geometry=%s entries=%d audit=%s',
-                             state[0], state[1], state[2], data['markerCount'], (snapshot or {}).get('entryAudit', {}))
+                    LOG.info('Allied calibration: status=%s native=%s geometry=%s player=%s entries=%d audit=%s',
+                             state[0], state[1], state[2], state[3], data['markerCount'], (snapshot or {}).get('entryAudit', {}))
                 self._publish(view, data)
             except Exception:
                 LOG.exception('Cannot publish minimap diagnostic; Vanilla unchanged')

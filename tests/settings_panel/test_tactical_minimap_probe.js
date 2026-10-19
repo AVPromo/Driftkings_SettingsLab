@@ -182,9 +182,10 @@ data.alliedPoints.pop(); refresh();
 assert.strictEqual(livePoints.children.length, 1);
 data.alliedPoints.push({x: .5, y: .5, vehicleClass: 'mediumTank', side: 'enemy'}); refresh();
 assert.strictEqual(livePoints.children.length, 1);
-data.alliedPoints = [{x: .5, y: .75, vehicleClass: 'mediumTank', side: 'player'}]; refresh();
+data.alliedPoints = [{x: .5, y: .75, vehicleClass: 'mediumTank', side: 'player', heading: 90}]; refresh();
 var ownIcon = livePoints.children[0].children[0].children[0];
 assert.strictEqual(ownIcon.attributes.stroke, '#ffffff');
+assert.strictEqual(livePoints.children[0].children[0].style.transform, 'rotate(90deg)');
 assert.strictEqual(ownIcon.attributes.d, win.DKTacticalGraphics.createGlyph(graphicsDoc, 'player', '#ffffff', 18).path.attributes.d);
 data.alliedPoints = []; refresh();
 assert.strictEqual(livePoints.children.length, 0); // Empty frame overrides the legacy reference.

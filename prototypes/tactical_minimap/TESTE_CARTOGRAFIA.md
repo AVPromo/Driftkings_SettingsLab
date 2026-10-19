@@ -75,3 +75,9 @@ Confirmar vários ícones na pequena amostra, posições em movimento e cores de
 O adapter compara o ID da entrada publicada com `arenaDP.getPlayerVehicleID()` e marca `side=player`. O transportador preserva esta relação sem enviar o ID. O renderer usa o chevron branco `player` em vez da classe; mantém verde para aliados e amarelo para pelotão. Sem suporte SVG, usa TU.
 
 A orientação ainda não está ligada: a matriz das entradas de veículos foi verificada apenas para translação. A seta é atualmente um identificador fixo, não um indicador de direção. Não se infere rotação a partir de deslocamento. Só se desenha o próprio veículo quando existe uma entrada elegível no plugin de veículos; a entrada pessoal/câmara, usada pelo cliente em outros modos, continua por integrar. Confirmar o chevron no replay testado. A classificação usa o veículo do jogador, não transforma o veículo observado em jogador após morte.
+
+## Entrada pessoal nativa do jogador
+
+A mudança de relação na lista de veículos não bastou: o cliente utiliza `ViewPointMinimapEntry` para a seta própria. A ponte passa a ler o glifo pessoal já publicado no Flash, com posição relativa à área do mapa e direção obtida pela transformação do próprio desenho. Não consulta entidades nem deduz direção pelo movimento.
+
+A leitura só é solicitada se o plugin pessoal tiver o mesmo ID próprio e controlado, e a informação nativa indicar jogador vivo e não observador. No Flash, exige entrada/seta visível e alpha positivo; a procura na árvore é limitada a 4000 nós. Um protocolo de string opcional e validado transporta x/y/ângulo. A entrada pessoal substitui qualquer duplicado do jogador na lista de veículos e não conserva posição se desaparecer. O texto «Seta própria: publicada» e `player=True` no log distinguem a disponibilidade. A seta branca deve aparecer na amostra e rodar como a seta original; falta confirmação no jogo.

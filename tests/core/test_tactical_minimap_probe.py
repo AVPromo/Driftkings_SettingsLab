@@ -34,7 +34,7 @@ class ProbeTests(RuntimeTest):
         self.scheduled, self.cancelled = [], []
         self.api = source('views/battle/tactical_minimap_probe.py', {
             'Driftkings.core.tactical_minimap_probe': self.policy,
-            'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory),
+            'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory, owns_player_marker=lambda component: False),
             'Driftkings.views.hangar.common': module(publish_card=publish),
             'Driftkings.core.hud_visibility': module(hudVisibility=hud)})
         self.bridge = self.api['ProbeBridge'](object(), lambda config: self.settings,
@@ -43,7 +43,7 @@ class ProbeTests(RuntimeTest):
         self.view = Owner(_ready=True, _guiVisible=True, _acknowledged=False, destroy=lambda: None)
         self.bridge.views.add(self.view)
         self.component = Owner(sessionProvider=Owner(),
-            flashObject=Owner(as_DriftkingsMinimapGeometry=lambda: '1|800|400|200|200|1000|800'))
+            flashObject=Owner(as_DriftkingsMinimapGeometry=lambda *args: '1|800|400|200|200|1000|800'))
 
     def test_map_uri_accepts_only_virtual_cartography(self):
         for path in ('spaces/01_karelia/mmap.dds', 'gui/maps/icons/map/01_karelia.png'):
@@ -105,12 +105,12 @@ class ProbeTests(RuntimeTest):
         self.settings['tacticalDiagnostics'] = True
         self.bridge.bind_native(self.component)
         self.bridge.start()
-        def missing():
+        def missing(*args):
             raise AttributeError('Library not ready')
         self.component.flashObject.as_DriftkingsMinimapGeometry = missing
         self.scheduled[-1][1]()
         self.assertEqual(self.bridge._calibration['reason'], 'native-geometry-unavailable')
-        self.component.flashObject.as_DriftkingsMinimapGeometry = lambda: '1|0|0|200|200|1000|800'
+        self.component.flashObject.as_DriftkingsMinimapGeometry = lambda *args: '1|0|0|200|200|1000|800'
         self.scheduled[-1][1]()
         self.assertTrue(self.bridge._calibration['available'])
         self.bridge.hudVisible = False
@@ -171,6 +171,21 @@ class ProbeTests(RuntimeTest):
         self.assertNotIn('id', point)
         self.assertNotIn('name', point)
         self.assertEqual(self.policy.allied_calibration_points([dict(marker, visible=False)]), [])
+
+    def test_personal_player_protocol_is_validated_and_replaces_duplicate(self):
+        geometry = self.policy.geometry_response('1|0|0|200|200|1000|800|0.25|0.75|90')
+        self.assertEqual(geometry['player'], {'x': .25, 'y': .75, 'heading': 90, 'side': 'player'})
+        self.snapshot['markers'] = [dict(side='player', visible=True, state='visible',
+                                        vehicleClass='mediumTank', x=.2, y=.7)]
+        data = self.policy.payload(True, True, self.snapshot, calibration=geometry)
+        self.assertEqual(data['alliedPoints'], [geometry['player']])
+        for suffix in ('nan|.5|90', '.5|.5|360', '2|.5|90'):
+            result = self.policy.geometry_response('1|0|0|200|200|1000|800|' + suffix)
+            self.assertTrue(result['available'])
+            self.assertNotIn('player', result)
+        geometry = self.policy.geometry_response('1|0|0|200|200|1000|800')
+        self.snapshot['markers'] = []
+        self.assertEqual(self.policy.payload(True, True, self.snapshot, calibration=geometry)['alliedPoints'], [])
 
     def test_default_off_creates_no_adapter_and_starts_no_diagnostic(self):
         self.bridge.bind_native(self.component)
@@ -310,7 +325,7 @@ class ProbeTests(RuntimeTest):
         self.resource_id = 123
         dependencies = {
             'Driftkings.core.tactical_minimap_probe': self.policy,
-            'Driftkings.views.battle.tactical_minimap': module(native_adapter=lambda *args: None),
+            'Driftkings.views.battle.tactical_minimap': module(native_adapter=lambda *args: None, owns_player_marker=lambda component: False),
             'Driftkings.views.hangar.common': module(publish_card=lambda *args: None),
             'frameworks.wulf': module(ViewModel=BaseModel),
             'gui.impl.pub.view_component': module(ViewComponent=BaseView),

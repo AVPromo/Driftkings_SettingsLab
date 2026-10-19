@@ -103,6 +103,10 @@
                 points.appendChild(marker);
                 record = records[key] = {node: marker, signature: signature};
             }
+            var heading = ally.side === 'player' && typeof ally.heading === 'number' && isFinite(ally.heading) ? ally.heading : 0;
+            if (record.node.firstChild && record.node.firstChild.style) {
+                record.node.firstChild.style.transform = 'rotate(' + heading + 'deg)';
+            }
             record.node.style.left = (100 * ally.x) + '%'; record.node.style.top = (100 * ally.y) + '%';
         });
         Object.keys(records).forEach(function (key) {
@@ -187,10 +191,11 @@
             line('Fonte nativa: ' + (data.reason || 'indisponível'), 'dk-probe-pending');
         }
         line('Aliados atuais; sem inimigos ou Lost Contact.');
+        line('Seta própria: ' + (data.playerAvailable ? 'publicada' : 'indisponível'));
         line('Marcador aliado no mapa de teste: ' + (data.allyStatus || 'a aguardar'));
         if (validAlly(data.alliedPoint)) {
             line('Referência (primeiro aliado): ' + (allyClass(data.alliedPoint) || 'indisponível (A)') +
-                (data.alliedPoint.side === 'player' ? ' | Tu (seta sem direção)' : data.alliedPoint.side === 'platoon' ? ' | Pelotão' : ' | Aliado'));
+                (data.alliedPoint.side === 'player' ? ' | Tu' : data.alliedPoint.side === 'platoon' ? ' | Pelotão' : ' | Aliado'));
             line('Célula nativa: ' + (/^[A-HJK][1-90]$/.test(data.alliedPoint.cell || '') ? data.alliedPoint.cell : 'indisponível'));
             line('Aliado: ' + (100 * data.alliedPoint.x).toFixed(1) + '% horizontal / ' +
                 (100 * data.alliedPoint.y).toFixed(1) + '% vertical');
