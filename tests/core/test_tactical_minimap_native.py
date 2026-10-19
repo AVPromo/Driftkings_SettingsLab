@@ -85,6 +85,15 @@ class NativeAdapterTests(RuntimeTest):
         self.assertEqual(self.adapter.capture()['markers'], [])
         self.assertEqual(self.reads, [])
 
+    def test_enemy_disappears_without_reading_or_retaining_previous_matrix(self):
+        self.plugin._entries = {1: self.entry(enemy=True)}
+        self.assertEqual(len(self.adapter.capture()['markers']), 1)
+        for changes in ({'active': False}, {'alive': False}, {'aoi': False}, {'location': 2}):
+            self.plugin._entries[1] = self.entry(enemy=True, **changes)
+            self.reads[:] = []
+            self.assertEqual(self.adapter.capture()['markers'], [])
+            self.assertEqual(self.reads, [])
+
     def test_personal_matrix_uses_world_bounds_and_yaw_not_flash_pixels(self):
         from math import pi
         Personal = type('Personal', (object,), {

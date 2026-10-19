@@ -82,16 +82,16 @@
         var records = points._dkAllies || {}, seen = {};
         if (!Array.isArray(allies)) { allies = []; }
         allies.slice(0, 64).forEach(function (ally, index) {
-            if (!validAlly(ally) || (ally.side && ally.side !== 'player' && ally.side !== 'ally' && ally.side !== 'platoon')) { return; }
+            if (!validAlly(ally) || (ally.side && ally.side !== 'player' && ally.side !== 'ally' && ally.side !== 'platoon' && ally.side !== 'enemy')) { return; }
             var key = 'slot' + index;
             seen[key] = true;
-            var color = ally.side === 'player' ? '#ffffff' : ally.side === 'platoon' ? '#ffc45b' : '#67cf69';
+            var color = ally.side === 'player' ? '#ffffff' : ally.side === 'enemy' ? '#ee6868' : ally.side === 'platoon' ? '#ffc45b' : '#67cf69';
             var kind = ally.side === 'player' ? 'player' : allyClass(ally) ? ally.vehicleClass : null;
             var signature = String(kind) + color, record = records[key];
             if (!record || record.signature !== signature) {
                 if (record) { points.removeChild(record.node); }
                 var marker = document.createElement('div');
-                marker.className = 'dk-probe-ally'; marker.textContent = ally.side === 'player' ? 'TU' : 'A';
+                marker.className = 'dk-probe-ally'; marker.textContent = ally.side === 'player' ? 'TU' : ally.side === 'enemy' ? 'E' : 'A';
                 if (kind && window.DKTacticalGraphics) {
                     try {
                         var glyph = window.DKTacticalGraphics.createGlyph(document, kind, color, 18);
@@ -212,7 +212,7 @@
         var root = document.createElement('div');
         root.className = 'dk-probe-cartography';
         var caption = document.createElement('div');
-        caption.textContent = 'Mapa de teste — aliados publicados';
+        caption.textContent = 'Mapa de teste — veículos publicados';
         var image = document.createElement('div');
         image.className = 'dk-probe-map-image';
         image.style.backgroundImage = 'url("' + uri + '")';
@@ -283,7 +283,7 @@
         } else {
             line('Fonte nativa: ' + (data.reason || 'indisponível'), 'dk-probe-pending');
         }
-        line('Aliados atuais; sem inimigos ou Lost Contact.');
+        line('Veículos atuais publicados; sem Lost Contact.');
         line('Seta própria: ' + (data.playerAvailable ? 'publicada' : 'indisponível'));
         line('Marcador aliado no mapa de teste: ' + (data.allyStatus || 'a aguardar'));
         if (validAlly(data.alliedPoint)) {
@@ -297,11 +297,14 @@
         alignNativeArea(data.calibration);
         line('Calibração: NO/NE/SO/SE nos cantos; + no centro nativo.');
         var allies = Array.isArray(data.alliedPoints) ? data.alliedPoints : (data.alliedPoint ? [data.alliedPoint] : []);
-        line('Veículos na amostra: ' + allies.length + ' | branco: tu; verde: aliado; amarelo: pelotão');
+        allies = allies.filter(function (point) { return point && (!point.side || ['player', 'ally', 'platoon'].indexOf(point.side) !== -1); }).slice(0, 64);
+        var enemies = Array.isArray(data.enemyPoints) ? data.enemyPoints.filter(function (point) { return point && point.side === 'enemy'; }).slice(0, 64) : [];
+        var vehicles = allies.concat(enemies).slice(0, 64);
+        line('Veículos na amostra: ' + vehicles.length + ' | branco: tu; verde: aliado; amarelo: pelotão; vermelho: inimigo avistado');
         line('Bases/objetivos: ' + (Array.isArray(data.objectives) ? data.objectives.length : 0) + ' (captura publicada pelo cliente)');
         line('Círculos nativos: ' + (Array.isArray(data.circles) ? data.circles.length : 0));
         line('Pings nativos: ' + (Array.isArray(data.pings) ? data.pings.length : 0) + ' | quadrado: célula; ! atenção; > destino; + artilharia; ponto vermelho: impacto; R resposta');
-        var map = mapSample(data.textureUri, allies, data.objectives, data.circles, data.pings);
+        var map = mapSample(data.textureUri, vehicles, data.objectives, data.circles, data.pings);
         if (map) { node.appendChild(map); }
         line('Amostras fixas — 16 / 24 / 32 px; confirmar visualmente.');
         var sample = graphicsSample();

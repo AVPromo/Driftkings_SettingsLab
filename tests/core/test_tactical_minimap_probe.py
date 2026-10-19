@@ -54,6 +54,22 @@ class ProbeTests(RuntimeTest):
         self.assertEqual(self.policy.ping_points(read('.25,.75')), [expected])
         self.assertLessEqual(len(read(';'.join('%s,0' % (i / 40.0) for i in range(40)))), 32)
 
+    def test_enemy_samples_require_current_visibility_and_strip_identity(self):
+        enemy = dict(id=42, name='private', side='enemy', state='visible', visible=True,
+                     vehicleClass='mediumTank', x=.3, y=.7)
+        geometry = dict(available=True, x=800, y=400, width=200, height=200,
+                        stageWidth=1000, stageHeight=800)
+        self.snapshot['markers'] = [enemy]
+        for enabled, ack in ((False, True), (True, False)):
+            self.assertNotIn('enemyPoints', self.policy.payload(enabled, ack, self.snapshot, calibration=geometry))
+        data = self.policy.payload(True, True, self.snapshot, calibration=geometry)
+        self.assertEqual(data['enemyPoints'], [dict(side='enemy', vehicleClass='mediumTank', x=.3, y=.7)])
+        self.assertEqual(data['alliedPoints'], [])
+        for changes in ({'visible': False}, {'state': 'lost'}, {'vehicleClass': 'unknown'}, {'x': float('nan')}):
+            self.assertEqual(self.policy.enemy_calibration_points([dict(enemy, **changes)]), [])
+        self.snapshot['markers'] = []
+        self.assertEqual(self.policy.payload(True, True, self.snapshot, calibration=geometry)['enemyPoints'], [])
+
     def test_artillery_ping_uses_native_aim_area_symbol(self):
         self.assertEqual(self.policy.PING_SYMBOLS['ArtyMarkerMinimapEntry'], 'artillery')
         value = dict(kind='artillery', x=.4, y=.6, state='attack', sender='private')

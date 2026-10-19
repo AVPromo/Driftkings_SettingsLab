@@ -1,5 +1,11 @@
 # Cartografia e calibração — diagnóstico
 
+## Inimigos atualmente avistados
+
+Impactos de artilharia confirmados pelo utilizador. A próxima etapa acrescenta `enemyPoints` à amostra, apenas após handshake e geometria válida. A origem continua a ser o adaptador nativo: entrada ativa, viva, em AoI e localização AOI, verificadas antes de ler a matriz. FAR, transições, entradas ocultas e destruídas são excluídas; não há pesquisa de entidades ou retenção da última posição. O transporte remove IDs e nomes e limita os veículos a 64 slots.
+
+Os ícones SVG da classe aparecem a vermelho. Confirmar no replay a posição, classe e remoção quando o inimigo deixa de estar avistado, morre ou desaparece da entrada publicada; testar também avançar/recuar no replay. A amostra não oferece Lost Contact, não mostra destruídos nesta etapa e mantém o minimapa original. A validação visual desta etapa está pendente.
+
 A textura original vem de `ArenaVisitor.type.getMinimapTexture()`. Não é copiada para o pacote. O Gameface nativo do treino de mapas utiliza `img://spaces/.../mmap.dds` em fundos CSS; o diagnóstico usa o mesmo mecanismo, com caminhos virtuais restritos.
 
 A amostra é uma imagem estática sem veículos, pings ou interação. O minimapa nativo continua ativo. A geometria vem de `currentTopLeftPoint` e `getMinimapRectBySizeIndex`, convertida para o palco Flash. Não encaminha cliques.

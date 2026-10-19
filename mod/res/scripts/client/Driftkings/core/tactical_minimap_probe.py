@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Small diagnostic transport contract. Publishes bounded current allied samples without identities or enemy positions."""
+"""Bounded current native samples without identities or position history."""
 import re
 
 from Driftkings.core.tactical_minimap import CLASSES, finite
@@ -55,6 +55,7 @@ def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, c
         data['circles'] = circle_points(snapshot.get('circles', []))
         data['pings'] = ping_points(snapshot.get('pings', []))
         data['alliedPoints'] = points
+        data['enemyPoints'] = enemy_calibration_points(snapshot.get('markers', []))
         point = points[0] if points else None
         if point is not None:
             data['alliedPoint'] = point
@@ -131,11 +132,15 @@ def calibration_result(data):
 
 def allied_calibration_point(markers):
     """One currently published ally only; no identity, history or enemy coordinates."""
+    return _vehicle_calibration_point(markers, ('player', 'ally', 'platoon'))
+
+
+def _vehicle_calibration_point(markers, sides):
     if not isinstance(markers, list):
         return None
     for marker in markers[:64]:
         if (not isinstance(marker, dict) or marker.get('visible') is not True or
-                marker.get('state') != 'visible' or marker.get('side') not in ('player', 'ally', 'platoon')):
+                marker.get('state') != 'visible' or marker.get('side') not in sides):
             continue
         try:
             x, y = finite(marker['x']), finite(marker['y'])
@@ -175,6 +180,18 @@ def allied_calibration_points(markers):
     for marker in markers[:64]:
         point = allied_calibration_point([marker])
         if point is not None:
+            result.append(point)
+    return result
+
+
+def enemy_calibration_points(markers):
+    """Only enemies admitted by the native adapter this frame; no last position."""
+    if not isinstance(markers, list):
+        return []
+    result = []
+    for marker in markers[:64]:
+        point = _vehicle_calibration_point([marker], ('enemy',))
+        if point is not None and point.get('side') == 'enemy':
             result.append(point)
     return result
 
