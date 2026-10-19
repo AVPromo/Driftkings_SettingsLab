@@ -290,6 +290,15 @@ assert.strictEqual(wreckMarker.children[0].children[0].attributes.stroke, '#ee68
 assert.strictEqual(wreckMarker.style.opacity, .5);
 data.destroyedPoints = []; refresh();
 assert.strictEqual(livePoints.children.length, 2);
+data.mapContext = 'topography';
+data.trainingPoints = [{x: .4, y: .4, vehicleClass: 'heavyTank', side: 'training', state: 'training', goal: true}]; refresh();
+assert.strictEqual(livePoints.children.length, 3);
+assert.strictEqual(livePoints.children[2].children[0].children[0].attributes.stroke, '#ffc45b');
+data.trainingPoints[0].goal = false; refresh();
+assert.strictEqual(livePoints.children[2].children[0].children[0].attributes.stroke, '#ff9f5a');
+data.mapContext = 'classic'; refresh();
+assert.strictEqual(livePoints.children.length, 2);
+data.trainingPoints = [];
 created = svgNodesCreated;
 data.alliedPoints[0].x = .3; refresh();
 assert.strictEqual(livePoints.children[0], firstAlly);

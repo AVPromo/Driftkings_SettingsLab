@@ -11,7 +11,7 @@ from Driftkings.core.tactical_minimap import CLASSES, coordinates, finite
 
 
 class NativeMinimapAdapter(object):
-    def __init__(self, component, session, matrix_position, aoi_location, native_size, plugin_type=None, cell_name=None, far_location=2):
+    def __init__(self, component, session, matrix_position, aoi_location, native_size, plugin_type=None, cell_name=None, far_location=2, topography=False):
         # Native component lifecycle remains owned by Scaleform. Never retain it.
         self._component = weakref.ref(component)
         self._session = weakref.ref(session)
@@ -21,6 +21,7 @@ class NativeMinimapAdapter(object):
         self._native_size = tuple(native_size)
         self._plugin_type = plugin_type
         self._cell_name = cell_name
+        self._topography = topography
         self._closed = False
 
     def close(self):
@@ -29,7 +30,7 @@ class NativeMinimapAdapter(object):
 
     def capture(self):
         result = {'source': 'native-minimap-audit', 'available': False,
-                  'nativePresentationChanged': False, 'lostContactAvailable': False, 'markers': [], 'destroyedMarkers': []}
+                  'nativePresentationChanged': False, 'lostContactAvailable': False, 'markers': [], 'destroyedMarkers': [], 'trainingMarkers': []}
         if self._closed:
             result['reason'] = 'adapter-closed'
             return result
@@ -48,6 +49,8 @@ class NativeMinimapAdapter(object):
             plugin = component.getPlugin('vehicles')
             if plugin is None or (self._plugin_type is not None and type(plugin) is not self._plugin_type):
                 raise ValueError('Native vehicle plugin owner changed')
+            if self._topography and not _topography_context(component, session, plugin):
+                raise ValueError('Topography context changed')
             if not isinstance(plugin._entries, dict):
                 raise ValueError('Missing native vehicle entries')
             arena_dp = session.getArenaDP()
@@ -60,6 +63,7 @@ class NativeMinimapAdapter(object):
             result['reason'] = 'native-contract-unavailable'
             return result
         result.update(available=True, bounds=bounds, texture=texture,
+                      context='topography' if self._topography else 'classic',
                       nativeSize=self._native_size, partial=True,
                       limitations=['alive-published-allies-and-aoi-enemies', 'personal-player-separate',
                                    'no-pings-zones-or-ranges', 'no-orientation'],
@@ -74,7 +78,9 @@ class NativeMinimapAdapter(object):
                     continue
                 enemy, location = entry.isEnemy(), entry.getLocation()
                 alive = entry.isAlive()
-                allowed = (entry.isInAoI() and location in (self._aoi_location, self._far_location) or
+                # Topography's active static hints are intentionally visible
+                # even before a bot is spotted. Keep them in a separate channel.
+                allowed = (self._topography or entry.isInAoI() and location in (self._aoi_location, self._far_location) or
                            alive and not enemy and location == self._far_location)
                 if not allowed:
                     result['entryAudit']['unpublished'] += 1
@@ -92,9 +98,10 @@ class NativeMinimapAdapter(object):
                 if point is None:
                     result['entryAudit']['bounds'] += 1
                     continue
-                side = ('enemy' if enemy else 'player' if player_id is not None and vehicle_id == player_id else
+                lookup_id = entry.getOwnVehicleID() if self._topography else vehicle_id
+                side = ('training' if self._topography else 'enemy' if enemy else 'player' if player_id is not None and vehicle_id == player_id else
                         'platoon' if arena_dp.isSquadMan(vID=vehicle_id) else 'ally')
-                info = arena_dp.getVehicleInfo(vehicle_id)
+                info = arena_dp.getVehicleInfo(lookup_id)
                 name = info.getDisplayedName() if info is not None else u''
                 native_cell = None
                 if self._cell_name is not None:
@@ -102,15 +109,28 @@ class NativeMinimapAdapter(object):
                         native_cell = self._cell_name(x, z, (lower, upper))
                     except Exception:
                         pass  # Cell annotation is optional; keep the published position.
-                bucket = 'markers' if alive else 'destroyedMarkers'
-                result[bucket].append({'cell': native_cell, 'id': vehicle_id, 'visible': True, 'state': 'visible' if alive else 'destroyed',
+                bucket = 'trainingMarkers' if self._topography else 'markers' if alive else 'destroyedMarkers'
+                row = {'cell': native_cell, 'id': vehicle_id, 'visible': True,
+                                          'state': 'destroyed' if not alive else 'training' if self._topography else 'visible',
                                           'vehicleClass': vehicle_class, 'side': side,
-                                          'name': name, 'vehicleLabel': name, 'x': point[0], 'y': point[1]})
+                                          'name': name, 'vehicleLabel': name, 'x': point[0], 'y': point[1]}
+                if self._topography:
+                    row['goal'] = bool(entry.isGoalForPlayer())
+                result[bucket].append(row)
             except Exception:
                 # One expired native entry must not invalidate other entries.
                 result['entryAudit']['errors'] += 1
                 continue
         return result
+
+
+def _topography_context(component, session, plugin):
+    native_module = 'gui.Scaleform.daapi.view.battle.maps_training.minimap'
+    if (type(plugin).__module__ != native_module or type(plugin).__name__ != 'BotAppearNotificationPlugin' or
+            type(component).__module__ != native_module or type(component).__name__ != 'MapsTrainingMinimapComponent'):
+        return False
+    from constants import ARENA_GUI_TYPE
+    return session.arenaVisitor.gui.guiType == ARENA_GUI_TYPE.MAPS_TRAINING
 
 
 def native_adapter(component, session):
@@ -121,7 +141,8 @@ def native_adapter(component, session):
     plugin = component.getPlugin('vehicles')
     allowed = ('gui.Scaleform.daapi.view.battle.shared.minimap.plugins',
                'Driftkings.battle.minimap_enhancements')
-    if plugin is None or type(plugin).__module__ not in allowed:
+    topography = plugin is not None and _topography_context(component, session, plugin)
+    if plugin is None or not topography and type(plugin).__module__ not in allowed:
         raise ValueError('Unverified third-party or mode-specific minimap plugin')
     from Driftkings.common import xvmInstalled
     if xvmInstalled:
@@ -137,7 +158,7 @@ def native_adapter(component, session):
     def cell_name(x, z, bounds):
         return getCellName(getCellIdFromPosition(Math.Vector3(x, 0, z), bounds, 10), 10)
 
-    return NativeMinimapAdapter(component, session, position, VEHICLE_LOCATION.AOI, MINIMAP_SIZE, type(plugin), cell_name, VEHICLE_LOCATION.FAR)
+    return NativeMinimapAdapter(component, session, position, VEHICLE_LOCATION.AOI, MINIMAP_SIZE, type(plugin), cell_name, VEHICLE_LOCATION.FAR, topography)
 
 
 def owns_player_marker(component):

@@ -355,6 +355,23 @@ class ProbeTests(RuntimeTest):
         self.assertEqual(self.policy.enemy_calibration_points([dict(enemy, visible=False)]), [])
         self.assertEqual(self.policy.enemy_calibration_points([]), [])
 
+    def test_training_hints_are_separate_from_spotted_enemies_and_mode_gated(self):
+        hint = dict(side='training', visible=True, state='training', vehicleClass='heavyTank',
+                    x=.5, y=.5, vehicleLabel='Training tank', goal=True, id=101)
+        geometry = dict(available=True, x=800, y=400, width=200, height=200,
+                        stageWidth=1000, stageHeight=800)
+        self.snapshot['trainingMarkers'] = [hint]
+        self.assertEqual(self.policy.payload(True, True, self.snapshot, calibration=geometry)['trainingPoints'], [])
+        self.snapshot['context'] = 'topography'
+        data = self.policy.payload(True, True, self.snapshot, calibration=geometry)
+        self.assertEqual(len(data['trainingPoints']), 1)
+        self.assertTrue(data['trainingPoints'][0]['goal'])
+        self.assertNotIn('id', data['trainingPoints'][0])
+        self.assertEqual(self.policy.enemy_calibration_points([hint]), [])
+        self.assertEqual(self.policy.training_calibration_points([dict(hint, visible=False)]), [])
+        self.assertEqual(self.policy.training_calibration_points([]), [])
+        self.assertNotIn('trainingPoints', self.policy.payload(True, False, self.snapshot, calibration=geometry))
+
     def test_artillery_ping_uses_native_aim_area_symbol(self):
         self.assertEqual(self.policy.PING_SYMBOLS['ArtyMarkerMinimapEntry'], 'artillery')
         value = dict(kind='artillery', x=.4, y=.6, state='attack', sender='private')

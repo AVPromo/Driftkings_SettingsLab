@@ -56,6 +56,8 @@ def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, c
         data['pings'] = ping_points(snapshot.get('pings', []))
         data['alliedPoints'] = points
         data['enemyPoints'] = enemy_calibration_points(snapshot.get('markers', []))
+        data['mapContext'] = 'topography' if snapshot.get('context') == 'topography' else 'classic'
+        data['trainingPoints'] = training_calibration_points(snapshot.get('trainingMarkers', [])) if data['mapContext'] == 'topography' else []
         data['destroyedPoints'] = destroyed_calibration_points(snapshot.get('destroyedMarkers', []))
         data['cameraLine'] = camera_line(snapshot.get('cameraLine'))
         data['strategicPoint'] = strategic_point(snapshot.get('strategicPoint'))
@@ -221,6 +223,21 @@ def enemy_calibration_points(markers):
     for marker in markers[:64]:
         point = _vehicle_calibration_point([marker], ('enemy',))
         if point is not None and point.get('side') == 'enemy':
+            result.append(point)
+    return result
+
+
+def training_calibration_points(markers):
+    """Explicit Topography hints; never recast as spotted enemy vehicles."""
+    if not isinstance(markers, list):
+        return []
+    result = []
+    for marker in markers[:64]:
+        if not isinstance(marker, dict) or marker.get('state') not in ('training', 'destroyed'):
+            continue
+        point = _vehicle_calibration_point([marker], ('training',), marker['state'])
+        if point is not None and point.get('side') == 'training':
+            point.update(state=marker['state'], goal=marker.get('goal') is True)
             result.append(point)
     return result
 

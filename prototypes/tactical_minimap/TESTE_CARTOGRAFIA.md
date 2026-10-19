@@ -1,5 +1,15 @@
 # Cartografia e calibração — diagnóstico
 
+## Topography / Maps Training
+
+Ativação da amostra no modo pedida pelo utilizador. O cliente usa `MAPS_TRAINING_PAGE` com `RANDOM_BATTLE_HUD`, pelo que reutiliza a view Gameface existente. O adaptador aceita especificamente `MapsTrainingMinimapComponent` e `BotAppearNotificationPlugin` do módulo nativo maps_training, confirmando também `ARENA_GUI_TYPE.MAPS_TRAINING` na arena em cada snapshot. Uma troca de modo/plugin invalida o leitor; não se alargou a lista de plugins genéricos e os filtros das batalhas normais permanecem iguais.
+
+O plugin de Topography publica entradas estáticas `MapsTrainingVehicleEntryUI` ativas para os alvos do exercício, mesmo com isInAoI=false e localização indefinida. São pistas visíveis do próprio modo, não inimigos avistados da batalha clássica. A amostra transporta-as num canal separado `trainingPoints`: laranja para marcador de treino, dourado quando `isGoalForPlayer()` assinala o objetivo atual. A etiqueta resolve o ID real com `getOwnVehicleID()`, pois o ID da entrada é o da marcação. Destruição e remoção seguem a entrada nativa, sem cache, pesquisa de entidades ou antecipação de objetivos futuros não publicados.
+
+Textura, grelha, seta própria, círculos e input continuam nos contratos já existentes. O modo herda o plugin clássico de cliques; só se esse handler auditado estiver disponível se pode encaminhar um clique esquerdo. Não se alteram as regras/objetivos do exercício, e o minimapa original mantém as rotas, textos e elementos específicos que a amostra ainda não espelha.
+
+Teste: instalar a build e iniciar uma missão de Topography. Confirmar a amostra, cartografia, seta própria e marcadores laranja/dourados contra os elementos visíveis no original. Concluir um objetivo e verificar atualização/remoção; sair da missão e abrir outra para verificar limpeza. Ainda necessita de confirmação no jogo. Continua a usar o opt-in tacticalDiagnostics existente; não ativa substituição do minimapa.
+
 ## Clique esquerdo encaminhado ao cliente
 
 Receção Gameface confirmada pelo utilizador. A etapa atual acrescenta encaminhamento **só do clique esquerdo** para `MinimapComponent.onMinimapClicked`, depois de validar cursor, modal, geração, pedido e posição. A geometria/tamanho são relidos no momento da receção. A classe do plugin tem de ser exatamente `ClassicMinimapPingPlugin` do módulo clássico auditado; plugin ausente, terceiro/XVM, modo não clássico ou replay mantêm diagnóstico sem envio. Os outros botões continuam sem encaminhamento.

@@ -416,6 +416,57 @@ class NativeAdapterTests(RuntimeTest):
         self.assertEqual(frame['markers'], [])
         self.assertEqual(self.reads, [])
 
+    def test_topography_factory_accepts_only_native_mode_and_published_training_hints(self):
+        native_module = 'gui.Scaleform.daapi.view.battle.maps_training.minimap'
+        Plugin = type('BotAppearNotificationPlugin', (object,), {'__module__': native_module})
+        Component = type('MapsTrainingMinimapComponent', (object,), {'__module__': native_module})
+        self.plugin = Plugin()
+        entry = self.entry(aoi=False, location=0)
+        entry.getOwnVehicleID = lambda: 101
+        entry.isGoalForPlayer = lambda: True
+        self.plugin._entries = {999: entry}
+        component = Component()
+        component.getPlugin = lambda name: self.plugin
+        component.getBoundingBox = self.component.getBoundingBox
+        self.session.arenaVisitor.gui = Owner(guiType=77)
+        looked_up, reads = [], []
+        self.dp.getVehicleInfo = lambda vehicle_id: looked_up.append(vehicle_id) or Owner(getDisplayedName=lambda: u'Training tank')
+        dependencies = {
+            'Driftkings.core.tactical_minimap': self.load('core.tactical_minimap'),
+            'Driftkings.common': module(xvmInstalled=False),
+            'constants': module(ARENA_GUI_TYPE=module(MAPS_TRAINING=77)),
+            'Math': module(Matrix=lambda provider: reads.append(provider) or Owner(translation=Owner(x=100, z=200)),
+                           Vector3=lambda x, y, z: (x, y, z)),
+            'gui.battle_control.battle_constants': module(VEHICLE_LOCATION=module(AOI=1, FAR=2)),
+            'gui.battle_control.minimap_utils': module(MINIMAP_SIZE=(210, 210),
+                getCellIdFromPosition=lambda *args: 0, getCellName=lambda *args: 'A1')}
+        api = source('views/battle/tactical_minimap.py', dependencies)
+        adapter = api['native_adapter'](component, self.session)
+        frame = adapter.capture()
+        self.assertTrue(frame['available'])
+        self.assertEqual(frame['context'], 'topography')
+        self.assertEqual(frame['markers'], [])
+        self.assertEqual(frame['trainingMarkers'][0]['side'], 'training')
+        self.assertEqual(frame['trainingMarkers'][0]['state'], 'training')
+        self.assertTrue(frame['trainingMarkers'][0]['goal'])
+        self.assertEqual(looked_up, [101])  # Target ID 999 is not a vehicle ID.
+        entry.isActive = lambda: False
+        reads[:] = []
+        self.assertEqual(adapter.capture()['trainingMarkers'], [])
+        self.assertEqual(reads, [])
+        entry.isActive = lambda: True
+        self.session.arenaVisitor.gui.guiType = 1
+        self.assertFalse(adapter.capture()['available'])
+        self.assertEqual(reads, [])
+        with self.assertRaises(ValueError):
+            api['native_adapter'](component, self.session)
+        self.session.arenaVisitor.gui.guiType = 77
+        with self.assertRaises(ValueError):
+            api['native_adapter'](self.component, self.session)  # Wrong component class.
+        dependencies['Driftkings.common'].xvmInstalled = True
+        with self.assertRaises(ValueError):
+            api['native_adapter'](component, self.session)
+
     def test_native_factory_uses_verified_constants_and_translation_contract(self):
         NativePlugin = type('NativePlugin', (object,), {
             '__module__': 'gui.Scaleform.daapi.view.battle.shared.minimap.plugins'})

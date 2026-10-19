@@ -85,10 +85,11 @@
         var records = points._dkAllies || {}, seen = {};
         if (!Array.isArray(allies)) { allies = []; }
         allies.slice(0, 64).forEach(function (ally, index) {
-            if (!validAlly(ally) || (ally.side && ally.side !== 'player' && ally.side !== 'ally' && ally.side !== 'platoon' && ally.side !== 'enemy')) { return; }
+            if (!validAlly(ally) || (ally.side && ally.side !== 'player' && ally.side !== 'ally' && ally.side !== 'platoon' && ally.side !== 'enemy' && ally.side !== 'training')) { return; }
             var key = 'slot' + index;
             seen[key] = true;
             var color = ally.side === 'player' ? '#ffffff' : ally.side === 'enemy' ? '#ee6868' : ally.side === 'platoon' ? '#ffc45b' : '#67cf69';
+            if (ally.side === 'training') { color = ally.goal === true ? '#ffc45b' : '#ff9f5a'; }
             var destroyed = ally.state === 'destroyed';
             var kind = destroyed ? 'destroyed' : ally.side === 'player' ? 'player' : allyClass(ally) ? ally.vehicleClass : null;
             var signature = String(kind) + color, record = records[key];
@@ -96,7 +97,7 @@
                 if (record) { points.removeChild(record.node); }
                 var marker = document.createElement('div');
                 var glyphNode = null;
-                marker.className = 'dk-probe-ally'; marker.textContent = destroyed ? 'X' : ally.side === 'player' ? 'TU' : ally.side === 'enemy' ? 'E' : 'A';
+                marker.className = 'dk-probe-ally'; marker.textContent = destroyed ? 'X' : ally.side === 'player' ? 'TU' : ally.side === 'enemy' ? 'E' : ally.side === 'training' ? 'T' : 'A';
                 if (kind && window.DKTacticalGraphics) {
                     try {
                         var glyph = window.DKTacticalGraphics.createGlyph(document, kind, color, 18);
@@ -424,7 +425,7 @@
         } else {
             line('Fonte nativa: ' + (data.reason || 'indisponível'), 'dk-probe-pending');
         }
-        line('Veículos atuais publicados; sem Lost Contact.');
+        line(data.mapContext === 'topography' ? 'Topography — marcadores de treino publicados pelo cliente.' : 'Veículos atuais publicados; sem Lost Contact.');
         line('Seta própria: ' + (data.playerAvailable ? 'publicada' : 'indisponível'));
         line('Marcador aliado no mapa de teste: ' + (data.allyStatus || 'a aguardar'));
         if (validAlly(data.alliedPoint)) {
@@ -464,7 +465,11 @@
         var wrecks = Array.isArray(data.destroyedPoints) ? data.destroyedPoints.filter(function (point) {
             return point && point.state === 'destroyed' && ['player', 'ally', 'platoon', 'enemy'].indexOf(point.side) !== -1;
         }).slice(0, 64) : [];
-        var vehicles = allies.concat(enemies, wrecks).slice(0, 64);
+        var training = data.mapContext === 'topography' && Array.isArray(data.trainingPoints) ? data.trainingPoints.filter(function (point) {
+            return point && point.side === 'training' && ['training', 'destroyed'].indexOf(point.state) !== -1;
+        }).slice(0, 64) : [];
+        var vehicles = allies.concat(enemies, wrecks, training).slice(0, 64);
+        if (data.mapContext === 'topography') { line('Topography: ' + training.length + ' marcadores | laranja: treino; dourado: objetivo atual'); }
         line('Destruídos publicados: ' + wrecks.length + ' (símbolo X)');
         line('Veículos na amostra: ' + vehicles.length + ' | branco: tu; verde: aliado; amarelo: pelotão; vermelho: inimigo avistado');
         line('Bases/objetivos: ' + (Array.isArray(data.objectives) ? data.objectives.length : 0) + ' (captura publicada pelo cliente)');
