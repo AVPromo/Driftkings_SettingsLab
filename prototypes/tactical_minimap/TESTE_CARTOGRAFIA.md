@@ -55,3 +55,9 @@ O utilizador confirmou que o A aparece na amostra. Acrescentada grelha 10 × 10:
 O adapter obtém a célula do mesmo x/z e bounding box usados para normalizar a posição, chamando as funções do cliente `getCellIdFromPosition(..., 10)` e `getCellName(..., 10)`. O texto mostra «Célula nativa: ...». Isto evita uma segunda implementação de arredondamento: nas linhas exatas da grelha, o cálculo nativo inverte o eixo z antes de determinar a linha e aplica uma margem de 0,1 m nos limites. Não é correto inferir sempre a célula com floor(y * 10).
 
 Para validar: confirmar a célula escrita contra a célula onde o A verde aparece na amostra, e comparar esse local com o aliado no mapa original. Testar perto dos quatro cantos, atravessando linhas e com outro mapa. Norte = +z, direita = +x, origem normalizada = canto superior esquerdo. A divisão considera a bounding box real, incluindo mapas deslocados ou retangulares. Não são enviados x/z mundiais, IDs ou nomes. Confirmação visual da grelha pendente.
+
+## Ícone de classe do aliado
+
+O utilizador confirmou a correspondência do A com a grelha/célula. A amostra substitui agora esse ponto pelo ícone da classe nativa: ligeiro, médio, pesado, caça-tanques ou artilharia. Continua a mostrar apenas um aliado elegível. Verde = aliado; amarelo = pelotão. A classe e a célula permanecem escritas no diagnóstico. Sem classe reconhecida ou SVG disponível, conserva o A como alternativa. O nó SVG é reutilizado quando só muda a posição; elimina-se quando não existe aliado elegível.
+
+Confirmar que a silhueta corresponde ao tipo do aliado e que mantém a célula correta em movimento. Validar cor do pelotão quando disponível. A amostra não lê inimigos, não conserva posições antigas e não substitui o minimapa nativo. Teste visual desta etapa pendente.

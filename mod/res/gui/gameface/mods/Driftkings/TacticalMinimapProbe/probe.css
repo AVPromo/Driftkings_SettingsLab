@@ -21,3 +21,6 @@
 .dk-probe-grid-row { left:-14rem; transform:translateY(-50%); }
 .dk-probe-grid-vertical { position:absolute; top:0; height:100%; border-left:1px solid rgba(255,255,255,.35); }
 .dk-probe-grid-horizontal { position:absolute; left:0; width:100%; border-top:1px solid rgba(255,255,255,.35); }
+
+.dk-probe-map-image .dk-probe-ally-icon { width:18px; height:18px; padding:0; border:0; background:none; }
+.dk-probe-ally-icon svg { display:block; }

@@ -74,13 +74,36 @@
         image.appendChild(points);
         return points;
     }
+    function allyClass(ally) {
+        var names = {lightTank: 'Ligeiro', mediumTank: 'Médio', heavyTank: 'Pesado', 'AT-SPG': 'Caça-tanques', SPG: 'Artilharia'};
+        return ally && Object.prototype.hasOwnProperty.call(names, ally.vehicleClass) ? names[ally.vehicleClass] : null;
+    }
     function mapPoint(points, ally) {
-        while (points.firstChild) { points.removeChild(points.firstChild); }
-        if (!validAlly(ally)) { return; }
-        var marker = document.createElement('div');
-        marker.className = 'dk-probe-ally'; marker.textContent = 'A';
-        marker.style.left = (100 * ally.x) + '%'; marker.style.top = (100 * ally.y) + '%';
-        points.appendChild(marker);
+        if (!validAlly(ally)) {
+            while (points.firstChild) { points.removeChild(points.firstChild); }
+            points._dkAlly = null;
+            return;
+        }
+        var color = ally.side === 'platoon' ? '#ffc45b' : '#67cf69';
+        var kind = allyClass(ally) ? ally.vehicleClass : null;
+        var signature = String(kind) + color;
+        var record = points._dkAlly;
+        if (!record || record.signature !== signature) {
+            while (points.firstChild) { points.removeChild(points.firstChild); }
+            var marker = document.createElement('div');
+            marker.className = 'dk-probe-ally'; marker.textContent = 'A';
+            if (kind && window.DKTacticalGraphics) {
+                try {
+                    var glyph = window.DKTacticalGraphics.createGlyph(document, kind, color, 18);
+                    marker.textContent = ''; marker.appendChild(glyph.node);
+                    marker.className += ' dk-probe-ally-icon';
+                } catch (error) { /* Keep A when SVG cannot be constructed. */ }
+            }
+            marker.style.color = color;
+            points.appendChild(marker);
+            record = points._dkAlly = {node: marker, signature: signature};
+        }
+        record.node.style.left = (100 * ally.x) + '%'; record.node.style.top = (100 * ally.y) + '%';
     }
     function mapSample(uri, ally) {
         if (typeof uri !== 'string' || uri.length > 262 ||
@@ -93,7 +116,7 @@
         var root = document.createElement('div');
         root.className = 'dk-probe-cartography';
         var caption = document.createElement('div');
-        caption.textContent = 'Mapa de teste — A = aliado';
+        caption.textContent = 'Mapa de teste — classe de um aliado';
         var image = document.createElement('div');
         image.className = 'dk-probe-map-image';
         image.style.backgroundImage = 'url("' + uri + '")';
@@ -159,8 +182,10 @@
             line('Fonte nativa: ' + (data.reason || 'indisponível'), 'dk-probe-pending');
         }
         line('Um aliado para calibração; sem inimigos ou Lost Contact.');
-        line('Ponto A no mapa de teste: ' + (data.allyStatus || 'a aguardar'));
+        line('Marcador aliado no mapa de teste: ' + (data.allyStatus || 'a aguardar'));
         if (validAlly(data.alliedPoint)) {
+            line('Classe: ' + (allyClass(data.alliedPoint) || 'indisponível (A)') +
+                (data.alliedPoint.side === 'platoon' ? ' | Pelotão' : ' | Aliado'));
             line('Célula nativa: ' + (/^[A-HJK][1-90]$/.test(data.alliedPoint.cell || '') ? data.alliedPoint.cell : 'indisponível'));
             line('Aliado: ' + (100 * data.alliedPoint.x).toFixed(1) + '% horizontal / ' +
                 (100 * data.alliedPoint.y).toFixed(1) + '% vertical');

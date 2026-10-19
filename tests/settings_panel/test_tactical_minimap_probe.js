@@ -148,6 +148,27 @@ assert(medium.children[1].children[0].attributes.d.indexOf('M10 21 L22 10') !== 
 data.acknowledged = true; data.graphics = {svgApi: true, glyphCount: 21}; refresh();
 assert.strictEqual(svgNodesCreated, 42); // No graphic rebuild for a metadata change.
 assert.strictEqual(body.children[0].children.filter(function (child) { return child.className === 'dk-probe-glyphs'; })[0], sample);
+data.textureUri = 'img://spaces/01_karelia/mmap.dds';
+['lightTank', 'mediumTank', 'heavyTank', 'AT-SPG', 'SPG'].forEach(function (kind) {
+    data.alliedPoint = {x: .25, y: .5, cell: 'E3', vehicleClass: kind, side: 'ally'};
+    refresh();
+    var image = body.children[0].children.filter(function (child) { return child.className === 'dk-probe-cartography'; })[0].children[1];
+    var points = image.children[1], marker = points.children[0];
+    assert(marker.className.indexOf('dk-probe-ally-icon') !== -1);
+    assert.strictEqual(marker.children[0].children[0].attributes.stroke, '#67cf69');
+    var expected = win.DKTacticalGraphics.createGlyph(graphicsDoc, kind, '#67cf69', 18);
+    assert.strictEqual(marker.children[0].children[0].attributes.d, expected.path.attributes.d);
+    var count = svgNodesCreated;
+    data.alliedPoint.x = .75; refresh();
+    assert.strictEqual(points.children[0], marker);
+    assert.strictEqual(marker.style.left, '75%');
+    assert.strictEqual(svgNodesCreated, count);
+});
+data.alliedPoint.side = 'platoon'; refresh();
+var iconImage = body.children[0].children.filter(function (child) { return child.className === 'dk-probe-cartography'; })[0].children[1];
+assert.strictEqual(iconImage.children[1].children[0].children[0].children[0].attributes.stroke, '#ffc45b');
+delete data.alliedPoint; refresh();
+assert.strictEqual(iconImage.children[1].children.length, 0);
 win.__dkTacticalMinimapProbe.dispose();
 assert.strictEqual(body.children.length, 0);
 assert.strictEqual(Object.keys(callbacks).length, 0);
@@ -157,12 +178,14 @@ console.log('PASS: shared SVG glyphs, three scales, missing-API fallback and cac
 // A DOM method may exist but reject SVG: contain this failure inside the probe.
 graphicsDoc.createElementNS = function () { throw new Error('SVG namespace unsupported'); };
 data.generation = 4; data.acknowledged = false;
+data.alliedPoint = {x: .25, y: .5, vehicleClass: 'mediumTank', side: 'ally'};
 model.payload = JSON.stringify(data);
 vm.runInNewContext(script, {window: win, document: graphicsDoc, engine: engine, viewEnv: viewEnv,
     console: {error: function () { errors.push(true); }}});
 report = acknowledgements[acknowledgements.length - 1];
 assert.strictEqual(report.svgApi, false);
 assert.strictEqual(report.glyphCount, 0);
+assert.strictEqual(body.children[0].children.filter(function (child) { return child.className === 'dk-probe-cartography'; })[0].children[1].children[1].children[0].textContent, 'A');
 assert.strictEqual(body.children.length, 1);
 assert.strictEqual(errors.length, 0);
 win.__dkTacticalMinimapProbe.dispose();

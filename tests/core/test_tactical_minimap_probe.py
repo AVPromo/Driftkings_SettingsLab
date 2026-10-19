@@ -133,6 +133,21 @@ class ProbeTests(RuntimeTest):
             marker['cell'] = invalid
             self.assertNotIn('cell', self.policy.allied_calibration_point([marker]))
 
+    def test_allied_class_transport_is_limited_to_native_classes_and_relations(self):
+        marker = dict(side='platoon', visible=True, state='visible', x=.25, y=.5,
+                      name='private', id=666)
+        for vehicle_class in ('lightTank', 'mediumTank', 'heavyTank', 'AT-SPG', 'SPG'):
+            marker['vehicleClass'] = vehicle_class
+            point = self.policy.allied_calibration_point([marker])
+            self.assertEqual(point['vehicleClass'], vehicle_class)
+            self.assertEqual(point['side'], 'platoon')
+            self.assertNotIn('name', point)
+            self.assertNotIn('id', point)
+        marker['vehicleClass'] = 'unknown'
+        self.assertNotIn('vehicleClass', self.policy.allied_calibration_point([marker]))
+        marker['side'] = 'enemy'
+        self.assertIsNone(self.policy.allied_calibration_point([marker]))
+
     def test_default_off_creates_no_adapter_and_starts_no_diagnostic(self):
         self.bridge.bind_native(self.component)
         self.bridge.start()

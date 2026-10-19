@@ -2,7 +2,7 @@
 """Small diagnostic transport contract. Never publishes identities or enemy positions; one current ally calibrates coordinates."""
 import re
 
-from Driftkings.core.tactical_minimap import finite
+from Driftkings.core.tactical_minimap import CLASSES, finite
 
 PROTOCOL = 1
 
@@ -130,6 +130,9 @@ def allied_calibration_point(markers):
             continue
         if 0 <= x <= 1 and 0 <= y <= 1:
             point = {'x': x, 'y': y}
+            if marker.get('vehicleClass') in CLASSES:
+                point['vehicleClass'] = marker['vehicleClass']
+                point['side'] = marker['side']
             cell = marker.get('cell')
             if isinstance(cell, (str, type(u''))) and re.match(r'^[A-HJK][1-90]\Z', cell):
                 point['cell'] = cell
