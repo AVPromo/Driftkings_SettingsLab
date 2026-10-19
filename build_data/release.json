@@ -6,11 +6,12 @@
   "title": "Driftkings",
   "author": "Driftkings",
   "changelog": [
-    "Migrate MarksOnGun battle and hangar panels to Gameface with a shared calculation engine.",
-    "Add panel scaling, position locking and saved header dragging; battle dragging uses the native cursor (normally left Ctrl).",
-    "Remove obsolete Flash marks panel, HTML templates and legacy configuration defaults.",
-    "Expose custom sniper zoom steps and fix fractional post-shot camera delay validation.",
-    "Stop creating automatic .bak files during normal settings saves; preserve personal configurations.",
-    "NA hangar and replay dragging confirmed. Live-battle mark estimates, other realms and the complete updater flow still require validation."
+    "Migrate High Caliber progress to Gameface with the original medal, configurable positioning and a dynamic progress bar.",
+    "Separate arcade, postmortem and artillery camera profiles; preserve native artillery camera values by default.",
+    "Use the client realm and active language for player-panel region and destruction macros.",
+    "Remove retired clock and target-acquisition configuration defaults while preserving personal settings.",
+    "Pin updater downloads to the official repository and verify Ed25519-signed release manifests.",
+    "Add portable regression tests and refresh the build reference to WoT source 2.4.1.5493; retain the recorded SWC export provenance.",
+    "Beta: in-game validation of the signed update flow and all affected camera modes is still required."
   ]
 }

@@ -4,9 +4,9 @@ Modpack for Wargaming World of Tanks: battle overlays, hangar improvements and a
 
 ## Downloads
 
-**[Download the beta](https://github.com/dkruben/Driftkings_SettingsLab/releases/tag/v0.1.2-beta.3)** · [All releases](https://github.com/dkruben/Driftkings_SettingsLab/releases)
+**[Download the beta](https://github.com/dkruben/Driftkings_SettingsLab/releases/tag/v0.1.2-beta.4)** · [All releases](https://github.com/dkruben/Driftkings_SettingsLab/releases)
 
-Current version: **0.1.2-beta.3**, for **WoT 2.4.1.0**. Beta releases remain under refinement.
+Current version: **0.1.2-beta.4**, for **WoT 2.4.1.0**. Beta releases remain under refinement.
 
 ## Battle interface and statistics
 
@@ -34,7 +34,7 @@ Available behavior depends on configuration, vehicle and game mode.
 ## Installation
 
 1. Close World of Tanks.
-2. Download `Driftkings-0.1.2-beta.3-WoT-2.4.1.0.zip` from the release assets.
+2. Download `Driftkings-0.1.2-beta.4-WoT-2.4.1.0.zip` from the release assets.
 3. Extract its `mods` folder into the game installation, merging folders. It includes Driftkings and the required ModsListAPI and OpenWG Gameface packages under `mods/2.4.1.0/`.
 4. For a new installation, extract the separate `Driftkings-defaults.zip` into the game installation. Preserve existing `mods/configs/Driftkings` settings when updating.
 5. Start the game and open Driftkings settings through the mods list.
@@ -63,7 +63,7 @@ On Windows, configure Python 3.10+, Python 2.7, Java/Flex, playerglobal and game
 python build_tools/compiler.py --plan
 python build_tools/validate_build_data.py
 .\debug.cmd
-.\release.cmd --version 0.1.2-beta.3 --channel beta
+.\release.cmd --version 0.1.2-beta.4 --channel beta
 ```
 
 Check portable logic with `python -m unittest discover -s tests/settings_panel -p 'test_*.py'` and `python -m unittest discover -s tests/core -p 'test_*.py'`; both suites also run on Python 2.7. Run `node tests/settings_panel/test_gameface.js` for the Gameface state tests. Install development dependencies with `npm ci --ignore-scripts`, then run `npm run lint` to enforce ES5 syntax and basic JavaScript checks. These tools run on Node 20.19+; client scripts remain ES5.

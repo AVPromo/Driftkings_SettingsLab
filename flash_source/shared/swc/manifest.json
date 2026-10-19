@@ -1,5 +1,5 @@
 {
-  "source_version": "2.4.1.5488",
+  "source_version": "2.4.1.5493",
   "game_version": "2.4.1.0",
   "libraries": [
     {
@@ -34,5 +34,6 @@
       "name": "lobby.swc",
       "sha256": "2B082EDF06EA65CB641E14E834AB21E78A03942243F15BD26666E7CF11129566"
     }
-  ]
+  ],
+  "library_export_version": "2.4.1.5488"
 }
