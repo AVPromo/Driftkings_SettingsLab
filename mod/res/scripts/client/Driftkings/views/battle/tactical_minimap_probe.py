@@ -3,6 +3,8 @@
 import logging
 import weakref
 
+from Driftkings.core.diagnostics import Diagnostics
+
 from Driftkings.core.tactical_minimap import preferences, selection
 
 from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits, strategic_area_response, native_click_sample, gameface_click_sample, input_request
@@ -15,6 +17,7 @@ FEATURE = 'DriftkingsTacticalMinimapProbe'
 
 class ProbeBridge(object):
     def __init__(self, config, settings_reader, adapter_factory=native_adapter, publisher=publish_card, schedule=None, cancel=None):
+        self._metrics = Diagnostics(limit=16)
         self.config = config
         self._settings = settings_reader
         self._factory = adapter_factory
@@ -100,11 +103,13 @@ class ProbeBridge(object):
             view._sampleSequence = 0
             view._sampleRequest = 0
         self.active = True
+        self._metrics.configure(True)
         self._start_geometry_poll()
         hudVisibility.attach(self)
         self.refresh()
 
     def stop(self, *args):
+        self._metrics.configure(False)
         from Driftkings.core.hud_visibility import hudVisibility
         self.active = False
         self._last_input = None
@@ -132,6 +137,9 @@ class ProbeBridge(object):
         self.refresh()
 
     def _read_geometry(self):
+        return self._metrics.call('tactical_minimap.geometry', self._read_geometry_impl)
+
+    def _read_geometry_impl(self):
         component = self._native() if self._native is not None else None
         self._calibration = None
         if component is None or not self.enabled():
@@ -243,6 +251,9 @@ class ProbeBridge(object):
             self.refresh()
 
     def refresh(self, *args):
+        return self._metrics.call('tactical_minimap.refresh', self._refresh)
+
+    def _refresh(self):
         enabled = self.active and self.enabled() and self.hudVisible
         ready_views = [view for view in self.views if view._ready]
         snapshot = None
@@ -254,7 +265,7 @@ class ProbeBridge(object):
                 try:
                     if self._adapter is None:
                         self._adapter = self._factory(component, component.sessionProvider)
-                    snapshot = self._adapter.capture()
+                    snapshot = self._metrics.call('tactical_minimap.capture', self._adapter.capture)
                     if snapshot.get('available'):
                         snapshot['nativeInput'] = self._last_input
                         try:
@@ -324,7 +335,8 @@ class ProbeBridge(object):
                     self._ally_log_count += 1
                     LOG.info('Allied calibration: status=%s native=%s geometry=%s player=%s entries=%d audit=%s',
                              state[0], state[1], state[2], state[3], data['markerCount'], (snapshot or {}).get('entryAudit', {}))
-                self._publish(view, data)
+                sent = self._metrics.call('tactical_minimap.publish', self._publish, view, data)
+                self._metrics.count('tactical_minimap.skipped' if sent is False else 'tactical_minimap.published')
             except Exception:
                 LOG.exception('Cannot publish minimap diagnostic; Vanilla unchanged')
 

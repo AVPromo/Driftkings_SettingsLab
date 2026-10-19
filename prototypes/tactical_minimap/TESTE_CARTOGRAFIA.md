@@ -1,5 +1,21 @@
 # Cartografia e calibração — diagnóstico
 
+## Medição do custo da ponte em missão
+
+Com `tacticalDiagnostics=true`, cada batalha inicia um agregado próprio do serviço `Diagnostics` existente. Ao sair da missão, o logger `Driftkings.Performance` escreve:
+
+- `tactical_minimap.geometry`: leitura da geometria e da matriz própria;
+- `tactical_minimap.capture`: captura pelo adapter de entradas nativas;
+- `tactical_minimap.publish`: publicação pelo gestor existente, incluindo a serialização quando há alterações;
+- `tactical_minimap.refresh`: atualização completa, incluindo as medições anteriores;
+- `tactical_minimap.published` e `tactical_minimap.skipped`: contadores de publicações realizadas ou ignoradas por conteúdo igual.
+
+`calls`, `errors`, `total` e `max` são contagens e tempos agregados em milissegundos. A média pode ser calculada por total/calls. Os tempos são inclusivos: não somar refresh às suas parcelas. errors conta exceções que atravessam a função medida; não substitui os logs dos leitores auxiliares. Um pico durante carregamento não prova atraso persistente durante combate. Não são medições de FPS, GPU, pintura Gameface ou latência de rede.
+
+Não há timer, hook ou callback adicional, nem envio destas métricas à UI. Até dezasseis etiquetas por agregado, sem listas de amostras, IDs, posições ou payloads. Relatório apenas ao terminar, sem spam por frame; a batalha seguinte limpa os agregados. Sem diagnóstico ativo no arranque, as funções executam-se sem medição. O serviço global de desempenho dos outros módulos não é reconfigurado.
+
+Teste: entrar em Topography, movimentar/rodar, alternar arcade e sniper, clicar e redimensionar; sair normalmente para o hangar. Depois consultar `game.log` para `Driftkings.Performance` e `tactical_minimap.`. Repetir uma missão permite comparar os agregados, sem afirmar ganhos de desempenho a partir de um teste isolado. Ainda faltam medições reais com carga de batalha e confirmação da artilharia antes da substituição.
+
 ## Clique concluído e cancelamento de arrastos
 
 A correção de sniper foi confirmada pelo utilizador. Nesta etapa, o envio de uma posição passa de mousedown para um par pressão/libertação dentro da mesma imagem, botão, alvo e geração. Mover mais de quatro píxeis cancela o gesto, mesmo regressando ao ponto inicial. Mudança de geometria, perda de foco da janela, HUD/cursor desativado, remoção/recriação da vista ou erro de desenho invalidam o clique pendente. Pressionar sem libertar não envia comandos. O pedido continua deduplicado no Python e o handler nativo é chamado no máximo uma vez.

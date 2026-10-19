@@ -48,6 +48,54 @@ class ProbeTests(RuntimeTest):
         self.component = Owner(sessionProvider=Owner(), isModalViewShown=lambda: False,
             flashObject=Owner(as_DriftkingsMinimapGeometry=lambda *args: '1|800|400|200|200|1000|800'))
 
+    def test_performance_aggregates_are_bounded_opt_in_and_reset_per_battle(self):
+        self.bridge.refresh()
+        self.assertEqual(self.bridge._metrics.snapshot()['records'], {})
+        reports, ticks = [], [0]
+        def clock():
+            ticks[0] += 1
+            return ticks[0] / 1000.0
+        self.bridge._metrics.clock = clock
+        self.bridge._metrics.reporter = reports.append
+        self.settings['tacticalDiagnostics'] = True
+        self.bridge.bind_native(self.component)
+        self.bridge.start()
+        before = self.bridge._metrics.snapshot()['records']['tactical_minimap.refresh']['calls']
+        self.bridge.refresh()
+        records = self.bridge._metrics.snapshot()['records']
+        self.assertEqual(records['tactical_minimap.refresh']['calls'], before + 1)
+        self.assertGreater(records['tactical_minimap.capture']['calls'], 0)
+        self.assertGreater(records['tactical_minimap.publish']['calls'], 0)
+        self.assertGreater(records['tactical_minimap.geometry']['calls'], 0)
+        self.assertGreater(records['tactical_minimap.refresh']['totalMs'], 0)
+        self.assertLessEqual(len(records), 16)
+        self.assertEqual(reports, [])  # No report for every frame.
+        self.bridge.stop()
+        self.assertTrue(reports)
+        report_count = len(reports)
+        self.bridge.stop()
+        self.assertEqual(len(reports), report_count)
+        self.assertFalse(self.bridge._metrics.enabled)
+        calls = self.bridge._metrics.snapshot()['records']['tactical_minimap.refresh']['calls']
+        self.bridge.refresh()
+        self.assertEqual(self.bridge._metrics.snapshot()['records']['tactical_minimap.refresh']['calls'], calls)
+        self.bridge.start()
+        self.assertLess(self.bridge._metrics.snapshot()['records']['tactical_minimap.refresh']['calls'], calls)
+
+    def test_performance_counts_unchanged_publications_without_forcing_payload_changes(self):
+        self.settings['tacticalDiagnostics'] = True
+        frames = []
+        def publish(view, data):
+            frames.append(data)
+            return False
+        self.bridge._publish = publish
+        self.bridge.start()
+        self.bridge.refresh()
+        self.assertEqual(frames[-1], frames[-2])
+        records = self.bridge._metrics.snapshot()['records']
+        self.assertGreater(records['tactical_minimap.skipped']['count'], 0)
+        self.assertNotIn('tactical_minimap.published', records)
+
     def test_preferences_publish_separately_without_enabling_replacement(self):
         self.settings.update(tacticalDiagnostics=True, minimapMode='driftkings',
                              tactical={'theme': 'military', 'size': 400})
