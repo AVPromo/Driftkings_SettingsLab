@@ -58,6 +58,7 @@ def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, c
         data['enemyPoints'] = enemy_calibration_points(snapshot.get('markers', []))
         data['destroyedPoints'] = destroyed_calibration_points(snapshot.get('destroyedMarkers', []))
         data['cameraLine'] = camera_line(snapshot.get('cameraLine'))
+        data['strategicPoint'] = strategic_point(snapshot.get('strategicPoint'))
         values = snapshot.get('yawLines')
         lines = [camera_line(value) for value in values] if isinstance(values, list) and len(values) == 2 else []
         data['yawLines'] = lines if len(lines) == 2 and all(lines) else []
@@ -240,6 +241,16 @@ def player_point(value):
     if isinstance(cell, (str, type(u''))) and re.match(r'^[A-HJK][1-90]\Z', cell):
         result['cell'] = cell
     return result
+
+
+def strategic_point(value):
+    if not isinstance(value, dict):
+        return None
+    try:
+        x, y = finite(value['x']), finite(value['y'])
+    except (KeyError, ValueError, TypeError, OverflowError):
+        return None
+    return {'x': x, 'y': y} if 0 <= x <= 1 and 0 <= y <= 1 else None
 
 
 def camera_line(value):

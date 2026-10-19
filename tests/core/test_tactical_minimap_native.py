@@ -209,6 +209,32 @@ class NativeAdapterTests(RuntimeTest):
         api['owns_player_marker'] = lambda component: False
         self.assertEqual(api['native_yaw_lines'](self.component, record), [])
 
+    def test_strategic_aim_uses_selected_published_matrix_only_in_arty_modes(self):
+        reads, selected, strategic, arty = [], [7], [True], [False]
+        self.component.getPlugin = lambda name: Owner(_getCameraIDs=lambda: {'StrategicCameraEntry': 7},
+            _getSelectedCameraID=lambda: selected[0], _isInStrategicMode=lambda: strategic[0],
+            _isInArtyMode=lambda: arty[0])
+        api = source('views/battle/tactical_minimap.py', {
+            'Driftkings.core.tactical_minimap': self.load('core.tactical_minimap'),
+            'Math': module(Matrix=lambda provider: reads.append(provider) or Owner(translation=Owner(x=100, z=200)))})
+        api['owns_player_marker'] = lambda component: True
+        record = dict(id=7, active=True, matrix=object())
+        self.assertEqual(api['native_strategic_point'](self.component, record), dict(x=.5, y=.5))
+        strategic[0], arty[0] = False, True
+        self.assertIsNotNone(api['native_strategic_point'](self.component, record))
+        strategic[0], arty[0] = False, False
+        reads[:] = []
+        self.assertIsNone(api['native_strategic_point'](self.component, record))
+        self.assertEqual(reads, [])
+        strategic[0] = True
+        for changes in ({'active': False}, {'id': 8}, {'matrix': None}):
+            self.assertIsNone(api['native_strategic_point'](self.component, dict(record, **changes)))
+        selected[0] = 8
+        self.assertIsNone(api['native_strategic_point'](self.component, record))
+        selected[0] = 7
+        api['owns_player_marker'] = lambda component: False
+        self.assertIsNone(api['native_strategic_point'](self.component, record))
+
     def test_native_objectives_read_only_active_publication_and_world_bounds(self):
         reads = []
         def matrix(provider):

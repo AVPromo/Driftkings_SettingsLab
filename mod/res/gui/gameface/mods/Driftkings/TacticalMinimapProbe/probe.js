@@ -240,7 +240,19 @@
             if (child._dkLine) { child._dkLine.setAttribute('stroke', '#70dfff'); }
         });
     }
-    function mapSample(uri, allies, objectives, circles, pings, camera, yawLines) {
+    function mapStrategic(layer, value) {
+        if (!validAlly(value)) {
+            if (layer.firstChild) { layer.removeChild(layer.firstChild); }
+            return;
+        }
+        var marker = layer.firstChild;
+        if (!marker) {
+            marker = document.createElement('div'); marker.className = 'dk-probe-strategic-point';
+            marker.textContent = '+'; layer.appendChild(marker);
+        }
+        marker.style.left = (100 * value.x) + '%'; marker.style.top = (100 * value.y) + '%';
+    }
+    function mapSample(uri, allies, objectives, circles, pings, camera, yawLines, strategicPoint) {
         if (typeof uri !== 'string' || uri.length > 262 ||
                 !/^img:\/\/(spaces\/[A-Za-z0-9_/-]+\.(dds|png)|gui\/maps\/icons\/map\/[A-Za-z0-9_-]+\.png)$/.test(uri) ||
                 uri.indexOf('//', 6) !== -1) { return null; }
@@ -251,6 +263,7 @@
             mapPings(cartography.pings, pings);
             mapCamera(cartography.camera, camera);
             mapYawLimits(cartography.yaw, yawLines);
+            mapStrategic(cartography.strategic, strategicPoint);
             return cartography.node;
         }
         var root = document.createElement('div');
@@ -273,7 +286,9 @@
         image.appendChild(cameraLayer); mapCamera(cameraLayer, camera);
         var yawLayer = document.createElement('div'); yawLayer.className = 'dk-probe-camera';
         image.appendChild(yawLayer); mapYawLimits(yawLayer, yawLines);
-        cartography = {uri: uri, node: root, points: points, objectives: objectiveLayer, circles: circleLayer, pings: pingLayer, camera: cameraLayer, yaw: yawLayer};
+        var strategicLayer = document.createElement('div'); strategicLayer.className = 'dk-probe-strategic';
+        image.appendChild(strategicLayer); mapStrategic(strategicLayer, strategicPoint);
+        cartography = {uri: uri, node: root, points: points, objectives: objectiveLayer, circles: circleLayer, pings: pingLayer, camera: cameraLayer, yaw: yawLayer, strategic: strategicLayer};
         return root;
     }
     function clearAlignment() {
@@ -358,7 +373,8 @@
         line('Pings nativos: ' + (Array.isArray(data.pings) ? data.pings.length : 0) + ' | quadrado: célula; ! atenção; > destino; + artilharia; ponto vermelho: impacto; R resposta');
         line('Direção da câmara arcade: ' + (data.cameraLine ? 'publicada' : 'indisponível/oculta'));
         line('Limites do canhão: ' + (Array.isArray(data.yawLines) && data.yawLines.length === 2 ? 'publicados (azul)' : 'indisponíveis/ocultos'));
-        var map = mapSample(data.textureUri, vehicles, data.objectives, data.circles, data.pings, data.cameraLine, data.yawLines);
+        line('Ponto de mira estratégico: ' + (data.strategicPoint ? 'publicado (mira azul)' : 'indisponível/oculto'));
+        var map = mapSample(data.textureUri, vehicles, data.objectives, data.circles, data.pings, data.cameraLine, data.yawLines, data.strategicPoint);
         if (map) { node.appendChild(map); }
         line('Amostras fixas — 16 / 24 / 32 px; confirmar visualmente.');
         var sample = graphicsSample();

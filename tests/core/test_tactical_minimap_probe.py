@@ -34,7 +34,7 @@ class ProbeTests(RuntimeTest):
         self.scheduled, self.cancelled = [], []
         self.api = source('views/battle/tactical_minimap_probe.py', {
             'Driftkings.core.tactical_minimap_probe': self.policy,
-            'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: []),
+            'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: [], native_strategic_point=lambda component, record: None),
             'Driftkings.views.hangar.common': module(publish_card=publish),
             'Driftkings.core.hud_visibility': module(hudVisibility=hud)})
         self.bridge = self.api['ProbeBridge'](object(), lambda config: self.settings,
@@ -109,6 +109,29 @@ class ProbeTests(RuntimeTest):
         self.assertNotIn('yawLimits', bridge._personal_entries[component])
         hooks['delEntry'](original, component, 7)
         self.assertNotIn(component, bridge._personal_entries)
+
+    def test_strategic_point_contract_rejects_invalid_and_strips_details(self):
+        self.assertEqual(self.policy.strategic_point(dict(x=.3, y=.7, matrix='private')), dict(x=.3, y=.7))
+        for value in (None, {}, dict(x=float('nan'), y=0), dict(x=2, y=0)):
+            self.assertIsNone(self.policy.strategic_point(value))
+
+    def test_strategic_hooks_track_native_matrix_activation_and_cleanup(self):
+        self.settings['tacticalDiagnostics'] = True
+        bridge, hooks, events = self.install_runtime_stubs()
+        bridge.install()
+        component = Owner()
+        original = lambda *args: 7
+        hooks['addEntry'](original, component, 'StrategicCameraEntry', 'personal', 'matrix', True)
+        record = bridge._strategic_entries[component]
+        hooks['setMatrix'](original, component, 7, 'updated')
+        self.assertEqual(record['matrix'], 'updated')
+        hooks['setActive'](original, component, 7, False)
+        self.assertFalse(record['active'])
+        hooks['delEntry'](original, component, 7)
+        self.assertNotIn(component, bridge._strategic_entries)
+        hooks['addEntry'](original, component, 'StrategicCameraEntry', 'personal', 'matrix', True)
+        bridge.stop()
+        self.assertEqual(len(bridge._strategic_entries), 0)
 
     def test_camera_contract_is_bounded_and_removes_private_fields(self):
         value = dict(x=.5, y=.5, x2=1, y2=.5)
@@ -601,7 +624,7 @@ class ProbeTests(RuntimeTest):
         self.resource_id = 123
         dependencies = {
             'Driftkings.core.tactical_minimap_probe': self.policy,
-            'Driftkings.views.battle.tactical_minimap': module(native_adapter=lambda *args: None, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: []),
+            'Driftkings.views.battle.tactical_minimap': module(native_adapter=lambda *args: None, native_player_point=lambda component, record: None, native_objective_points=lambda component, records: [], native_circle_points=lambda component, record: [], native_ping_points=lambda component, records: [], native_camera_line=lambda component, record: None, native_yaw_lines=lambda component, record: [], native_strategic_point=lambda component, record: None),
             'Driftkings.views.hangar.common': module(publish_card=lambda *args: None),
             'frameworks.wulf': module(ViewModel=BaseModel),
             'gui.impl.pub.view_component': module(ViewComponent=BaseView),

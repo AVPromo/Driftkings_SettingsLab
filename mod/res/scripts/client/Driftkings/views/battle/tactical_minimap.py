@@ -212,6 +212,22 @@ def _world_direction_line(point, yaw, bounds):
             'y2': max(0, min(1, point[1] + distance * dy))}
 
 
+def native_strategic_point(component, record):
+    """Aim-matrix translation already published for the strategic camera."""
+    if not record or not record.get('active') or not owns_player_marker(component):
+        return None
+    personal = component.getPlugin('personal')
+    if (personal._getCameraIDs().get('StrategicCameraEntry') != record.get('id') or
+            personal._getSelectedCameraID() != record.get('id') or record.get('matrix') is None or
+            not (personal._isInStrategicMode() or personal._isInArtyMode())):
+        return None
+    import Math
+    position = Math.Matrix(record['matrix']).translation
+    lower, upper = component.getBoundingBox()
+    point = coordinates(position.x, position.z, (lower[0], lower[1], upper[0], upper[1]))
+    return {'x': point[0], 'y': point[1]} if point is not None else None
+
+
 def native_yaw_lines(component, record):
     """Hull-relative limits explicitly enabled on the native personal entry."""
     if not record or not record.get('active') or not record.get('yawLimits') or not owns_player_marker(component):

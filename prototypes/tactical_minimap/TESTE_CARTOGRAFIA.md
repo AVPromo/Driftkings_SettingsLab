@@ -1,5 +1,11 @@
 # Cartografia e calibração — diagnóstico
 
+## Ponto de mira da câmara estratégica
+
+A entrada nativa `StrategicCameraEntry`/`personal` usa `makeStrategicCameraMatrix()`, cuja translação vem da aimMatrix do cliente. A amostra acompanha apenas essa posição com uma mira azul, sem calcular dispersão, trajetória ou impacto. Requer propriedade do jogador vivo, ID selecionado e confirmado no plugin, modo estratégico/arty, entrada ativa e matriz publicada. Trocas de modo, desativação, remoção e fim de batalha retiram a mira. Reutiliza hooks/callbacks existentes.
+
+Testar replay de artilharia: entrar na vista estratégica, mover a mira e comparar o centro com o original; testar a vista alternativa de artilharia e voltar ao arcade. Não representa ainda o retângulo/área de visão, rotação/escala estratégica ou câmara de vídeo. A validação de etiquetas, limites e destruídos continua pendente, assim como esta nova mira.
+
 ## Etiquetas dos veículos
 
 Acrescentado o nome apresentado pelo cliente (`VehicleArenaInfoVO.getDisplayedName()`) aos ícones publicados, via campo `vehicleLabel` do adaptador e `label` sanitizado. Não se transportam IDs ou o campo de nome de jogador. Máximo de 64 caracteres, sem caracteres de controlo; o JS usa apenas textContent e aplica nova limitação defensiva. Etiquetas usam cor de relação, sombra, largura limitada e reticências. À direita de 70% do mapa ficam voltadas para a esquerda. Mantêm o nó ao mover; são removidas com a entrada. A rotação do jogador aplica-se só ao SVG, nunca ao texto.
