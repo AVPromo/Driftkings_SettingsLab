@@ -11,8 +11,8 @@ O código nativo contém `convertToLastSpottedVehicleMP` e condições de visibi
 
 ## Limites desta entrega
 
-- Não há ligação a dados de batalha, captura de coordenadas ou enumeração de entidades.
-- O adapter só aceita fixtures com origem `synthetic-preview`.
+- Não há ligação automática de dados de batalha ao renderer nem enumeração de entidades. A etapa 2 contém um leitor nativo não instalado, limitado a entradas vivas publicadas em AoI.
+- O renderer só aceita fixtures com origem `synthetic-preview`. O leitor nativo parcial produz `native-minimap-audit`, origem recusada pelo renderer.
 - Entradas invisíveis/lost são descartadas antes de ler posição; snapshots são independentes e não guardam posições passadas.
 - Lost Contact não tem opção de ativação, feed nem renderização. Existe apenas um SVG de referência, não utilizado pelo preview.
 - Não há predição, projéteis, rastos, objetos destruídos, ghost markers 3D ou inferência.

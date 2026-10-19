@@ -72,3 +72,16 @@ class TacticalMinimapTests(RuntimeTest):
                 self.api.preview_snapshot([self.marker(**changes)], (-1, -1, 1, 1))
         with self.assertRaises(ValueError):
             self.api.preview_snapshot([self.marker(), self.marker()], (-1, -1, 1, 1))
+
+
+    def test_click_conversion_and_inverse_match_native_rectangular_geometry(self):
+        bounds = (-100, -200, 300, 600)
+        for world in ((-100, -200), (-100, 600), (300, -200), (300, 600), (100, 200)):
+            normalized = self.api.coordinates(world[0], world[1], bounds)
+            self.assertEqual(self.api.world_point(normalized[0], normalized[1], bounds), world)
+        self.assertEqual(self.api.native_click_point(0.5, 0.5, (210, 210)), (105, 105))
+        self.assertEqual(self.api.native_click_point(1, 0, (210, 210)), (210, 0))
+        with self.assertRaises(ValueError):
+            self.api.native_click_point(1.1, 0, (210, 210))
+        with self.assertRaises(ValueError):
+            self.api.world_point(0, float('nan'), bounds)

@@ -47,6 +47,8 @@ assert.strictEqual(api.valid(marker), false);
 marker.vehicleClass = 'mediumTank';
 renderer.render(frame, {});
 assert.strictEqual(Object.keys(renderer.nodes).length, 1);
+renderer.render({source: 'native-minimap-audit', markers: [marker]}, {});
+assert.strictEqual(Object.keys(renderer.nodes).length, 0);
 renderer.render({source: 'battle', markers: [marker]}, {});
 assert.strictEqual(Object.keys(renderer.nodes).length, 0);
 renderer.render({source: 'synthetic-preview', markers: {}}, {});

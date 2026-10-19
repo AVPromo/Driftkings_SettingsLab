@@ -33,3 +33,7 @@ Uma fase em produção só pode ser marcada concluída com prova do contrato rea
 - Build debug completa: 266 módulos Python, sem ativação do protótipo.
 - Dois testes do instalador falham por copiarem as imagens locais para fixtures que assumem ausência de branding/previews. O ficheiro destes testes e o código do instalador não foram alterados nesta fase; a falha é independente do minimapa. Não se declara CI global verde a partir deste resultado.
 - Sem inspeção visual automática, combate real ou medições de desempenho nesta sessão.
+
+## Etapa 2
+
+A convenção x/direita, z/norte e a área lógica de clique de 210×210 foram confirmadas no SRC do minimapa clássico. Existe agora um adaptador de leitura parcial não instalado e sem ligação ao renderer; ver CONTRATOS_NATIVOS.md. O transporte de rotação não é fornecido pelas matrizes de veículos auditadas. A validação em combate, modos diferentes, input completo e fallback de ponta a ponta continua pendente.

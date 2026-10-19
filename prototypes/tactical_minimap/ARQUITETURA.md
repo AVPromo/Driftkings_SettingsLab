@@ -2,7 +2,7 @@
 
 ## Estado entregue
 
-`core/tactical_minimap.py` não importa BigWorld, GUI, Wulf, Settings ou eventos. Expõe política de seleção bloqueada, defaults do protótipo, transformação matemática e adapter exclusivo de fixtures sintéticas. Nunca oculta o nativo e não conserva coordenadas. `preview_snapshot()` rejeita fontes de batalha: não existe ainda um Battle Data Adapter verificado.
+`core/tactical_minimap.py` não importa BigWorld, GUI, Wulf, Settings ou eventos. Expõe política de seleção bloqueada, defaults do protótipo, transformação matemática e adapter exclusivo de fixtures sintéticas. Nunca oculta o nativo e não conserva coordenadas. `preview_snapshot()` rejeita fontes de batalha: ainda não existe um adapter de batalha completo. A etapa 2 acrescenta um leitor nativo parcial, não instalado, descrito em CONTRATOS_NATIVOS.md.
 
 `renderer.js` recebe apenas `source=synthetic-preview`, marcadores normalizados, relações e estados explícitos; descarta entradas invisíveis/lost antes de desenhar. Atualiza nós por ID e assinatura, remove nós ausentes, valida cores/tamanhos e torna dispose idempotente. Não tem timer de polling, listeners de batalha ou chamadas Python. O harness `preview.js` liga e desliga os controlos da página.
 

@@ -98,3 +98,27 @@ def preview_snapshot(markers, bounds, source='synthetic-preview'):
             value['heading'] = heading(*marker['direction'])
         result.append(value)
     return {'source': source, 'markers': result, 'lostContactAvailable': False}
+
+
+def native_click_point(x, y, native_size):
+    """Normalized point -> native local pixels, not world metres.
+
+    ClassicMinimapPingPlugin._getClickPosition delegates to
+    minimap_utils.makePointMatrixByLocal using MINIMAP_SIZE. The caller must
+    supply that native constant; the visual size/zoom must not be used here.
+    This function never sends a ping or invokes the game component.
+    """
+    x, y = finite(x), finite(y)
+    width, height = [finite(value) for value in native_size]
+    if width <= 0 or height <= 0 or not 0 <= x <= 1 or not 0 <= y <= 1:
+        raise ValueError('Invalid native click geometry')
+    return x * width, y * height
+
+
+def world_point(x, y, bounds):
+    """Inverse of coordinates(), following native x/right, z/north mapping."""
+    x, y = finite(x), finite(y)
+    left, bottom, right, top = [finite(value) for value in bounds]
+    if right <= left or top <= bottom or not 0 <= x <= 1 or not 0 <= y <= 1:
+        raise ValueError('Invalid map point')
+    return left + x * (right - left), top - y * (top - bottom)

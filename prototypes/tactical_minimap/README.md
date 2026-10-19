@@ -7,6 +7,7 @@ Abrir [preview.html](preview.html) num navegador para explorar os três temas, o
 - [Auditoria obrigatória, Fase 0](AUDITORIA.md).
 - [Arquitetura e fronteiras](ARQUITETURA.md).
 - [Compatibilidade e matriz de testes](COMPATIBILIDADE.md).
+- [Etapa 2: contratos e adaptador nativo](CONTRATOS_NATIVOS.md).
 - [Avaliação Fair Play](FAIR_PLAY.md).
 
 ## O que está entregue
@@ -32,3 +33,5 @@ python -B build_tools/validate_build_data.py
 ```
 
 A CI executa os testes novos juntamente com os existentes. A aparência não foi verificada automaticamente num navegador nesta sessão: a ferramenta de browser não tinha nenhuma superfície disponível. A conformidade ES5, a estrutura DOM e o comportamento incremental foram verificados por testes; isto não substitui a inspeção visual ou o teste no Gameface.
+
+Etapa 2: foi acrescentado um adaptador de leitura nativo **não instalado**, com origem de snapshot diferente e recusada pelo preview. Ver CONTRATOS_NATIVOS.md para os filtros conservadores, a matemática de input e as limitações. A seleção em Settings e o renderer de batalha continuam por integrar.
