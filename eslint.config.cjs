@@ -1,7 +1,7 @@
 /* Build tooling runs on Node 20; the checked client scripts stay ES5. */
 module.exports = [
     {
-        files: ["mod/res/gui/gameface/**/*.js", "prototypes/tactical_minimap/*.js"],
+        files: ["mod/res/gui/gameface/**/*.js"],
         languageOptions: {
             ecmaVersion: 5,
             sourceType: "script",
@@ -30,8 +30,7 @@ module.exports = [
         }
     },
     {
-        files: ["mod/res/gui/gameface/mods/Driftkings/TacticalMinimap/graphics.js",
-            "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel_layout.js",
+        files: ["mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel_layout.js",
             "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel_native.js"],
         languageOptions: { globals: { module: "readonly" } }
     }

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Minimap presentation policy; no game dependencies."""
 import re
-from Driftkings.core.tactical_minimap import validate_settings
 try:
     text_type = unicode
 except NameError:
@@ -87,7 +86,6 @@ def stroke(value):
 
 
 def validate(data):
-    validate_settings(data)
     for name in ('labels', 'circles', 'lines', 'presentation', 'artilleryAim'):
         if not isinstance(data.get(name), dict):
             raise ValueError('Invalid minimap section: ' + name)

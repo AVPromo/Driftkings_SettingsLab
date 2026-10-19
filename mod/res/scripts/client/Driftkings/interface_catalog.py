@@ -51,16 +51,7 @@ FLASH_COMPONENTS = {'ArmorCalculatorView': {'as3': 'driftkings.battle.components
                     'section': 'sixth_sense_alert',
                     'surfaces': ['battle']}}
 
-GAMEFACE = {'DriftkingsTacticalMinimapProbe': {'context': 'battle',
-     'layout': 'coui://gui/gameface/mods/Driftkings/TacticalMinimapProbe/model.html',
-     'owner': '__dkTacticalMinimapProbe',
-     'python': 'Driftkings.views.battle.tactical_minimap_probe',
-     'resource': 'mods/Driftkings/TacticalMinimapProbe/model',
-     'scripts': ['coui://gui/gameface/mods/Driftkings/TacticalMinimap/graphics.js',
-                 'coui://gui/gameface/mods/Driftkings/TacticalMinimapProbe/probe.js'],
-     'section': 'minimap_enhancements',
-     'styles': ['coui://gui/gameface/mods/Driftkings/TacticalMinimapProbe/probe.css']},
- 'DriftkingsCrewDetails': {'context': 'hangar',
+GAMEFACE = {'DriftkingsCrewDetails': {'context': 'hangar',
                           'layout': 'coui://gui/gameface/mods/Driftkings/CrewDetails/model.html',
                           'owner': '__dkCrewDetails',
                           'python': 'Driftkings.views.hangar.crew_details',

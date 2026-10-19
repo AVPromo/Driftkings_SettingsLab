@@ -97,16 +97,6 @@
             "styles": [
                 "coui://gui/gameface/mods/Driftkings/RatingPlayers/ratings.css"
             ]
-        },
-        "DriftkingsTacticalMinimapProbe": {
-            "owner": "__dkTacticalMinimapProbe",
-            "scripts": [
-                "coui://gui/gameface/mods/Driftkings/TacticalMinimap/graphics.js",
-                "coui://gui/gameface/mods/Driftkings/TacticalMinimapProbe/probe.js"
-            ],
-            "styles": [
-                "coui://gui/gameface/mods/Driftkings/TacticalMinimapProbe/probe.css"
-            ]
         }
     };
     /* GENERATED CATALOG END */

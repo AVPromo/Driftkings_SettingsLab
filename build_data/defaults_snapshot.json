@@ -136,7 +136,7 @@
     {
       "path": "default/minimap_enhancements/minimap.json",
       "source_sha256": "de64e128582a012f20414e5aab72e09f8462db98ad1a2c17b0aabb2448d0dd33",
-      "sha256": "72ac81809821644557067d63a7370d59f00c4da38116aee75fa8bbe3817206f6"
+      "sha256": "3e6fdb220e042b955c47abd0ffd696a25dcc4c9f764bcead543cdb8a0bf65670"
     },
     {
       "path": "default/minimap_enhancements/minimap_circles.json",
@@ -156,7 +156,7 @@
     {
       "path": "default/minimap_enhancements.json",
       "source_sha256": "dfaa52eb85cb1a534dec7230085819638293ffd3220ac3ed81a87ac6869acb41",
-      "sha256": "414a0f12ea52fd0c799c3e9751e89bf01b9363026fdc7fa4c5ed7a8aa8dfcbb7"
+      "sha256": "9ed78c5422128da5b9bd5d3806442e75b5b7176857047b452803eac6b9edeee0"
     },
     {
       "path": "default/vehicle_health.json",
