@@ -41,7 +41,13 @@ class RuntimeTest(unittest.TestCase):
         sys.modules.update(self.saved)
 
     def load(self, relative):
-        return importlib.import_module('Driftkings.' + relative)
+        module = importlib.import_module('Driftkings.' + relative)
+        # Tests must not depend on the production trust anchor: start every test with no trusted keys.
+        signature = sys.modules.get('Driftkings.core.updater.signature')
+        if signature is not None and signature is not self.__dict__.get('_signature_reset'):
+            signature.TRUSTED_KEYS = ()
+            self._signature_reset = signature
+        return module
 
 
 def source(relative, dependencies):
