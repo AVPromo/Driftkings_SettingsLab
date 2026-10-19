@@ -78,51 +78,56 @@
         var names = {lightTank: 'Ligeiro', mediumTank: 'Médio', heavyTank: 'Pesado', 'AT-SPG': 'Caça-tanques', SPG: 'Artilharia'};
         return ally && Object.prototype.hasOwnProperty.call(names, ally.vehicleClass) ? names[ally.vehicleClass] : null;
     }
-    function mapPoint(points, ally) {
-        if (!validAlly(ally)) {
-            while (points.firstChild) { points.removeChild(points.firstChild); }
-            points._dkAlly = null;
-            return;
-        }
-        var color = ally.side === 'platoon' ? '#ffc45b' : '#67cf69';
-        var kind = allyClass(ally) ? ally.vehicleClass : null;
-        var signature = String(kind) + color;
-        var record = points._dkAlly;
-        if (!record || record.signature !== signature) {
-            while (points.firstChild) { points.removeChild(points.firstChild); }
-            var marker = document.createElement('div');
-            marker.className = 'dk-probe-ally'; marker.textContent = 'A';
-            if (kind && window.DKTacticalGraphics) {
-                try {
-                    var glyph = window.DKTacticalGraphics.createGlyph(document, kind, color, 18);
-                    marker.textContent = ''; marker.appendChild(glyph.node);
-                    marker.className += ' dk-probe-ally-icon';
-                } catch (error) { /* Keep A when SVG cannot be constructed. */ }
+    function mapPoints(points, allies) {
+        var records = points._dkAllies || {}, seen = {};
+        if (!Array.isArray(allies)) { allies = []; }
+        allies.slice(0, 64).forEach(function (ally, index) {
+            if (!validAlly(ally) || (ally.side && ally.side !== 'ally' && ally.side !== 'platoon')) { return; }
+            var key = 'slot' + index;
+            seen[key] = true;
+            var color = ally.side === 'platoon' ? '#ffc45b' : '#67cf69';
+            var kind = allyClass(ally) ? ally.vehicleClass : null;
+            var signature = String(kind) + color, record = records[key];
+            if (!record || record.signature !== signature) {
+                if (record) { points.removeChild(record.node); }
+                var marker = document.createElement('div');
+                marker.className = 'dk-probe-ally'; marker.textContent = 'A';
+                if (kind && window.DKTacticalGraphics) {
+                    try {
+                        var glyph = window.DKTacticalGraphics.createGlyph(document, kind, color, 18);
+                        marker.textContent = ''; marker.appendChild(glyph.node);
+                        marker.className += ' dk-probe-ally-icon';
+                    } catch (error) { /* Keep A when SVG cannot be constructed. */ }
+                }
+                marker.style.color = color;
+                points.appendChild(marker);
+                record = records[key] = {node: marker, signature: signature};
             }
-            marker.style.color = color;
-            points.appendChild(marker);
-            record = points._dkAlly = {node: marker, signature: signature};
-        }
-        record.node.style.left = (100 * ally.x) + '%'; record.node.style.top = (100 * ally.y) + '%';
+            record.node.style.left = (100 * ally.x) + '%'; record.node.style.top = (100 * ally.y) + '%';
+        });
+        Object.keys(records).forEach(function (key) {
+            if (!seen[key]) { points.removeChild(records[key].node); delete records[key]; }
+        });
+        points._dkAllies = records;
     }
-    function mapSample(uri, ally) {
+    function mapSample(uri, allies) {
         if (typeof uri !== 'string' || uri.length > 262 ||
                 !/^img:\/\/(spaces\/[A-Za-z0-9_/-]+\.(dds|png)|gui\/maps\/icons\/map\/[A-Za-z0-9_-]+\.png)$/.test(uri) ||
                 uri.indexOf('//', 6) !== -1) { return null; }
         if (cartography && cartography.uri === uri) {
-            mapPoint(cartography.points, ally);
+            mapPoints(cartography.points, allies);
             return cartography.node;
         }
         var root = document.createElement('div');
         root.className = 'dk-probe-cartography';
         var caption = document.createElement('div');
-        caption.textContent = 'Mapa de teste — classe de um aliado';
+        caption.textContent = 'Mapa de teste — aliados publicados';
         var image = document.createElement('div');
         image.className = 'dk-probe-map-image';
         image.style.backgroundImage = 'url("' + uri + '")';
         root.appendChild(caption); root.appendChild(image);
         var points = mapGrid(image);
-        mapPoint(points, ally);
+        mapPoints(points, allies);
         cartography = {uri: uri, node: root, points: points};
         return root;
     }
@@ -181,10 +186,10 @@
         } else {
             line('Fonte nativa: ' + (data.reason || 'indisponível'), 'dk-probe-pending');
         }
-        line('Um aliado para calibração; sem inimigos ou Lost Contact.');
+        line('Aliados atuais; sem inimigos ou Lost Contact.');
         line('Marcador aliado no mapa de teste: ' + (data.allyStatus || 'a aguardar'));
         if (validAlly(data.alliedPoint)) {
-            line('Classe: ' + (allyClass(data.alliedPoint) || 'indisponível (A)') +
+            line('Referência (primeiro aliado): ' + (allyClass(data.alliedPoint) || 'indisponível (A)') +
                 (data.alliedPoint.side === 'platoon' ? ' | Pelotão' : ' | Aliado'));
             line('Célula nativa: ' + (/^[A-HJK][1-90]$/.test(data.alliedPoint.cell || '') ? data.alliedPoint.cell : 'indisponível'));
             line('Aliado: ' + (100 * data.alliedPoint.x).toFixed(1) + '% horizontal / ' +
@@ -193,7 +198,9 @@
         calibration(data.calibration);
         alignNativeArea(data.calibration);
         line('Calibração: NO/NE/SO/SE nos cantos; + no centro nativo.');
-        var map = mapSample(data.textureUri, data.alliedPoint);
+        var allies = Array.isArray(data.alliedPoints) ? data.alliedPoints : (data.alliedPoint ? [data.alliedPoint] : []);
+        line('Aliados na amostra: ' + allies.length + ' | verde: aliado; amarelo: pelotão');
+        var map = mapSample(data.textureUri, allies);
         if (map) { node.appendChild(map); }
         line('Amostras fixas — 16 / 24 / 32 px; confirmar visualmente.');
         var sample = graphicsSample();

@@ -167,6 +167,24 @@ data.textureUri = 'img://spaces/01_karelia/mmap.dds';
 data.alliedPoint.side = 'platoon'; refresh();
 var iconImage = body.children[0].children.filter(function (child) { return child.className === 'dk-probe-cartography'; })[0].children[1];
 assert.strictEqual(iconImage.children[1].children[0].children[0].children[0].attributes.stroke, '#ffc45b');
+data.alliedPoints = [
+    {x: .25, y: .5, vehicleClass: 'mediumTank', side: 'ally'},
+    {x: .75, y: .5, vehicleClass: 'heavyTank', side: 'platoon'}];
+refresh();
+var livePoints = iconImage.children[1];
+assert.strictEqual(livePoints.children.length, 2);
+var firstAlly = livePoints.children[0], created = svgNodesCreated;
+data.alliedPoints[0].x = .3; refresh();
+assert.strictEqual(livePoints.children[0], firstAlly);
+assert.strictEqual(firstAlly.style.left, '30%');
+assert.strictEqual(svgNodesCreated, created);
+data.alliedPoints.pop(); refresh();
+assert.strictEqual(livePoints.children.length, 1);
+data.alliedPoints.push({x: .5, y: .5, vehicleClass: 'mediumTank', side: 'enemy'}); refresh();
+assert.strictEqual(livePoints.children.length, 1);
+data.alliedPoints = []; refresh();
+assert.strictEqual(livePoints.children.length, 0); // Empty frame overrides the legacy reference.
+delete data.alliedPoints;
 delete data.alliedPoint; refresh();
 assert.strictEqual(iconImage.children[1].children.length, 0);
 win.__dkTacticalMinimapProbe.dispose();

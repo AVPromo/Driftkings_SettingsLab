@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Small diagnostic transport contract. Never publishes identities or enemy positions; one current ally calibrates coordinates."""
+"""Small diagnostic transport contract. Publishes bounded current allied samples without identities or enemy positions."""
 import re
 
 from Driftkings.core.tactical_minimap import CLASSES, finite
@@ -42,7 +42,9 @@ def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, c
                           'waiting-geometry' if not data.get('calibration', {}).get('available') else
                           'no-current-ally')
     if acknowledged and data.get('calibration', {}).get('available') is True:
-        point = allied_calibration_point(snapshot.get('markers', []))
+        points = allied_calibration_points(snapshot.get('markers', []))
+        data['alliedPoints'] = points
+        point = points[0] if points else None
         if point is not None:
             data['alliedPoint'] = point
             data['allyStatus'] = 'ready'
@@ -152,3 +154,15 @@ def geometry_response(value):
     data = dict(zip(('x', 'y', 'width', 'height', 'stageWidth', 'stageHeight'), parts[1:]))
     data['available'] = True
     return calibration_result(data)
+
+
+def allied_calibration_points(markers):
+    """Bounded current-frame slots; no native IDs or position history retained."""
+    if not isinstance(markers, list):
+        return []
+    result = []
+    for marker in markers[:64]:
+        point = allied_calibration_point([marker])
+        if point is not None:
+            result.append(point)
+    return result

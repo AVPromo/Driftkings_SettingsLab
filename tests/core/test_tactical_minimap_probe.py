@@ -148,6 +148,21 @@ class ProbeTests(RuntimeTest):
         marker['side'] = 'enemy'
         self.assertIsNone(self.policy.allied_calibration_point([marker]))
 
+    def test_allied_frame_is_bounded_current_and_excludes_enemies_and_identity(self):
+        ally = dict(side='ally', visible=True, state='visible', vehicleClass='mediumTank',
+                    x=.25, y=.5, name='private', id=666)
+        platoon = dict(ally, side='platoon', x=.75)
+        self.assertEqual(len(self.policy.allied_calibration_points([ally, platoon])), 2)
+        rejected = [dict(ally, side='enemy'), dict(ally, visible=False),
+                    dict(ally, state='lost'), dict(ally, x=float('nan'))]
+        self.assertEqual(self.policy.allied_calibration_points(rejected), [])
+        rows = self.policy.allied_calibration_points([ally] * 100)
+        self.assertEqual(len(rows), 64)
+        self.assertNotIn('private', json.dumps(rows))
+        self.assertNotIn('666', json.dumps(rows))
+        self.assertEqual(self.policy.allied_calibration_points([]), [])
+        self.assertEqual(self.policy.allied_calibration_points(None), [])
+
     def test_default_off_creates_no_adapter_and_starts_no_diagnostic(self):
         self.bridge.bind_native(self.component)
         self.bridge.start()

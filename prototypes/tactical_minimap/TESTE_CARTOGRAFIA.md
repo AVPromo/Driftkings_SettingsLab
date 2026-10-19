@@ -61,3 +61,11 @@ Para validar: confirmar a célula escrita contra a célula onde o A verde aparec
 O utilizador confirmou a correspondência do A com a grelha/célula. A amostra substitui agora esse ponto pelo ícone da classe nativa: ligeiro, médio, pesado, caça-tanques ou artilharia. Continua a mostrar apenas um aliado elegível. Verde = aliado; amarelo = pelotão. A classe e a célula permanecem escritas no diagnóstico. Sem classe reconhecida ou SVG disponível, conserva o A como alternativa. O nó SVG é reutilizado quando só muda a posição; elimina-se quando não existe aliado elegível.
 
 Confirmar que a silhueta corresponde ao tipo do aliado e que mantém a célula correta em movimento. Validar cor do pelotão quando disponível. A amostra não lê inimigos, não conserva posições antigas e não substitui o minimapa nativo. Teste visual desta etapa pendente.
+
+## Vários aliados na amostra
+
+Classe/cor/posição do marcador individual confirmadas pelo utilizador. A etapa atual mostra todos os aliados elegíveis do snapshot nativo, limitados a 64 entradas processadas por amostra. Mantém os filtros anteriores: vivos, ativos e em AoI; não inclui aliados distantes, inimigos, mortos ou Lost Contact. O contador distingue a amostra parcial da equipa completa.
+
+Não transporta IDs/nome/histórico. Usa slots do snapshot atual para reutilizar os nós de classe/cor, atualiza posições a cada 250 ms e remove slots ausentes. Uma lista vazia elimina todos os ícones, mesmo se existir a referência individual antiga no payload. A célula/classe escrita continua a referir-se ao primeiro aliado, não a cada ícone.
+
+Confirmar vários ícones na pequena amostra, posições em movimento e cores de equipa/pelotão. Confirmar remoção quando o aliado morre ou deixa AoI, ocultação do HUD e fim de replay. O minimapa original permanece ativo; a paridade do minimapa alternativo ainda não está concluída.
