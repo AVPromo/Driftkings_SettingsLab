@@ -113,17 +113,25 @@ class NativeAdapterTests(RuntimeTest):
             '__module__': 'gui.Scaleform.daapi.view.battle.shared.minimap.plugins'})
         self.plugin = NativePlugin()
         self.plugin._entries = {1: self.entry()}
+        cell_calls = []
+        def cell_id(position, bounds, dimensions):
+            cell_calls.append((position, bounds, dimensions))
+            return 89
         dependencies = {
             'Driftkings.core.tactical_minimap': self.load('core.tactical_minimap'),
             'Driftkings.common': module(xvmInstalled=False),
-            'Math': module(Matrix=lambda provider: module(translation=module(x=provider[0], z=provider[1]))),
+            'Math': module(Matrix=lambda provider: module(translation=module(x=provider[0], z=provider[1])),
+                           Vector3=lambda x, y, z: (x, y, z)),
             'gui.battle_control.battle_constants': module(VEHICLE_LOCATION=module(AOI=1)),
-            'gui.battle_control.minimap_utils': module(MINIMAP_SIZE=(210, 210))}
+            'gui.battle_control.minimap_utils': module(MINIMAP_SIZE=(210, 210),
+                getCellIdFromPosition=cell_id, getCellName=lambda value, dimensions: 'K9' if (value, dimensions) == (89, 10) else None)}
         api = source('views/battle/tactical_minimap.py', dependencies)
         adapter = api['native_adapter'](self.component, self.session)
         frame = adapter.capture()
         self.assertEqual(frame['nativeSize'], (210, 210))
         self.assertEqual(len(frame['markers']), 1)
+        self.assertEqual(frame['markers'][0]['cell'], 'K9')
+        self.assertEqual(cell_calls, [((100, 0, 200), ((-100, -200), (300, 600)), 10)])
         dependencies['Driftkings.common'].xvmInstalled = True
         with self.assertRaises(ValueError):
             source('views/battle/tactical_minimap.py', dependencies)['native_adapter'](self.component, self.session)

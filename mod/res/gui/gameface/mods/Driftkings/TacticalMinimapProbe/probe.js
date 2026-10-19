@@ -54,20 +54,40 @@
         return ally && typeof ally.x === 'number' && isFinite(ally.x) && ally.x >= 0 && ally.x <= 1 &&
             typeof ally.y === 'number' && isFinite(ally.y) && ally.y >= 0 && ally.y <= 1;
     }
-    function mapPoint(image, ally) {
-        while (image.firstChild) { image.removeChild(image.firstChild); }
+    function mapGrid(image) {
+        var grid = document.createElement('div'); grid.className = 'dk-probe-map-grid';
+        var rows = 'ABCDEFGHJK', columns = '1234567890';
+        for (var i = 0; i < 10; i++) {
+            var column = document.createElement('div'); column.className = 'dk-probe-grid-column';
+            column.textContent = columns.charAt(i); column.style.left = (i * 10 + 5) + '%'; grid.appendChild(column);
+            var row = document.createElement('div'); row.className = 'dk-probe-grid-row';
+            row.textContent = rows.charAt(i); row.style.top = (i * 10 + 5) + '%'; grid.appendChild(row);
+            if (i > 0) {
+                var vertical = document.createElement('div'); vertical.className = 'dk-probe-grid-vertical';
+                vertical.style.left = (i * 10) + '%'; grid.appendChild(vertical);
+                var horizontal = document.createElement('div'); horizontal.className = 'dk-probe-grid-horizontal';
+                horizontal.style.top = (i * 10) + '%'; grid.appendChild(horizontal);
+            }
+        }
+        image.appendChild(grid);
+        var points = document.createElement('div'); points.className = 'dk-probe-map-points';
+        image.appendChild(points);
+        return points;
+    }
+    function mapPoint(points, ally) {
+        while (points.firstChild) { points.removeChild(points.firstChild); }
         if (!validAlly(ally)) { return; }
         var marker = document.createElement('div');
         marker.className = 'dk-probe-ally'; marker.textContent = 'A';
         marker.style.left = (100 * ally.x) + '%'; marker.style.top = (100 * ally.y) + '%';
-        image.appendChild(marker);
+        points.appendChild(marker);
     }
     function mapSample(uri, ally) {
         if (typeof uri !== 'string' || uri.length > 262 ||
                 !/^img:\/\/(spaces\/[A-Za-z0-9_/-]+\.(dds|png)|gui\/maps\/icons\/map\/[A-Za-z0-9_-]+\.png)$/.test(uri) ||
                 uri.indexOf('//', 6) !== -1) { return null; }
         if (cartography && cartography.uri === uri) {
-            mapPoint(cartography.image, ally);
+            mapPoint(cartography.points, ally);
             return cartography.node;
         }
         var root = document.createElement('div');
@@ -78,8 +98,9 @@
         image.className = 'dk-probe-map-image';
         image.style.backgroundImage = 'url("' + uri + '")';
         root.appendChild(caption); root.appendChild(image);
-        mapPoint(image, ally);
-        cartography = {uri: uri, node: root, image: image};
+        var points = mapGrid(image);
+        mapPoint(points, ally);
+        cartography = {uri: uri, node: root, points: points};
         return root;
     }
     function clearAlignment() {
@@ -140,6 +161,7 @@
         line('Um aliado para calibração; sem inimigos ou Lost Contact.');
         line('Ponto A no mapa de teste: ' + (data.allyStatus || 'a aguardar'));
         if (validAlly(data.alliedPoint)) {
+            line('Célula nativa: ' + (/^[A-HJK][1-90]$/.test(data.alliedPoint.cell || '') ? data.alliedPoint.cell : 'indisponível'));
             line('Aliado: ' + (100 * data.alliedPoint.x).toFixed(1) + '% horizontal / ' +
                 (100 * data.alliedPoint.y).toFixed(1) + '% vertical');
         }

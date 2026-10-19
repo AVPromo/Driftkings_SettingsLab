@@ -47,3 +47,11 @@ Esta revisão requer substituir o pacote e reabrir o replay. O teste visual perm
 O log NA de 19/10/2026 às 02:39:30 confirmou `status=ready`, 14 entradas e geometria válida. O mesmo log mostra `classicBattlePage` (Flash) na camada 4 e `randomBattleHud` (Gameface) na camada 3. Isto explica a provável ocultação do ponto pelo fundo do minimapa original; um z-index CSS não atravessa janelas nativas.
 
 O A passa agora a ser desenhado exclusivamente na pequena amostra da cartografia junto ao painel diagnóstico. A legenda indica claramente «Mapa de teste — A = aliado» e o texto mostra as percentagens horizontal/vertical. A textura é reutilizada; só o ponto muda. Não são alteradas as camadas nem a visibilidade do original. Confirmar o A nesta amostra, não no minimapa original. A possibilidade de substituição futura continua bloqueada por paridade e gestão de camadas. A indicação anterior para procurar o A sobre o original estava incorreta.
+
+## Grelha nativa e confirmação de coordenadas
+
+O utilizador confirmou que o A aparece na amostra. Acrescentada grelha 10 × 10: colunas `1234567890` da esquerda para a direita e linhas `ABCDEFGHJK` de cima para baixo. A amostra passou para 200 rem para permitir ler os rótulos. A textura e grelha são conservadas entre atualizações; apenas o ponto é renovado.
+
+O adapter obtém a célula do mesmo x/z e bounding box usados para normalizar a posição, chamando as funções do cliente `getCellIdFromPosition(..., 10)` e `getCellName(..., 10)`. O texto mostra «Célula nativa: ...». Isto evita uma segunda implementação de arredondamento: nas linhas exatas da grelha, o cálculo nativo inverte o eixo z antes de determinar a linha e aplica uma margem de 0,1 m nos limites. Não é correto inferir sempre a célula com floor(y * 10).
+
+Para validar: confirmar a célula escrita contra a célula onde o A verde aparece na amostra, e comparar esse local com o aliado no mapa original. Testar perto dos quatro cantos, atravessando linhas e com outro mapa. Norte = +z, direita = +x, origem normalizada = canto superior esquerdo. A divisão considera a bounding box real, incluindo mapas deslocados ou retangulares. Não são enviados x/z mundiais, IDs ou nomes. Confirmação visual da grelha pendente.

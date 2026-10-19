@@ -129,7 +129,11 @@ def allied_calibration_point(markers):
         except (KeyError, TypeError, ValueError, OverflowError):
             continue
         if 0 <= x <= 1 and 0 <= y <= 1:
-            return {'x': x, 'y': y}
+            point = {'x': x, 'y': y}
+            cell = marker.get('cell')
+            if isinstance(cell, (str, type(u''))) and re.match(r'^[A-HJK][1-90]\Z', cell):
+                point['cell'] = cell
+            return point
     return None
 
 

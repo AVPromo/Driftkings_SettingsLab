@@ -11,7 +11,7 @@ from Driftkings.core.tactical_minimap import CLASSES, coordinates, finite
 
 
 class NativeMinimapAdapter(object):
-    def __init__(self, component, session, matrix_position, aoi_location, native_size, plugin_type=None):
+    def __init__(self, component, session, matrix_position, aoi_location, native_size, plugin_type=None, cell_name=None):
         # Native component lifecycle remains owned by Scaleform. Never retain it.
         self._component = weakref.ref(component)
         self._session = weakref.ref(session)
@@ -19,11 +19,12 @@ class NativeMinimapAdapter(object):
         self._aoi_location = aoi_location
         self._native_size = tuple(native_size)
         self._plugin_type = plugin_type
+        self._cell_name = cell_name
         self._closed = False
 
     def close(self):
         self._closed = True
-        self._component = self._session = self._matrix_position = None
+        self._component = self._session = self._matrix_position = self._cell_name = None
 
     def capture(self):
         result = {'source': 'native-minimap-audit', 'available': False,
@@ -85,7 +86,13 @@ class NativeMinimapAdapter(object):
                 side = 'enemy' if enemy else 'platoon' if arena_dp.isSquadMan(vID=vehicle_id) else 'ally'
                 info = arena_dp.getVehicleInfo(vehicle_id)
                 name = info.getDisplayedName() if info is not None else u''
-                result['markers'].append({'id': vehicle_id, 'visible': True, 'state': 'visible',
+                native_cell = None
+                if self._cell_name is not None:
+                    try:
+                        native_cell = self._cell_name(x, z, (lower, upper))
+                    except Exception:
+                        pass  # Cell annotation is optional; keep the published position.
+                result['markers'].append({'cell': native_cell, 'id': vehicle_id, 'visible': True, 'state': 'visible',
                                           'vehicleClass': vehicle_class, 'side': side,
                                           'name': name, 'x': point[0], 'y': point[1]})
             except Exception:
@@ -110,10 +117,13 @@ def native_adapter(component, session):
         raise ValueError('XVM owns the minimap; the audit adapter is unavailable')
     import Math
     from gui.battle_control.battle_constants import VEHICLE_LOCATION
-    from gui.battle_control.minimap_utils import MINIMAP_SIZE
+    from gui.battle_control.minimap_utils import MINIMAP_SIZE, getCellIdFromPosition, getCellName
 
     def position(provider):
         value = Math.Matrix(provider).translation
         return value.x, value.z
 
-    return NativeMinimapAdapter(component, session, position, VEHICLE_LOCATION.AOI, MINIMAP_SIZE, type(plugin))
+    def cell_name(x, z, bounds):
+        return getCellName(getCellIdFromPosition(Math.Vector3(x, 0, z), bounds, 10), 10)
+
+    return NativeMinimapAdapter(component, session, position, VEHICLE_LOCATION.AOI, MINIMAP_SIZE, type(plugin), cell_name)

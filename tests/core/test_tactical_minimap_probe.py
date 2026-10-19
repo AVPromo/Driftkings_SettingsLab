@@ -123,6 +123,16 @@ class ProbeTests(RuntimeTest):
         self.assertEqual(len(self.scheduled), count)
         self.assertIsNone(self.bridge._calibration)
 
+    def test_native_cell_name_is_whitelisted_without_recomputing_boundaries(self):
+        marker = dict(side='ally', visible=True, state='visible', x=.25, y=.5)
+        for row in 'ABCDEFGHJK':
+            for column in '1234567890':
+                marker['cell'] = row + column
+                self.assertEqual(self.policy.allied_calibration_point([marker])['cell'], row + column)
+        for invalid in ('I5', 'A10', 'Z0', 'A1\n', '<b>A1</b>', None):
+            marker['cell'] = invalid
+            self.assertNotIn('cell', self.policy.allied_calibration_point([marker]))
+
     def test_default_off_creates_no_adapter_and_starts_no_diagnostic(self):
         self.bridge.bind_native(self.component)
         self.bridge.start()
