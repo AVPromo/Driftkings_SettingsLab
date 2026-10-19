@@ -65,12 +65,12 @@ class GamefaceLoading(object):
             from gui.impl.battle.battle_page.tab_view import TabView
             install(TabView,'_onLoaded','tab')
         except ImportError:
-            pass
+            logging.getLogger('Driftkings.PlayerPanelPro').debug('TabView unavailable in this client')
         try:
             from white_tiger.gui.impl.battle.white_tiger_battle_loading import WhiteTigerBattleLoadingView
             install(WhiteTigerBattleLoadingView,'_onLoading','loading')
         except ImportError:
-            pass
+            logging.getLogger('Driftkings.PlayerPanelPro').debug('WhiteTiger loading view unavailable in this client')
 
     def active_screens(self):
         return set(record['screen'] for record in self.children.values() if record.get('visible',True))

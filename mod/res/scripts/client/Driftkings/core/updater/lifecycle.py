@@ -55,7 +55,7 @@ class LifecycleMixin(object):
                 try:
                     self.context_policy.unsubscribe(self._on_install_context_changed)
                 except Exception:
-                    pass
+                    LOG.debug('Install context unsubscribe failed during cleanup', exc_info=True)
                 self.context_policy = None
         self.api.updater = self
         from Driftkings.settings.panel import core_page

@@ -54,6 +54,7 @@ def override(obj, prop=_sentinel, getter=None, setter=None, deleter=None):
         try:
             update_wrapper(getter_new, getter_func)
         except AttributeError:
+            # Handlers without __name__/__doc__ (e.g. partials) cannot be wrapped; keep the plain wrapper.
             pass
         if inspect.isclass(obj):
             if inspect.isfunction(src):

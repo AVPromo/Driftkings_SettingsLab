@@ -4,13 +4,15 @@ from __future__ import print_function
 import binascii
 import codecs
 import json
+import logging
 import os
 import re
-import traceback
 import zlib
 from collections import OrderedDict
 
 from Driftkings.common.config.utils import smart_update
+
+LOG = logging.getLogger('Driftkings.Config')
 
 __all__ = ('loadJson',)
 
@@ -38,8 +40,7 @@ class JSONObjectEncoder(json.JSONEncoder):
             else:
                 return super(JSONObjectEncoder, self).encode(o)
         except Exception:
-            traceback.print_exc()
-            print(type(o))
+            LOG.exception('Could not encode %s value', type(o))
             return str(o)
 
 
@@ -128,10 +129,9 @@ class JSONLoader(object):
                     read_contents = read_contents.decode('utf-8-sig')
                 read_contents, read_excluded = cls.json_comments(read_contents)
         except Exception:
-            print(new_path)
-            traceback.print_exc()
+            LOG.exception('Could not read config %s', new_path)
             if not encrypted:
-                print(read_contents.replace('\r', ''))
+                LOG.debug('Partial config contents: %s', read_contents.replace('\r', ''))
             success = False
         return read_contents, read_excluded, success
 
@@ -145,7 +145,7 @@ class JSONLoader(object):
 
     @classmethod
     def loadJson(cls, ID, name, oldConfig, path, save=False, rewrite=True, quiet=False, encrypted=False, sort_keys=True):
-        LOG = ID + ':'
+        prefix = ID + ':'
         config_new = oldConfig
         oldConfig = cls.stringed_ints(oldConfig)
         if not os.path.exists(path):
@@ -155,7 +155,7 @@ class JSONLoader(object):
         new_path = '%s%s.json' % (path, name)
         if not os.path.isfile(new_path):
             if not save:
-                print(LOG, 'ERROR: Config not found, creating default:', new_path)
+                LOG.error('%s Config not found, creating default: %s', prefix, new_path)
             cls.json_file_write(new_path, cls.json_dumps(oldConfig, sort_keys), encrypted)
             return config_new
         if not save:
@@ -165,8 +165,7 @@ class JSONLoader(object):
             try:
                 config_new = cls.json_loads(data)
             except Exception:
-                print(new_path)
-                traceback.print_exc()
+                LOG.exception('Could not parse config %s', new_path)
             return config_new
         read_contents, read_excluded, success = cls.json_file_read(new_path, encrypted)
         if not success:
@@ -183,13 +182,13 @@ class JSONLoader(object):
             return config_new
         write_lines = cls.json_dumps(read_data, sort_keys).split('\n')
         if not quiet:
-            print(LOG, 'updating config:', new_path)
+            LOG.info('%s updating config: %s', prefix, new_path)
         for lineNum, (comment, insert) in sorted(read_excluded.iteritems(), key=lambda x: x[0]):
             if not insert:
                 if lineNum < len(write_lines):
                     write_lines[lineNum] += comment
                     continue
-                print(LOG, 'config', new_path, 'update warning: comment on line', lineNum, 'went beyond updated file')
+                LOG.warning('%s config %s update warning: comment on line %s went beyond updated file', prefix, new_path, lineNum)
             write_lines.insert(lineNum, comment)
         cls.json_file_write(new_path, '\n'.join(write_lines), encrypted)
         return config_new

@@ -218,7 +218,7 @@ def install_carousel_layout():
         try:
             g_rowModels[model] = value
         except TypeError:
-            pass
+            LOG.debug('Carousel model is not weak-referenceable; row count not tracked')
         rows = layout.row_count(settings_service.getComponentDict(config)[VEHICLE_CAROUSEL.CAROUSEL], value) if settings_service.getComponentDict(config)[GLOBAL.ENABLED] else value
         # The client model/toggle remains single or double; our Gameface bridge
         # expands effectiveRows to three/four without saving invalid client prefs.

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
+import logging
 import re
-import traceback
 from math import degrees
 from xml.sax.saxutils import escape
 
@@ -48,6 +48,7 @@ PRESET_TEMPLATES = {
     'driftkings': _card([_FIREPOWER, _GUN, _MOBILITY, _ARMOR, _SHELL], '#D6BE91')
 }
 TEMPLATE_INDEX_TO_KEY = {0: 'default', 1: 'minimal', 2: 'detailed', 3: 'full', 4: 'kmp', 5: 'ndo', 6: 'driftkings'}
+LOG = logging.getLogger('Driftkings.TargetInformation')
 config = Settings()
 g_flash = Flash()
 
@@ -164,9 +165,7 @@ class DataConstants(object):
                 try:
                     macro = macro.format(*parts)
                 except StandardError:
-                    print('macro:  {}'.format(macro))
-                    print('params: {}'.format(parts))
-                    traceback.print_exc()
+                    LOG.exception('Could not format macro %r with params %r', macro, parts)
             text = text[:localizedMacroStart] + macro + text[localizedMacroEnd + 2:]
         return config.i18n.get(text, text)
 

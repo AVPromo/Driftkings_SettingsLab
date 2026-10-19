@@ -38,8 +38,9 @@ class SixthSense(SixthSenseMeta):
         try:
             from constants import DIRECT_DETECTION_TYPE
             self.__radar = DIRECT_DETECTION_TYPE.STEALTH_RADAR
-        except Exception:
-            pass
+        except (ImportError, AttributeError):
+            # Older clients do not define the stealth radar detection type.
+            self.__radar = None
 
     def callWWISE(self, wwiseEventName):
         if wwiseEventName in self.__sounds:
