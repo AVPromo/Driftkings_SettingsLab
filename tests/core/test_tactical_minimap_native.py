@@ -88,7 +88,7 @@ class NativeAdapterTests(RuntimeTest):
     def test_enemy_disappears_without_reading_or_retaining_previous_matrix(self):
         self.plugin._entries = {1: self.entry(enemy=True)}
         self.assertEqual(len(self.adapter.capture()['markers']), 1)
-        for changes in ({'active': False}, {'alive': False}, {'aoi': False}, {'location': 0}, {'location': 3}):
+        for changes in ({'active': False}, {'aoi': False}, {'location': 0}, {'location': 3}):
             self.plugin._entries[1] = self.entry(enemy=True, **changes)
             self.reads[:] = []
             self.assertEqual(self.adapter.capture()['markers'], [])
@@ -104,6 +104,20 @@ class NativeAdapterTests(RuntimeTest):
         self.reads[:] = []
         self.assertEqual(self.adapter.capture()['markers'], [])
         self.assertEqual(self.reads, [])
+
+    def test_native_wreck_publication_and_expiry_have_no_local_history(self):
+        self.plugin._entries = {1: self.entry(enemy=True, alive=False)}
+        frame = self.adapter.capture()
+        self.assertEqual(frame['markers'], [])
+        self.assertEqual(frame['destroyedMarkers'][0]['state'], 'destroyed')
+        self.assertEqual(frame['destroyedMarkers'][0]['side'], 'enemy')
+        for changes in ({'active': False}, {'aoi': False}, {'location': 0}, {'location': 3}):
+            self.plugin._entries[1] = self.entry(enemy=True, alive=False, **changes)
+            self.reads[:] = []
+            self.assertEqual(self.adapter.capture()['destroyedMarkers'], [])
+            self.assertEqual(self.reads, [])
+        self.plugin._entries = {}
+        self.assertEqual(self.adapter.capture()['destroyedMarkers'], [])
 
     def test_personal_matrix_uses_world_bounds_and_yaw_not_flash_pixels(self):
         from math import pi
@@ -215,7 +229,7 @@ class NativeAdapterTests(RuntimeTest):
         self.assertEqual(api['native_ping_points'](self.component, records), [])
 
     def test_hidden_lost_transitional_dead_and_inactive_entries_never_read_matrices(self):
-        entries = [self.entry(active=False), self.entry(alive=False), self.entry(aoi=False),
+        entries = [self.entry(active=False), self.entry(alive=False, active=False), self.entry(aoi=False),
                    self.entry(location=0), self.entry(location=2, aoi=False), self.entry(location=3)]
         def forbidden():
             self.reads.append('forbidden')

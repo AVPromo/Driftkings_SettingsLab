@@ -1,5 +1,11 @@
 # Cartografia e calibração — diagnóstico
 
+## Veículos destruídos publicados
+
+Inimigos próximos e distantes confirmados no jogo. A etapa seguinte usa `destroyedMarkers` do mesmo plugin nativo, separados dos veículos vivos. `VehiclesPlugin.__setDestroyed()` mantém a entrada ativa e chama `setDead` apenas conforme as opções nativas; o callback de expiração desativa-a. O adaptador aceita somente entradas ativas, mortas, com sinal nativo de publicação e localização AOI/FAR; não lê matrizes de destroços ocultos, de localização indefinida ou em transição. Não conserva posições nem cria TTL.
+
+A ponte envia `destroyedPoints` sem IDs/nomes, após handshake e geometria válida. A amostra usa o SVG próprio `destroyed`, cor da relação e opacidade de 50%, sem orientação de jogador. Confirmar os símbolos e a remoção contra o original no replay, incluindo a opção nativa de mostrar destruídos e o fim da batalha. Lost Contact continua ausente. Validação visual desta etapa pendente.
+
 ## Inimigos atualmente avistados
 
 Correção após a captura do replay: o filtro inicial omitira inimigos distantes visíveis. `VehiclesPlugin.updatePositions()` publica essas entradas como FAR e mantém `isInAoI=True`; `_hideVehicle()` passa a UNDEFINED/false quando deixam de estar avistadas. O adaptador aceita agora AOI ou FAR apenas com esse sinal nativo verdadeiro para inimigos. Continua a rejeitar FAR/false, UNDEFINED, transições e destruídos antes de ler matrizes. O teste reproduz publicação distante e posterior ocultação sem retenção.

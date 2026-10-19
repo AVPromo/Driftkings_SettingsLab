@@ -29,7 +29,7 @@ class NativeMinimapAdapter(object):
 
     def capture(self):
         result = {'source': 'native-minimap-audit', 'available': False,
-                  'nativePresentationChanged': False, 'lostContactAvailable': False, 'markers': []}
+                  'nativePresentationChanged': False, 'lostContactAvailable': False, 'markers': [], 'destroyedMarkers': []}
         if self._closed:
             result['reason'] = 'adapter-closed'
             return result
@@ -69,12 +69,13 @@ class NativeMinimapAdapter(object):
                 # FAR also carries currently spotted distant enemies. Native
                 # isInAoI stays true for those publications; hidden entries are
                 # reset to UNDEFINED/false by _hideVehicle before any read here.
-                if not entry.isActive() or not entry.isAlive():
+                if not entry.isActive():
                     result['entryAudit']['unpublished'] += 1
                     continue
                 enemy, location = entry.isEnemy(), entry.getLocation()
+                alive = entry.isAlive()
                 allowed = (entry.isInAoI() and location in (self._aoi_location, self._far_location) or
-                           not enemy and location == self._far_location)
+                           alive and not enemy and location == self._far_location)
                 if not allowed:
                     result['entryAudit']['unpublished'] += 1
                     continue
@@ -101,7 +102,8 @@ class NativeMinimapAdapter(object):
                         native_cell = self._cell_name(x, z, (lower, upper))
                     except Exception:
                         pass  # Cell annotation is optional; keep the published position.
-                result['markers'].append({'cell': native_cell, 'id': vehicle_id, 'visible': True, 'state': 'visible',
+                bucket = 'markers' if alive else 'destroyedMarkers'
+                result[bucket].append({'cell': native_cell, 'id': vehicle_id, 'visible': True, 'state': 'visible' if alive else 'destroyed',
                                           'vehicleClass': vehicle_class, 'side': side,
                                           'name': name, 'x': point[0], 'y': point[1]})
             except Exception:

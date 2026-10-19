@@ -56,6 +56,7 @@ def payload(enabled, acknowledged, snapshot=None, generation=0, graphics=None, c
         data['pings'] = ping_points(snapshot.get('pings', []))
         data['alliedPoints'] = points
         data['enemyPoints'] = enemy_calibration_points(snapshot.get('markers', []))
+        data['destroyedPoints'] = destroyed_calibration_points(snapshot.get('destroyedMarkers', []))
         point = points[0] if points else None
         if point is not None:
             data['alliedPoint'] = point
@@ -135,12 +136,12 @@ def allied_calibration_point(markers):
     return _vehicle_calibration_point(markers, ('player', 'ally', 'platoon'))
 
 
-def _vehicle_calibration_point(markers, sides):
+def _vehicle_calibration_point(markers, sides, state='visible'):
     if not isinstance(markers, list):
         return None
     for marker in markers[:64]:
         if (not isinstance(marker, dict) or marker.get('visible') is not True or
-                marker.get('state') != 'visible' or marker.get('side') not in sides):
+                marker.get('state') != state or marker.get('side') not in sides):
             continue
         try:
             x, y = finite(marker['x']), finite(marker['y'])
@@ -192,6 +193,19 @@ def enemy_calibration_points(markers):
     for marker in markers[:64]:
         point = _vehicle_calibration_point([marker], ('enemy',))
         if point is not None and point.get('side') == 'enemy':
+            result.append(point)
+    return result
+
+
+def destroyed_calibration_points(markers):
+    """Currently active native wreck entries only, without a local lifetime."""
+    if not isinstance(markers, list):
+        return []
+    result = []
+    for marker in markers[:64]:
+        point = _vehicle_calibration_point([marker], ('player', 'ally', 'platoon', 'enemy'), 'destroyed')
+        if point is not None and point.get('side'):
+            point['state'] = 'destroyed'
             result.append(point)
     return result
 

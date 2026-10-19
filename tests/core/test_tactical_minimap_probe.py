@@ -70,6 +70,16 @@ class ProbeTests(RuntimeTest):
         self.snapshot['markers'] = []
         self.assertEqual(self.policy.payload(True, True, self.snapshot, calibration=geometry)['enemyPoints'], [])
 
+    def test_wreck_contract_rejects_live_hidden_and_invalid_entries(self):
+        wreck = dict(id=42, name='private', side='enemy', state='destroyed', visible=True,
+                     vehicleClass='heavyTank', x=.3, y=.7)
+        clean = self.policy.destroyed_calibration_points([wreck])
+        self.assertEqual(clean, [dict(side='enemy', state='destroyed', vehicleClass='heavyTank', x=.3, y=.7)])
+        self.assertEqual(self.policy.enemy_calibration_points([wreck]), [])
+        for changes in ({'visible': False}, {'state': 'visible'}, {'side': 'unknown'}, {'x': float('nan')}):
+            self.assertEqual(self.policy.destroyed_calibration_points([dict(wreck, **changes)]), [])
+        self.assertEqual(self.policy.destroyed_calibration_points([]), [])
+
     def test_artillery_ping_uses_native_aim_area_symbol(self):
         self.assertEqual(self.policy.PING_SYMBOLS['ArtyMarkerMinimapEntry'], 'artillery')
         value = dict(kind='artillery', x=.4, y=.6, state='attack', sender='private')

@@ -86,12 +86,13 @@
             var key = 'slot' + index;
             seen[key] = true;
             var color = ally.side === 'player' ? '#ffffff' : ally.side === 'enemy' ? '#ee6868' : ally.side === 'platoon' ? '#ffc45b' : '#67cf69';
-            var kind = ally.side === 'player' ? 'player' : allyClass(ally) ? ally.vehicleClass : null;
+            var destroyed = ally.state === 'destroyed';
+            var kind = destroyed ? 'destroyed' : ally.side === 'player' ? 'player' : allyClass(ally) ? ally.vehicleClass : null;
             var signature = String(kind) + color, record = records[key];
             if (!record || record.signature !== signature) {
                 if (record) { points.removeChild(record.node); }
                 var marker = document.createElement('div');
-                marker.className = 'dk-probe-ally'; marker.textContent = ally.side === 'player' ? 'TU' : ally.side === 'enemy' ? 'E' : 'A';
+                marker.className = 'dk-probe-ally'; marker.textContent = destroyed ? 'X' : ally.side === 'player' ? 'TU' : ally.side === 'enemy' ? 'E' : 'A';
                 if (kind && window.DKTacticalGraphics) {
                     try {
                         var glyph = window.DKTacticalGraphics.createGlyph(document, kind, color, 18);
@@ -103,7 +104,8 @@
                 points.appendChild(marker);
                 record = records[key] = {node: marker, signature: signature};
             }
-            var heading = ally.side === 'player' && typeof ally.heading === 'number' && isFinite(ally.heading) ? ally.heading : 0;
+            record.node.style.opacity = destroyed ? .5 : 1;
+            var heading = !destroyed && ally.side === 'player' && typeof ally.heading === 'number' && isFinite(ally.heading) ? ally.heading : 0;
             if (record.node.firstChild && record.node.firstChild.style) {
                 record.node.firstChild.style.transform = 'rotate(' + heading + 'deg)';
             }
@@ -299,7 +301,11 @@
         var allies = Array.isArray(data.alliedPoints) ? data.alliedPoints : (data.alliedPoint ? [data.alliedPoint] : []);
         allies = allies.filter(function (point) { return point && (!point.side || ['player', 'ally', 'platoon'].indexOf(point.side) !== -1); }).slice(0, 64);
         var enemies = Array.isArray(data.enemyPoints) ? data.enemyPoints.filter(function (point) { return point && point.side === 'enemy'; }).slice(0, 64) : [];
-        var vehicles = allies.concat(enemies).slice(0, 64);
+        var wrecks = Array.isArray(data.destroyedPoints) ? data.destroyedPoints.filter(function (point) {
+            return point && point.state === 'destroyed' && ['player', 'ally', 'platoon', 'enemy'].indexOf(point.side) !== -1;
+        }).slice(0, 64) : [];
+        var vehicles = allies.concat(enemies, wrecks).slice(0, 64);
+        line('Destruídos publicados: ' + wrecks.length + ' (símbolo X)');
         line('Veículos na amostra: ' + vehicles.length + ' | branco: tu; verde: aliado; amarelo: pelotão; vermelho: inimigo avistado');
         line('Bases/objetivos: ' + (Array.isArray(data.objectives) ? data.objectives.length : 0) + ' (captura publicada pelo cliente)');
         line('Círculos nativos: ' + (Array.isArray(data.circles) ? data.circles.length : 0));
