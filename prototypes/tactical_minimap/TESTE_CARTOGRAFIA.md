@@ -1,5 +1,15 @@
 # Cartografia e calibração — diagnóstico
 
+## Clique concluído e cancelamento de arrastos
+
+A correção de sniper foi confirmada pelo utilizador. Nesta etapa, o envio de uma posição passa de mousedown para um par pressão/libertação dentro da mesma imagem, botão, alvo e geração. Mover mais de quatro píxeis cancela o gesto, mesmo regressando ao ponto inicial. Mudança de geometria, perda de foco da janela, HUD/cursor desativado, remoção/recriação da vista ou erro de desenho invalidam o clique pendente. Pressionar sem libertar não envia comandos. O pedido continua deduplicado no Python e o handler nativo é chamado no máximo uma vez.
+
+Auditoria reiterada de `Minimap.onMouseClickHandler`: o caminho de posição chama `onMinimapClickedS(x,y,buttonIdx,sizeIndex)`; a via `IHoverableEntity.onClick` é separada. Não foi encontrado um contrato específico de seleção dos ícones VehicleMinimapEntry; continuam em diagnóstico, sem conversão silenciosa para ping de posição.
+
+Teste em Topography com cursor visível: clicar e libertar esquerdo/direito numa área livre; confirmar um único envio. Pressionar e arrastar não deve enviar ping. Pressionar, retirar Ctrl ou alternar janela e regressar não deve concluir um pedido antigo. Confirmar que passar o rato e clicar em ícones mantém a identificação em diagnóstico. O botão do meio e os replays continuam sem envio nativo.
+
+Testes Node cobrem envio só na libertação, ausência de envio na pressão, arrasto com retorno ao ponto inicial, blur, mudança de geometria e bloqueio ao retirar a permissão de interação. Não há ainda ocultação do minimapa original.
+
 ## Recuperação da amostra após falha do Gameface
 
 Uma exceção no desenho limpa os nós, alinhamento, hover e estado de interação. O payload que falhou deixa de estar marcado como desenhado, permitindo recuperação no próximo evento, mesmo com dados iguais. A troca do modelo remove a amostra anterior antes de ligar a nova; uma falha transitória ao subscrever o modelo também pode ser repetida sem manter os nós antigos ou duplicar callbacks.

@@ -5,7 +5,7 @@
     if (window[OWNER]) { window[OWNER].dispose(); }
     var disposed = false, node = null, binding = null, graphics = null, cartography = null, alignment = null;
     var inputListening = false, interaction = null;
-    var sampleCalibration = null;
+    var sampleCalibration = null, pendingClick = null;
     var hoveredVehicle = null;
     var visual = null, followNativeSize = true;
     function configureVisual(value) {
@@ -34,14 +34,14 @@
     }
     function hide() {
         setHoveredVehicle(null);
-        interaction = null;
+        interaction = null; pendingClick = null;
         sampleCalibration = null;
         if (node && node.parentNode) { node.parentNode.removeChild(node); }
         node = null; graphics = null; cartography = null;
         clearAlignment();
     }
     function release() {
-        interaction = null;
+        interaction = null; pendingClick = null;
         if (binding && binding.callback !== null) { viewEnv.removeDataChangedCallback(binding.callback, binding.id); }
         binding = null;
     }
@@ -330,7 +330,17 @@
         mapStrategic(layer, value);
         if (value && layer.firstChild) { layer.firstChild.className = 'dk-probe-input-point'; }
     }
-    function sampleInput(event) {
+    function cancelClick() { pendingClick = null; }
+    function samplePress(event) {
+        pendingClick = null;
+        sampleInput(event, true, null);
+    }
+    function sampleRelease(event) {
+        var press = pendingClick;
+        pendingClick = null;
+        if (press) { sampleInput(event, false, press); }
+    }
+    function sampleInput(event, starting, press) {
         if (disposed || !interaction || !binding || !cartography || typeof binding.model.onSampleInput !== 'function') { return; }
         var image = cartography.image;
         if (!image || typeof image.getBoundingClientRect !== 'function') { return; }
@@ -346,6 +356,16 @@
                 !isFinite(event.clientX) || !isFinite(event.clientY) || [0, 1, 2].indexOf(button) === -1) { return; }
         var x = (event.clientX - rect.left) / rect.width, y = (event.clientY - rect.top) / rect.height;
         if (!isFinite(x) || !isFinite(y) || x < 0 || x > 1 || y < 0 || y > 1) { return; }
+        if (starting) {
+            pendingClick = {x: event.clientX, y: event.clientY, button: button, image: image,
+                vehicle: vehicle, binding: binding, generation: interaction.generation,
+                left: rect.left, top: rect.top, width: rect.width, height: rect.height};
+            return;
+        }
+        if (press.binding !== binding || press.image !== image || press.vehicle !== vehicle ||
+                press.generation !== interaction.generation || press.button !== button ||
+                Math.abs(event.clientX - press.x) > 4 || Math.abs(event.clientY - press.y) > 4 ||
+                press.left !== rect.left || press.top !== rect.top || press.width !== rect.width || press.height !== rect.height) { return; }
         event.preventDefault(); event.stopPropagation();
         try {
             if (binding.inputGeneration !== interaction.generation) {
@@ -357,7 +377,7 @@
                 request: binding.inputSequence, x: x, y: y, button: button === 1 ? 2 : button === 2 ? 1 : 0,
                 target: vehicle ? 'vehicle' : 'position'});
         } catch (error) {
-            interaction = null; image.style.pointerEvents = 'none';
+            interaction = null; pendingClick = null; image.style.pointerEvents = 'none';
             console.error('[Driftkings] Sample input diagnostic failed', error);
         }
     }
@@ -375,6 +395,11 @@
             (value.label ? ' | ' + value.label : '') + (value.state === 'destroyed' ? ' | Destruído' : '');
     }
     function sampleHover(event) {
+        if (pendingClick && (typeof event.clientX !== 'number' || typeof event.clientY !== 'number' ||
+                !isFinite(event.clientX) || !isFinite(event.clientY) ||
+                Math.abs(event.clientX - pendingClick.x) > 4 || Math.abs(event.clientY - pendingClick.y) > 4)) {
+            pendingClick = null;
+        }
         if (!interaction || !cartography) { setHoveredVehicle(null); return; }
         var target = event.target, marker = null, budget = 64;
         while (target && target !== cartography.image && --budget > 0) {
@@ -540,6 +565,7 @@
             data.available === true && data.calibration && data.calibration.available === true;
         var request = data.sampleInputRequest;
         if (typeof request !== 'number' || !isFinite(request) || request < 0 || request > 2147483647 || Math.floor(request) !== request) { request = 0; }
+        if (!interactive || pendingClick && pendingClick.generation !== data.generation) { pendingClick = null; }
         interaction = interactive ? {generation: data.generation, request: request} : null;
         line('Input da amostra: ' + (interactive ? 'esquerdo/direito via cliente; botão do meio em diagnóstico' : 'inativo'));
         if (sample && typeof sample.localX === 'number' && isFinite(sample.localX) &&
@@ -647,7 +673,8 @@
         engine.off('subViews.onAdded', refresh); engine.off('subViews.onRemoved', refresh);
         window.removeEventListener('unload', dispose);
         window.removeEventListener('resize', resizeSample);
-        if (inputListening) { document.removeEventListener('mousedown', sampleInput, true); inputListening = false; }
+        window.removeEventListener('blur', cancelClick);
+        if (inputListening) { document.removeEventListener('mousedown', samplePress, true); document.removeEventListener('mouseup', sampleRelease, true); inputListening = false; }
         if (document.removeEventListener) { document.removeEventListener('mousemove', sampleHover, true); }
         release(); hide();
         if (window[OWNER] && window[OWNER].dispose === dispose) { delete window[OWNER]; }
@@ -659,8 +686,9 @@
         engine.on('subViews.onAdded', refresh); engine.on('subViews.onRemoved', refresh);
         window.addEventListener('unload', dispose);
         window.addEventListener('resize', resizeSample);
+        window.addEventListener('blur', cancelClick);
         if (document.addEventListener && document.removeEventListener) {
-            document.addEventListener('mousedown', sampleInput, true); inputListening = true;
+            document.addEventListener('mousedown', samplePress, true); document.addEventListener('mouseup', sampleRelease, true); inputListening = true;
             document.addEventListener('mousemove', sampleHover, true);
         }
         refresh();

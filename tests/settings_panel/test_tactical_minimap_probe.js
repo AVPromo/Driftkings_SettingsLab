@@ -251,8 +251,10 @@ refresh();
 assert.strictEqual(iconImage.style.pointerEvents, 'auto');
 var prevented = 0, stopped = 0;
 function sampleClick(x, y, button) {
-    documentEvents.mousedown({clientX: x, clientY: y, button: button, target: iconImage,
-        preventDefault: function () { prevented++; }, stopPropagation: function () { stopped++; }});
+    var event = {clientX: x, clientY: y, button: button, target: iconImage,
+        preventDefault: function () { prevented++; }, stopPropagation: function () { stopped++; }};
+    documentEvents.mousedown(event);
+    documentEvents.mouseup(event);
 }
 sampleClick(200, 150, 0);
 assert.strictEqual(sampleCommands.length, 1);
@@ -280,11 +282,32 @@ assert.strictEqual(sampleCommands[3].request, 4);
 documentEvents.mousemove({target: livePoints.children[0].children[1]});
 assert.ok(livePoints.children[0].className.indexOf('dk-probe-hovered') !== -1);
 assert.ok(body.children[0].children.filter(function (child) { return child.className === 'dk-probe-cartography'; })[0].children[2].textContent.indexOf('Aliado') !== -1);
-documentEvents.mousedown({clientX: 300, clientY: 200, button: 0, target: livePoints.children[0].children[1],
-    preventDefault: function () { prevented++; }, stopPropagation: function () { stopped++; }});
+var vehicleClick = {clientX: 300, clientY: 200, button: 0, target: livePoints.children[0].children[1],
+    preventDefault: function () { prevented++; }, stopPropagation: function () { stopped++; }};
+documentEvents.mousedown(vehicleClick);
+documentEvents.mouseup(vehicleClick);
 assert.strictEqual(sampleCommands[4].target, 'vehicle');
 documentEvents.mousemove({target: body});
 assert.strictEqual(livePoints.children[0].className.indexOf('dk-probe-hovered'), -1);
+// A press alone never sends a command; drag, blur and changed geometry cancel it.
+var plainClick = {clientX: 300, clientY: 200, button: 0, target: iconImage,
+    preventDefault: function () {}, stopPropagation: function () {}};
+documentEvents.mousedown(plainClick);
+assert.strictEqual(sampleCommands.length, 5);
+documentEvents.mousemove({clientX: 310, clientY: 200, target: iconImage});
+documentEvents.mouseup(plainClick); // Moving back to the start must not turn a drag into a click.
+assert.strictEqual(sampleCommands.length, 5);
+documentEvents.mousedown(plainClick);
+windowEvents.blur();
+documentEvents.mouseup(plainClick);
+assert.strictEqual(sampleCommands.length, 5);
+documentEvents.mousedown(plainClick);
+var oldRect = iconImage.getBoundingClientRect;
+iconImage.getBoundingClientRect = function () { return {left: 101, top: 100, width: 400, height: 400}; };
+documentEvents.mouseup(plainClick);
+iconImage.getBoundingClientRect = oldRect;
+assert.strictEqual(sampleCommands.length, 5);
+documentEvents.mousedown(plainClick);
 data.sampleInputEnabled = false; refresh();
 sampleClick(200, 150, 0);
 assert.strictEqual(sampleCommands.length, 5);
