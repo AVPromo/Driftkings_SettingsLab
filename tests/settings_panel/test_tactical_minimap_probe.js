@@ -5,7 +5,17 @@ var listeners = {}, callbacks = {}, acknowledgements = [], removed = [], errors 
 var serial = 0, model = null, callbackAdds = 0;
 function Element() { this.children = []; this.parentNode = null; this.style = {}; }
 Object.defineProperty(Element.prototype, 'firstChild', {get: function () { return this.children[0] || null; }});
-Element.prototype.appendChild = function (child) { this.children.push(child); child.parentNode = this; };
+Element.prototype.appendChild = function (child) {
+    if (child.parentNode) { child.parentNode.removeChild(child); }
+    this.children.push(child); child.parentNode = this;
+};
+Element.prototype.insertBefore = function (child, reference) {
+    if (!reference) { this.appendChild(child); return; }
+    if (child === reference) { return; }
+    if (child.parentNode) { child.parentNode.removeChild(child); }
+    var index = this.children.indexOf(reference); assert(index >= 0);
+    this.children.splice(index, 0, child); child.parentNode = this;
+};
 Element.prototype.removeChild = function (child) {
     var index = this.children.indexOf(child); assert(index >= 0); this.children.splice(index, 1); child.parentNode = null;
 };
@@ -51,8 +61,19 @@ var maps = box.children.filter(function (child) { return child.className === 'dk
 assert.strictEqual(maps.length, 1);
 assert.strictEqual(maps[0].children[1].style.backgroundImage, 'url("img://spaces/01_karelia/mmap.dds")');
 var originalMap = maps[0];
+var originalTitle = box.children[0], originalCounter = box.children[2], mapRemovals = 0;
+var originalRemoveChild = box.removeChild;
+box.removeChild = function (child) {
+    if (child === originalMap) { mapRemovals++; }
+    return originalRemoveChild.call(this, child);
+};
 data.markerCount++; refresh();
 assert.strictEqual(box.children.filter(function (child) { return child.className === 'dk-probe-cartography'; })[0], originalMap);
+assert.strictEqual(box.children[0], originalTitle);
+assert.strictEqual(box.children[2], originalCounter);
+assert.strictEqual(originalCounter.textContent, 'Entradas nativas em AoI: 4 (leitura parcial)');
+assert.strictEqual(mapRemovals, 0); // A coordinate/text update must never detach the interactive map.
+box.removeChild = originalRemoveChild;
 data.textureUri = 'https://example.com/map.png'; refresh();
 assert.strictEqual(box.children.filter(function (child) { return child.className === 'dk-probe-cartography'; }).length, 0);
 data.calibration = {available: true, x: 800, y: 600, width: 200, height: 200, stageWidth: 1000, stageHeight: 800};
@@ -312,6 +333,18 @@ data.sampleInputEnabled = false; refresh();
 sampleClick(200, 150, 0);
 assert.strictEqual(sampleCommands.length, 5);
 assert.strictEqual(iconImage.style.pointerEvents, 'none');
+// A normal native-data refresh between press and release keeps the same map
+// attached and preserves the click; it must not simulate a view replacement.
+data.sampleInputEnabled = true; refresh();
+var pressedParent = iconImage.parentNode;
+documentEvents.mousedown(plainClick);
+data.markerCount = 42; refresh();
+assert.strictEqual(iconImage.parentNode, pressedParent);
+assert.strictEqual(sampleCommands.length, 5);
+documentEvents.mouseup(plainClick);
+assert.strictEqual(sampleCommands.length, 6);
+data.sampleInputEnabled = false; refresh();
+
 data.gamefaceInput = {x: .5, y: .25, button: 0, sizeIndex: 2, sequence: 1, localX: 105, localY: 52.5}; refresh();
 var sampleMarker = iconImage.children[10].children[0];
 assert.strictEqual(sampleMarker.className, 'dk-probe-gameface-point');

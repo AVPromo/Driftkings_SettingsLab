@@ -7,6 +7,7 @@
     var inputListening = false, interaction = null;
     var sampleCalibration = null, pendingClick = null;
     var hoveredVehicle = null;
+    var textLines = [], desiredNodes = null, lineIndex = 0;
     var visual = null, followNativeSize = true;
     function configureVisual(value) {
         visual = null; followNativeSize = true;
@@ -38,6 +39,7 @@
         sampleCalibration = null;
         if (node && node.parentNode) { node.parentNode.removeChild(node); }
         node = null; graphics = null; cartography = null;
+        textLines = []; desiredNodes = null; lineIndex = 0;
         clearAlignment();
     }
     function release() {
@@ -46,10 +48,24 @@
         binding = null;
     }
     function line(text, className) {
-        var child = document.createElement('div');
-        child.className = className || '';
-        child.textContent = text;
-        node.appendChild(child);
+        var child = textLines[lineIndex];
+        if (!child) { child = document.createElement('div'); textLines[lineIndex] = child; }
+        lineIndex++;
+        className = className || '';
+        if (child.className !== className) { child.className = className; }
+        if (child.textContent !== text) { child.textContent = text; }
+        desiredNodes.push(child);
+    }
+    function commitNodes() {
+        // Keep the map attached when only text or coordinates change.
+        for (var i = node.children.length - 1; i >= 0; i--) {
+            if (desiredNodes.indexOf(node.children[i]) === -1) { node.removeChild(node.children[i]); }
+        }
+        desiredNodes.forEach(function (child, index) {
+            if (node.children[index] !== child) { node.insertBefore(child, node.children[index] || null); }
+        });
+        textLines.length = lineIndex;
+        desiredNodes = null;
     }
     function graphicsSample() {
         if (graphics) { return graphics; }
@@ -529,7 +545,7 @@
             document.body.appendChild(node);
         }
         configureVisual(data.visualConfig);
-        while (node.firstChild) { node.removeChild(node.firstChild); }
+        desiredNodes = []; lineIndex = 0;
         line('Tactical Minimap — diagnóstico | Vanilla preservado', 'dk-probe-title');
         if (data.rendererSelection && data.rendererSelection.requestedMode === 'driftkings') {
             line('Preferência Driftkings guardada; Vanilla ativo: interação e recuperação por concluir.', 'dk-probe-pending');
@@ -609,14 +625,15 @@
             cartography.image.className = 'dk-probe-map-image' + (interactive ? ' dk-probe-input-enabled' : '');
         }
         if (cartography) { setHoveredVehicle(interactive && hoveredVehicle && hoveredVehicle.parentNode === cartography.points ? hoveredVehicle : null); }
-        if (map) { node.appendChild(map); }
+        if (map) { desiredNodes.push(map); }
         line('Amostras fixas — 16 / 24 / 32 px; confirmar visualmente.');
         var glyphSample = graphicsSample();
-        node.appendChild(glyphSample.node);
+        desiredNodes.push(glyphSample.node);
         if (data.graphics) {
             line('SVG DOM: ' + (data.graphics.svgApi ? 'disponível' : 'indisponível') +
                 ' | nós construídos: ' + data.graphics.glyphCount + '/21');
         }
+        commitNodes();
     }
     function update() {
         if (disposed || !window.subViews) { return; }

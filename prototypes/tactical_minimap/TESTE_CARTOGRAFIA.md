@@ -1,5 +1,13 @@
 # Cartografia e calibração — diagnóstico
 
+## Atualização incremental da apresentação
+
+O diagnóstico reutiliza agora os nós das linhas de texto e só altera texto/classe quando necessário. O mapa e a amostra de glifos permanecem ligados ao DOM nas atualizações correntes; linhas condicionais são inseridas/removidas sem retirar o mapa. A limpeza por falha, fim de missão e troca de modelo mantém-se. Testes verificam identidade dos nós, ausência de remoção do mapa e conclusão de um clique atravessado por uma atualização de dados.
+
+Primeira medição real NA/Topography, log de 2026-10-19 às 19:15:36, antes desta otimização visual: refresh 151 chamadas, total 137,079 ms, média aproximada 0,908 ms, máximo 1,747 ms; geometry 141 chamadas, máximo 0,369 ms; capture 151 chamadas, máximo 0,551 ms; publish 151 chamadas, máximo 0,167 ms. Quatro publicações efetivas e 147 ignoradas por conteúdo igual. Não houve exceções nas funções medidas. A baixa quantidade de publicações limita a representatividade para combate movimentado. Estes números não medem o DOM/GPU e não demonstram ganho desta alteração.
+
+Confirmar em Topography: mover/rodar com nomes e ícones visíveis, alternar arcade/sniper, redimensionar e concluir cliques enquanto os dados mudam. Não deve haver cintilação nem perdas de interação. A substituição do Vanilla permanece bloqueada e os testes de artilharia continuam pendentes.
+
 ## Medição do custo da ponte em missão
 
 Com `tacticalDiagnostics=true`, cada batalha inicia um agregado próprio do serviço `Diagnostics` existente. Ao sair da missão, o logger `Driftkings.Performance` escreve:
