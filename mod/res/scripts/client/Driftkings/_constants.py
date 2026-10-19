@@ -98,9 +98,6 @@ class ARTILLERY_BLAST_RADIUS(object):
 
 class AUTOAIM_TARGET_INDICATOR(object):
     NAME = 'autoaim_target_indicator'
-    ANGLE = 'angle'
-    CATCH_HIDDEN_TARGET = 'catchHiddenTarget'
-    DISABLE_ARTY_MODE = 'disableArtyMode'
 
 
 class BATTLE_PERFORMANCE(object):
@@ -452,16 +449,12 @@ class HANGAR_PREFERENCES(object):
     FIELD_MAIL = 'fieldMail'
     CLOCK = 'clock'
     CLOCK_BACKGROUND = 'clockBackground'
-    CLOCK_STYLE = 'clockStyle'
     CLOCK_X = 'clockX'
     CLOCK_Y = 'clockY'
     CLOCK_SCALE = 'clockScale'
-    CLOCK_SECONDS = 'clockSeconds'
-    CLOCK24_HOUR = 'clock24Hour'
     SHOW_BATTLE_PASS_WIDGET = 'showBattlePassWidget'
     BLOCK_VEHICLE_IF_LOW_AMMO = 'blockVehicleIfLowAmmo'
     LOW_AMMO_PERCENTAGE = 'lowAmmoPercentage'
-    CUSTOM_CLOCK_FORMAT = 'customClockFormat'
     TEXT = 'text'
     CUSTOM_CLOCK_TEXT = 'customClockText'
     PANEL = 'panel'

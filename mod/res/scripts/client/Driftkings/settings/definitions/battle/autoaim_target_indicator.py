@@ -8,7 +8,14 @@ class AutoaimTargetIndicatorSettings(SectionDefinition):
 
     TRANSLATED_TITLE = True
 
+    def normalize_loaded(self, values):
+        for key in ('angle', 'catchHiddenTarget', 'disableArtyMode'):
+            values.pop(key, None)
+        return values
+
+    def normalize_changes(self, values, changes):
+        return self.normalize_loaded(values)
+
     def getControlColumns(self):
-        # Preserve old config keys, but do not expose discontinued acquisition.
-        # The existing enabled switch now controls the native-target box.
+        # Only the existing enabled switch controls the native-target box.
         return ((), ())

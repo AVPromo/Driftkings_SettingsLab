@@ -15,6 +15,9 @@ class HangarPreferencesSettings(SectionDefinition):
             values.pop(key, None)
         return values
 
+    def normalize_changes(self, values, changes):
+        return self.normalize_loaded(values)
+
     def getControlColumns(self):
         return (
             [
