@@ -2,7 +2,6 @@
 from functools import partial
 
 import BigWorld
-import Keys
 
 from BigWorld import callback
 
@@ -19,11 +18,6 @@ def checkKeys(keys, key=None):
 
 
 VKEY_ALT, VKEY_CONTROL, VKEY_SHIFT = range(-1, -4, -1)
-VKEYS_MAP = {
-    VKEY_ALT: (Keys.KEY_LALT, Keys.KEY_RALT),
-    VKEY_CONTROL: (Keys.KEY_LCONTROL, Keys.KEY_RCONTROL),
-    VKEY_SHIFT: (Keys.KEY_LSHIFT, Keys.KEY_RSHIFT),
-}
 
 
 def refreshCurrentVehicle():

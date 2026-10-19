@@ -128,5 +128,3 @@ def application_timing(component, field):
     return policy.get('*', RESTART)
 
 
-def requires_restart(component, field):
-    return application_timing(component, field) == RESTART

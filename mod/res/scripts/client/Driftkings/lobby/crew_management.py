@@ -84,12 +84,6 @@ def removeIgnoredVehicle(vehicle_id):
     return False
 
 
-def clearIgnoredVehicles():
-    global ignored_vehicles
-    ignored_vehicles = set()
-    return writeJsonFile(os.path.join(getCachePath(), 'auto_prev_crew.json'), {'vehicles': []})
-
-
 ignored_vehicles = openIgnoredVehicles()
 config = Settings()
 
