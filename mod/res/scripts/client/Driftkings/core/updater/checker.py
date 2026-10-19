@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """GitHub metadata checks only. Never request the WOTMOD download URL."""
 import logging
-from Driftkings.core.updater import endpoints
+from Driftkings.core.updater import endpoints, signature
 from Driftkings.core.updater.manifest import Manifest, bounded_json, MAX_MANIFEST
 from Driftkings.core.updater.versioning import Version
 
@@ -51,7 +51,7 @@ class Checker(object):
             self._handles = []
             callback(result, error)
 
-        def request(url, maximum, success):
+        def request(url, maximum, success, raw=False):
             try:
                 endpoints.validate_https(url)
                 delivered = [False]
@@ -66,7 +66,9 @@ class Checker(object):
                         if response is None or response.status != 200:
                             raise ValueError('httpError')
                         endpoints.validate_https(response.url)
-                        value = bounded_json(response.body, maximum)
+                        value = response.body if raw else bounded_json(response.body, maximum)
+                        if raw and (not isinstance(value, bytes) or len(value) > maximum):
+                            raise ValueError('invalidBody')
                     except (ValueError, TypeError, AttributeError, UnicodeError):
                         finish(error='invalidResponse')
                         return
@@ -93,10 +95,10 @@ class Checker(object):
                 else:
                     finish(dict(latestVersion=None, changelog=[], compatible=None))
                 return
-            release, version, url = queue.pop(0)
-            def loaded(document):
+            release, version, url, sig_url = queue.pop(0)
+            def parsed(raw):
                 try:
-                    manifest = Manifest(document)
+                    manifest = Manifest(bounded_json(raw))
                     if manifest.version.text != version.text or bool(manifest.version.prerelease) != release['prerelease']:
                         raise ValueError('Release metadata disagrees with manifest')
                     if manifest.version.allowed(channel):
@@ -104,7 +106,21 @@ class Checker(object):
                 except (ValueError, TypeError, UnicodeError):
                     failures.append(url)
                 next_manifest(queue)
-            request(url, MAX_MANIFEST, loaded)
+            def loaded(raw):
+                if not signature.enforced():
+                    parsed(raw)
+                    return
+                def signed(encoded):
+                    try:
+                        signature.verify_manifest(raw, encoded)
+                    except (ValueError, TypeError):
+                        LOG.warning('Rejected release %s: invalid manifest signature', version.text)
+                        failures.append(url)
+                        next_manifest(queue)
+                        return
+                    parsed(raw)
+                request(sig_url, signature.MAX_SIGNATURE, signed, raw=True)
+            request(url, MAX_MANIFEST, loaded, raw=True)
 
         def releases_loaded(releases):
             if not isinstance(releases, list) or len(releases) > 50:
@@ -130,7 +146,13 @@ class Checker(object):
                     if len(matches) != 1:
                         raise ValueError('Missing or ambiguous release manifest')
                     url = endpoints.manifest_asset_url(matches[0].get('browser_download_url'))
-                    queue.append((release, version, url))
+                    sig_url = None
+                    if signature.enforced():
+                        signed = [item for item in assets if isinstance(item, dict) and item.get('name') == signature.SIGNATURE_ASSET]
+                        if len(signed) != 1:
+                            raise ValueError('Missing or ambiguous manifest signature')
+                        sig_url = endpoints.signature_asset_url(signed[0].get('browser_download_url'))
+                    queue.append((release, version, url, sig_url))
                 except (ValueError, TypeError, AttributeError):
                     failures.append('release')
             queue.sort(key=lambda item: item[1], reverse=True)

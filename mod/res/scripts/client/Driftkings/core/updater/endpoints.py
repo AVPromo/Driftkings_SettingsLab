@@ -23,11 +23,24 @@ def validate_https(url):
     return url
 
 
-def manifest_asset_url(url):
+def official_release_url(url):
+    """HTTPS URL of a release asset of the official repository (not merely an allowed host)."""
     validate_https(url)
     parts = urlsplit(url)
     if parts.hostname != 'github.com' or not parts.path.startswith('/' + REPOSITORY + '/releases/download/'):
-        raise ValueError('Manifest asset outside official repository')
-    if not parts.path.endswith('/release.json'):
+        raise ValueError('Asset outside official repository')
+    return url
+
+
+def manifest_asset_url(url):
+    official_release_url(url)
+    if not urlsplit(url).path.endswith('/release.json'):
         raise ValueError('Not a release manifest asset')
+    return url
+
+
+def signature_asset_url(url):
+    official_release_url(url)
+    if not urlsplit(url).path.endswith('/release.json.sig'):
+        raise ValueError('Not a manifest signature asset')
     return url

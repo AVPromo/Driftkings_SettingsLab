@@ -3,7 +3,7 @@
 import json
 import re
 from Driftkings.core.updater.versioning import Version, TEXT, normalize_game_version, game_key
-from Driftkings.core.updater.endpoints import validate_https
+from Driftkings.core.updater.endpoints import official_release_url
 from Driftkings.core.updater.inventory import Inventory
 
 MAX_MANIFEST = 64 * 1024
@@ -66,7 +66,7 @@ class Manifest(object):
                 raise ValueError('Invalid package size')
             if not isinstance(document['sha256'], TEXT) or re.match(r'\A[0-9a-fA-F]{64}\Z', document['sha256']) is None:
                 raise ValueError('Invalid SHA-256')
-            validate_https(document['download'])
+            official_release_url(document['download'])
             changelog = document.get('changelog', [])
             if (not isinstance(changelog, list) or len(changelog) > 50 or
                     any(not isinstance(line, TEXT) or len(line) > 500 for line in changelog) or
@@ -87,7 +87,7 @@ class Manifest(object):
                 if not self.download.endswith('/Driftkings.wotmod'):
                     raise ValueError('Invalid package asset URL')
                 self.download = self.download.rsplit('/', 1)[0] + '/' + self.inventory.distribution['file']
-                validate_https(self.download)
+                official_release_url(self.download)
                 self.payload_size = self.inventory.distribution['size']
                 self.payload_sha256 = self.inventory.distribution['sha256']
         except (TypeError, KeyError, OverflowError):
