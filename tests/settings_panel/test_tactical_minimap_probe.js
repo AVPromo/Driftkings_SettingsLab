@@ -429,6 +429,38 @@ delete data.visualConfig; refresh();
 assert.strictEqual(livePoints.children[0].style.color, '#67cf69');
 assert.strictEqual(livePoints.children[0].children[1].style.display, '');
 
+// A transient rendering failure removes the sample and input, then the same
+// payload must be retried on the next update (rather than cached as successful).
+var savedOptions = win.DKTacticalGraphics.options;
+win.DKTacticalGraphics.options = function () { throw new Error('Simulated rendering failure'); };
+data.visualConfig = {theme: 'dark'};
+refresh();
+assert.strictEqual(body.children.length, 0);
+assert.strictEqual(errors.pop(), true);
+assert.strictEqual(Object.keys(callbacks).length, 1);
+win.DKTacticalGraphics.options = savedOptions;
+refresh();
+assert.strictEqual(body.children.filter(function (child) { return child.id === 'dk-tactical-minimap-probe'; }).length, 1);
+// Recovery creates fresh nodes; the old cartography must remain detached.
+assert.strictEqual(iconImage.parentNode.parentNode.parentNode, null);
+// Rebinding must drop the old view immediately and retry a failed subscription.
+var savedAddCallback = viewEnv.addDataChangedCallback;
+viewEnv.addDataChangedCallback = function () { throw new Error('Simulated subscription failure'); };
+model = {DriftkingsUI: model.DriftkingsUI, payload: model.payload, onProbeReady: model.onProbeReady};
+refresh();
+assert.strictEqual(body.children.length, 0);
+assert.strictEqual(Object.keys(callbacks).length, 0);
+assert.strictEqual(errors.pop(), true);
+viewEnv.addDataChangedCallback = savedAddCallback;
+refresh();
+assert.strictEqual(Object.keys(callbacks).length, 1);
+assert.strictEqual(body.children.filter(function (child) { return child.id === 'dk-tactical-minimap-probe'; }).length, 1);
+var recoveredBox = body.children.filter(function (child) { return child.id === 'dk-tactical-minimap-probe'; })[0];
+iconImage = recoveredBox.children.filter(function (child) { return child.className.indexOf('dk-probe-cartography') === 0; })[0].children[1];
+livePoints = iconImage.children[1];
+pingLayer = iconImage.children[4];
+delete data.visualConfig;
+
 data.alliedPoints = []; refresh();
 assert.strictEqual(livePoints.children.length, 0); // Empty frame overrides the legacy reference.
 delete data.alliedPoints;

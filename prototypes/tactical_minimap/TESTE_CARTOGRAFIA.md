@@ -1,5 +1,11 @@
 # Cartografia e calibração — diagnóstico
 
+## Recuperação da amostra após falha do Gameface
+
+Uma exceção no desenho limpa os nós, alinhamento, hover e estado de interação. O payload que falhou deixa de estar marcado como desenhado, permitindo recuperação no próximo evento, mesmo com dados iguais. A troca do modelo remove a amostra anterior antes de ligar a nova; uma falha transitória ao subscrever o modelo também pode ser repetida sem manter os nós antigos ou duplicar callbacks.
+
+Testes Node injetam falhas de desenho e subscrição e verificam remoção, recuperação e libertação final. O minimapa nativo continua sempre visível; esta etapa não implementa nem comprova recuperação de uma substituição real, ainda bloqueada. Confirmar no cliente a saída/entrada em Topography, reabrir uma missão e alternar visibilidade do HUD. Não foi introduzida uma falha artificial no jogo do utilizador.
+
 ## Preferências no painel e configurações
 
 O painel de melhorias do minimapa contém agora a escolha Vanilla/Driftkings e as preferências `tactical`: tema, seguir o tamanho nativo ou tamanho fixo, opacidade da textura, escala dos ícones, grelha, nomes, tamanho de letra e cores de aliados/inimigos/pelotão. São guardadas pelo gestor existente em `minimap_enhancements/minimap.json`, incluindo perfis e reposição de valores. Os defaults antigos recebem os campos em falta pelo merge existente; não se substituem escolhas do jogador.

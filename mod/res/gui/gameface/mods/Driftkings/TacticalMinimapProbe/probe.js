@@ -600,8 +600,10 @@
             if (!model || !model.DriftkingsUI || model.DriftkingsUI.name !== FEATURE) { continue; }
             found = true;
             if (!binding || binding.id !== ids[i] || binding.model !== model) {
-                release();
+                release(); hide();
                 binding = {id: ids[i], model: model, callback: null, signature: null, sentGeneration: null};
+            }
+            if (binding.callback === null) {
                 binding.callback = viewEnv.addDataChangedCallback('model', ids[i], true);
             }
             var data = {};
@@ -630,7 +632,13 @@
     }
     function refresh() {
         try { update(); }
-        catch (error) { hide(); console.error('[Driftkings] Diagnostic update failed; Vanilla unchanged', error); }
+        catch (error) {
+            // A failed render must not cache the payload as successfully drawn.
+            // Leave subscriptions in place so the next native update can recover.
+            if (binding) { binding.signature = null; }
+            hide();
+            console.error('[Driftkings] Diagnostic update failed; Vanilla unchanged', error);
+        }
     }
     function dispose() {
         if (disposed) { return; }
