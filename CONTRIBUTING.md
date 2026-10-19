@@ -90,6 +90,16 @@ npm ci --ignore-scripts && npm run lint && node tests/settings_panel/test_gamefa
 
 Behaviour inside the game still needs manual verification against the target client. Say in the pull request which client version and mode you tested.
 
+## Signing releases
+
+The updater can authenticate `release.json` with an Ed25519 signature (free, no certificate authority). It is **enforced only once a public key is listed in `TRUSTED_KEYS`** in `core/updater/signature.py`; until then updates behave as before.
+
+1. Once: `python build_tools/sign_release.py --generate release-signing.key`. Keep that file offline (never in the repository or CI) and back it up. Paste the printed public key into `TRUSTED_KEYS`.
+2. For each release, after the build: `python build_tools/sign_release.py <version-folder> --key release-signing.key`. This writes `release.json.sig`, and `publish_release.py` verifies it and uploads it with the other assets.
+3. To rotate a key, ship a release that lists both the old and the new public keys before retiring the old one.
+
+Clients that predate this feature do not verify signatures; they must update once to get the check.
+
 ## Pull requests
 
 - Keep changes focused; one concern per pull request.

@@ -16,6 +16,11 @@ from build_tools.modpack import verify as verify_modpack
 from build_tools.validate_build_data import input_path, read_json, relative_path, require
 
 
+def signature_module():
+    from build_tools.sign_release import load_signature
+    return load_signature()
+
+
 def prepare(folder):
     folder = folder.resolve()
     report = read_json(folder / 'build-report.json')
@@ -55,6 +60,18 @@ def prepare(folder):
         require(sha(input_path(folder, name)) == digest, 'Checksum mismatch: ' + name)
     require(covered == set(report['artifacts']) | {'build-report.json'}, 'Incomplete checksum inventory')
     names = set(report['artifacts']) | {'build-report.json', 'SHA256SUMS.txt'}
+    signature = signature_module()
+    if signature.enforced() or (folder / signature.SIGNATURE_ASSET).exists():
+        require((folder / signature.SIGNATURE_ASSET).is_file(),
+                'Missing %s; run build_tools/sign_release.py first' % signature.SIGNATURE_ASSET)
+        signed = (folder / signature.SIGNATURE_ASSET).read_bytes()
+        keys = signature.TRUSTED_KEYS
+        require(keys, 'A signature was produced but TRUSTED_KEYS is empty in signature.py')
+        try:
+            signature.verify_manifest((folder / 'release.json').read_bytes(), signed)
+        except ValueError as error:
+            raise SystemExit('Release manifest signature is not valid for a trusted key: %s' % error)
+        names.add(signature.SIGNATURE_ASSET)
     files = [folder / name for name in sorted(names)]
     require(len({path.name.lower() for path in files}) == len(files), 'Release assets have duplicate filenames')
     command = ['gh', 'release', 'create', 'v' + version.text, '--repo', release['repository'],
