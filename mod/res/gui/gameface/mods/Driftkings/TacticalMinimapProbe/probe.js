@@ -5,8 +5,10 @@
     if (window[OWNER]) { window[OWNER].dispose(); }
     var disposed = false, node = null, binding = null, graphics = null, cartography = null, alignment = null;
     var inputListening = false, interaction = null;
+    var sampleCalibration = null;
     function hide() {
         interaction = null;
+        sampleCalibration = null;
         if (node && node.parentNode) { node.parentNode.removeChild(node); }
         node = null; graphics = null; cartography = null;
         clearAlignment();
@@ -320,6 +322,30 @@
             console.error('[Driftkings] Sample input diagnostic failed', error);
         }
     }
+    function resizeSample() {
+        if (!cartography) { return; }
+        var cfg = sampleCalibration || {}, index = cfg.sizeIndex, ratio = 1, unit = 1;
+        var width = cfg.available === true && typeof index === 'number' && isFinite(index) &&
+            index >= 0 && index <= 5 && Math.floor(index) === index ? 200 + index * 40 : 200;
+        if (cfg.available === true && typeof cfg.width === 'number' && typeof cfg.height === 'number' &&
+                isFinite(cfg.width) && isFinite(cfg.height) && cfg.width > 0 && cfg.height > 0) {
+            var candidate = cfg.height / cfg.width;
+            if (candidate >= .25 && candidate <= 4) { ratio = candidate; }
+        }
+        if (window.getComputedStyle && document.documentElement) {
+            var fontSize = parseFloat(window.getComputedStyle(document.documentElement).fontSize);
+            if (isFinite(fontSize) && fontSize > 0) { unit = fontSize; }
+        }
+        if (typeof window.innerWidth === 'number' && isFinite(window.innerWidth) && window.innerWidth > 0) {
+            width = Math.min(width, Math.max(32, window.innerWidth / unit - 64));
+        }
+        if (typeof window.innerHeight === 'number' && isFinite(window.innerHeight) && window.innerHeight > 0) {
+            width = Math.min(width, Math.max(32, (window.innerHeight / unit - 96) / ratio));
+        }
+        cartography.node.style.width = width + 'rem';
+        cartography.image.style.width = width + 'rem';
+        cartography.image.style.height = (width * ratio) + 'rem';
+    }
     function mapSample(uri, allies, objectives, circles, pings, camera, yawLines, strategicPoint, strategicArea, input, sample) {
         if (typeof uri !== 'string' || uri.length > 262 ||
                 !/^img:\/\/(spaces\/[A-Za-z0-9_/-]+\.(dds|png)|gui\/maps\/icons\/map\/[A-Za-z0-9_-]+\.png)$/.test(uri) ||
@@ -438,6 +464,7 @@
         calibration(data.calibration);
         var sizeIndex = data.calibration && data.calibration.sizeIndex;
         line('Tamanho nativo: ' + (typeof sizeIndex === 'number' && sizeIndex >= 0 && sizeIndex <= 5 && Math.floor(sizeIndex) === sizeIndex ? sizeIndex : 'indisponível'));
+        line('Amostra: tamanho acompanha o índice nativo (200–400rem, limitado ao ecrã).');
         var input = nativeInput(data.nativeInput);
         line(input ? 'Último clique no original #' + input.sequence + ': botão ' + input.button +
             ', escala ' + input.sizeIndex + ' (cruz magenta; apenas diagnóstico)' : 'Cliques nativos: a aguardar no original');
@@ -480,6 +507,8 @@
         line('Ponto de mira estratégico: ' + (data.strategicPoint ? 'publicado (mira azul)' : 'indisponível/oculto'));
         line('Contorno estratégico: ' + (Array.isArray(data.strategicArea) && data.strategicArea.length === 4 ? 'publicado' : 'indisponível/oculto'));
         var map = mapSample(data.textureUri, vehicles, data.objectives, data.circles, data.pings, data.cameraLine, data.yawLines, data.strategicPoint, data.strategicArea, input, sample);
+        sampleCalibration = data.calibration || null;
+        resizeSample();
         if (cartography) { cartography.image.style.pointerEvents = interactive ? 'auto' : 'none'; }
         if (map) { node.appendChild(map); }
         line('Amostras fixas — 16 / 24 / 32 px; confirmar visualmente.');
@@ -536,6 +565,7 @@
         engine.off('viewEnv.onDataChanged', refresh);
         engine.off('subViews.onAdded', refresh); engine.off('subViews.onRemoved', refresh);
         window.removeEventListener('unload', dispose);
+        window.removeEventListener('resize', resizeSample);
         if (inputListening) { document.removeEventListener('mousedown', sampleInput, true); inputListening = false; }
         release(); hide();
         if (window[OWNER] && window[OWNER].dispose === dispose) { delete window[OWNER]; }
@@ -546,6 +576,7 @@
         engine.on('viewEnv.onDataChanged', refresh);
         engine.on('subViews.onAdded', refresh); engine.on('subViews.onRemoved', refresh);
         window.addEventListener('unload', dispose);
+        window.addEventListener('resize', resizeSample);
         if (document.addEventListener && document.removeEventListener) {
             document.addEventListener('mousedown', sampleInput, true); inputListening = true;
         }

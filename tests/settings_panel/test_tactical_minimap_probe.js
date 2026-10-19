@@ -70,6 +70,24 @@ alignment = body.children.filter(function (child) { return child.id === 'dk-tact
 assert.strictEqual(alignment.children.length, 5);
 var mapImage = box.children.filter(function (child) { return child.className === 'dk-probe-cartography'; })[0].children[1];
 assert.strictEqual(mapImage.children.length, 11);
+assert.strictEqual(mapImage.style.width, '200rem');
+for (var mapSizeIndex = 0; mapSizeIndex <= 5; mapSizeIndex++) {
+    data.calibration.sizeIndex = mapSizeIndex; refresh();
+    assert.strictEqual(mapImage.style.width, (200 + mapSizeIndex * 40) + 'rem');
+    assert.strictEqual(mapImage.style.height, mapImage.style.width);
+    assert.strictEqual(box.children.filter(function (child) { return child.className === 'dk-probe-cartography'; })[0], originalMap);
+}
+data.calibration.sizeIndex = 6; refresh();
+assert.strictEqual(mapImage.style.width, '200rem');
+data.calibration.sizeIndex = 5; data.calibration.width = 400; data.calibration.height = 200; refresh();
+assert.strictEqual(mapImage.style.width, '400rem');
+assert.strictEqual(mapImage.style.height, '200rem');
+data.calibration.width = 200; refresh();
+win.innerWidth = 180; win.innerHeight = 200; windowEvents.resize();
+assert.strictEqual(mapImage.style.width, '104rem');
+assert.strictEqual(mapImage.style.height, '104rem');
+delete win.innerWidth; delete win.innerHeight; windowEvents.resize();
+assert.strictEqual(mapImage.style.width, '400rem');
 var grid = mapImage.children[0];
 assert.strictEqual(grid.children.filter(function (child) { return child.className === 'dk-probe-grid-column'; }).map(function (child) { return child.textContent; }).join(''), '1234567890');
 assert.strictEqual(grid.children.filter(function (child) { return child.className === 'dk-probe-grid-row'; }).map(function (child) { return child.textContent; }).join(''), 'ABCDEFGHJK');
@@ -252,9 +270,16 @@ assert.strictEqual(sampleCommands[1].request, 2);
 sampleClick(200, 150, 1);
 assert.strictEqual(sampleCommands[2].button, 2); // Browser middle -> native middle.
 assert.strictEqual(sampleCommands[2].request, 3);
+data.calibration.sizeIndex = 5; refresh();
+assert.strictEqual(iconImage.style.width, '400rem');
+iconImage.getBoundingClientRect = function () { return {left: 100, top: 100, width: 400, height: 400}; };
+sampleClick(300, 200, 0);
+assert.strictEqual(sampleCommands[3].x, .5);
+assert.strictEqual(sampleCommands[3].y, .25);
+assert.strictEqual(sampleCommands[3].request, 4);
 data.sampleInputEnabled = false; refresh();
 sampleClick(200, 150, 0);
-assert.strictEqual(sampleCommands.length, 3);
+assert.strictEqual(sampleCommands.length, 4);
 assert.strictEqual(iconImage.style.pointerEvents, 'none');
 data.gamefaceInput = {x: .5, y: .25, button: 0, sizeIndex: 2, sequence: 1, localX: 105, localY: 52.5}; refresh();
 var sampleMarker = iconImage.children[10].children[0];

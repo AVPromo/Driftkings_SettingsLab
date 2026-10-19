@@ -1,5 +1,13 @@
 # Cartografia e calibração — diagnóstico
 
+## Redimensionamento da amostra com o índice nativo
+
+A amostra deixa de ter 200rem fixos: os índices nativos 0–5 correspondem a 200/240/280/320/360/400rem. É uma escala própria da amostra, não uma reprodução em pixels do tamanho original. Mantém a proporção do retângulo nativo quando válida e limita as dimensões à viewport, considerando a unidade rem. Sem geometria/índice válidos usa 200rem. Nenhuma preferência do jogo é alterada pelo código novo.
+
+O evento resize da janela recalcula apenas dimensões CSS. Ícones, etiquetas, áreas e linhas continuam em posições normalizadas e os nós são reutilizados. O input usa getBoundingClientRect em cada clique e a constante lógica MINIMAP_SIZE no backend; não confunde o tamanho visual de 200–400rem com os 210 pixels lógicos nativos. O listener é removido no fim/reload da view.
+
+Teste em Topography: usar as teclas nativas de aumentar/diminuir o minimapa e confirmar que a amostra também cresce/encolhe. Em dois tamanhos diferentes, clicar nos mesmos pontos relativos e comparar os resultados. Alternar resolução/tela inteira para verificar limite, proporções e legibilidade. A posição da amostra continua a ser a do painel de diagnóstico, não a do minimapa de produção. Validação no jogo pendente.
+
 ## Botão direito pela via nativa
 
 Topography confirmado pelo utilizador. A amostra encaminha agora os botões esquerdo e direito; o botão do meio continua diagnóstico. Mantém o mesmo handler, validações de cursor/foco modal, modo, propriedade, coordenadas, geração e deduplicação. O clique direito usa `MinimapPingPlugin._specialMinimapCommand`: o próprio cliente tenta `AvatarInputHandler.onMinimapClicked` e só cria a marcação de destino quando esse controlador não o trata. O mod não decide quando mudar de câmara ou mover a mira.
