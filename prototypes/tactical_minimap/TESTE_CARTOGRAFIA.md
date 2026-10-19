@@ -130,6 +130,8 @@ Testar no replay comparando centro, tamanho e cores com os círculos originais. 
 
 ### Zona de mira da artilharia
 
+O indicador de impacto inimigo usa outro símbolo: `ArtyHitDotMarkerUI`, no contentor `personal`, publicado por `EnemySPGShotPlugin`. A amostra acompanha essa matriz como ponto vermelho e remove-o quando o cliente elimina a entrada (duração nativa de 10 segundos). Não subscreve eventos de disparo nem calcula posições adicionais; respeita `SHOW_ARTY_HIT_ON_MAP`, pois só recebe entradas efetivamente criadas. Posição e remoção ainda carecem de confirmação visual.
+
 Células a piscar confirmadas no jogo. Acrescentado `ArtyMarkerMinimapEntry`, mapeado pelo cliente de `SPG_AIM_AREA_SUBTYPE` em `AreaStaticMarkerPlugin`. Usa o contentor `equipments` e a matriz publicada, com os mesmos hooks existentes e remoção nativa. A amostra desenha uma mira laranja (+); não calcula dispersão, raio, previsão de impacto ou posições de artilharia inimiga. Confirmar posição e desaparecimento contra o marcador original num replay que contenha esse evento. Não inclui os efeitos de consumíveis de artilharia nem indicadores de disparos inimigos.
 
 ### Correção das células a piscar

@@ -6,7 +6,7 @@ from Driftkings.core.tactical_minimap import CLASSES, finite
 
 PROTOCOL = 1
 PING_SYMBOLS = {'MarkAttentionEntryUI': 'attention', 'MarkGoingToPositionEntryUI': 'going',
-                'ArtyMarkerMinimapEntry': 'artillery'}
+                'ArtyMarkerMinimapEntry': 'artillery', 'ArtyHitDotMarkerUI': 'artilleryImpact'}
 OBJECTIVE_SYMBOLS = {'AllyTeamBaseEntry': 'allyBase', 'EnemyTeamBaseEntry': 'enemyBase',
                      'ControlPointEntry': 'controlPoint'}
 

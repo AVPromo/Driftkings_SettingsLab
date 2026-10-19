@@ -324,7 +324,8 @@ class ProbeBridge(object):
                 records = bridge._objective_entries.setdefault(component, {})
                 if entry_id in records or len(records) < 16:
                     records[entry_id] = {'kind': OBJECTIVE_SYMBOLS[symbol], 'matrix': matrix, 'active': bool(active)}
-            if bridge.enabled() and container == 'equipments' and symbol in PING_SYMBOLS and entry_id:
+            ping_container = 'personal' if symbol == 'ArtyHitDotMarkerUI' else 'equipments'
+            if bridge.enabled() and container == ping_container and symbol in PING_SYMBOLS and entry_id:
                 records = bridge._ping_entries.setdefault(component, {})
                 if entry_id in records or len(records) < 32:
                     records[entry_id] = {'kind': PING_SYMBOLS[symbol], 'matrix': matrix, 'active': bool(active), 'state': 'attack'}

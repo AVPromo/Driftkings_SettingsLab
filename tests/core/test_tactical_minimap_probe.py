@@ -346,6 +346,12 @@ class ProbeTests(RuntimeTest):
         self.assertEqual(bridge._ping_entries[component][9]['kind'], 'artillery')
         hooks['delEntry'](original, component, 9)
         self.assertEqual(bridge._ping_entries[component], {})
+        hooks['addEntry'](original, component, 'ArtyHitDotMarkerUI', 'equipments', provider, True)
+        self.assertEqual(bridge._ping_entries[component], {})
+        hooks['addEntry'](original, component, 'ArtyHitDotMarkerUI', 'personal', provider, True)
+        self.assertEqual(bridge._ping_entries[component][9]['kind'], 'artilleryImpact')
+        hooks['delEntry'](original, component, 9)
+        self.assertEqual(bridge._ping_entries[component], {})
         bridge.stop()
         self.assertEqual(len(bridge._ping_entries), 0)
 
