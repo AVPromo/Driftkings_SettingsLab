@@ -156,11 +156,23 @@ def _vehicle_calibration_point(markers, sides, state='visible'):
             if marker.get('vehicleClass') in CLASSES:
                 point['vehicleClass'] = marker['vehicleClass']
                 point['side'] = marker['side']
+            label = vehicle_label(marker.get('vehicleLabel'))
+            if label:
+                point['label'] = label
             cell = marker.get('cell')
             if isinstance(cell, (str, type(u''))) and re.match(r'^[A-HJK][1-90]\Z', cell):
                 point['cell'] = cell
             return point
     return None
+
+
+def vehicle_label(value):
+    """Bounded display text only; no native IDs or player-name fields."""
+    if not isinstance(value, (str, type(u''))):
+        return u''
+    if not isinstance(value, type(u'')):
+        value = value.decode('utf-8', 'replace')
+    return u''.join(char for char in value[:128] if ord(char) >= 32 and ord(char) != 127)[:64].strip()
 
 
 def geometry_response(value):

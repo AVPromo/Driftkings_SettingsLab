@@ -1,5 +1,11 @@
 # Cartografia e calibração — diagnóstico
 
+## Etiquetas dos veículos
+
+Acrescentado o nome apresentado pelo cliente (`VehicleArenaInfoVO.getDisplayedName()`) aos ícones publicados, via campo `vehicleLabel` do adaptador e `label` sanitizado. Não se transportam IDs ou o campo de nome de jogador. Máximo de 64 caracteres, sem caracteres de controlo; o JS usa apenas textContent e aplica nova limitação defensiva. Etiquetas usam cor de relação, sombra, largura limitada e reticências. À direita de 70% do mapa ficam voltadas para a esquerda. Mantêm o nó ao mover; são removidas com a entrada. A rotação do jogador aplica-se só ao SVG, nunca ao texto.
+
+Confirmar legibilidade no replay, nomes traduzidos, mudança de lado junto à margem, remoção ao perder avistamento e aspeto dos destruídos. A amostra de 200rem pode continuar a ter sobreposições em grupos densos; não há ainda resolução de colisões, configuração de tamanho de letra ou modos Alt. A seta própria pode não ter etiqueta quando a entrada pessoal não fornece nome. Limites azuis e destruídos continuam a aguardar confirmação visual explícita.
+
 ## Limites de rotação do canhão
 
 Direção da câmara arcade e remoção ao mudar de modo confirmadas pelo utilizador. A etapa seguinte acompanha `setYawLimit(left, right)` e `clearYawLimit` na entrada `ViewPointEntry`, sem novos hooks/timers. O cliente converte os limites da torre para graus e só os publica conforme os modos, tipo de veículo e opção `SHOW_SECTOR_ON_MAP`. O Flash aplica esses ângulos à orientação da entrada pessoal (a correção de 180° é própria do desenho do atlas); a amostra usa diretamente yaw mundial do casco + offset em graus.

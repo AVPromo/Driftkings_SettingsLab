@@ -24,6 +24,8 @@
 
 .dk-probe-map-image .dk-probe-ally-icon { width:18px; height:18px; padding:0; border:0; background:none; }
 .dk-probe-ally-icon svg { display:block; }
+.dk-probe-vehicle-label { position:absolute; left:17px; top:3px; max-width:70px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; font:10px/12px Arial,sans-serif; text-shadow:1px 1px 2px #000,-1px -1px 2px #000; }
+.dk-probe-label-left { left:auto; right:17px; text-align:right; }
 
 .dk-probe-objectives { position:absolute; left:0; top:0; width:100%; height:100%; z-index:2; }
 .dk-probe-map-points { z-index:3; }

@@ -92,22 +92,28 @@
             if (!record || record.signature !== signature) {
                 if (record) { points.removeChild(record.node); }
                 var marker = document.createElement('div');
+                var glyphNode = null;
                 marker.className = 'dk-probe-ally'; marker.textContent = destroyed ? 'X' : ally.side === 'player' ? 'TU' : ally.side === 'enemy' ? 'E' : 'A';
                 if (kind && window.DKTacticalGraphics) {
                     try {
                         var glyph = window.DKTacticalGraphics.createGlyph(document, kind, color, 18);
                         marker.textContent = ''; marker.appendChild(glyph.node);
+                        glyphNode = glyph.node;
                         marker.className += ' dk-probe-ally-icon';
                     } catch (error) { /* Keep A when SVG cannot be constructed. */ }
                 }
                 marker.style.color = color;
+                var label = document.createElement('span'); label.className = 'dk-probe-vehicle-label';
+                marker.appendChild(label);
                 points.appendChild(marker);
-                record = records[key] = {node: marker, signature: signature};
+                record = records[key] = {node: marker, signature: signature, glyph: glyphNode, label: label};
             }
+            record.label.textContent = typeof ally.label === 'string' ? ally.label.replace(/[\x00-\x1f\x7f]/g, '').slice(0, 64) : '';
+            record.label.className = 'dk-probe-vehicle-label' + (ally.x > .7 ? ' dk-probe-label-left' : '');
             record.node.style.opacity = destroyed ? .5 : 1;
             var heading = !destroyed && ally.side === 'player' && typeof ally.heading === 'number' && isFinite(ally.heading) ? ally.heading : 0;
-            if (record.node.firstChild && record.node.firstChild.style) {
-                record.node.firstChild.style.transform = 'rotate(' + heading + 'deg)';
+            if (record.glyph && record.glyph.style) {
+                record.glyph.style.transform = 'rotate(' + heading + 'deg)';
             }
             record.node.style.left = (100 * ally.x) + '%'; record.node.style.top = (100 * ally.y) + '%';
         });

@@ -139,6 +139,20 @@ class ProbeTests(RuntimeTest):
         bridge.stop()
         self.assertEqual(len(bridge._camera_entries), 0)
 
+    def test_vehicle_labels_are_bounded_text_and_follow_current_publication(self):
+        label = self.policy.vehicle_label
+        self.assertEqual(label(u'  KV-2\n\x00  '), u'KV-2')
+        self.assertEqual(label(None), u'')
+        self.assertEqual(len(label('x' * 1000)), 64)
+        enemy = dict(side='enemy', visible=True, state='visible', vehicleClass='heavyTank',
+                     x=.5, y=.5, vehicleLabel=u'T-34-85', name='private', id=42)
+        result = self.policy.enemy_calibration_points([enemy])[0]
+        self.assertEqual(result['label'], u'T-34-85')
+        self.assertNotIn('name', result)
+        self.assertNotIn('id', result)
+        self.assertEqual(self.policy.enemy_calibration_points([dict(enemy, visible=False)]), [])
+        self.assertEqual(self.policy.enemy_calibration_points([]), [])
+
     def test_artillery_ping_uses_native_aim_area_symbol(self):
         self.assertEqual(self.policy.PING_SYMBOLS['ArtyMarkerMinimapEntry'], 'artillery')
         value = dict(kind='artillery', x=.4, y=.6, state='attack', sender='private')

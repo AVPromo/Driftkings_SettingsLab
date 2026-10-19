@@ -105,7 +105,7 @@ class NativeMinimapAdapter(object):
                 bucket = 'markers' if alive else 'destroyedMarkers'
                 result[bucket].append({'cell': native_cell, 'id': vehicle_id, 'visible': True, 'state': 'visible' if alive else 'destroyed',
                                           'vehicleClass': vehicle_class, 'side': side,
-                                          'name': name, 'x': point[0], 'y': point[1]})
+                                          'name': name, 'vehicleLabel': name, 'x': point[0], 'y': point[1]})
             except Exception:
                 # One expired native entry must not invalidate other entries.
                 result['entryAudit']['errors'] += 1

@@ -44,6 +44,7 @@ class NativeAdapterTests(RuntimeTest):
         rows = dict((row['id'], row) for row in frame['markers'])
         self.assertEqual((rows[1]['x'], rows[1]['y']), (.5, .5))
         self.assertEqual(rows[1]['side'], 'enemy')
+        self.assertEqual(rows[1]['vehicleLabel'], u'Test')
         self.assertEqual(rows[2]['side'], 'platoon')
         self.assertNotIn('heading', rows[1])
         self.assertFalse(frame['lostContactAvailable'])
