@@ -259,6 +259,8 @@ def native_position_input_status(component):
 
 def forward_native_position_input(component, value):
     """One explicit left/right click, delegated once; never retry or send chat here."""
+    if isinstance(value, dict) and value.get('target', 'position') != 'position':
+        return 'diagnostic-vehicle' if value.get('target') == 'vehicle' else 'invalid-input'
     status = native_position_input_status(component)
     if status != 'ready':
         return status

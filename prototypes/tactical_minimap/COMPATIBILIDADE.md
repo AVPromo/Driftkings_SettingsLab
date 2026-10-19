@@ -2,6 +2,8 @@
 
 ## Atualização após testes NA de 19/10/2026
 
+O utilizador confirmou o redimensionamento. A etapa atual acrescenta realce/identificação de ícones ao passar o rato e separa o clique em veículo do clique em posição. Veículos ficam em diagnóstico sem comandos, pois não há contrato específico de seleção confirmado na auditoria; posições livres mantêm o handler nativo. Falta confirmação visual desta etapa.
+
 Topography tem um adaptador específico para o plugin nativo de alvos/objetivos de treino, mantendo-os separados dos inimigos avistados. A integração reutiliza o HUD aleatório que o próprio modo carrega. O utilizador confirmou que funciona numa missão. O percurso de input agora encaminha esquerdo/direito pelo handler nativo, com o botão do meio em diagnóstico; a equivalência dos comandos ainda precisa confirmação específica.
 
 O estado inicial abaixo é histórico. O diagnóstico opt-in já tem transporte de posições publicadas, SVG, cartografia/grelha, geometria, bases/captura, círculos, pings de célula/posição/artilharia, impactos inimigos e inimigos próximos/distantes confirmados pelo utilizador em replay. A linha de direção da câmara arcade também foi confirmada. Destruídos, etiquetas, limites do canhão e mira/contorno estratégico têm código e testes, mas ainda carecem de confirmação visual explícita; o utilizador fará o teste de artilharia numa batalha.

@@ -6,7 +6,9 @@
     var disposed = false, node = null, binding = null, graphics = null, cartography = null, alignment = null;
     var inputListening = false, interaction = null;
     var sampleCalibration = null;
+    var hoveredVehicle = null;
     function hide() {
+        setHoveredVehicle(null);
         interaction = null;
         sampleCalibration = null;
         if (node && node.parentNode) { node.parentNode.removeChild(node); }
@@ -115,6 +117,8 @@
                 record = records[key] = {node: marker, signature: signature, glyph: glyphNode, label: label};
             }
             record.label.textContent = typeof ally.label === 'string' ? ally.label.replace(/[\x00-\x1f\x7f]/g, '').slice(0, 64) : '';
+            record.node._dkVehicle = {label: record.label.textContent, vehicleClass: ally.vehicleClass,
+                side: ally.side, state: destroyed ? 'destroyed' : ally.side === 'training' ? 'training' : 'visible'};
             record.label.className = 'dk-probe-vehicle-label' + (ally.x > .7 ? ' dk-probe-label-left' : '');
             record.node.style.opacity = destroyed ? .5 : 1;
             var heading = !destroyed && ally.side === 'player' && typeof ally.heading === 'number' && isFinite(ally.heading) ? ally.heading : 0;
@@ -299,8 +303,11 @@
         if (disposed || !interaction || !binding || !cartography || typeof binding.model.onSampleInput !== 'function') { return; }
         var image = cartography.image;
         if (!image || typeof image.getBoundingClientRect !== 'function') { return; }
-        var target = event.target, budget = 64;
-        while (target && target !== image && --budget > 0) { target = target.parentNode; }
+        var target = event.target, budget = 64, vehicle = null;
+        while (target && target !== image && --budget > 0) {
+            if (target._dkVehicle) { vehicle = target; }
+            target = target.parentNode;
+        }
         if (target !== image) { return; }
         var rect = image.getBoundingClientRect(), button = event.button;
         if (!rect || !isFinite(rect.width) || !isFinite(rect.height) || rect.width <= 0 || rect.height <= 0 ||
@@ -316,11 +323,34 @@
             binding.inputSequence = Math.max(binding.inputSequence, interaction.request) + 1;
             if (binding.inputSequence > 2147483647) { return; }
             binding.model.onSampleInput({protocol: 1, generation: interaction.generation,
-                request: binding.inputSequence, x: x, y: y, button: button === 1 ? 2 : button === 2 ? 1 : 0});
+                request: binding.inputSequence, x: x, y: y, button: button === 1 ? 2 : button === 2 ? 1 : 0,
+                target: vehicle ? 'vehicle' : 'position'});
         } catch (error) {
             interaction = null; image.style.pointerEvents = 'none';
             console.error('[Driftkings] Sample input diagnostic failed', error);
         }
+    }
+    function setHoveredVehicle(marker) {
+        if (hoveredVehicle && hoveredVehicle !== marker) {
+            hoveredVehicle.className = hoveredVehicle.className.replace(/ dk-probe-hovered\b/g, '');
+        }
+        hoveredVehicle = marker;
+        if (!cartography || !cartography.hover) { return; }
+        if (!marker) { cartography.hover.textContent = 'Ícones: passar o rato para identificar; clique em diagnóstico.'; return; }
+        if (marker.className.indexOf(' dk-probe-hovered') === -1) { marker.className += ' dk-probe-hovered'; }
+        var value = marker._dkVehicle;
+        var sides = {player: 'Tu', ally: 'Aliado', enemy: 'Inimigo avistado', platoon: 'Pelotão', training: 'Marcador de treino'};
+        cartography.hover.textContent = (sides[value.side] || '') + ' | ' + (allyClass(value) || '') +
+            (value.label ? ' | ' + value.label : '') + (value.state === 'destroyed' ? ' | Destruído' : '');
+    }
+    function sampleHover(event) {
+        if (!interaction || !cartography) { setHoveredVehicle(null); return; }
+        var target = event.target, marker = null, budget = 64;
+        while (target && target !== cartography.image && --budget > 0) {
+            if (target._dkVehicle) { marker = target; }
+            target = target.parentNode;
+        }
+        setHoveredVehicle(target === cartography.image ? marker : null);
     }
     function resizeSample() {
         if (!cartography) { return; }
@@ -393,7 +423,8 @@
         var sampleLayer = document.createElement('div'); sampleLayer.className = 'dk-probe-strategic';
         image.appendChild(sampleLayer); mapInput(sampleLayer, sample);
         if (sampleLayer.firstChild) { sampleLayer.firstChild.className = 'dk-probe-gameface-point'; }
-        cartography = {uri: uri, node: root, image: image, points: points, objectives: objectiveLayer, circles: circleLayer, pings: pingLayer, camera: cameraLayer, yaw: yawLayer, strategic: strategicLayer, area: areaLayer, input: inputLayer, sample: sampleLayer};
+        var hover = document.createElement('div'); hover.className = 'dk-probe-hover-info'; root.appendChild(hover);
+        cartography = {uri: uri, node: root, image: image, points: points, hover: hover, objectives: objectiveLayer, circles: circleLayer, pings: pingLayer, camera: cameraLayer, yaw: yawLayer, strategic: strategicLayer, area: areaLayer, input: inputLayer, sample: sampleLayer};
         return root;
     }
     function clearAlignment() {
@@ -479,6 +510,7 @@
                 typeof sample.localY === 'number' && isFinite(sample.localY)) {
             line('Gameface → Python #' + sample.sequence + ': ' + sample.localX.toFixed(1) + ', ' + sample.localY.toFixed(1) + ' px nativos (cruz turquesa)');
             var statuses = {forwarded: 'entregue ao cliente', 'diagnostic-replay': 'replay: apenas diagnóstico',
+                'diagnostic-vehicle': 'ícone reconhecido; seleção nativa ainda não disponível',
                 'diagnostic-button': 'botão apenas diagnóstico', 'native-input-unavailable': 'envio nativo indisponível',
                 'third-party-owner': 'outro componente controla o minimapa', 'unsupported-mode': 'modo não suportado',
                 'modal-view': 'janela modal aberta', 'invalid-input': 'coordenadas inválidas', failed: 'falha nativa; pedido não repetido'};
@@ -509,7 +541,11 @@
         var map = mapSample(data.textureUri, vehicles, data.objectives, data.circles, data.pings, data.cameraLine, data.yawLines, data.strategicPoint, data.strategicArea, input, sample);
         sampleCalibration = data.calibration || null;
         resizeSample();
-        if (cartography) { cartography.image.style.pointerEvents = interactive ? 'auto' : 'none'; }
+        if (cartography) {
+            cartography.image.style.pointerEvents = interactive ? 'auto' : 'none';
+            cartography.image.className = 'dk-probe-map-image' + (interactive ? ' dk-probe-input-enabled' : '');
+        }
+        if (cartography) { setHoveredVehicle(interactive && hoveredVehicle && hoveredVehicle.parentNode === cartography.points ? hoveredVehicle : null); }
         if (map) { node.appendChild(map); }
         line('Amostras fixas — 16 / 24 / 32 px; confirmar visualmente.');
         var glyphSample = graphicsSample();
@@ -567,6 +603,7 @@
         window.removeEventListener('unload', dispose);
         window.removeEventListener('resize', resizeSample);
         if (inputListening) { document.removeEventListener('mousedown', sampleInput, true); inputListening = false; }
+        if (document.removeEventListener) { document.removeEventListener('mousemove', sampleHover, true); }
         release(); hide();
         if (window[OWNER] && window[OWNER].dispose === dispose) { delete window[OWNER]; }
     }
@@ -579,6 +616,7 @@
         window.addEventListener('resize', resizeSample);
         if (document.addEventListener && document.removeEventListener) {
             document.addEventListener('mousedown', sampleInput, true); inputListening = true;
+            document.addEventListener('mousemove', sampleHover, true);
         }
         refresh();
     });

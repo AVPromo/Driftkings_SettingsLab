@@ -167,7 +167,7 @@ class ProbeTests(RuntimeTest):
         args = dict(protocol=1, generation=3, x=.5, y=.25, button=0)
         value = read(args, 3, 2, (210, 210), 1)
         self.assertEqual((value['localX'], value['localY']), (105, 52.5))
-        for changes in ({'generation': 2}, {'protocol': True}, {'x': 2}, {'y': float('nan')}, {'button': False}):
+        for changes in ({'generation': 2}, {'protocol': True}, {'x': 2}, {'y': float('nan')}, {'button': False}, {'target': 'unknown'}):
             self.assertIsNone(read(dict(args, **changes), 3, 2, (210, 210), 1))
 
     def test_gameface_click_round_trip_is_cursor_gated_and_never_dispatches(self):
@@ -243,6 +243,9 @@ class ProbeTests(RuntimeTest):
         self.bridge.receive_sample_input(self.view, dict(args, request=2, button=1))
         self.assertEqual(len(forwarded), 2)
         self.assertEqual(forwarded[1][1]['button'], 1)
+        self.bridge.receive_sample_input(self.view, dict(args, request=3, target='vehicle'))
+        self.assertEqual(len(forwarded), 2)
+        self.assertEqual(self.frames[-1]['gamefaceInput']['dispatch'], 'diagnostic-vehicle')
         self.bridge.stop()
         self.assertEqual(self.view._sampleRequest, 0)
 

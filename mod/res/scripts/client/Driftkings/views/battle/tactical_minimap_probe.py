@@ -192,7 +192,8 @@ class ProbeBridge(object):
                 view._sampleRequest = request
                 view._sampleInput = value
                 view._sampleSequence = value['sequence']
-                value['dispatch'] = forward_native_position_input(self._native(), value)
+                value['dispatch'] = ('diagnostic-vehicle' if value['target'] == 'vehicle' else
+                                     forward_native_position_input(self._native(), value))
                 self.refresh()
         except Exception:
             LOG.debug('Gameface input diagnostic unavailable', exc_info=True)

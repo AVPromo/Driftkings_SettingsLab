@@ -298,11 +298,14 @@ def gameface_click_sample(args, generation, size_index, native_size, sequence):
     """Validate sample input and calculate native pixels; never dispatch here."""
     if not accepts_ack(args, generation):
         return None
+    target = args.get('target', 'position')
+    if target not in ('position', 'vehicle'):
+        return None
     try:
         local_x, local_y = native_click_point(args.get('x'), args.get('y'), native_size)
         result = native_click_sample(local_x, local_y, args.get('button'), size_index, native_size, sequence)
         if result is not None:
-            result.update(localX=local_x, localY=local_y)
+            result.update(localX=local_x, localY=local_y, target=target)
         return result
     except (ValueError, TypeError, OverflowError):
         return None

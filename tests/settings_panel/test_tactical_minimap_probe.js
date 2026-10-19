@@ -256,7 +256,7 @@ function sampleClick(x, y, button) {
 }
 sampleClick(200, 150, 0);
 assert.strictEqual(sampleCommands.length, 1);
-assert.strictEqual(JSON.stringify(sampleCommands[0]), JSON.stringify({protocol: 1, generation: 3, request: 1, x: .5, y: .25, button: 0}));
+assert.strictEqual(JSON.stringify(sampleCommands[0]), JSON.stringify({protocol: 1, generation: 3, request: 1, x: .5, y: .25, button: 0, target: 'position'}));
 assert.strictEqual(prevented, 1); assert.strictEqual(stopped, 1);
 documentEvents.mousedown({clientX: 200, clientY: 150, button: 0, target: body,
     preventDefault: function () { throw new Error('Must not capture foreign elements'); },
@@ -277,9 +277,17 @@ sampleClick(300, 200, 0);
 assert.strictEqual(sampleCommands[3].x, .5);
 assert.strictEqual(sampleCommands[3].y, .25);
 assert.strictEqual(sampleCommands[3].request, 4);
+documentEvents.mousemove({target: livePoints.children[0].children[1]});
+assert.ok(livePoints.children[0].className.indexOf('dk-probe-hovered') !== -1);
+assert.ok(body.children[0].children.filter(function (child) { return child.className === 'dk-probe-cartography'; })[0].children[2].textContent.indexOf('Aliado') !== -1);
+documentEvents.mousedown({clientX: 300, clientY: 200, button: 0, target: livePoints.children[0].children[1],
+    preventDefault: function () { prevented++; }, stopPropagation: function () { stopped++; }});
+assert.strictEqual(sampleCommands[4].target, 'vehicle');
+documentEvents.mousemove({target: body});
+assert.strictEqual(livePoints.children[0].className.indexOf('dk-probe-hovered'), -1);
 data.sampleInputEnabled = false; refresh();
 sampleClick(200, 150, 0);
-assert.strictEqual(sampleCommands.length, 4);
+assert.strictEqual(sampleCommands.length, 5);
 assert.strictEqual(iconImage.style.pointerEvents, 'none');
 data.gamefaceInput = {x: .5, y: .25, button: 0, sizeIndex: 2, sequence: 1, localX: 105, localY: 52.5}; refresh();
 var sampleMarker = iconImage.children[10].children[0];

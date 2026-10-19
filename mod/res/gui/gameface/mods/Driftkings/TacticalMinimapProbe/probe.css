@@ -26,6 +26,10 @@
 .dk-probe-ally-icon svg { display:block; }
 .dk-probe-vehicle-label { position:absolute; left:17px; top:3px; max-width:70px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; font:10px/12px Arial,sans-serif; text-shadow:1px 1px 2px #000,-1px -1px 2px #000; }
 .dk-probe-label-left { left:auto; right:17px; text-align:right; }
+.dk-probe-map-image .dk-probe-hovered { outline:1px solid #fff; background:rgba(255,255,255,.12); }
+.dk-probe-hover-info { margin-top:6rem; color:#e9e2bf; font:11rem/14rem Arial,sans-serif; pointer-events:none; }
+.dk-probe-map-grid, .dk-probe-objectives, .dk-probe-pings, .dk-probe-map-points, .dk-probe-map-image .dk-probe-ally { pointer-events:none; }
+.dk-probe-input-enabled .dk-probe-ally { pointer-events:auto; }
 
 .dk-probe-objectives { position:absolute; left:0; top:0; width:100%; height:100%; z-index:2; }
 .dk-probe-map-points { z-index:3; }

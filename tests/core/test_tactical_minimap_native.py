@@ -257,6 +257,8 @@ class NativeAdapterTests(RuntimeTest):
         self.assertEqual(send(self.component, dict(value, button=1)), 'forwarded')
         self.assertEqual(calls[-1], (105, 52.5, 1, 4))
         calls[:] = []
+        self.assertEqual(send(self.component, dict(value, target='vehicle')), 'diagnostic-vehicle')
+        self.assertEqual(calls, [])
         self.assertEqual(send(self.component, dict(value, button=2)), 'diagnostic-button')
         self.assertEqual(send(self.component, dict(value, x=2)), 'invalid-input')
         replay.isPlaying = True

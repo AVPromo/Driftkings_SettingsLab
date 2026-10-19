@@ -1,5 +1,15 @@
 # Cartografia e calibração — diagnóstico
 
+## Identificação de ícones e separação do clique em posição
+
+Redimensionamento confirmado pelo utilizador. A auditoria seguinte confirmou que `MinimapMeta.onMinimapClicked`/`MinimapComponent.onMinimapClicked` recebem x/y/botão/escala, sem ID de veículo. No Flash auditado, `VehicleMinimapEntry` expõe informação visual e highlight, mas não um onClick público; `Minimap.onMouseClickHandler` trata posições e entidades IHoverableEntity (implementação encontrada para W2GTBattleZoneMinimapEntry). Não foi encontrado um contrato verificável de seleção de veículo para reproduzir pelo Gameface nesta etapa. Não se inventou um comando de alvo.
+
+A amostra reconhece o nó SVG/etiqueta do veículo a partir dos dados do frame corrente, sem enviar IDs ao JS. Com o cursor visível, passar o rato realça o ícone e mostra relação, classe, nome e estado de destruído abaixo da amostra. Marcadores de Topography continuam identificados como treino. Sem cursor, HUD ou handshake não há interação. Camadas de desenho deixam passar o rato até aos ícones/imagem; nenhum listener novo altera o cursor ou foco.
+
+O comando distingue `target=position` de `target=vehicle`. O backend confirma cliques de veículo como `diagnostic-vehicle` e não os encaminha ao método de posições; há uma segunda proteção no helper nativo. Continua a encaminhar esquerdo/direito nos pontos livres. O alvo de diagnóstico não recebe comandos de ataque, seleção, mira ou chat. O listener de movimento é libertado em dispose/reload.
+
+Testar em Topography: Ctrl esquerdo e passar o rato por objetivos, incluindo SVG e etiqueta; confirmar realce e texto. Clicar num ícone deve mostrar reconhecimento em diagnóstico, sem criar ping de posição. Clicar numa posição livre deve continuar a usar a via nativa. Confirmar limpeza ao retirar o cursor, remover um alvo e sair da missão. Validação in-game pendente. Seleção nativa específica de veículos permanece pendente e impede declarar paridade completa.
+
 ## Redimensionamento da amostra com o índice nativo
 
 A amostra deixa de ter 200rem fixos: os índices nativos 0–5 correspondem a 200/240/280/320/360/400rem. É uma escala própria da amostra, não uma reprodução em pixels do tamanho original. Mantém a proporção do retângulo nativo quando válida e limita as dimensões à viewport, considerando a unidade rem. Sem geometria/índice válidos usa 200rem. Nenhuma preferência do jogo é alterada pelo código novo.
