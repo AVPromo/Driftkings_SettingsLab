@@ -55,6 +55,18 @@ data.markerCount++; refresh();
 assert.strictEqual(box.children.filter(function (child) { return child.className === 'dk-probe-cartography'; })[0], originalMap);
 data.textureUri = 'https://example.com/map.png'; refresh();
 assert.strictEqual(box.children.filter(function (child) { return child.className === 'dk-probe-cartography'; }).length, 0);
+data.calibration = {available: true, x: 800, y: 600, width: 200, height: 200, stageWidth: 1000, stageHeight: 800};
+refresh();
+var alignment = body.children.filter(function (child) { return child.id === 'dk-tactical-minimap-alignment'; })[0];
+assert.strictEqual(alignment.style.left, '80%');
+assert.strictEqual(alignment.style.top, '75%');
+assert.strictEqual(alignment.style.width, '20%');
+assert.strictEqual(alignment.style.height, '25%');
+assert.strictEqual(alignment.children.length, 5);
+assert.strictEqual(alignment.children[2].style.left, '50%');
+data.calibration.width = -1; refresh();
+assert.strictEqual(body.children.length, 1);
+delete data.calibration; refresh();
 var validPayload = model.payload;
 ['{', 'null', '[]'].forEach(function (bad) {
     model.payload = bad; listeners['viewEnv.onDataChanged'](); assert.strictEqual(body.children.length, 0);

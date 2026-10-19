@@ -3,10 +3,11 @@
     'use strict';
     var OWNER = '__dkTacticalMinimapProbe', FEATURE = 'DriftkingsTacticalMinimapProbe';
     if (window[OWNER]) { window[OWNER].dispose(); }
-    var disposed = false, node = null, binding = null, graphics = null, cartography = null;
+    var disposed = false, node = null, binding = null, graphics = null, cartography = null, alignment = null;
     function hide() {
         if (node && node.parentNode) { node.parentNode.removeChild(node); }
         node = null; graphics = null; cartography = null;
+        clearAlignment();
     }
     function release() {
         if (binding && binding.callback !== null) { viewEnv.removeDataChangedCallback(binding.callback, binding.id); }
@@ -65,6 +66,32 @@
         cartography = {uri: uri, node: root};
         return root;
     }
+    function clearAlignment() {
+        if (alignment && alignment.parentNode) { alignment.parentNode.removeChild(alignment); }
+        alignment = null;
+    }
+    function alignNativeArea(data) {
+        clearAlignment();
+        if (!data || data.available !== true) { return; }
+        var keys = ['x', 'y', 'width', 'height', 'stageWidth', 'stageHeight'];
+        if (!keys.every(function (key) { return typeof data[key] === 'number' && isFinite(data[key]); }) ||
+                data.stageWidth <= 0 || data.stageHeight <= 0 || data.width <= 0 || data.height <= 0 ||
+                data.width > data.stageWidth * 4 || data.height > data.stageHeight * 4 ||
+                Math.abs(data.x) > data.stageWidth * 4 || Math.abs(data.y) > data.stageHeight * 4) { return; }
+        alignment = document.createElement('div');
+        alignment.id = 'dk-tactical-minimap-alignment';
+        alignment.style.left = (100 * data.x / data.stageWidth) + '%';
+        alignment.style.top = (100 * data.y / data.stageHeight) + '%';
+        alignment.style.width = (100 * data.width / data.stageWidth) + '%';
+        alignment.style.height = (100 * data.height / data.stageHeight) + '%';
+        [[0, 0, 'NO'], [100, 0, 'NE'], [50, 50, '+'], [0, 100, 'SO'], [100, 100, 'SE']].forEach(function (point) {
+            var mark = document.createElement('div');
+            mark.className = 'dk-probe-anchor';
+            mark.style.left = point[0] + '%'; mark.style.top = point[1] + '%';
+            mark.textContent = point[2]; alignment.appendChild(mark);
+        });
+        document.body.appendChild(alignment);
+    }
     function calibration(data) {
         if (!data || data.available !== true) {
             line('Geometria Flash: ' + (data && data.reason || 'a aguardar'));
@@ -96,6 +123,8 @@
         }
         line('Sem substituição do minimapa, posições de veículos ou Lost Contact.');
         calibration(data.calibration);
+        alignNativeArea(data.calibration);
+        line('Calibração: NO/NE/SO/SE nos cantos; + no centro nativo.');
         var map = mapSample(data.textureUri);
         if (map) { node.appendChild(map); }
         line('Amostras fixas — 16 / 24 / 32 px; confirmar visualmente.');
