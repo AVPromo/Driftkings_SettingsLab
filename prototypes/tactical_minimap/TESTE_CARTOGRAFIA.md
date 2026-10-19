@@ -1,5 +1,11 @@
 # Cartografia e calibração — diagnóstico
 
+## Botão direito pela via nativa
+
+Topography confirmado pelo utilizador. A amostra encaminha agora os botões esquerdo e direito; o botão do meio continua diagnóstico. Mantém o mesmo handler, validações de cursor/foco modal, modo, propriedade, coordenadas, geração e deduplicação. O clique direito usa `MinimapPingPlugin._specialMinimapCommand`: o próprio cliente tenta `AvatarInputHandler.onMinimapClicked` e só cria a marcação de destino quando esse controlador não o trata. O mod não decide quando mudar de câmara ou mover a mira.
+
+Teste com Ctrl esquerdo e botão direito na amostra: em Topography/tanque normal, comparar a marcação de destino com o original; em artilharia, comparar a mudança/movimento de câmara conforme o comportamento nativo. Confirmar um único efeito por clique, também depois de redimensionar. Replays mantêm apenas diagnóstico, sem chamar o handler. Testes automatizados cobrem o índice nativo 1, bloqueios, deduplicação e ausência de encaminhamento do meio; falta validação visual/do comando no jogo. A amostra continua sem substituir o original.
+
 ## Topography / Maps Training
 
 Ativação da amostra no modo pedida pelo utilizador. O cliente usa `MAPS_TRAINING_PAGE` com `RANDOM_BATTLE_HUD`, pelo que reutiliza a view Gameface existente. O adaptador aceita especificamente `MapsTrainingMinimapComponent` e `BotAppearNotificationPlugin` do módulo nativo maps_training, confirmando também `ARENA_GUI_TYPE.MAPS_TRAINING` na arena em cada snapshot. Uma troca de modo/plugin invalida o leitor; não se alargou a lista de plugins genéricos e os filtros das batalhas normais permanecem iguais.

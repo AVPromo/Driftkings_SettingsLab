@@ -254,11 +254,14 @@ class NativeAdapterTests(RuntimeTest):
         value = dict(x=.5, y=.25, button=0, sizeIndex=4, sequence=1)
         self.assertEqual(send(self.component, value), 'forwarded')
         self.assertEqual(calls, [(105, 52.5, 0, 4)])
+        self.assertEqual(send(self.component, dict(value, button=1)), 'forwarded')
+        self.assertEqual(calls[-1], (105, 52.5, 1, 4))
         calls[:] = []
-        self.assertEqual(send(self.component, dict(value, button=1)), 'diagnostic-button')
+        self.assertEqual(send(self.component, dict(value, button=2)), 'diagnostic-button')
         self.assertEqual(send(self.component, dict(value, x=2)), 'invalid-input')
         replay.isPlaying = True
         self.assertEqual(send(self.component, value), 'diagnostic-replay')
+        self.assertEqual(send(self.component, dict(value, button=1)), 'diagnostic-replay')
         replay.isPlaying = False
         modal[0] = True
         self.assertEqual(send(self.component, value), 'modal-view')

@@ -447,7 +447,7 @@
         var request = data.sampleInputRequest;
         if (typeof request !== 'number' || !isFinite(request) || request < 0 || request > 2147483647 || Math.floor(request) !== request) { request = 0; }
         interaction = interactive ? {generation: data.generation, request: request} : null;
-        line('Input da amostra: ' + (interactive ? 'esquerdo via cliente; restantes botões em diagnóstico' : 'inativo'));
+        line('Input da amostra: ' + (interactive ? 'esquerdo/direito via cliente; botão do meio em diagnóstico' : 'inativo'));
         if (sample && typeof sample.localX === 'number' && isFinite(sample.localX) &&
                 typeof sample.localY === 'number' && isFinite(sample.localY)) {
             line('Gameface → Python #' + sample.sequence + ': ' + sample.localX.toFixed(1) + ', ' + sample.localY.toFixed(1) + ' px nativos (cruz turquesa)');

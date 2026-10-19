@@ -3,7 +3,7 @@
 
 The adapter does not subscribe to events, query world entities or retain past
 positions. Its snapshots feed diagnostics, not production replacement. Input
-delegation calls the stock classic handler only for validated user left-clicks.
+delegation calls the stock classic handler only for validated user clicks.
 """
 import weakref
 
@@ -258,7 +258,7 @@ def native_position_input_status(component):
 
 
 def forward_native_position_input(component, value):
-    """One explicit left-click, delegated once; never retry or send chat here."""
+    """One explicit left/right click, delegated once; never retry or send chat here."""
     status = native_position_input_status(component)
     if status != 'ready':
         return status
@@ -269,7 +269,7 @@ def forward_native_position_input(component, value):
         value = input_sample(value)
         if value is None:
             return 'invalid-input'
-        if value['button'] != 0:
+        if value['button'] not in (0, 1):
             return 'diagnostic-button'
         x, y = native_click_point(value['x'], value['y'], MINIMAP_SIZE)
         component.onMinimapClicked(x, y, value['button'], value['sizeIndex'])

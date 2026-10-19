@@ -239,8 +239,10 @@ class ProbeTests(RuntimeTest):
         self.assertEqual(self.frames[-1]['sampleInputRequest'], 1)
         self.bridge.receive_sample_input(self.view, dict(args, request=2, generation=0))
         self.assertEqual(len(forwarded), 1)
-        self.bridge.receive_sample_input(self.view, dict(args, request=2))
+        self.bridge.receive_sample_input(self.view, dict(args, request=2, button=1))
+        self.bridge.receive_sample_input(self.view, dict(args, request=2, button=1))
         self.assertEqual(len(forwarded), 2)
+        self.assertEqual(forwarded[1][1]['button'], 1)
         self.bridge.stop()
         self.assertEqual(self.view._sampleRequest, 0)
 
