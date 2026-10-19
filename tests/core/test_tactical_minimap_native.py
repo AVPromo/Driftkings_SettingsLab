@@ -88,11 +88,22 @@ class NativeAdapterTests(RuntimeTest):
     def test_enemy_disappears_without_reading_or_retaining_previous_matrix(self):
         self.plugin._entries = {1: self.entry(enemy=True)}
         self.assertEqual(len(self.adapter.capture()['markers']), 1)
-        for changes in ({'active': False}, {'alive': False}, {'aoi': False}, {'location': 2}):
+        for changes in ({'active': False}, {'alive': False}, {'aoi': False}, {'location': 0}, {'location': 3}):
             self.plugin._entries[1] = self.entry(enemy=True, **changes)
             self.reads[:] = []
             self.assertEqual(self.adapter.capture()['markers'], [])
             self.assertEqual(self.reads, [])
+
+    def test_spotted_far_enemy_is_published_then_removed_when_hidden(self):
+        self.plugin._entries = {1: self.entry(enemy=True, aoi=True, location=2)}
+        points = self.adapter.capture()['markers']
+        self.assertEqual(len(points), 1)
+        self.assertEqual(points[0]['side'], 'enemy')
+        self.assertEqual((points[0]['x'], points[0]['y']), (.5, .5))
+        self.plugin._entries[1] = self.entry(enemy=True, aoi=False, location=0)
+        self.reads[:] = []
+        self.assertEqual(self.adapter.capture()['markers'], [])
+        self.assertEqual(self.reads, [])
 
     def test_personal_matrix_uses_world_bounds_and_yaw_not_flash_pixels(self):
         from math import pi
@@ -205,7 +216,7 @@ class NativeAdapterTests(RuntimeTest):
 
     def test_hidden_lost_transitional_dead_and_inactive_entries_never_read_matrices(self):
         entries = [self.entry(active=False), self.entry(alive=False), self.entry(aoi=False),
-                   self.entry(location=0), self.entry(location=2), self.entry(location=3)]
+                   self.entry(location=0), self.entry(location=2, aoi=False), self.entry(location=3)]
         def forbidden():
             self.reads.append('forbidden')
             self.fail('Must not read a matrix for an unpublished entry')

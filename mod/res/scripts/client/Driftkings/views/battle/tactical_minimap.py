@@ -66,13 +66,14 @@ class NativeMinimapAdapter(object):
                       entryAudit={'total': len(entries), 'unpublished': 0, 'class': 0, 'matrix': 0, 'bounds': 0, 'errors': 0})
         for vehicle_id, entry in entries:
             try:
-                # FAR is accepted only for allies still published by the native
-                # minimap. Never access a matrix for an enemy outside AoI.
+                # FAR also carries currently spotted distant enemies. Native
+                # isInAoI stays true for those publications; hidden entries are
+                # reset to UNDEFINED/false by _hideVehicle before any read here.
                 if not entry.isActive() or not entry.isAlive():
                     result['entryAudit']['unpublished'] += 1
                     continue
                 enemy, location = entry.isEnemy(), entry.getLocation()
-                allowed = (entry.isInAoI() and location == self._aoi_location or
+                allowed = (entry.isInAoI() and location in (self._aoi_location, self._far_location) or
                            not enemy and location == self._far_location)
                 if not allowed:
                     result['entryAudit']['unpublished'] += 1

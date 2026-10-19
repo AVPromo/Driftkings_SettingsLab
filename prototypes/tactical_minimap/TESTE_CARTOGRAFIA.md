@@ -2,7 +2,9 @@
 
 ## Inimigos atualmente avistados
 
-Impactos de artilharia confirmados pelo utilizador. A próxima etapa acrescenta `enemyPoints` à amostra, apenas após handshake e geometria válida. A origem continua a ser o adaptador nativo: entrada ativa, viva, em AoI e localização AOI, verificadas antes de ler a matriz. FAR, transições, entradas ocultas e destruídas são excluídas; não há pesquisa de entidades ou retenção da última posição. O transporte remove IDs e nomes e limita os veículos a 64 slots.
+Correção após a captura do replay: o filtro inicial omitira inimigos distantes visíveis. `VehiclesPlugin.updatePositions()` publica essas entradas como FAR e mantém `isInAoI=True`; `_hideVehicle()` passa a UNDEFINED/false quando deixam de estar avistadas. O adaptador aceita agora AOI ou FAR apenas com esse sinal nativo verdadeiro para inimigos. Continua a rejeitar FAR/false, UNDEFINED, transições e destruídos antes de ler matrizes. O teste reproduz publicação distante e posterior ocultação sem retenção.
+
+Impactos de artilharia confirmados pelo utilizador. A próxima etapa acrescenta `enemyPoints` à amostra, apenas após handshake e geometria válida. A origem continua a ser o adaptador nativo: entrada ativa, viva, sinal de avistamento nativo e localização AOI/FAR, verificados antes de ler a matriz. Transições, entradas ocultas e destruídas são excluídas; não há pesquisa de entidades ou retenção da última posição. O transporte remove IDs e nomes e limita os veículos a 64 slots.
 
 Os ícones SVG da classe aparecem a vermelho. Confirmar no replay a posição, classe e remoção quando o inimigo deixa de estar avistado, morre ou desaparece da entrada publicada; testar também avançar/recuar no replay. A amostra não oferece Lost Contact, não mostra destruídos nesta etapa e mantém o minimapa original. A validação visual desta etapa está pendente.
 
