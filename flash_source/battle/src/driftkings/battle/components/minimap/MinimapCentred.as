@@ -52,38 +52,6 @@ package driftkings.battle.components.minimap
             timer.addEventListener(TimerEvent.TIMER, refresh);
         }
 
-        public function as_minimapGeometry():Object
-        {
-            var data:Object = {available:false, reason:"minimap-unavailable"};
-            if (minimap && stage && stage.stageWidth > 0 && stage.stageHeight > 0)
-            {
-                try
-                {
-                    // Native map inset/size, not getBounds() over vehicle labels.
-                    var origin:Point = minimap.currentTopLeftPoint;
-                    var area:Rectangle = minimap.getMinimapRectBySizeIndex(minimap.currentSizeIndex);
-                    if (origin && area && area.width > 0 && area.height > 0)
-                    {
-                        var a:Point = minimap.localToGlobal(origin);
-                        var b:Point = minimap.localToGlobal(new Point(origin.x + area.width, origin.y));
-                        var c:Point = minimap.localToGlobal(new Point(origin.x, origin.y + area.height));
-                        var d:Point = minimap.localToGlobal(new Point(origin.x + area.width, origin.y + area.height));
-                        var left:Number = Math.min(a.x, b.x, c.x, d.x);
-                        var top:Number = Math.min(a.y, b.y, c.y, d.y);
-                        data = {available:true, x:Math.round(left * 100) / 100,
-                            y:Math.round(top * 100) / 100,
-                            width:Math.round((Math.max(a.x,b.x,c.x,d.x) - left) * 100) / 100,
-                            height:Math.round((Math.max(a.y,b.y,c.y,d.y) - top) * 100) / 100,
-                            stageWidth:stage.stageWidth, stageHeight:stage.stageHeight};
-                    }
-                    else data.reason = "empty-map-area";
-                }
-                catch (error:Error) { data = {available:false, reason:"map-area-unavailable"}; }
-            }
-            else if (minimap) data.reason = "stage-unavailable";
-            return data;
-        }
-
         public function as_minimapPresentation(value:Object):void
         {
             options = value;

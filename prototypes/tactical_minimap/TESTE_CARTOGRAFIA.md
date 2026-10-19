@@ -33,3 +33,11 @@ Confirmar se A coincide com um aliado nativo, também com veículos em movimento
 ## Correção da entrega de geometria
 
 No teste NA, o log confirmou `waiting-geometry` apesar de existirem 14 entradas publicadas. A origem não estava a entregar geometria ao diagnóstico. Foi removida a dependência do callback Flash → Python: a view lê agora `as_minimapGeometry()` diretamente, através de `core.callbacks`, a cada 250 ms apenas com o diagnóstico ativo. O callback agendado é cancelado ao destruir a view e para em erro/desativação. O timer nativo do minimapa não foi alterado. Esta revisão substitui a descrição anterior de reutilização do timer Flash para o diagnóstico. Confirmar no próximo teste `Ponto A: ready` e a coincidência visual.
+
+## Leitura independente da view auxiliar
+
+O segundo teste continuou em `waiting-geometry`. Foi confirmado por hash que o SWF e os PYC instalados correspondiam à build. A ponte já recebe o componente nativo e as entradas, mas o caminho pela view auxiliar não produz geometria.
+
+A biblioteca passa a expor `as_DriftkingsMinimapGeometry` no protótipo `BaseMinimap`, tal como já expõe as fábricas na página nativa. A ponte consulta o próprio `MinimapComponent.flashObject`, sem criar ou esperar por `MinimapCentredView`. Uma string limitada transporta seis números do palco, evitando conversão implícita de objetos GFx. A leitura repete-se a cada 250 ms pelo serviço existente de callbacks; é cancelada em ended/dispose, não lê quando o HUD está oculto e recupera caso a biblioteca ainda esteja a carregar. Foram removidos o getter e o polling da view auxiliar.
+
+Esta revisão requer substituir o pacote e reabrir o replay. O teste visual permanece pendente; o log apresenta agora também `geometry=...`, distinguindo biblioteca indisponível, palco indisponível e dados inválidos.

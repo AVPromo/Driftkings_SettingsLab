@@ -16,8 +16,3 @@ class MinimapMeta(BattleMeta):
     def as_minimapRangesS(self, payload):
         if self._isDAAPIInited():
             return self.flashObject.as_minimapRanges(payload)
-
-
-    def as_minimapGeometryS(self):
-        if self._isDAAPIInited():
-            return self.flashObject.as_minimapGeometry()

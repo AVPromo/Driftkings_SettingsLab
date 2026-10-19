@@ -31,15 +31,19 @@ class ProbeTests(RuntimeTest):
             return Owner(capture=lambda: self.snapshot, close=lambda: self.closed.append(True))
         def publish(view, data):
             self.frames.append(data)
+        self.scheduled, self.cancelled = [], []
         self.api = source('views/battle/tactical_minimap_probe.py', {
             'Driftkings.core.tactical_minimap_probe': self.policy,
             'Driftkings.views.battle.tactical_minimap': module(native_adapter=factory),
             'Driftkings.views.hangar.common': module(publish_card=publish),
             'Driftkings.core.hud_visibility': module(hudVisibility=hud)})
-        self.bridge = self.api['ProbeBridge'](object(), lambda config: self.settings)
+        self.bridge = self.api['ProbeBridge'](object(), lambda config: self.settings,
+            schedule=lambda delay, fn: self.scheduled.append((delay, fn)) or len(self.scheduled),
+            cancel=lambda token: self.cancelled.append(token))
         self.view = Owner(_ready=True, _guiVisible=True, _acknowledged=False, destroy=lambda: None)
         self.bridge.views.add(self.view)
-        self.component = Owner(sessionProvider=Owner())
+        self.component = Owner(sessionProvider=Owner(),
+            flashObject=Owner(as_DriftkingsMinimapGeometry=lambda: '1|800|400|200|200|1000|800'))
 
     def test_map_uri_accepts_only_virtual_cartography(self):
         for path in ('spaces/01_karelia/mmap.dds', 'gui/maps/icons/map/01_karelia.png'):
@@ -59,23 +63,22 @@ class ProbeTests(RuntimeTest):
         self.assertFalse(self.policy.calibration_result(raw)['available'])
         self.assertNotIn('calibration', self.policy.payload(False, False, calibration=raw))
 
-    def test_geometry_source_ignores_stale_callbacks_and_clears_on_stop(self):
+    def test_native_geometry_does_not_require_an_auxiliary_view(self):
         self.settings['tacticalDiagnostics'] = True
-        first, second = Owner(), Owner()
-        raw = dict(available=True, x=800, y=400, width=200, height=200,
-                   stageWidth=1000, stageHeight=800)
-        self.bridge.register_geometry_source(first)
-        self.bridge.on_geometry(first, raw)
+        self.bridge.bind_native(self.component)
+        self.bridge.start()
         self.assertTrue(self.bridge._calibration['available'])
-        self.bridge.register_geometry_source(second)
-        self.bridge.on_geometry(first, raw)
+        self.assertEqual(self.scheduled[0][0], .25)
+        self.bridge.unbind_native(self.component)
         self.assertIsNone(self.bridge._calibration)
-        self.bridge.on_geometry(second, raw)
-        self.bridge.clear_geometry_source(first)
-        self.assertTrue(self.bridge._calibration['available'])
         self.bridge.stop()
-        self.bridge.on_geometry(second, raw)
-        self.assertIsNone(self.bridge._calibration)
+        self.assertEqual(self.cancelled, [1])
+        self.assertIsNone(self.bridge._geometry_callback)
+
+    def test_geometry_string_protocol_is_bounded_and_rejects_invalid_data(self):
+        self.assertTrue(self.policy.geometry_response('1|800|400|200|200|1000|800')['available'])
+        for value in (None, {}, '1|0|0|nan|200|1000|800', '1|0|0|-1|200|1000|800', '1|0', '2|0'):
+            self.assertFalse(self.policy.geometry_response(value)['available'])
 
     def test_ally_probe_requires_handshake_geometry_and_current_publication(self):
         geometry = dict(available=True, x=800, y=400, width=200, height=200,
@@ -98,52 +101,27 @@ class ProbeTests(RuntimeTest):
         self.snapshot['markers'] = []
         self.assertNotIn('alliedPoint', self.policy.payload(True, True, self.snapshot, calibration=geometry))
 
-    def test_geometry_tick_recaptures_current_native_entries(self):
+    def test_native_geometry_poll_handles_failure_recovery_hud_and_stop(self):
         self.settings['tacticalDiagnostics'] = True
         self.bridge.bind_native(self.component)
         self.bridge.start()
-        owner = Owner()
-        self.bridge.register_geometry_source(owner)
-        raw = dict(available=True, x=800, y=400, width=200, height=200,
-                   stageWidth=1000, stageHeight=800)
-        self.bridge.on_geometry(owner, raw)
-        count = len(self.frames)
-        self.bridge.on_geometry(owner, raw)
-        self.assertEqual(len(self.frames), count + 1)
-
-    def test_direct_flash_geometry_poll_is_opt_in_owned_and_cancelled(self):
-        scheduled, cancelled, readings = [], [], []
-        class Meta(object):
-            def __init__(self, section):
-                self.section = section
-            def as_minimapGeometryS(self):
-                return {'available': False, 'reason': 'stage-unavailable'}
-        callbacks = module(callback=lambda delay, fn: scheduled.append((delay, fn)) or len(scheduled),
-                           cancelCallback=lambda token: cancelled.append(token))
-        api = source('views/battle/minimap_enhancements.py', {
-            'Driftkings._constants': module(GLOBAL=Owner(), MINIMAP_ENHANCEMENTS=Owner()),
-            'Driftkings.settings.service': module(settings_service=Owner()),
-            'Driftkings.common': module(logError=lambda *args: None, xvmInstalled=False),
-            'Driftkings.common.utils.game': module(checkKeys=lambda *args: False),
-            'Driftkings.core.callbacks': callbacks,
-            'Driftkings.meta.battle.minimap': module(MinimapMeta=Meta),
-            'Driftkings.ui.common.events': module(g_events=Owner())})
-        enabled = [True]
-        bridge = Owner(enabled=lambda: enabled[0], register_geometry_source=lambda view: True,
-                       clear_geometry_source=lambda view: readings.append('clear'),
-                       on_geometry=lambda view, data: readings.append(data))
-        api['_component'] = lambda: Owner(config=Owner(NAME='minimap_enhancements'), _probe_bridge=bridge)
-        view = api['MinimapCentredView']()
-        view._bindTacticalProbe()
-        self.assertEqual(readings[0]['reason'], 'stage-unavailable')
-        self.assertEqual(scheduled[0][0], .25)
-        view._releaseTacticalProbe()
-        self.assertEqual(cancelled, [1])
-        self.assertIsNone(view._probeCallback)
-        enabled[0] = False
-        view._probeTick()
-        self.assertEqual(len(scheduled), 1)
-        self.assertEqual(readings[-1], 'clear')
+        def missing():
+            raise AttributeError('Library not ready')
+        self.component.flashObject.as_DriftkingsMinimapGeometry = missing
+        self.scheduled[-1][1]()
+        self.assertEqual(self.bridge._calibration['reason'], 'native-geometry-unavailable')
+        self.component.flashObject.as_DriftkingsMinimapGeometry = lambda: '1|0|0|200|200|1000|800'
+        self.scheduled[-1][1]()
+        self.assertTrue(self.bridge._calibration['available'])
+        self.bridge.hudVisible = False
+        self.component.flashObject.as_DriftkingsMinimapGeometry = missing
+        self.scheduled[-1][1]()
+        self.assertTrue(self.bridge._calibration['available'])
+        self.bridge.stop()
+        count = len(self.scheduled)
+        self.bridge._geometry_tick()
+        self.assertEqual(len(self.scheduled), count)
+        self.assertIsNone(self.bridge._calibration)
 
     def test_default_off_creates_no_adapter_and_starts_no_diagnostic(self):
         self.bridge.bind_native(self.component)

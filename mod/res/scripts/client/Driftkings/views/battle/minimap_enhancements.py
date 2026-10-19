@@ -2,7 +2,7 @@
 from Driftkings._constants import GLOBAL, MINIMAP_ENHANCEMENTS
 from Driftkings.settings.service import settings_service
 """Presentation adapter for MinimapPlugins; gameplay state stays in its component."""
-from Driftkings.common import logError, xvmInstalled
+from Driftkings.common import xvmInstalled
 from Driftkings.common.utils.game import checkKeys
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.meta.battle.minimap import MinimapMeta
@@ -20,7 +20,6 @@ class MinimapCentredView(MinimapMeta):
     def __init__(self):
         super(MinimapCentredView, self).__init__(_component().config.NAME)
         self._releaseCallback = None
-        self._probeCallback = None
 
 
     def _populate(self):
@@ -36,10 +35,8 @@ class MinimapCentredView(MinimapMeta):
         for plugin in list(_component().PERSONAL):
             if hasattr(plugin, '_ranges'):
                 self.onRanges(plugin._ranges)
-        self._bindTacticalProbe()
 
     def _dispose(self):
-        self._releaseTacticalProbe()
         # AS disposal restores zoom; arena data may already be gone here.
         if self._releaseCallback is not None:
             cancelCallback(self._releaseCallback)
@@ -50,41 +47,6 @@ class MinimapCentredView(MinimapMeta):
         g_events.onAltKey -= self.onAltKey
         # noinspection PyProtectedMember
         super(MinimapCentredView, self)._dispose()
-
-    def _bindTacticalProbe(self):
-        bridge = _component()._probe_bridge
-        if bridge is not None:
-            try:
-                if bridge.register_geometry_source(self):
-                    self._probeTick()
-            except Exception as error:
-                logError(self.section, 'Tactical calibration unavailable: ' + repr(error))
-
-    def _releaseTacticalProbe(self):
-        if self._probeCallback is not None:
-            cancelCallback(self._probeCallback)
-            self._probeCallback = None
-        bridge = _component()._probe_bridge
-        if bridge is not None:
-            try:
-                bridge.clear_geometry_source(self)
-            except Exception as error:
-                logError(self.section, 'Tactical calibration cleanup failed: ' + repr(error))
-
-    def _probeTick(self):
-        self._probeCallback = None
-        bridge = _component()._probe_bridge
-        if bridge is None:
-            return
-        if not bridge.enabled():
-            bridge.clear_geometry_source(self)
-            return
-        try:
-            bridge.on_geometry(self, self.as_minimapGeometryS())
-            self._probeCallback = callback(0.25, self._probeTick)
-        except Exception as error:
-            bridge.clear_geometry_source(self)
-            logError(self.section, 'Tactical geometry read failed: ' + repr(error))
 
     def _checkRelease(self):
         self._releaseCallback = None

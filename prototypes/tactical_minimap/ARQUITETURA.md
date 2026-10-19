@@ -31,3 +31,7 @@ A biblioteca gráfica foi movida para a pasta Gameface e declarada no manifesto/
 ## Calibração de coordenadas — estado atual
 
 O diagnóstico recebeu cartografia original, geometria Flash e contorno Gameface. O utilizador confirmou a textura e o alinhamento dos cantos/centro com redimensionamento. A amostra seguinte transporta apenas x/y de um aliado atualmente publicado, após handshake e com geometria válida, para testar a conversão mundo/mapa. Reutiliza o timer Flash existente de 250 ms; não acrescenta scheduler. As descrições anteriores de transporte sem posições correspondem às etapas iniciais. Não são enviados IDs, nomes, inimigos ou histórico. O renderer sintético permanece isolado e a substituição do minimapa continua bloqueada.
+
+### Revisão após testes NA
+
+Os testes do ponto A ficaram bloqueados em `waiting-geometry`. A implementação atual lê a geometria diretamente do `MinimapComponent.flashObject` através de uma função do protótipo nativo instalada pela biblioteca, independente da nossa view auxiliar. Usa o serviço de callbacks existente com um único token de 250 ms, cancelado no fim da batalha. Não lê posições com o HUD oculto. As referências acima ao timer Flash descrevem a implementação anterior, removida. Testes de integração simulados cobrem leitura sem view auxiliar, falha/recuperação, ocultação e cancelamento; ainda é necessária confirmação no jogo.

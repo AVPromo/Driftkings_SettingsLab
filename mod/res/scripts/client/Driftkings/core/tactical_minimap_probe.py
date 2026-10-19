@@ -97,7 +97,7 @@ def calibration_result(data):
         return unavailable
     if data.get('available') is False:
         reason = data.get('reason')
-        allowed = ('minimap-unavailable', 'background-unavailable', 'stage-unavailable', 'empty-background', 'map-area-unavailable', 'empty-map-area')
+        allowed = ('minimap-unavailable', 'background-unavailable', 'stage-unavailable', 'empty-background', 'map-area-unavailable', 'empty-map-area', 'native-geometry-unavailable')
         return {'available': False, 'reason': reason if reason in allowed else 'unavailable'}
     if data.get('available') is not True:
         return unavailable
@@ -131,3 +131,17 @@ def allied_calibration_point(markers):
         if 0 <= x <= 1 and 0 <= y <= 1:
             return {'x': x, 'y': y}
     return None
+
+
+def geometry_response(value):
+    """Primitive-string Flash return avoids relying on GFx object conversion."""
+    if not isinstance(value, (str, type(u''))) or len(value) > 256:
+        return calibration_result(None)
+    parts = value.split('|')
+    if len(parts) == 2 and parts[0] == '0':
+        return calibration_result({'available': False, 'reason': parts[1]})
+    if len(parts) != 7 or parts[0] != '1':
+        return calibration_result(None)
+    data = dict(zip(('x', 'y', 'width', 'height', 'stageWidth', 'stageHeight'), parts[1:]))
+    data['available'] = True
+    return calibration_result(data)

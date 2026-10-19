@@ -3,7 +3,7 @@
 import logging
 import weakref
 
-from Driftkings.core.tactical_minimap_probe import accepts_ack, calibration_result, graphics_result, payload
+from Driftkings.core.tactical_minimap_probe import accepts_ack, geometry_response, graphics_result, payload
 from Driftkings.views.battle.tactical_minimap import native_adapter
 from Driftkings.views.hangar.common import publish_card
 
@@ -12,11 +12,13 @@ FEATURE = 'DriftkingsTacticalMinimapProbe'
 
 
 class ProbeBridge(object):
-    def __init__(self, config, settings_reader, adapter_factory=native_adapter, publisher=publish_card):
+    def __init__(self, config, settings_reader, adapter_factory=native_adapter, publisher=publish_card, schedule=None, cancel=None):
         self.config = config
         self._settings = settings_reader
         self._factory = adapter_factory
         self._publish = publisher
+        self._schedule, self._cancel = schedule, cancel
+        self._geometry_callback = None
         self.views = weakref.WeakSet()
         self.active = False
         self.generation = 0
@@ -26,7 +28,6 @@ class ProbeBridge(object):
         self.installed = False
         self._native = None
         self._adapter = None
-        self._geometry_source = None
         self._calibration = None
         self._ally_log_state = None
         self._ally_log_count = 0
@@ -49,12 +50,14 @@ class ProbeBridge(object):
         self._close_adapter()
         self._native_failed = False
         self._native = weakref.ref(component)
+        self._read_geometry()
         self.refresh()
 
     def unbind_native(self, component):
         if self._native is not None and self._native() is component:
             self._close_adapter()
             self._native = None
+            self._calibration = None
             self.refresh()
 
     def start(self, *args):
@@ -68,12 +71,16 @@ class ProbeBridge(object):
             view._acknowledged = False
             view._graphicsResult = None
         self.active = True
+        self._start_geometry_poll()
         hudVisibility.attach(self)
         self.refresh()
 
     def stop(self, *args):
         from Driftkings.core.hud_visibility import hudVisibility
         self.active = False
+        if self._geometry_callback is not None:
+            self._cancel(self._geometry_callback)
+            self._geometry_callback = None
         self._native_failed = False
         for view in self.views:
             view._acknowledged = False
@@ -81,30 +88,36 @@ class ProbeBridge(object):
         hudVisibility.detach(self)
         self._close_adapter()
         self._native = None
-        self._geometry_source = None
         self._calibration = None
         self.refresh()
 
-    def register_geometry_source(self, view):
-        if not self.enabled():
-            return False
-        self._geometry_source = weakref.ref(view)
+    def _read_geometry(self):
+        component = self._native() if self._native is not None else None
         self._calibration = None
-        return True
+        if component is None or not self.enabled():
+            return
+        try:
+            data = component.flashObject.as_DriftkingsMinimapGeometry()
+            self._calibration = geometry_response(data)
+        except Exception:
+            self._calibration = {'available': False, 'reason': 'native-geometry-unavailable'}
 
-    def clear_geometry_source(self, view):
-        if self._geometry_source is not None and self._geometry_source() is view:
-            self._geometry_source = None
+    def _start_geometry_poll(self):
+        if self._schedule is None:
+            from Driftkings.core.callbacks import callback, cancelCallback
+            self._schedule, self._cancel = callback, cancelCallback
+        self._geometry_tick()
+
+    def _geometry_tick(self):
+        self._geometry_callback = None
+        if not self.active or not self.enabled():
             self._calibration = None
             self.refresh()
-
-    def on_geometry(self, view, data):
-        if (not self.enabled() or self._geometry_source is None or self._geometry_source() is not view):
             return
-        result = calibration_result(data)
-        self._calibration = result
-        # Reuse the existing Flash refresh tick for a fresh, stateless ally sample.
-        self.refresh()
+        if self.hudVisible and any(view._ready and view._guiVisible for view in self.views):
+            self._read_geometry()
+            self.refresh()
+        self._geometry_callback = self._schedule(0.25, self._geometry_tick)
 
     def setBattleHudVisible(self, visible):
         self.hudVisible = bool(visible)
@@ -143,12 +156,12 @@ class ProbeBridge(object):
             try:
                 data = payload(enabled and view._guiVisible, view._acknowledged, snapshot, self.generation,
                                getattr(view, '_graphicsResult', None), self._calibration)
-                state = (data['allyStatus'], data['reason'])
+                state = (data['allyStatus'], data['reason'], (self._calibration or {}).get('reason', 'no-native-geometry'))
                 if enabled and state != self._ally_log_state and self._ally_log_count < 8:
                     self._ally_log_state = state
                     self._ally_log_count += 1
-                    LOG.info('Allied calibration: status=%s native=%s entries=%d audit=%s',
-                             state[0], state[1], data['markerCount'], (snapshot or {}).get('entryAudit', {}))
+                    LOG.info('Allied calibration: status=%s native=%s geometry=%s entries=%d audit=%s',
+                             state[0], state[1], state[2], data['markerCount'], (snapshot or {}).get('entryAudit', {}))
                 self._publish(view, data)
             except Exception:
                 LOG.exception('Cannot publish minimap diagnostic; Vanilla unchanged')
