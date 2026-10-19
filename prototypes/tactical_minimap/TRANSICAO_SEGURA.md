@@ -20,6 +20,16 @@ A leitura é feita uma vez quando a geometria fica disponível, por ligação ao
 
 Para recolher: instalar o pacote recompilado, reiniciar o jogo, entrar numa missão Topography e voltar ao hangar. Consultar o log e comparar com a árvore auditada do SRC/SWF. A confirmação seguinte é estrutural; não se espera mudança visual nesta entrega. A ocultação e a recuperação independente continuam por implementar.
 
+## Resultado do ensaio por scrollRect — via retirada
+
+No ensaio NA/Topography de 2026-10-19, o log registou início às 20:14:46.786 e reposição às 20:14:49.726. A captura enviada pelo utilizador às 20:15:01 mostra o fundo original vermelho e círculos/linhas fora da área do mapa. A reposição das propriedades Flash não demonstrou reposição correta do desenho nativo.
+
+A implementação de recorte por scrollRect foi retirada por completo: helper Flash, comando, controlo, flag nos defaults e arranque Python. Um valor antigo `tacticalPresentationTrial=true` nas configurações fica sem consumidor e não pode ativar o ensaio na build corrigida. A sondagem estrutural só de leitura mantém-se.
+
+Este resultado invalida esta implementação de ocultação. Não se repete nem se ativa como troca permanente. A hipótese de que os ramos separados na árvore poderiam ser recortados preservando a apresentação C++ não ficou comprovada. Uma alternativa precisa de auditoria das superfícies C++/Flash e nova prova de reposição, antes de qualquer ocultação. A substituição permanece bloqueada.
+
+Após instalar o pacote corrigido é necessário reiniciar o cliente para recriar as superfícies nativas; remover a opção ou restaurar propriedades em memória não prova que uma superfície já afetada fique recuperada. Confirmar que o original regressa normal, sem vermelho ou linhas a sair do mapa.
+
 ## Condições para assumir a apresentação
 
 - Escolha Driftkings guardada antes do início da batalha, sem troca durante combate nesta primeira versão.
@@ -38,17 +48,4 @@ Testar falha de carregamento, falha de desenho, ausência de confirmações, per
 
 ## O que esta etapa não comprova
 
-Não há troca permanente nem lease de produção implementados. Existe apenas o ensaio de recorte temporário descrito abaixo. Os testes existentes cobrem a amostra e a política bloqueada. A seleção específica de veículos continua sem contrato confirmado; não será inventada nem convertida silenciosamente em ping de posição. Compatibilidade EU/NA/ASIA não pode ser deduzida apenas do SRC EU ou dos testes NA/Topography.
-
-
-## Ensaio opt-in de recorte e reposição — Topography
-
-A sondagem real NA de 2026-10-19 19:58:00 mostrou 12 ramos diretos: background, seis foregrounds, entriesContainer, entriesContainerMask, minimapHint, clickAreaSpr e mapHit. Fundo/entradas/input foram identificados separadamente (`coupledInput=false`). Isto permite ensaiar um recorte da apresentação; não prova que a substituição completa seja possível.
-
-A opção `tacticalPresentationTrial` nasce falsa e aparece nas melhorias do minimapa como “Training only: test native presentation restoration (3 seconds)”. Só atua com `tacticalDiagnostics=true`, na próxima missão Topography, com veículo próprio vivo, geometria válida, confirmação SVG 21/21, sondagem separada e classes nativas exatas. Não depende da preferência Vanilla/Driftkings nem a modifica. Recusa batalhas normais, espectador, XVM e janela modal. Catálogos i18n não são alterados nesta entrega; o controlo usa texto inglês.
-
-`TacticalPresentationTrial` guarda os scrollRect dos ramos do fundo, entradas, foregrounds e hint. Recorta-os para uma área vazia durante três segundos, sem mudar visible, alpha, pais, rato, plugins ou configurações do jogo. Não toca em clickAreaSpr/mapHit nem no componente inteiro. A leitura de geometria e entradas continua; é necessário confirmar no cliente que o desenho C++ respeita o recorte e que pings/mira continuam publicados.
-
-Um Timer de uma execução no próprio Flash repõe os recortes. A remoção do componente do palco e stop/unbind Python também pedem reposição. A função evita repetir o ensaio no mesmo componente e tenta desfazer alterações parciais se o início falhar. A reposição preserva um scrollRect diferente entretanto escolhido pelo cliente. Um falhanço ao restaurar é identificado como `restore-failed`; não se declara sucesso nesse caso. Não existe ainda confirmação de execução real deste novo temporizador nem prova de recuperação de uma substituição permanente.
-
-Procedimento: instalar a build recompilada e reiniciar; ativar o controlo acima; guardar e entrar em Topography. A apresentação original deverá desaparecer durante três segundos e regressar sozinha, mantendo a amostra. Confirmar o regresso do original com textura, ícones, linhas e teclas de tamanho funcionais. Sair da missão e consultar `Presentation trial: active` e `Presentation trial: restored` no log. Depois desativar o controlo. Não é necessário nem permitido testar esta opção numa batalha normal; a guarda independente do backend rejeita esse modo.
+Ainda não há ocultação nem lease nativo implementados. Os testes existentes cobrem a amostra e a política bloqueada. A seleção específica de veículos continua sem contrato confirmado; não será inventada nem convertida silenciosamente em ping de posição. Compatibilidade EU/NA/ASIA não pode ser deduzida apenas do SRC EU ou dos testes NA/Topography.

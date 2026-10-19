@@ -11,21 +11,6 @@ OBJECTIVE_SYMBOLS = {'AllyTeamBaseEntry': 'allyBase', 'EnemyTeamBaseEntry': 'ene
                      'ControlPointEntry': 'controlPoint'}
 
 
-def presentation_trial_ready(settings, data, audit):
-    """Training-only evidence for a short test, never production replacement."""
-    return bool(settings.get('tacticalPresentationTrial') is True and
-                data.get('enabled') is True and data.get('acknowledged') is True and
-                data.get('available') is True and data.get('playerAvailable') is True and
-                data.get('mapContext') == 'topography' and
-                data.get('calibration', {}).get('available') is True and
-                data.get('graphics', {}).get('svgApi') is True and
-                data.get('graphics', {}).get('glyphCount') == 21 and
-                audit and audit.get('available') is True and
-                audit.get('background') is True and audit.get('entries') is True and
-                audit.get('hitArea') is True and audit.get('coupledInput') is False and
-                audit.get('visible') is True and audit.get('alpha', 0) > 0)
-
-
 def presentation_response(value):
     """Bounded structural metadata, never a capability to hide native UI."""
     unavailable = {'available': False, 'reason': 'invalid-presentation-audit'}

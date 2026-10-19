@@ -1,10 +1,10 @@
 # Cartografia e calibração — diagnóstico
 
-## Ensaio temporário da apresentação nativa
+## Correção após o ensaio de ocultação
 
-Novo controlo opt-in “Training only: test native presentation restoration (3 seconds)” nas melhorias do minimapa. Default desligado. Com diagnóstico ativo, ativar, guardar e entrar numa missão Topography após instalar/reiniciar a build nova. Quando a amostra estiver confirmada, o original deverá ficar recortado durante três segundos e regressar automaticamente pelo Timer Flash. Confirmar também teclas de tamanho, seta, câmara, ângulos, pings e saída da missão. Desativar o teste depois da confirmação.
+O ensaio scrollRect foi retirado após produzir fundo vermelho e linhas fora do minimapa, apesar de o log indicar reposição das propriedades. O novo pacote não contém o helper nem o comando/controlo de ensaio; uma flag antiga guardada não tem efeito. A sondagem estrutural continua só de leitura e Vanilla permanece ativo.
 
-Apenas ensaio da separação gráfica e da reposição: não é uma troca permanente para Driftkings. Ver detalhes, precondições e limites em `TRANSICAO_SEGURA.md`. Não há roda do rato. Confirmação in-game pendente.
+Instalar o pacote corrigido, reiniciar completamente o jogo e reentrar em Topography. Confirmar o original normal e os elementos da amostra sem regressão. Não repetir o ensaio antigo. Resultado e limites documentados em `TRANSICAO_SEGURA.md`.
 
 ## Tamanho apenas pelas teclas nativas
 

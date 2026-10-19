@@ -133,17 +133,6 @@ def _topography_context(component, session, plugin):
     return session.arenaVisitor.gui.guiType == ARENA_GUI_TYPE.MAPS_TRAINING
 
 
-def presentation_trial_allowed(component):
-    """A reversible presentation experiment is restricted to native Topography."""
-    try:
-        from Driftkings.common import xvmInstalled
-        return bool(not xvmInstalled and not component.isModalViewShown() and
-                    _topography_context(component, component.sessionProvider, component.getPlugin('vehicles')) and
-                    owns_player_marker(component))
-    except Exception:
-        return False
-
-
 def native_adapter(component, session):
     """Factory using contracts verified in the local 2.4.1 SRC, called explicitly.
 

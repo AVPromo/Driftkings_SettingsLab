@@ -62,8 +62,6 @@ def preferences(values=None):
 
 
 def validate_settings(data):
-    if type(data.get('tacticalPresentationTrial', False)) is not bool:
-        raise ValueError('Invalid tactical presentation trial switch')
     if data.get('minimapMode', 'vanilla') not in MODES:
         raise ValueError('Unknown minimap mode')
     preferences(data.get('tactical'))

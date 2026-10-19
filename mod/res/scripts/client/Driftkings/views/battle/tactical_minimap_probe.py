@@ -7,8 +7,8 @@ from Driftkings.core.diagnostics import Diagnostics
 
 from Driftkings.core.tactical_minimap import preferences, selection
 
-from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits, strategic_area_response, native_click_sample, gameface_click_sample, input_request, presentation_response, presentation_trial_ready
-from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points, native_camera_line, native_yaw_lines, native_strategic_point, forward_native_position_input, presentation_trial_allowed
+from Driftkings.core.tactical_minimap_probe import OBJECTIVE_SYMBOLS, PING_SYMBOLS, accepts_ack, cell_ping_response, geometry_response, graphics_result, payload, update_ranges, update_yaw_limits, strategic_area_response, native_click_sample, gameface_click_sample, input_request, presentation_response
+from Driftkings.views.battle.tactical_minimap import native_adapter, native_player_point, native_objective_points, native_circle_points, native_ping_points, native_camera_line, native_yaw_lines, native_strategic_point, forward_native_position_input
 from Driftkings.views.hangar.common import publish_card
 
 LOG = logging.getLogger('Driftkings.TacticalMinimapProbe')
@@ -41,8 +41,6 @@ class ProbeBridge(object):
         self._adapter = None
         self._calibration = None
         self._presentation_audit = None
-        self._trial_attempted = False
-        self._trial_status = 'idle'
         self._ally_log_state = None
         self._ally_log_count = 0
         self._ping_log_state = None
@@ -66,9 +64,6 @@ class ProbeBridge(object):
             self._adapter = None
 
     def bind_native(self, component):
-        self._restore_trial()
-        self._trial_attempted = False
-        self._trial_status = 'idle'
         self._presentation_audit = None
         self._last_input = None
         self._close_adapter()
@@ -78,8 +73,6 @@ class ProbeBridge(object):
         self.refresh()
 
     def unbind_native(self, component):
-        if self._native is not None and self._native() is component:
-            self._restore_trial()
         if self._native is not None and self._native() is component:
             self._close_adapter()
             self._native = None
@@ -118,7 +111,6 @@ class ProbeBridge(object):
         self.refresh()
 
     def stop(self, *args):
-        self._restore_trial()
         self._metrics.configure(False)
         from Driftkings.core.hud_visibility import hudVisibility
         self.active = False
@@ -159,11 +151,6 @@ class ProbeBridge(object):
             self._calibration = geometry_response(data)
             if self._calibration.get('available'):
                 self._audit_presentation(component)
-                if self._trial_status == 'active':
-                    try:
-                        self._set_trial_status(component.flashObject.as_DriftkingsPresentationTrial('status'))
-                    except Exception:
-                        LOG.debug('Presentation trial status unavailable; geometry preserved', exc_info=True)
                 try:
                     own = native_player_point(component, self._personal_entries.get(component))
                     if own is not None:
@@ -199,37 +186,6 @@ class ProbeBridge(object):
                          child['childCount'], child['mouseEnabled'], child['mouseChildren'])
         else:
             LOG.info('Native presentation audit unavailable: %s; Vanilla unchanged', result['reason'])
-
-    def _set_trial_status(self, status):
-        allowed = ('active', 'restored', 'restored-on-remove', 'failed-restored',
-                   'restore-failed', 'unsupported-tree', 'unavailable', 'already-tested', 'idle')
-        status = status if status in allowed else 'unavailable'
-        if status != self._trial_status:
-            self._trial_status = status
-            LOG.info('Presentation trial: %s; production replacement remains blocked', status)
-
-    def _restore_trial(self):
-        if self._trial_status != 'active':
-            return
-        try:
-            component = self._native() if self._native is not None else None
-            if component is not None:
-                self._set_trial_status(component.flashObject.as_DriftkingsPresentationTrial('restore'))
-        except Exception:
-            # The independent Flash timer is the backup if Python cannot reach it.
-            LOG.exception('Cannot request presentation restoration; Flash expiry remains armed')
-
-    def _try_trial(self, component, settings, data):
-        if self._trial_attempted or component is None:
-            return
-        if not presentation_trial_ready(settings, data, self._presentation_audit) or not presentation_trial_allowed(component):
-            return
-        self._trial_attempted = True
-        try:
-            self._set_trial_status(component.flashObject.as_DriftkingsPresentationTrial('start'))
-        except Exception:
-            self._set_trial_status('unavailable')
-            LOG.exception('Presentation trial unavailable; no retry')
 
     def observe_native_click(self, component, x, y, button, size_index):
         if (not self.active or not self.enabled() or not self.hudVisible or
@@ -391,9 +347,6 @@ class ProbeBridge(object):
                 data['visualConfig'] = preferences(settings.get('tactical'))
                 data['rendererSelection'] = selection(settings.get('minimapMode', 'vanilla'),
                                                       renderer_ready=bool(data.get('available')))
-                component = self._native() if self._native is not None else None
-                self._try_trial(component, settings, data)
-                data['presentationTrial'] = self._trial_status
                 data['sampleInputEnabled'] = bool(data.get('available') and self.sample_input_enabled(view))
                 data['sampleInputRequest'] = getattr(view, '_sampleRequest', 0)
                 if data.get('enabled') and data.get('acknowledged') and data.get('calibration', {}).get('available'):

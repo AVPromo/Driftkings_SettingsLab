@@ -59,7 +59,6 @@ class MinimapEnhancementsSettings(SectionDefinition):
         # These controls configure only the opt-in sample until native parity is verified.
         columns[0][0:0] = [
             caption('Tactical Minimap V2'),
-            nested_field(['tacticalPresentationTrial'], 'Training only: test native presentation restoration (3 seconds)'),
             nested_field(['minimapMode'], 'Minimap renderer', 'Dropdown',
                          choices=['vanilla', 'driftkings'], choice_labels=['Vanilla', 'Driftkings (preview)']),
             caption('Driftkings replacement is not available yet. Vanilla remains active.'),

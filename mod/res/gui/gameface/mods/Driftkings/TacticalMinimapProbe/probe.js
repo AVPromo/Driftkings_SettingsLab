@@ -547,10 +547,6 @@
         configureVisual(data.visualConfig);
         desiredNodes = []; lineIndex = 0;
         line('Tactical Minimap — diagnóstico | Vanilla preservado', 'dk-probe-title');
-        if (data.presentationTrial && data.presentationTrial !== 'idle') {
-            line(data.presentationTrial === 'active' ? 'Ensaio Topography: apresentação nativa recortada durante 3 segundos.' :
-                'Ensaio de apresentação: ' + data.presentationTrial, 'dk-probe-pending');
-        }
         if (data.rendererSelection && data.rendererSelection.requestedMode === 'driftkings') {
             line('Preferência Driftkings guardada; Vanilla ativo: interação e recuperação por concluir.', 'dk-probe-pending');
         }
