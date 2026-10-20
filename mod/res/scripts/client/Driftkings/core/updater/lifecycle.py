@@ -64,14 +64,22 @@ class LifecycleMixin(object):
         LOG.info('Starting updater; installed version %s', VERSION)
         if self.results is not None:
             client = getattr(self.api, 'client_version', None)
+            results = self.results
+            def scan():
+                reports = results.scan(client)
+                try:
+                    results.prune()
+                except Exception:
+                    LOG.warning('Superseded update cleanup failed', exc_info=True)
+                return reports
             if self.file_work is not None:
                 try:
-                    self.file_work.submit(lambda: self.results.scan(client), self._previous_results_received)
+                    self.file_work.submit(scan, self._previous_results_received)
                 except Exception as error:
                     self._previous_results_received(None, error)
             else:
                 try:
-                    self._previous_results_received(self.results.scan(client), None)
+                    self._previous_results_received(scan(), None)
                 except Exception as error:
                     self._previous_results_received(None, error)
         if self._install_armed:

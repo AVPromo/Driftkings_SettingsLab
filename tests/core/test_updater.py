@@ -266,3 +266,79 @@ class ServiceTests(RuntimeTest):
         self.assertFalse(self.service.schedule_install())
         self.assertEqual(self.service._blocked_reason(), 'unknownContext')
         self.assertFalse(self.service._safe_install_context())
+
+
+class StageCleanupTests(RuntimeTest):
+    def setUp(self):
+        super(StageCleanupTests, self).setUp()
+        self.root = tempfile.mkdtemp(prefix='dk-stage-test-')
+        self.addCleanup(shutil.rmtree, self.root)
+        self.cache = os.path.join(self.root, 'mods', 'configs', 'Driftkings', 'cache', 'update')
+        os.makedirs(self.cache)
+        # Python 2.7 on Windows delegates reparse checks to the native helper, absent in tests.
+        self.load('core.updater.windows_files').safe_path = lambda path: None
+        self.api = self.load('core.updater.results')
+        self.results = self.api.Results(self.root, loaded_version='1.2.0')
+
+    def stage(self, name, version, status=None, armed=True, stamp=0):
+        folder = os.path.join(self.cache, name)
+        os.makedirs(folder)
+        documents = {'release.json': dict(version=version)}
+        if armed:
+            documents['install.json'] = dict(version=version)
+        if status is not None:
+            documents['result.json'] = dict(schema=1, status=status, error=None, helperPid=1)
+        for filename, document in documents.items():
+            with open(os.path.join(folder, filename), 'w') as stream:
+                json.dump(document, stream)
+        with open(os.path.join(folder, 'backup-0'), 'wb') as stream:
+            stream.write(b'old file')
+        if stamp and status is not None:
+            os.utime(os.path.join(folder, 'result.json'), (stamp, stamp))
+        return folder
+
+    def test_prune_removes_only_finished_superseded_stages(self):
+        old = self.stage('download-old', '1.1.0', 'installed')
+        never_armed = self.stage('download-staged', '1.0.0', armed=False)
+        unfinished = self.stage('download-busy', '1.1.0', 'installing')
+        current = self.stage('download-current', '1.2.0', 'installed')
+        newer = self.stage('download-newer', '1.3.0', 'rolledBack')
+        nested = self.stage('download-nested', '1.0.0', 'failed')
+        os.makedirs(os.path.join(nested, 'unexpected'))
+        os.makedirs(os.path.join(self.cache, 'unrelated'))
+        self.assertEqual(self.results.prune(), 2)
+        for folder in (old, never_armed):
+            self.assertFalse(os.path.exists(folder))
+        for folder in (unfinished, current, newer, nested, os.path.join(self.cache, 'unrelated')):
+            self.assertTrue(os.path.isdir(folder))
+
+    def test_scan_skips_superseded_results_and_orders_by_result_time(self):
+        self.stage('download-b', '1.1.0', 'installed', stamp=100)
+        self.stage('download-a', '1.3.0', 'failed', stamp=300)
+        self.stage('download-c', '1.3.0', 'cancelled', stamp=200)
+        def ticket(ready):
+            with open(os.path.join(os.path.dirname(ready), 'release.json')) as stream:
+                return dict(gameVersion='2.4.1.0', version=json.load(stream)['version'])
+        self.results.ticket = ticket
+        self.results._package_matches = lambda ticket, old=False: None
+        reports = self.results.scan('2.4.1.0')
+        self.assertEqual([(item['version'], item['status']) for item in reports],
+                         [('1.3.0', 'cancelled'), ('1.3.0', 'failed')])
+
+    def test_stale_windows_helpers_are_removed_but_current_and_recent_kept(self):
+        api = self.load('core.updater.windows_files')
+        cache = os.path.join(self.root, 'wf-cache')
+        folders = {}
+        for name in ('wf-old', 'wf-recent', 'wf-current', 'wf-extra'):
+            folders[name] = os.path.join(cache, name)
+            os.makedirs(folders[name])
+            with open(os.path.join(folders[name], 'Driftkings.WindowsFiles.exe'), 'wb') as stream:
+                stream.write(b'MZ')
+        with open(os.path.join(folders['wf-extra'], 'other'), 'wb') as stream:
+            stream.write(b'x')
+        for name in ('wf-old', 'wf-current', 'wf-extra'):
+            os.utime(folders[name], (1, 1))
+        api.remove_stale_helpers(cache, folders['wf-current'])
+        self.assertFalse(os.path.exists(folders['wf-old']))
+        for name in ('wf-recent', 'wf-current', 'wf-extra'):
+            self.assertTrue(os.path.isdir(folders[name]))

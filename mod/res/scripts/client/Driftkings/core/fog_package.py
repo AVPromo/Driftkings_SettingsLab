@@ -112,6 +112,30 @@ class FogPackageController(object):
         with open(path + '.reported', 'wb') as stream:
             stream.write(b'1')
 
+    def remove_stale_sessions(self, age=86400, limit=20):
+        """Keep this session and the latest result; a helper still running keeps its files locked."""
+        from Driftkings.core.updater.results import remove_flat_directory
+        import time
+        sessions = []
+        for name in os.listdir(self.cache):
+            folder = os.path.join(self.cache, name)
+            if name.startswith('session-') and os.path.isdir(folder):
+                result = os.path.join(folder, 'result')
+                sessions.append((os.path.getmtime(result) if os.path.isfile(result) else 0, folder))
+        latest = max(sessions)[1] if sessions else None
+        threshold = time.time() - age
+        removed = 0
+        for _, folder in sorted(sessions):
+            if removed >= limit:
+                break
+            if folder in (self.stage, latest) or os.path.getmtime(folder) > threshold:
+                continue
+            try:
+                remove_flat_directory(folder)
+                removed += 1
+            except Exception:
+                LOG.debug('Kept fog session folder %s', folder, exc_info=True)
+
     def changed(self, component, changes):
         if not self.active:
             return
@@ -148,6 +172,10 @@ class FogPackageController(object):
             from Driftkings.core.updater import windows_files
             windows_files.initialize(read_resource, self.root)
             windows_files.safe_path(self.stage)
+            try:
+                self.remove_stale_sessions()
+            except Exception:
+                LOG.debug('Fog session cleanup skipped', exc_info=True)
             helper = os.path.join(self.stage, 'Driftkings.FogPackage.exe')
             descriptor = os.open(helper, os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, 'O_BINARY', 0), 0o600)
             with os.fdopen(descriptor, 'wb') as output:

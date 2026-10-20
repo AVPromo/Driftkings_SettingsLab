@@ -12,6 +12,7 @@ from Driftkings.core.updater.manifest import Manifest, INTEGER
 from Driftkings.core.updater.versioning import Version, TEXT, normalize_game_version
 
 LOG = logging.getLogger('Driftkings.Updater')
+FINAL_STATUSES = frozenset(('installed', 'rolledBack', 'rolled_back', 'cancelled', 'error', 'failed'))
 TICKET_KEYS = frozenset(('schema', 'gameVersion', 'version', 'size', 'sha256', 'installedVersion', 'installedSize', 'installedSha256'))
 
 
@@ -38,6 +39,17 @@ def safe_path(path):
         from Driftkings.core.updater.windows_files import safe_path as windows_safe_path
         windows_safe_path(path)
     return path
+
+
+def remove_flat_directory(path):
+    """Delete one owned cache folder holding only regular files; nested directories are refused."""
+    safe_path(path)
+    entries = [os.path.join(path, name) for name in os.listdir(path)]
+    if any(os.path.isdir(entry) or not os.path.isfile(entry) for entry in entries):
+        raise ValueError('Unexpected entry in owned cache folder')
+    for entry in entries:
+        os.remove(entry)
+    os.rmdir(path)
 
 
 class Results(object):
@@ -120,19 +132,37 @@ class Results(object):
         if os.path.lexists(path + '.new'):
             raise ValueError('Unresolved temporary package')
 
+    def _superseded(self, version):
+        """A release older than the loaded one can no longer be resumed or proven."""
+        try:
+            return Version(version) < Version(self.loaded_version)
+        except Exception:
+            return False
+
+    def _result_time(self, name):
+        try:
+            return os.path.getmtime(os.path.join(self.cache, name, 'result.json'))
+        except (IOError, OSError):
+            return 0
+
     def scan(self, client_version):
         if not os.path.isdir(self.cache):
             return []
         safe_path(self.cache)
         reports = []
-        for name in sorted(os.listdir(self.cache))[:100]:
+        # Folder names are random; order by result time so reports[-1] is the latest outcome.
+        names = sorted((name for name in os.listdir(self.cache) if name.startswith('download-')),
+                       key=self._result_time, reverse=True)[:100]
+        for name in reversed(names):
             folder = os.path.join(self.cache, name)
-            if not name.startswith('download-') or not os.path.isfile(os.path.join(folder, 'result.json')):
+            if not os.path.isfile(os.path.join(folder, 'result.json')):
                 continue
             ready = os.path.join(folder, 'Driftkings.wotmod.ready')
             try:
                 ticket = self.ticket(ready)
                 if ticket['gameVersion'] != normalize_game_version(client_version):
+                    continue
+                if self._superseded(ticket['version']):
                     continue
             except Exception:
                 LOG.warning('Ignoring result with unknown or invalid local ticket', exc_info=True)
@@ -167,6 +197,43 @@ class Results(object):
                 LOG.warning('Previous notification receipt invalid')
             reports.append(dict(status=status, version=ticket['version'], error=error, ready=ready, fingerprint=identity))
         return reports
+
+    def _stage_version(self, folder):
+        """Release version of a removable stage, or None while it may still be needed."""
+        result_path = os.path.join(folder, 'result.json')
+        if os.path.lexists(os.path.join(folder, 'install.json')):
+            # An armed transaction is only removable once the helper reported a final status.
+            if not os.path.isfile(result_path):
+                return None
+            result = read_json(safe_path(result_path))
+            if not isinstance(result, dict) or result.get('status') not in FINAL_STATUSES:
+                return None
+        release_path = os.path.join(folder, 'release.json')
+        if not os.path.isfile(release_path):
+            return None
+        release = read_json(safe_path(release_path))
+        version = release.get('version') if isinstance(release, dict) else None
+        return version if isinstance(version, TEXT) else None
+
+    def prune(self):
+        """Remove stage folders of releases older than the loaded one, including their backups."""
+        if not os.path.isdir(self.cache):
+            return 0
+        safe_path(self.cache)
+        removed = 0
+        for name in sorted(os.listdir(self.cache)):
+            folder = os.path.join(self.cache, name)
+            if not name.startswith('download-') or not os.path.isdir(folder):
+                continue
+            try:
+                version = self._stage_version(folder)
+                if version is None or not self._superseded(version):
+                    continue
+                remove_flat_directory(folder)
+                removed += 1
+            except Exception:
+                LOG.warning('Could not remove superseded update folder %s', name, exc_info=True)
+        return removed
 
     def acknowledge(self, report):
         """Controlled cleanup: one receipt; retain ticket/result/backups for diagnosis."""

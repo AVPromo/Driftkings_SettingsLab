@@ -163,6 +163,29 @@ def initialize(resource_reader, root, cache_root=None):
         client.identity()
         if _client is not None: _client.close()
         _client = client
+        remove_stale_helpers(cache, directory)
+
+
+def remove_stale_helpers(cache, current, age=3600):
+    """Drop helper copies left by earlier sessions; a copy still running stays locked and is kept."""
+    limit = time.time() - age
+    try:
+        names = os.listdir(cache)
+    except OSError:
+        return
+    for name in names:
+        folder = os.path.join(cache, name)
+        if not name.startswith('wf-') or os.path.normcase(folder) == os.path.normcase(current):
+            continue
+        try:
+            if os.path.getmtime(folder) > limit:
+                continue
+            helper = os.path.join(folder, 'Driftkings.WindowsFiles.exe')
+            if os.path.isfile(helper):
+                os.remove(helper)
+            os.rmdir(folder)
+        except OSError:
+            continue
 
 
 def close():
