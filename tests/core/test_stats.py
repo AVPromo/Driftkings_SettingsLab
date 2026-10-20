@@ -31,7 +31,14 @@ class StatsTests(RuntimeTest):
     def download(self, url, timeout):
         if self.failure:
             raise self.failure
-        return module(read=lambda: self.response, close=lambda: None)
+        pending = [self.response]
+        def read(amount=None):
+            data = pending.pop(0) if pending else b''
+            if amount is not None and len(data) > amount:
+                pending.insert(0, data[amount:])
+                data = data[:amount]
+            return data
+        return module(read=read, close=lambda: None)
 
     def test_scale_endpoints_and_invalid_values(self):
         self.scale.xvmScale_data = {'xwn8': [100, 200]}
@@ -68,6 +75,64 @@ class StatsTests(RuntimeTest):
         self.assertFalse(self.scale.loadJsonData('test', path))
         with open(path, 'rb') as stream:
             self.assertEqual(json.load(stream), {'xwn8': [100, 200]})
+
+    def test_truncated_oversized_and_invalid_downloads_keep_cache(self):
+        path = os.path.join(self.directory, 'xvmScales.json')
+        original = b'{"xwn8": [5, 10]}'
+        with open(path, 'wb') as stream:
+            stream.write(original)
+        class IncompleteRead(Exception):
+            """Stands for httplib.IncompleteRead, which is not an IOError in Python 2.7."""
+        self.failure = IncompleteRead('partial')
+        self.assertFalse(self.scale.loadJsonData('test', path))
+        self.failure = None
+        self.response = b'{"xwn8": [1]}' + b' ' * (self.api['MAX_DOWNLOAD'] + 1)
+        self.assertFalse(self.scale.loadJsonData('test', path))
+        self.response = b'{"xwn8": [3, 1]}'
+        self.assertFalse(self.scale.loadJsonData('test', path, self.api['valid_xvm_scales']))
+        self.response = b'{"xwn8": [1, 3]}'
+        self.assertTrue(self.scale.loadJsonData('test', path, self.api['valid_xvm_scales']))
+        with open(path, 'rb') as stream:
+            self.assertEqual(json.load(stream), {'xwn8': [1, 3]})
+
+    def test_download_deadline_is_enforced(self):
+        clock = iter([0.0, 1000.0, 2000.0])
+        self.api['time'] = module(time=lambda: next(clock))
+        self.assertRaises(IOError, self.scale.download, 'test', 30.0)
+
+    def test_schema_validators(self):
+        v = self.api
+        self.assertTrue(v['valid_wn8']({'data': [{'IDNum': 1}]}))
+        for bad in ({}, {'data': []}, {'data': {}}, []):
+            self.assertFalse(v['valid_wn8'](bad))
+        self.assertTrue(v['valid_scaled_vehicles']({'1': {'x': [1, 2]}}))
+        for bad in ({'1': {'x': [2, 1]}}, {'1': 5}, {}):
+            self.assertFalse(v['valid_scaled_vehicles'](bad))
+        self.assertFalse(v['valid_xvm_scales']({'xwn8': 'text'}))
+
+    def test_downloads_run_off_the_client_thread_and_are_applied_by_polling(self):
+        calls = []
+        self.api['callback'] = lambda delay, method: calls.append(method)
+        self.scale.config_path = self.directory
+        self.response = b'{"xwn8": [100, 200]}'
+        # The worker body is synchronous here; the point is that nothing downloads on the client path.
+        self.scale._loadXvmScaleData()
+        self.assertEqual(self.scale.xvmScale_data, {})
+        updated = self.scale._downloadAll()
+        self.assertEqual(updated, ['xvmScales.json'])  # other sources fail their schema check
+        self.assertFalse(self.scale._updates.empty())
+        self.scale._downloading = False
+        self.scale._pollDownloads()
+        self.assertEqual(self.scale.xvmScale_data, {'xwn8': [100, 200]})
+        self.assertEqual(calls, [])
+
+    def test_offline_start_uses_cache_without_blocking(self):
+        with open(os.path.join(self.directory, 'xvmScales.json'), 'wb') as stream:
+            stream.write(b'{"xwn8": [5, 10]}')
+        self.failure = IOError('offline')
+        self.assertEqual(self.scale._downloadAll(), [])
+        self.scale._loadXvmScaleData()
+        self.assertEqual(self.scale.xvmScale_data, {'xwn8': [5, 10]})
 
     def test_missing_and_degenerate_vehicle_ratings(self):
         self.assertEqual(self.scale.calculateXTE(1, 10, 1), -1)
