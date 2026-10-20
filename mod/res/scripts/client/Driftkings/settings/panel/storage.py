@@ -8,7 +8,7 @@ import tempfile
 
 from Driftkings.settings.store import replace_file as _replace, recover_file as _recover
 
-FILE_PATTERN = re.compile(r'^[A-Za-z0-9_.-]{1,64}$')
+FILE_PATTERN = re.compile(r'^[A-Za-z0-9_.-]{1,64}\Z')
 MAX_BACKUPS = 3
 SECRETS_DIRECTORY = 'secrets'
 

@@ -8,7 +8,7 @@ from Driftkings.settings.panel.controls import (Control, DefinitionError, DEFAUL
                                                 is_text, options_list, resolve_text, check_metadata)
 from Driftkings.settings.panel.storage import ConfigReadError
 
-MOD_ID_PATTERN = re.compile(r'^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$')
+MOD_ID_PATTERN = re.compile(r'^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}\Z')
 DEFAULT_ICON = 'puzzle'
 STATUS_ACTIVE, STATUS_CONFIG_ERROR, STATUS_ERROR = 'active', 'configError', 'error'
 
