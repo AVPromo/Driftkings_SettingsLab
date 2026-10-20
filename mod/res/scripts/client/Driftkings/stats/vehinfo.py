@@ -7,8 +7,14 @@ import json
 import logging
 import math
 import os
+import threading
+import time
 import urllib2
 from contextlib import closing
+try:
+    from Queue import Queue, Empty
+except ImportError:
+    from queue import Queue, Empty
 
 import ResMgr
 import nations
@@ -34,12 +40,33 @@ def valid_scale(values):
             all(left <= right for left, right in zip(values, values[1:])))
 
 
+def _scale_documents(document, field=None):
+    values = document.values() if field is None else [item.get(field) for item in document.values() if isinstance(item, dict)]
+    return any(valid_scale(value) for value in values)
+
+
+def valid_xvm_scales(document):
+    return isinstance(document, dict) and _scale_documents(document)
+
+
+def valid_wn8(document):
+    return isinstance(document, dict) and isinstance(document.get('data'), list) and bool(document['data'])
+
+
+def valid_scaled_vehicles(document):
+    return isinstance(document, dict) and _scale_documents(document, 'x')
+
+
 _FLAVOR = 'wg'
 HOST = 'https://static.modxvm.com/'
 URL_WN8 = HOST + 'wn8-data-exp/json/%s/wn8exp.json' % _FLAVOR
 URL_XTE = HOST + 'xte.json'
 URL_XTDB = HOST + 'xtdb.json'
 URL_XVM_SCALE = HOST + 'xvmscales-%s.json' % _FLAVOR
+MAX_DOWNLOAD = 16 * 1024 * 1024
+READ_CHUNK = 64 * 1024
+SOCKET_TIMEOUT = 10
+DOWNLOAD_DEADLINE = 30.0
 VEHICLE_TYPE_XML_PATH = 'scripts/item_defs/vehicles/'
 VEHICLE_CLASS_TAGS = frozenset(('lightTank', 'mediumTank', 'heavyTank', 'SPG', 'AT-SPG'))
 
@@ -76,14 +103,14 @@ class ScaleValues(object):
         self.xtdb_data = {}
         self.config_path = cache_directory('stats')
         self.settings = {'onlineUpdateData': True, 'showExpectedTankValuesMessage': True}
+        self._updates = Queue()
+        self._downloading = False
         self.init()
         self._initialize_callbacks()
 
     def _initialize_callbacks(self):
-        callback(0, self._loadXvmScaleData)
-        callback(0, self._loadWn8Data)
-        callback(0, self._loadXteData)
-        callback(0, self._loadXtdbData)
+        # Local cache first (fast, on the client thread); network refresh runs in a worker.
+        callback(0, self._loadAll)
 
     def init(self):
         res = [dict(UNKNOWN_VEHICLE_DATA)]
@@ -132,24 +159,45 @@ class ScaleValues(object):
         return XVM_SCALE_TO_SUP_CACHE[min(100, max(1, int(x))) - 1] if x > 0 else 0.0
 
     @staticmethod
-    def loadJsonData(url, local_path):
-        """Keep the last valid cache if a download or publication fails."""
+    def download(url, deadline=DOWNLOAD_DEADLINE):
+        """Bounded body read: size cap and total deadline, independent of per-read socket timeouts."""
+        limit = time.time() + deadline
+        chunks, total = [], 0
+        with closing(urllib2.urlopen(url, timeout=SOCKET_TIMEOUT)) as response:
+            while True:
+                if time.time() > limit:
+                    raise IOError('download deadline exceeded')
+                chunk = response.read(READ_CHUNK)
+                if not chunk:
+                    break
+                total += len(chunk)
+                if total > MAX_DOWNLOAD:
+                    raise IOError('download exceeds %d bytes' % MAX_DOWNLOAD)
+                chunks.append(chunk)
+        return b''.join(chunks)
+
+    @staticmethod
+    def loadJsonData(url, local_path, validate=None):
+        """Keep the last valid cache if a download or publication fails. Safe to call off the client thread."""
         try:
-            with closing(urllib2.urlopen(url, timeout=10)) as response:
-                data = response.read()
+            data = ScaleValues.download(url)
             document = json.loads(data.decode('utf-8-sig'))
             if not isinstance(document, dict) or not document:
                 raise ValueError('Expected a non-empty JSON object')
+            if validate is not None and not validate(document):
+                raise ValueError('Unexpected document structure')
             atomicWrite(local_path, data)
             return True
-        except (IOError, OSError, ValueError):
-            LOG.exception('Could not update statistics cache %s from %s', local_path, url)
+        except (IOError, OSError, ValueError) as error:
+            LOG.warning('Could not update statistics cache %s from %s: %s', local_path, url, error)
+            return False
+        except Exception:
+            # httplib.HTTPException (IncompleteRead, BadStatusLine...) is not an IOError in Python 2.7.
+            LOG.exception('Unexpected failure updating statistics cache %s from %s', local_path, url)
             return False
 
-    def _loadData(self, filename, url):
+    def _readCache(self, filename):
         path = os.path.join(self.config_path, filename)
-        if self.settings.get('onlineUpdateData', True):
-            self.loadJsonData(url, path)
         try:
             recoverFile(path)
             with open(path, 'rb') as stream:
@@ -161,11 +209,58 @@ class ScaleValues(object):
             LOG.exception('Could not load statistics cache %s', path)
             return {}
 
+    def _downloadAll(self):
+        """Worker thread body: refresh every cache file, return the names that changed."""
+        updated = []
+        for filename, url, validate in self.SOURCES:
+            if self.loadJsonData(url, os.path.join(self.config_path, filename), validate):
+                updated.append(filename)
+                self._updates.put(filename)
+        return updated
+
+    def _runDownloads(self):
+        try:
+            self._downloadAll()
+        except Exception:
+            LOG.exception('Statistics download worker failed')
+        finally:
+            self._downloading = False
+
+    def _startDownloads(self):
+        if self._downloading or not self.settings.get('onlineUpdateData', True):
+            return
+        self._downloading = True
+        worker = threading.Thread(target=self._runDownloads, name='Driftkings.StatsDownload')
+        worker.daemon = True
+        try:
+            worker.start()
+        except Exception:
+            self._downloading = False
+            LOG.exception('Could not start statistics download worker')
+            return
+        callback(0.5, self._pollDownloads)
+
+    def _pollDownloads(self):
+        """Client thread: apply files published by the worker, never touching the network."""
+        while True:
+            try:
+                filename = self._updates.get_nowait()
+            except Empty:
+                break
+            self.APPLY[filename](self)
+        if self._downloading or not self._updates.empty():
+            callback(0.5, self._pollDownloads)
+
+    def _loadAll(self):
+        for filename in ('xvmScales.json', 'wn8exp.json', 'xte.json', 'xtdb.json'):
+            self.APPLY[filename](self)
+        self._startDownloads()
+
     def _loadXvmScaleData(self):
-        self.xvmScale_data = self._loadData('xvmScales.json', URL_XVM_SCALE)
+        self.xvmScale_data = self._readCache('xvmScales.json')
 
     def _loadWn8Data(self):
-        self.wn8_data = self._loadData('wn8exp.json', URL_WN8)
+        self.wn8_data = self._readCache('wn8exp.json')
         records = self.wn8_data.get('data', [])
         if not isinstance(records, list):
             LOG.warning('Ignored invalid WN8 records')
@@ -184,7 +279,7 @@ class ScaleValues(object):
                 LOG.exception('Ignored invalid WN8 vehicle record')
 
     def _loadXteData(self):
-        self.xte_data = self._loadData('xte.json', URL_XTE)
+        self.xte_data = self._readCache('xte.json')
         for key, values in self.xte_data.items():
             try:
                 vinfo = self.getVehicleInfoData(int(key))
@@ -198,7 +293,14 @@ class ScaleValues(object):
                 LOG.exception('Ignored invalid XTE vehicle record %s', key)
 
     def _loadXtdbData(self):
-        self.xtdb_data = self._loadData('xtdb.json', URL_XTDB)
+        self.xtdb_data = self._readCache('xtdb.json')
+
+    SOURCES = (('xvmScales.json', URL_XVM_SCALE, valid_xvm_scales),
+               ('wn8exp.json', URL_WN8, valid_wn8),
+               ('xte.json', URL_XTE, valid_scaled_vehicles),
+               ('xtdb.json', URL_XTDB, valid_scaled_vehicles))
+    APPLY = {'xvmScales.json': _loadXvmScaleData, 'wn8exp.json': _loadWn8Data,
+             'xte.json': _loadXteData, 'xtdb.json': _loadXtdbData}
 
     def getVehicleInfoData(self, vehCD):
         if not isinstance(vehCD, integer_types):
