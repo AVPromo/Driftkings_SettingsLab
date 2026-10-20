@@ -159,6 +159,13 @@ class Results(object):
                 continue
             ready = os.path.join(folder, 'Driftkings.wotmod.ready')
             try:
+                self._folder(ready)
+                missing = [filename for filename in ('install.json', 'release.json')
+                           if not os.path.lexists(safe_path(os.path.join(folder, filename)))]
+                if missing:
+                    LOG.warning('Ignoring incomplete update result in %s: missing %s',
+                                name, ', '.join(missing))
+                    continue
                 ticket = self.ticket(ready)
                 if ticket['gameVersion'] != normalize_game_version(client_version):
                     continue

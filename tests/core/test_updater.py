@@ -325,6 +325,37 @@ class StageCleanupTests(RuntimeTest):
         self.assertEqual([(item['version'], item['status']) for item in reports],
                          [('1.3.0', 'cancelled'), ('1.3.0', 'failed')])
 
+    def test_scan_preserves_orphan_results_without_ticket_traceback(self):
+        warnings = []
+        original = self.api.LOG.warning
+        self.api.LOG.warning = lambda *args, **kwargs: warnings.append((args, kwargs))
+        self.addCleanup(setattr, self.api.LOG, 'warning', original)
+        for filename in ('install.json', 'release.json'):
+            folder = self.stage('download-missing-' + filename, '1.3.0', 'installed')
+            os.remove(os.path.join(folder, filename))
+        self.assertEqual(self.results.scan('2.4.1.0'), [])
+        self.assertEqual(len(warnings), 2)
+        for args, kwargs in warnings:
+            self.assertIn('Ignoring incomplete update result', args[0])
+            self.assertFalse(kwargs.get('exc_info', False))
+        for name in os.listdir(self.cache):
+            self.assertTrue(os.path.isfile(os.path.join(self.cache, name, 'result.json')))
+            self.assertFalse(os.path.exists(os.path.join(self.cache, name, 'notified.json')))
+
+    def test_scan_still_rejects_ticket_directory_as_invalid(self):
+        folder = self.stage('download-invalid', '1.3.0', 'installed')
+        path = os.path.join(folder, 'install.json')
+        os.remove(path)
+        os.makedirs(path)
+        warnings = []
+        original = self.api.LOG.warning
+        self.api.LOG.warning = lambda *args, **kwargs: warnings.append((args, kwargs))
+        self.addCleanup(setattr, self.api.LOG, 'warning', original)
+        self.assertEqual(self.results.scan('2.4.1.0'), [])
+        self.assertEqual(len(warnings), 1)
+        self.assertTrue(warnings[0][1].get('exc_info'))
+        self.assertTrue(os.path.isdir(path))
+
     def test_stale_windows_helpers_are_removed_but_current_and_recent_kept(self):
         api = self.load('core.updater.windows_files')
         cache = os.path.join(self.root, 'wf-cache')
