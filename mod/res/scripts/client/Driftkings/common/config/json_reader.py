@@ -10,6 +10,7 @@ import zlib
 from collections import OrderedDict
 
 from Driftkings.common.config.utils import smart_update
+from Driftkings.common.utils.filesystem import atomicWrite, recoverFile
 
 LOG = logging.getLogger('Driftkings.Config')
 
@@ -136,11 +137,13 @@ class JSONLoader(object):
 
     @classmethod
     def json_file_write(cls, new_path, data, encrypted):
-        kwargs = {'mode': 'w', 'encoding': 'utf-8-sig'} if not encrypted else {'mode': 'wb'}
-        with codecs.open(new_path, **kwargs) as json_file:
-            if encrypted:
-                data = cls.encrypt(data)
-            json_file.write(data)
+        # Publish atomically: an interrupted write must never truncate the previous file.
+        if encrypted:
+            payload = cls.encrypt(data)
+        else:
+            text = data if isinstance(data, unicode) else data.decode('utf-8')
+            payload = codecs.BOM_UTF8 + text.encode('utf-8')
+        atomicWrite(new_path, payload)
 
     @classmethod
     def loadJson(cls, ID, name, oldConfig, path, save=False, rewrite=True, quiet=False, encrypted=False, sort_keys=True):
@@ -152,6 +155,7 @@ class JSONLoader(object):
         if not path.endswith('/'):
             path += '/'
         new_path = '%s%s.json' % (path, name)
+        recoverFile(new_path)
         if not os.path.isfile(new_path):
             if not save:
                 LOG.error('%s Config not found, creating default: %s', prefix, new_path)
@@ -167,9 +171,17 @@ class JSONLoader(object):
                 LOG.exception('Could not parse config %s', new_path)
             return config_new
         read_contents, read_excluded, success = cls.json_file_read(new_path, encrypted)
-        if not success:
-            read_contents = cls.json_dumps(oldConfig, sort_keys)
-        read_data = cls.json_loads(read_contents, True)
+        damaged = False
+        try:
+            if not success:
+                raise ValueError('Unreadable config')
+            read_data = cls.json_loads(read_contents, True)
+        except ValueError:
+            # A damaged file is replaced by the current values instead of failing every save.
+            LOG.warning('%s replacing unreadable config: %s', prefix, new_path)
+            damaged = True
+            read_excluded = {}
+            read_data = cls.json_loads(cls.json_dumps(oldConfig, sort_keys), True)
         if rewrite:
             updated = read_data != oldConfig
             read_data = oldConfig
@@ -177,7 +189,7 @@ class JSONLoader(object):
         else:
             updated = smart_update(read_data, oldConfig)
             sort_keys = False
-        if not updated:
+        if not updated and not damaged:
             return config_new
         write_lines = cls.json_dumps(read_data, sort_keys).split('\n')
         if not quiet:

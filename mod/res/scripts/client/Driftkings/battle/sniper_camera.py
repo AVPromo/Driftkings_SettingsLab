@@ -51,6 +51,10 @@ class ZoomController(TriggersManager.ITriggerListener):
         self._pending = set()
         self.__trigger_type = TriggersManager.TRIGGER_TYPE.PLAYER_DISCRETE_SHOOT
         self.updateSettings()
+        settings_service.onModSettingsChanged.connect(self.onSettingsChanged, SNIPER_CAMERA)
+
+    def onSettingsChanged(self, component, changes):
+        self.updateSettings()
 
     def updateSettings(self):
         settings = settings_service.getComponentDict(self.config)
@@ -136,4 +140,5 @@ def new__effectsListPlayer(func, *args, **kwargs):
 
 
 def fini():
+    settings_service.onModSettingsChanged.disconnect(controller.onSettingsChanged)
     controller.dispose()
