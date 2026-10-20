@@ -160,10 +160,8 @@ def new_getBorderColor(func, self, colorBlind):
 
 @on_event(events.PlayerAvatar.destroyGUI.after)
 def new_destroyGUI(*args):
-    if not settings_service.getComponentDict(config)[GLOBAL.ENABLED] or not settings_service.getComponentDict(config)[BATTLE_PREFERENCES.IN_BATTLE]:
-        return
+    # Always balance start(): the option may have changed during the battle.
     battle_clock.stop()
-    config.isLobby = False
 
 
 # Friends
