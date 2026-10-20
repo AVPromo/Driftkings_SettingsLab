@@ -158,7 +158,7 @@
                 state.disabled = !!info.disabled;
                 setClass(r.node, 'is-disabled', state.disabled);
                 setClass(r.node, 'is-changed', !!info.changed);
-                if (r.node.querySelectorAll) { var inputs = r.node.querySelectorAll('input,textarea,button,[tabindex]'); for (var i = 0; i < inputs.length; i++) { inputs[i].disabled = state.disabled; if (inputs[i]._dkTab === undefined) { inputs[i]._dkTab = inputs[i].tabIndex; } inputs[i].tabIndex = state.disabled ? -1 : inputs[i]._dkTab; } }
+                if (r.node.querySelectorAll) { var inputs = r.node.querySelectorAll('input,textarea,button,[tabindex]'); for (var i = 0; i < inputs.length; i++) { inputs[i].disabled = state.disabled; setClass(inputs[i], 'is-disabled', state.disabled); if (inputs[i]._dkTab === undefined) { inputs[i]._dkTab = inputs[i].tabIndex; } inputs[i].tabIndex = state.disabled ? -1 : inputs[i]._dkTab; } }
             }
         };
     }

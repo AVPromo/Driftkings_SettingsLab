@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from Driftkings._constants import AUTOAIM_TARGET_INDICATOR
+from Driftkings.settings.controls_schema import control
 from Driftkings.settings.definitions.base import SectionDefinition
 
 
@@ -17,5 +18,4 @@ class AutoaimTargetIndicatorSettings(SectionDefinition):
         return self.normalize_loaded(values)
 
     def getControlColumns(self):
-        # Only the existing enabled switch controls the native-target box.
-        return ((), ())
+        return ((control('color', 'ColorChoice'),), ())

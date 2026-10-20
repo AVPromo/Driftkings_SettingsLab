@@ -116,11 +116,16 @@ class AutoAimController(object):
         vehicle = player.autoAimVehicle
         if (not isinstance(vehicle, Vehicle) or not vehicle.isStarted or
                 not vehicle.inWorld or vehicle.isHidden or not vehicle.isAlive() or
-                vehicle.publicInfo['team'] == player.team):
+                not vehicle.publicInfo or vehicle.publicInfo.get('team') == player.team):
             return None
         # Inspect only the already locked, currently rendered entity.
         descriptor = vehicle.typeDescriptor
-        bottom, top = descriptor.hull.hitTester.bbox[:2]
+        hull = getattr(descriptor, 'hull', None)
+        hit_tester = getattr(hull, 'hitTester', None)
+        bounds = getattr(hit_tester, 'bbox', None)
+        if bounds is None or len(bounds) < 2:
+            return None
+        bottom, top = bounds[:2]
         world = Math.Matrix(vehicle.matrix)
         projection = cameras.getViewProjectionMatrix()
         camera = cameras.getWorldRayAndPoint(0, 0)[1]
@@ -154,6 +159,7 @@ class AutoAimController(object):
             self.hideBox()
             return
         x, y, width, height = bounds
+        color = settings_service.getComponentDict(self.config).get('color', BOX_COLOR)
         if not self.created:
             overlays.create(self.config.NAME, ElementType.PANEL, {
                 GLOBAL.ALIGN_X: Align.LEFT, GLOBAL.ALIGN_Y: Align.TOP, GLOBAL.LIMIT: False,
@@ -162,7 +168,7 @@ class AutoAimController(object):
                 overlays.create(self.config.NAME + '.' + name, ElementType.PANEL, {
                     GLOBAL.ALIGN_X: Align.LEFT, GLOBAL.ALIGN_Y: Align.TOP, GLOBAL.LIMIT: False,
                     GLOBAL.ALPHA: GLOBAL.ONE, GLOBAL.DRAG: False,
-                    'customBackground': {'fill': True, GLOBAL.COLOR: BOX_COLOR, GLOBAL.ALPHA: GLOBAL.ONE}})
+                    'customBackground': {'fill': True, GLOBAL.COLOR: color, GLOBAL.ALPHA: GLOBAL.ONE}})
             self.created = True
         overlays.update(self.config.NAME, {GLOBAL.X: x, 'y': y})
         for name, props in (
@@ -170,6 +176,7 @@ class AutoAimController(object):
                 (GLOBAL.BOTTOM, {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: height - BOX_THICKNESS, GLOBAL.WIDTH: width, GLOBAL.HEIGHT: BOX_THICKNESS}),
                 (GLOBAL.LEFT, {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: GLOBAL.ZERO, GLOBAL.WIDTH: BOX_THICKNESS, GLOBAL.HEIGHT: height}),
                 (GLOBAL.RIGHT, {GLOBAL.X: width - BOX_THICKNESS, GLOBAL.Y: GLOBAL.ZERO, GLOBAL.WIDTH: BOX_THICKNESS, GLOBAL.HEIGHT: height})):
+            props['customBackground'] = {'fill': True, GLOBAL.COLOR: color, GLOBAL.ALPHA: GLOBAL.ONE}
             overlays.update(self.config.NAME + '.' + name, props)
 
 

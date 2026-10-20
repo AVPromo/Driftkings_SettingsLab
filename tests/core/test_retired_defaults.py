@@ -42,11 +42,11 @@ class RetiredDefaultsTests(RuntimeTest):
             legacy = dict(active, angle=1.3, catchHiddenTarget=True, disableArtyMode=True)
             self.assertEqual(definition.normalize_loaded(copy.deepcopy(legacy)), active)
             self.assertEqual(definition.normalize_changes(copy.deepcopy(legacy), {}), active)
-            self.assertEqual(definition.getControlColumns(), ((), ()))
+            self.assertEqual(definition.getControlColumns()[0][0]['varName'], 'color')
 
     def test_canonical_defaults_contain_current_options_only(self):
         hangar = self.defaults('hangar_preferences')
         self.assertFalse(set(hangar).intersection(('clockStyle', 'clockSeconds', 'clock24Hour', 'customClockFormat')))
         self.assertTrue(all(key in hangar for key in
                             ('clock', 'clockBackground', 'clockX', 'clockY', 'clockScale', 'customClockText', 'accountManager')))
-        self.assertEqual(self.defaults('autoaim_target_indicator'), {'enabled': True})
+        self.assertEqual(self.defaults('autoaim_target_indicator'), {'enabled': True, 'color': '#F98600'})

@@ -1,0 +1,46 @@
+# -*- coding: utf-8 -*-
+"""Targets can temporarily lack metadata or loaded collision bounds."""
+from support import RuntimeTest, module, source
+
+
+class TargetIndicatorTests(RuntimeTest):
+    def setUp(self):
+        super(TargetIndicatorTests, self).setUp()
+        class Vehicle(object):
+            isStarted = True
+            inWorld = True
+            isHidden = False
+            publicInfo = {'team': 2}
+            typeDescriptor = None
+            def isAlive(self):
+                return True
+        self.vehicle = Vehicle()
+        self.player = module(isObserver=lambda: False, isVehicleAlive=True,
+                             autoAimVehicle=self.vehicle, team=1)
+        constants = module(GLOBAL=module(ENABLED='enabled'))
+        api = source('battle/autoaim_target_indicator.py', {
+            'BigWorld': module(), 'Math': module(),
+            'AvatarInputHandler': module(cameras=module()),
+            'Vehicle': module(Vehicle=Vehicle),
+            'Driftkings._constants': constants,
+            'Driftkings.core.battle_events': module(battleEvents=module()),
+            'Driftkings.core.callbacks': module(callback=None, cancelCallback=None),
+            'Driftkings.core.overlay': module(Align=None, ElementType=None, overlays=None),
+            'Driftkings.settings.service': module(settings_service=module(
+                getComponentDict=lambda config: {'enabled': True})),
+            'Driftkings.settings.definitions.battle.autoaim_target_indicator': module(
+                AutoaimTargetIndicatorSettings=lambda: module(NAME='target')),
+        })
+        self.controller = api['controller']
+
+    def test_missing_public_info_hides_box(self):
+        self.vehicle.publicInfo = None
+        self.assertIsNone(self.controller.targetBounds(self.player))
+
+    def test_missing_descriptor_hides_box(self):
+        self.assertIsNone(self.controller.targetBounds(self.player))
+
+    def test_missing_or_incomplete_bounds_hide_box(self):
+        for bounds in (None, (), (object(),)):
+            self.vehicle.typeDescriptor = module(hull=module(hitTester=module(bbox=bounds)))
+            self.assertIsNone(self.controller.targetBounds(self.player))
