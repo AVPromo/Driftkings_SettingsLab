@@ -3,6 +3,15 @@
 from support import RuntimeTest, module, source
 
 
+class FixedPublicInfo(object):
+    """Client mapping protocol: indexed fields, without dict methods."""
+    def __init__(self, fields):
+        self.fields = fields
+
+    def __getitem__(self, key):
+        return self.fields[key]
+
+
 class TargetIndicatorTests(RuntimeTest):
     def setUp(self):
         super(TargetIndicatorTests, self).setUp()
@@ -39,6 +48,24 @@ class TargetIndicatorTests(RuntimeTest):
 
     def test_missing_descriptor_hides_box(self):
         self.assertIsNone(self.controller.targetBounds(self.player))
+
+    def test_enemy_fixed_public_info_needs_no_dict_methods(self):
+        self.vehicle.publicInfo = FixedPublicInfo({'team': 2})
+        self.assertIsNone(self.controller.targetBounds(self.player))
+
+    def test_allied_fixed_public_info_is_rejected_before_geometry(self):
+        class UnavailableDescriptor(object):
+            @property
+            def hull(self):
+                raise AssertionError('Allied geometry must not be inspected')
+        self.vehicle.typeDescriptor = UnavailableDescriptor()
+        self.vehicle.publicInfo = FixedPublicInfo({'team': self.player.team})
+        self.assertIsNone(self.controller.targetBounds(self.player))
+
+    def test_missing_or_unknown_team_hides_box(self):
+        for info in ({}, FixedPublicInfo({}), FixedPublicInfo({'team': None})):
+            self.vehicle.publicInfo = info
+            self.assertIsNone(self.controller.targetBounds(self.player))
 
     def test_missing_or_incomplete_bounds_hide_box(self):
         for bounds in (None, (), (object(),)):

@@ -115,8 +115,17 @@ class AutoAimController(object):
             return None
         vehicle = player.autoAimVehicle
         if (not isinstance(vehicle, Vehicle) or not vehicle.isStarted or
-                not vehicle.inWorld or vehicle.isHidden or not vehicle.isAlive() or
-                not vehicle.publicInfo or vehicle.publicInfo.get('team') == player.team):
+                not vehicle.inWorld or vehicle.isHidden or not vehicle.isAlive()):
+            return None
+        public_info = vehicle.publicInfo
+        if public_info is None:
+            return None
+        try:
+            # WoT exposes a PyFixedDictDataInstance, which has no dict.get().
+            team = public_info['team']
+        except (KeyError, TypeError):
+            return None
+        if team is None or team == player.team:
             return None
         # Inspect only the already locked, currently rendered entity.
         descriptor = vehicle.typeDescriptor
