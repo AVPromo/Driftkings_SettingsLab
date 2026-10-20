@@ -119,7 +119,8 @@ def new_isReadyToPrebattle(func, self, *args, **kwargs):
 # low ammo => vehicle not ready for battle button/property
 @overrideMethod(Vehicle, 'isReadyToFight')
 def new_isReadyToFight(base, self, *args, **kwargs):
-    result = base.fget(self, *args, **kwargs)
+    original = base.fget if isinstance(base, property) else base
+    result = original(self, *args, **kwargs)
     if _isSpecialBattleVehicle(self):
         return result
     try:

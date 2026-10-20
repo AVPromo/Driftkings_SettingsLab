@@ -270,7 +270,7 @@ class CalculatorRating(object):
     def eff(avgDmg, avgDef, avgCap, avgSpot, avgTier, avgFrag):
         if avgTier <= 0:
             avgTier = 1
-        return int(round(avgDmg * (10 / (avgTier + 2)) * (0.23 + 2 * avgTier / 100) + avgFrag * 250 + avgSpot * 150 + math.log(avgCap + 1, 1.732) * 150 + avgDef * 150))
+        return int(round(avgDmg * (10.0 / (avgTier + 2)) * (0.23 + 2.0 * avgTier / 100) + avgFrag * 250 + avgSpot * 150 + math.log(avgCap + 1, 1.732) * 150 + avgDef * 150))
 
     @staticmethod
     def xeff(eff):

@@ -119,7 +119,8 @@ class SettingsLoader(object):
                 if not os.path.isdir(folder):
                     continue
                 entries = os.listdir(folder)
-                known = [name + '.json' for key in self.settings.configs for name in (key,) + previous_sections(key)]
+                # Python 2 list comprehensions leak their variables; keep the folder name intact.
+                known = [section + '.json' for key in self.settings.configs for section in (key,) + previous_sections(key)]
                 if any(key in entries for key in known) or any(key in entries for section in ('team_panels', 'vehicle_carousel', 'minimap_enhancements') for key in (section,) + previous_sections(section)):
                     names.add(name)
         return sorted(names)

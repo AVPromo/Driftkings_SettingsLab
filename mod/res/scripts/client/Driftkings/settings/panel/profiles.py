@@ -70,6 +70,6 @@ class Profiles(object):
     def delete(self, name):
         name = self.name(name)
         # Keep a bounded backup before deleting this exact profile file.
-        data = self.store.read(name)
-        self.store.write(name, data)
+        self.store.read(name)
+        self.store.backup(name)
         os.remove(os.path.join(self.store.root, name + '.json'))
