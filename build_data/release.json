@@ -6,12 +6,12 @@
   "title": "Driftkings",
   "author": "Driftkings",
   "changelog": [
-    "Migrate High Caliber progress to Gameface with the original medal, configurable positioning and a dynamic progress bar.",
-    "Separate arcade, postmortem and artillery camera profiles; preserve native artillery camera values by default.",
-    "Use the client realm and active language for player-panel region and destruction macros.",
-    "Remove retired clock and target-acquisition configuration defaults while preserving personal settings.",
-    "Pin updater downloads to the official repository and verify Ed25519-signed release manifests.",
-    "Add portable regression tests and refresh the build reference to WoT source 2.4.1.5493; retain the recorded SWC export provenance.",
-    "Beta: in-game validation of the signed update flow and all affected camera modes is still required."
+    "Include the Windows installer for supported Wargaming installations (EU, NA and ASIA); verify the selected game root and version.",
+    "Fix unavailable target geometry and add a configurable native-target indicator color.",
+    "Improve statistics cache preservation and rating validation without changing valid-input formulas.",
+    "Consolidate battle Gameface lifecycle, Flash text rendering and numeric conversion; preserve feature-specific settings.",
+    "Use explicit imports and owned hooks, remove unused constants and replace legacy logging with visible exception reports.",
+    "Centralize recoverable file publication and preserve strict updater path and JSON validation.",
+    "Beta: visual in-game checks of the refactored panels and a new automatic-update installation test remain pending."
   ]
 }

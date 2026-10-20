@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
+import logging
+LOG = logging.getLogger('Driftkings.battle.battle_statistics')
 from Driftkings.core.battle_policy import battle_policy
 from helpers.CallbackDelayer import CallbackDelayer
 from items import vehicles
 from vehicle_systems.CompoundAppearance import CompoundAppearance
 
-from Driftkings._constants import BATTLE_STATISTICS, GLOBAL, SHELL_TYPES
-from Driftkings.common import getPlayer, getEntity, replaceMacros, logError, getComparisonColor
+from Driftkings._constants import BATTLE_STATISTICS, GLOBAL
+from Driftkings.game_constants import SHELL_TYPES
+from Driftkings.common.utils.wgUtils import getPlayer, getEntity
+from Driftkings.common.utils.formatting import replaceMacros
+from Driftkings.common.utils.colorRatting import getComparisonColor
 from Driftkings.core.battle_events import battleEvents
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service, affects
@@ -396,7 +401,7 @@ def new__prerequisites(func, self, typeDescriptor, vehicleID, *args, **kwargs):
             if g_tanksStatistic.addVehicleInfo(vehicleID, info):
                 g_mod.refresh()
         except Exception as error:
-            logError(config.NAME, '{}', error)
+            LOG.error(('{}').format(error))
     return result
 
 

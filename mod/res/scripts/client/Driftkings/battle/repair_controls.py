@@ -9,7 +9,8 @@ from gui.shared.gui_items import Vehicle
 from gui.shared.personality import ServicesLocator
 
 from Driftkings._constants import GLOBAL, REPAIR_CONTROLS
-from Driftkings.common import checkKeys, getPlayer
+from Driftkings.common.utils.game import checkKeys
+from Driftkings.common.utils.wgUtils import getPlayer
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.core.keyboard import keyboard
 from Driftkings.settings.service import settings_service

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import logging
+LOG = logging.getLogger('Driftkings.lobby.hangar_preferences')
 from Driftkings.interface_catalog import gameface_spec
 from Driftkings.core.hooks import on_event
 from Driftkings.common.utils import events
@@ -30,29 +32,20 @@ from notification.NotificationListView import NotificationListView
 from vehicle_systems.tankStructure import ModelStates
 
 from Driftkings._constants import GLOBAL, HANGAR_PREFERENCES
-from Driftkings.common import isReplay, logDebug, logError, find_attr_name
+from Driftkings.common.utils.wgUtils import isReplay
+from Driftkings.core.introspection import find_attr_name
 from Driftkings.core.callbacks import callback
 from Driftkings.core.hooks import override, overrideMethod
 from Driftkings.settings.service import settings_service, affects
+from Driftkings.core.settings_controller import SettingsController
 from Driftkings.settings.definitions.lobby.hangar_preferences import HangarPreferencesSettings as Settings
 from Driftkings.views.hangar.hangar_preferences import ClockController
 from Driftkings.views.hangar.hangar_preferences import install_clock_gameface, install_header_options
 
 
-class HangarOptionsController(object):
-    def __init__(self):
-        self.active = False
+class HangarOptionsController(SettingsController):
+    SETTINGS_SECTION = HANGAR_PREFERENCES
 
-    def start(self):
-        if self.active:
-            return
-        self.active = True
-        settings_service.onModSettingsChanged.connect(self.onSettingsChanged, HANGAR_PREFERENCES)
-
-    def stop(self):
-        if self.active:
-            self.active = False
-            settings_service.onModSettingsChanged.disconnect(self.onSettingsChanged)
 
     def onSettingsChanged(self, component, changes):
         if not affects(changes, GLOBAL.ENABLED, HANGAR_PREFERENCES.SHOW_BATTLE_PASS_WIDGET):
@@ -62,7 +55,6 @@ class HangarOptionsController(object):
         if data[GLOBAL.ENABLED] and not data[HANGAR_PREFERENCES.SHOW_BATTLE_PASS_WIDGET]:
             visible = False
         dependency.instance(IUserMissionWidgetService).setGroupVisibility(BattlePassPresenter.GROUP, visible)
-
 
 
 config = Settings()
@@ -106,7 +98,7 @@ def new_isAmmoFull(base, self):
             mult = max(0.0, float(_cfg(HANGAR_PREFERENCES.LOW_AMMO_PERCENTAGE, 20))) / 100.0
         return sum(shell.count for shell in self.shells.installed.getItems()) >= self.ammoMaxSize * mult
     except Exception:
-        logError(config.NAME, 'Vehicle.isAmmoFull', 'fallback to base')
+        LOG.error(('Vehicle.isAmmoFull').format('fallback to base'))
         return original(self)
 
 
@@ -120,7 +112,7 @@ def new_isReadyToPrebattle(func, self, *args, **kwargs):
         if _cfg(GLOBAL.ENABLED, True) and _cfg(HANGAR_PREFERENCES.BLOCK_VEHICLE_IF_LOW_AMMO, False) and not self.hasLockMode() and not self.isAmmoFull:
             return False
     except Exception as err:
-        logError(config.NAME, 'Vehicle.isReadyToPrebattle', str(err))
+        LOG.error(('Vehicle.isReadyToPrebattle').format(str(err)))
     return result
 
 
@@ -134,7 +126,7 @@ def new_isReadyToFight(base, self, *args, **kwargs):
         if _cfg(GLOBAL.ENABLED, True) and _cfg(HANGAR_PREFERENCES.BLOCK_VEHICLE_IF_LOW_AMMO, False) and not self.hasLockMode() and not self.isAmmoFull:
             return False
     except Exception as err:
-        logError(config.NAME, 'Vehicle.isReadyToFight', str(err))
+        LOG.error(('Vehicle.isReadyToFight').format(str(err)))
     return result
 
 
@@ -150,7 +142,7 @@ def new_validateCurrentVehicle(func, self):
             if _cfg(GLOBAL.ENABLED, True) and _cfg(HANGAR_PREFERENCES.BLOCK_VEHICLE_IF_LOW_AMMO, False) and item and not item.isAmmoFull and not g_currentVehicle.isReadyToFight():
                 return ValidationResult(False, PREBATTLE_RESTRICTION.VEHICLE_NOT_READY)
         except Exception as err:
-            logError(config.NAME, 'CurrentVehicleActionsValidator._validate', str(err))
+            LOG.error(('CurrentVehicleActionsValidator._validate').format(str(err)))
     return res
 
 
@@ -169,7 +161,7 @@ def new__handleLazyChannelCtlInited(func, self, event):
         ctx = event.ctx
         controller = ctx.get('controller')
         if controller is None:
-            logDebug(config.NAME, True, 'Controller is not defined {}', ctx)
+            LOG.debug(('Controller is not defined {}').format(ctx))
             return
         else:
             ctx.clear()
@@ -350,7 +342,7 @@ def new__getAllVehiclePossibleXP(func, self, nodeCD, unlockStats):
         if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.ALLOW_EXCHANGE_XPIN_TECH_TREE, True):
             return unlockStats.getVehTotalXP(nodeCD)
     except Exception as err:
-        logError(config.NAME, '_TechTreeDataProvider_getAllVehiclePossibleXP', str(err))
+        LOG.error(('_TechTreeDataProvider_getAllVehiclePossibleXP').format(str(err)))
     return func(self, nodeCD, unlockStats)
 
 
@@ -397,7 +389,7 @@ def init():
         install_header_options()
         g_clockController.start()
     except Exception:
-        logError(config.NAME, 'Gameface clock integration unavailable; rebuild the Driftkings UI resources')
+        LOG.error('Gameface clock integration unavailable; rebuild the Driftkings UI resources')
 
 
 def fini():

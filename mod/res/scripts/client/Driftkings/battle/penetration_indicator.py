@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import logging
+LOG = logging.getLogger('Driftkings.battle.penetration_indicator')
 from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults, computePiercingPowerAtDist
 from DestructibleEntity import DestructibleEntity
 from Vehicle import Vehicle
@@ -8,9 +10,11 @@ from gui.battle_control import avatar_getter
 from gui.shared.gui_items import KPI
 from items.tankmen import getSkillsConfig
 
-from Driftkings._constants import MinMax, SHOT_RESULT, SHELL_TYPES, SHELL_MECHANICS_TYPE, PENETRATION_INDICATOR, GLOBAL, DEFAULT_RANDOMIZATION
+from Driftkings._constants import MinMax, PENETRATION_INDICATOR, GLOBAL, DEFAULT_RANDOMIZATION
+from Driftkings.game_constants import SHOT_RESULT, SHELL_TYPES, SHELL_MECHANICS_TYPE
 from Driftkings._constants import BATTLE_ALIASES
-from Driftkings.common import getPlayer, logDebug
+from Driftkings.game_constants import SHOT_RESULT, SHELL_TYPES, SHELL_MECHANICS_TYPE
+from Driftkings.common.utils.wgUtils import getPlayer
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service
 from Driftkings.ui import g_events
@@ -215,7 +219,7 @@ class Randomizer(object):
             for name, descr in descrArgs:
                 if name == KPI.Name.DAMAGE_AND_PIERCING_DISTRIBUTION_LOWER_BOUND:
                     percent = cls.PIERCING_DISTRIBUTION_BOUND[skill_name] = round(descr.value, 4)
-                    logDebug(cls.RND_SET_PIERCING_DISTRIBUTION_BOUND_DEBUG, skill_name, percent)
+                    LOG.debug((cls.RND_SET_PIERCING_DISTRIBUTION_BOUND_DEBUG).format(skill_name, percent))
                 break
         return percent
 
@@ -226,7 +230,7 @@ class Randomizer(object):
             return 0
         level_increase, bonuses = tman.crewLevelIncrease
         result = (skill.level + level_increase) * tman.skillsEfficiency * cls.getBaseSkillPercent(skill_name)
-        logDebug(cls.RND_SKILL_DIFF_DEBUG, skill_name, skill.level, level_increase, result)
+        LOG.debug((cls.RND_SKILL_DIFF_DEBUG).format(skill_name, skill.level, level_increase, result))
         return result
 
     @classmethod
@@ -248,7 +252,7 @@ class Randomizer(object):
                 if skill_name == cls.GUNNER_ARMORER:
                     randomization_max -= percent
         _ShotResult.RANDOMIZATION = MinMax(round(randomization_min, 4), round(randomization_max, 4))
-        logDebug(config.NAME, True, cls.RND_MIN_MAX_DEBUG, _ShotResult.RANDOMIZATION, vehicle.userName)
+        LOG.debug((cls.RND_MIN_MAX_DEBUG).format(_ShotResult.RANDOMIZATION, vehicle.userName))
 
 
 def init():

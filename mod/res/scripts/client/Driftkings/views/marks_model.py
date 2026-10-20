@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Presentation only: receives calculated MoE values, never acquires game data."""
-import math
+from Driftkings.common.utils.numbers import finite_number as finite
+from Driftkings._constants import MARK_THRESHOLDS
 from Driftkings.locale_support import language_code
 
 
@@ -15,12 +16,6 @@ def number_locale(language):
         decimal, group = '.', ','
     return {'decimalSeparator': decimal, 'groupSeparator': group}
 
-def finite(value, default=None):
-    try:
-        value = float(value)
-        return default if math.isnan(value) or math.isinf(value) else value
-    except (ValueError, TypeError, OverflowError):
-        return default
 
 
 def delta_model(value):
@@ -39,7 +34,7 @@ def milestone_model(percent, earned=0):
     if percent is None:
         return {'nextMilestone': None, 'progress': 0, 'gap': None, 'completed': False}
     percent = max(0.0, min(100.0, percent))
-    thresholds = (65, 85, 95)
+    thresholds = MARK_THRESHOLDS
     achieved = max(int(finite(earned, 0)), sum(percent >= value for value in thresholds))
     if achieved >= 3:
         return {'nextMilestone': None, 'progress': 1, 'gap': 0, 'completed': True}

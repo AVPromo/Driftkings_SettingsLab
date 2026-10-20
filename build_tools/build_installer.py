@@ -231,12 +231,40 @@ def prepare_payload(root, artifacts, output):
     (output / 'metadata.generated.iss').write_text('\n'.join('#define ' + key + ' ' + quoted(value) for key, value in metadata.items()) + '\n', encoding='utf-8-sig')
 
 
+def attach_installer(artifacts, installer):
+    """Add a compiled setup to the verified release inventory and checksums."""
+    from build_tools.package_tools import sha, write_json
+    artifacts, installer = Path(artifacts).resolve(), Path(installer).resolve()
+    report = read_json(artifacts / 'build-report.json')
+    manifest = read_json(artifacts / 'release.json')
+    require(report.get('status') == 'success' and report.get('mode') == 'release' and report.get('publishable'),
+            'Installer attachment requires a completed release build')
+    require(report['version'] == manifest['version'] and report['gameVersion'] == manifest['gameVersion'],
+            'Installer release version mismatch')
+    expected = 'Driftkings-%s-WoT-%s-Setup.exe' % (manifest['version'], manifest['gameVersion'])
+    require(installer.name == expected, 'Installer filename does not match the release')
+    with installer.open('rb') as stream:
+        require(stream.read(2) == b'MZ', 'Installer is not a Windows executable')
+    target = artifacts / expected
+    if installer != target:
+        shutil.copy2(installer, target)
+    report['artifacts'][expected] = dict(size=target.stat().st_size, sha256=sha(target))
+    write_json(artifacts / 'build-report.json', report)
+    names = sorted(set(report['artifacts']) | {'build-report.json'})
+    (artifacts / 'SHA256SUMS.txt').write_bytes((''.join('%s  %s\n' % (sha(artifacts / name), name)
+                                                     for name in names)).encode('utf-8'))
+    return target
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--artifacts', type=Path, help='Completed compiler output directory (debug or release)')
     parser.add_argument('--compile', action='store_true', help='Compile locally with Inno Setup 6.7.1+; never install or publish')
     parser.add_argument('--iscc', help='Inno compiler path')
+    parser.add_argument('--attach-to-release', action='store_true', help='Include the compiled installer in the release inventory and checksums')
     args = parser.parse_args()
+    if args.attach_to_release and not args.compile:
+        parser.error('--attach-to-release requires --compile')
     if args.compile and not args.artifacts:
         parser.error('--compile requires --artifacts')
     try:
@@ -251,6 +279,10 @@ def main():
         if args.compile:
             compiler = args.iscc or shutil.which('ISCC.exe') or 'C:/Program Files (x86)/Inno Setup 6/ISCC.exe'
             subprocess.run([compiler, '/DInputDir=' + str(output), str(ROOT / 'installer/setup/Driftkings.iss')], check=True)
+            if args.attach_to_release:
+                manifest = read_json(args.artifacts / 'release.json')
+                name = 'Driftkings-%s-WoT-%s-Setup.exe' % (manifest['version'], manifest['gameVersion'])
+                print('Release installer: ' + str(attach_installer(args.artifacts, ROOT / 'build/installer' / name)))
         print('Installer input: %d components, %d options, %d presets; %s' % (len(components), len(options), len(presets), output))
     except (ValueError, OSError, subprocess.SubprocessError) as error:
         parser.exit(1, 'Installer build failed: ' + str(error) + '\n')

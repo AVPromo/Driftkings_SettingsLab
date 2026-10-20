@@ -167,6 +167,10 @@ def initialize(resource_reader, root, cache_root=None):
 
 def close():
     global _client
+    # Python 2 clears globals of modules removed during test reloads before
+    # their registered atexit functions run. There is no client left to close.
+    if _client is None and _configuration_lock is None:
+        return
     with _configuration_lock:
         if _client is not None:
             _client.close(); _client = None

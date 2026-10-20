@@ -7,7 +7,8 @@ from gui.Scaleform.daapi.view.battle.shared.indicators import SixthSenseIndicato
 
 from Driftkings._constants import BATTLE_ALIASES
 from Driftkings._constants import GLOBAL, SIXTH_SENSE_ALERT
-from Driftkings.common import getPlayer, square_position, sendChatMessage
+from Driftkings.common.utils.wgUtils import getPlayer, square_position
+from Driftkings.common.utils.chat import sendChatMessage
 from Driftkings.core.callbacks import callback
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service

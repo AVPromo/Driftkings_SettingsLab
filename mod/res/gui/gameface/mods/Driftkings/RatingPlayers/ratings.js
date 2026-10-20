@@ -518,25 +518,12 @@
     }
 
     function copyText(source, target) {
-        for (var i = 0; i < source.childNodes.length; i++) {
-            var child = source.childNodes[i];
-            if (child.nodeType === 3) { target.appendChild(document.createTextNode(child.nodeValue)); continue; }
-            if (child.nodeType !== 1) { continue; }
-            var tag = child.tagName.toLowerCase();
-            if (tag === 'script' || tag === 'style' || tag === 'iframe') { continue; }
-            var dest = document.createElement(/^(b|i|u|br|p)$/.test(tag) ? tag : 'span');
-            if (tag === 'font') {
-                var color = child.getAttribute('color'), size = Number(child.getAttribute('size'));
-                var face = child.getAttribute('face'), alpha = child.getAttribute('alpha');
-                if (face === '$FieldFont') { dest.style.fontFamily = 'Arial'; }
-                else if (face && /^[a-z0-9 _-]+$/i.test(face)) { dest.style.fontFamily = face; }
-                if (/^#[0-9a-f]{2}$/i.test(alpha)) { dest.style.opacity = parseInt(alpha.slice(1), 16) / 255; }
-                if (/^#[0-9a-f]{6}$/i.test(color)) { dest.style.color = color; }
-                if (child.getAttribute('size') === '0') { dest.style.display = 'none'; }
-                else if (size >= 8 && size <= 40) { dest.style.fontSize = size + (tabData ? 'rem' : 'px'); }
-            }
-            copyText(child, dest); target.appendChild(dest);
-        }
+        window.DriftkingsFlashText.copy(source, target, {
+            fontFamily: true,
+            fontAlpha: true,
+            hideZeroSize: true,
+            sizeUnit: tabData ? 'rem' : 'px'
+        });
     }
     function applyLayout(node, style) {
         if (!style) { return; }

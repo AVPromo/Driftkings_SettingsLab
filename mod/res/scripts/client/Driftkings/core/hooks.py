@@ -94,7 +94,7 @@ _UNSET = object()
 def override(obj, prop=_UNSET, getter=None, setter=None, deleter=None):
     if getter is None and setter is None and deleter is None:
         return lambda handler: override(obj, handler.__name__ if prop is _UNSET else prop, handler)
-    from Driftkings.common.utils.monkeypatch import override as install
+    from Driftkings.core.hook_installers import override as install
     if prop is _UNSET:
         prop = getter.__name__
     for kind, handler in (('getter', getter), ('setter', setter), ('deleter', deleter)):
@@ -110,8 +110,8 @@ def override(obj, prop=_UNSET, getter=None, setter=None, deleter=None):
 def _typed(kind, cls, method):
     def decorator(handler):
         def installer(guarded):
-            from Driftkings.common.utils import monkeypatch
-            getattr(monkeypatch, kind)(cls, method)(guarded)
+            from Driftkings.core import hook_installers
+            getattr(hook_installers, kind)(cls, method)(guarded)
         return hooks.declare(handler.__module__, installer, handler, (cls, method, kind))
     return decorator
 

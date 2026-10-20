@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Statistical palettes and threshold tables; no lookup policy."""
+from Driftkings._constants import MARK_LEVELS as MOE_LEVELS
 
 class ColorRating:
     def __init__(self, scale_name, colors):
@@ -964,7 +965,6 @@ wot_labs_colors = {
 
 
 # Project statistics absent from XVM: keep all limits and palette decisions here.
-MOE_LEVELS = (0, 20, 40, 55, 65, 85, 95, 100)
 for _table in (noob_meter_colors, xvm_colors, wot_labs_colors):
     _palette = _table['colorRating']
     _table['mog'] = [{'value': limit, 'color': _palette.get(name, _palette['unique']) if name != 'neutral' else '#FFFFFF'} for limit, name in zip(MOE_LEVELS, ('neutral', 'very_bad', 'bad', 'normal', 'good', 'very_good', 'unique', 's_unique'))]

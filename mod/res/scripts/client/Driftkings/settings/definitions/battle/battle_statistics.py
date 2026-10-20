@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from Driftkings._constants import BATTLE_STATISTICS
-from Driftkings.common import color_tables
+from Driftkings.common.utils.colorRatting import color_tables
 from Driftkings.settings.controls_schema import control, options
 from Driftkings.settings.definitions.base import SectionDefinition
 

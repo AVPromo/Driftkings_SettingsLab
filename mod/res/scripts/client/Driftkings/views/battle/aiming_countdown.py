@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Presentation adapter for DispersionTimer; gameplay state stays in its component."""
+import logging
+LOG = logging.getLogger('Driftkings.views.battle.aiming_countdown')
 from collections import defaultdict
 from math import ceil, log
 
@@ -9,7 +11,6 @@ from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
 from Driftkings._constants import AIMING_COUNTDOWN
-from Driftkings.common import logDebug
 from Driftkings.core.battle_events import battleEvents
 from Driftkings.meta.battle.dispersion_timer import DispersionTimerMeta
 
@@ -58,7 +59,6 @@ class DispersionTimer(DispersionTimerMeta):
             return self.as_updateTimerTextS('')
         if self.min_angle > aiming_angle:
             self.min_angle = aiming_angle
-            logDebug(self.section, False, 'DispersionTimer - renew min dispersion angle {}', self.min_angle)
 
         diff = self.min_angle / aiming_angle
         percent = int(ceil(diff * 100))

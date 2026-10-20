@@ -49,6 +49,7 @@ def sha(data):
 
 
 def file_signature(path):
+    # This contract also loads standalone in Python 3 build tooling.
     digest = hashlib.sha256()
     with open(path, 'rb') as source:
         for block in iter(lambda: source.read(65536), b''):

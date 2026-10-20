@@ -5,6 +5,8 @@ import json
 import os
 import tempfile
 
+from Driftkings.common.utils.filesystem import recover_file, replace_file
+
 
 def merge(base, values):
     result = copy.deepcopy(base)
@@ -14,39 +16,6 @@ def merge(base, values):
         else:
             result[key] = copy.deepcopy(value)
     return result
-
-
-def recover_file(target):
-    previous = target + '.previous'
-    if not os.path.exists(target) and os.path.isfile(previous):
-        os.rename(previous, target)
-
-
-def replace_file(source, target):
-    replace = getattr(os, 'replace', None)
-    if callable(replace):
-        replace(source, target)
-        return
-    if os.name != 'nt':
-        os.rename(source, target)
-        return
-    # The game's Python 2.7 does not include the native _ctypes module.
-    # Preserve the old document until the new one has been published.
-    recover_file(target)
-    previous = target + '.previous'
-    if os.path.exists(previous):
-        os.remove(previous)
-    had_target = os.path.isfile(target)
-    if had_target:
-        os.rename(target, previous)
-    try:
-        os.rename(source, target)
-    except Exception:
-        if had_target:
-            os.rename(previous, target)
-        raise
-    if had_target:
-        os.remove(previous)
 
 
 def read_object(path):

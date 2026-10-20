@@ -17,7 +17,7 @@ from Driftkings.core.hooks import override
 from Driftkings.core.battle_events import battleEvents
 from Driftkings.core.panel_model import Roster
 from Driftkings.settings.settings_data import PROFILES, profile_for_mode
-from Driftkings.common import getStatisticColor
+from Driftkings.common.utils.colorRatting import getStatisticColor
 
 LOG=logging.getLogger('Driftkings.PlayerPanelPro')
 ALIAS=BATTLE_ALIASES.PLAYERS_PANEL

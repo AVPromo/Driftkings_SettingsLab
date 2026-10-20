@@ -16,8 +16,9 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID
 from skeletons.gui.shared import IItemsCache
 
 from Driftkings._constants import CREW_MANAGEMENT, GLOBAL
-from Driftkings.common import logException
+from Driftkings.common.utils.exceptions import log_exceptions
 from Driftkings.core.callbacks import callback, cancelCallback
+from Driftkings.common.utils.filesystem import atomicWrite, recoverFile
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.lobby.crew_management import CrewManagementSettings as Settings
@@ -42,6 +43,7 @@ def encodeData(data):
 
 
 def openJsonFile(path):
+    recoverFile(path)
     if not os.path.exists(path):
         return {}
     with open(path, 'r', encoding='utf-8') as dataFile:
@@ -49,8 +51,8 @@ def openJsonFile(path):
 
 
 def writeJsonFile(path, data):
-    with open(path, 'w', encoding='utf-8') as dataFile:
-        dataFile.write(unicode(json.dumps(data, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)))
+    encoded = unicode(json.dumps(data, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)).encode('utf-8')
+    atomicWrite(path, encoded)
     return True
 
 
@@ -154,7 +156,7 @@ class Crew(object):
                 self.__callbackID = callback(settings_service.getComponentDict(config)[CREW_MANAGEMENT.AUTO_RETURN_DELAY], self.returnCrew)
                 self.intCD = intCD
 
-    @logException
+    @log_exceptions
     def handlePopupSelect(self, items):
         if not items or not settings_service.getComponentDict(config)[GLOBAL.ENABLED] or not settings_service.getComponentDict(config)[CREW_MANAGEMENT.CREW_AUTO_RETURN]:
             return
@@ -241,7 +243,7 @@ progression_view.install(config)
 
 
 @override(VehicleSelectorPopup, 'onSelectVehicles')
-@logException
+@log_exceptions
 def new__onSelectVehicles(func, self, items):
     func(self, items)
     g_crew.handlePopupSelect(items)
@@ -268,7 +270,7 @@ def onContextLeft(spaceID):
         progression_view.g_controller.stop()
 
 
-@logException
+@log_exceptions
 def _onChanged():
     g_crew.handleVehicleChange()
 

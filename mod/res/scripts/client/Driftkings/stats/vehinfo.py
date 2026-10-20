@@ -4,6 +4,8 @@ Vehicle information and statistics module for Driftkings.
 Handles loading, processing and calculation of various tank statistics.
 """
 import json
+import logging
+import math
 import os
 import urllib2
 from contextlib import closing
@@ -12,16 +14,32 @@ import ResMgr
 import nations
 from items import vehicles
 
-from Driftkings.common import callback, logError
+from Driftkings.core.callbacks import callback
+from Driftkings.common.utils.filesystem import atomicWrite, recoverFile
 from Driftkings.core.cache import cache_directory
-from Driftkings.stats import __CORE_NAME__
+LOG = logging.getLogger('Driftkings.Stats')
+try:
+    integer_types = (int, long)
+except NameError:
+    integer_types = (int,)
+
+
+def finite_number(value):
+    return isinstance(value, integer_types + (float,)) and not (math.isnan(value) or math.isinf(value))
+
+
+def valid_scale(values):
+    return (isinstance(values, (list, tuple)) and bool(values) and
+            all(finite_number(value) for value in values) and
+            all(left <= right for left, right in zip(values, values[1:])))
+
 
 _FLAVOR = 'wg'
 HOST = 'https://static.modxvm.com/'
 URL_WN8 = HOST + 'wn8-data-exp/json/%s/wn8exp.json' % _FLAVOR
 URL_XTE = HOST + 'xte.json'
 URL_XTDB = HOST + 'xtdb.json'
-URL_XVM_SCALE = HOST + '/xvmscales-%s.json' % _FLAVOR
+URL_XVM_SCALE = HOST + 'xvmscales-%s.json' % _FLAVOR
 VEHICLE_TYPE_XML_PATH = 'scripts/item_defs/vehicles/'
 VEHICLE_CLASS_TAGS = frozenset(('lightTank', 'mediumTank', 'heavyTank', 'SPG', 'AT-SPG'))
 
@@ -43,7 +61,7 @@ UNKNOWN_VEHICLE_DATA = {
     'isReserved': False
 }
 
-XVM_SCALE_TO_SUP_CACHE = [str(i) for i in xrange(1, 100)]
+XVM_SCALE_TO_SUP_CACHE = [str(i) for i in range(1, 101)]
 
 
 class ScaleValues(object):
@@ -58,8 +76,8 @@ class ScaleValues(object):
         self.xtdb_data = {}
         self.config_path = cache_directory('stats')
         self.settings = {'onlineUpdateData': True, 'showExpectedTankValuesMessage': True}
-        self._initialize_callbacks()
         self.init()
+        self._initialize_callbacks()
 
     def _initialize_callbacks(self):
         callback(0, self._loadXvmScaleData)
@@ -68,25 +86,25 @@ class ScaleValues(object):
         callback(0, self._loadXtdbData)
 
     def init(self):
-        res = [UNKNOWN_VEHICLE_DATA]
+        res = [dict(UNKNOWN_VEHICLE_DATA)]
         try:
             for nation in nations.NAMES:
                 nationID = nations.INDICES[nation]
                 vehicle_list = vehicles.g_list.getList(nationID)
 
-                for ids, descr in vehicle_list.items():
+                for descr in vehicle_list.values():
                     if descr.name.endswith('training'):
                         continue
                     try:
                         data = self.createVehicleData(descr, nation)
                         res.append(data)
-                    except Exception as e:
-                        logError(__CORE_NAME__, 'Error creating vehicle data for {}: {}', descr.name, e)
+                    except Exception:
+                        LOG.exception('Error creating vehicle data for %s', descr.name)
                 ResMgr.purge(os.path.join(VEHICLE_TYPE_XML_PATH, nation, 'components', 'guns.xml'), True)
-            self.vehicleInfoData = {x['vehCD']: x for x in res}
-        except Exception as e:
-            logError(__CORE_NAME__, 'Failed to initialize vehicle data: {}', e)
-            self.vehicleInfoData = {UNKNOWN_VEHICLE_DATA['vehCD']: UNKNOWN_VEHICLE_DATA}
+        except Exception:
+            LOG.exception('Failed to initialize vehicle data')
+        finally:
+            self.vehicleInfoData = dict((item['vehCD'], item) for item in res)
 
     @staticmethod
     def createVehicleData(descr, nation):
@@ -109,88 +127,81 @@ class ScaleValues(object):
     def XvmScaleToSup(x=None):
         if x is None:
             return None
-        return XVM_SCALE_TO_SUP_CACHE[min(100, x) - 1] if x > 0 else 0.0
+        if not finite_number(x):
+            return None
+        return XVM_SCALE_TO_SUP_CACHE[min(100, max(1, int(x))) - 1] if x > 0 else 0.0
 
     @staticmethod
     def loadJsonData(url, local_path):
-        if not os.path.exists(local_path):
-            try:
-                with open(local_path, 'w') as f:
-                    json.dump({'key': 'value'}, f)
-            except IOError as e:
-                logError(__CORE_NAME__, 'Error creating initial JSON file {}: {}', local_path, e)
-                return
+        """Keep the last valid cache if a download or publication fails."""
         try:
             with closing(urllib2.urlopen(url, timeout=10)) as response:
                 data = response.read()
-                with open(local_path, 'wb') as f:
-                    f.write(data)
-        except (urllib2.URLError, urllib2.HTTPError) as e:
-            logError(__CORE_NAME__, 'Error retrieving data from {}: {}', url, e)
-        except IOError as e:
-            logError(__CORE_NAME__, 'Error writing data to {}: {}', local_path, e)
+            document = json.loads(data.decode('utf-8-sig'))
+            if not isinstance(document, dict) or not document:
+                raise ValueError('Expected a non-empty JSON object')
+            atomicWrite(local_path, data)
+            return True
+        except (IOError, OSError, ValueError):
+            LOG.exception('Could not update statistics cache %s from %s', local_path, url)
+            return False
+
+    def _loadData(self, filename, url):
+        path = os.path.join(self.config_path, filename)
+        if self.settings.get('onlineUpdateData', True):
+            self.loadJsonData(url, path)
+        try:
+            recoverFile(path)
+            with open(path, 'rb') as stream:
+                data = json.loads(stream.read().decode('utf-8-sig'))
+            if not isinstance(data, dict):
+                raise ValueError('Expected a JSON object')
+            return data
+        except (IOError, OSError, ValueError):
+            LOG.exception('Could not load statistics cache %s', path)
+            return {}
 
     def _loadXvmScaleData(self):
-        xvmScales_path = os.path.join(self.config_path, 'xvmScales.json')
-        if self.settings.get('onlineUpdateData', True):
-            self.loadJsonData(URL_XVM_SCALE, xvmScales_path)
-        try:
-            with open(xvmScales_path, 'r') as xvm_scale:
-                self.xvmScale_data = json.load(xvm_scale)
-        except (IOError, ValueError) as e:
-            logError(__CORE_NAME__, 'Error loading XVM scale data: {}', e)
-            self.xvmScale_data = {}
+        self.xvmScale_data = self._loadData('xvmScales.json', URL_XVM_SCALE)
 
     def _loadWn8Data(self):
-        wn8_cache = os.path.join(self.config_path, 'wn8exp.json')
-        if self.settings.get('onlineUpdateData', True):
-            self.loadJsonData(URL_WN8, wn8_cache)
-        try:
-            with open(wn8_cache) as origExpectedValuesJson:
-                origExpectedValues = json.load(origExpectedValuesJson)
-                self.wn8_data = origExpectedValues
-                for x in origExpectedValues.get('data', []):
-                    try:
-                        vehCD = int(x['IDNum'])
-                        vinfo = self.getVehicleInfoData(vehCD)
-                        if vinfo is not None:
-                            vinfo.update({'wn8expDamage': float(x['expDamage']), 'wn8expSpot': float(x['expSpot']), 'wn8expWinRate': float(x['expWinRate']), 'wn8expDef': float(x['expDef']), 'wn8expFrag': float(x['expFrag'])})
-                    except (KeyError, ValueError) as e:
-                        logError(__CORE_NAME__, 'Error processing WN8 data for vehicle: {}', e)
-        except (IOError, ValueError) as e:
-            logError(__CORE_NAME__, 'Error loading WN8 data: {}', e)
+        self.wn8_data = self._loadData('wn8exp.json', URL_WN8)
+        records = self.wn8_data.get('data', [])
+        if not isinstance(records, list):
+            LOG.warning('Ignored invalid WN8 records')
+            return
+        for record in records:
+            try:
+                vinfo = self.getVehicleInfoData(int(record['IDNum']))
+                values = dict((name, float(record[key])) for name, key in (
+                    ('wn8expDamage', 'expDamage'), ('wn8expSpot', 'expSpot'),
+                    ('wn8expWinRate', 'expWinRate'), ('wn8expDef', 'expDef'), ('wn8expFrag', 'expFrag')))
+                if not all(finite_number(value) for value in values.values()):
+                    raise ValueError('Non-finite WN8 expected value')
+                if vinfo is not None:
+                    vinfo.update(values)
+            except (KeyError, ValueError, TypeError, OverflowError):
+                LOG.exception('Ignored invalid WN8 vehicle record')
 
     def _loadXteData(self):
-        xte_path = os.path.join(self.config_path, 'xte.json')
-        if self.settings.get('onlineUpdateData', True):
-            self.loadJsonData(URL_XTE, xte_path)
-        try:
-            with open(xte_path) as xte_scale:
-                self.xte_data = json.load(xte_scale)
-                for key, values in self.xte_data.items():
-                    try:
-                        vinfo = self.getVehicleInfoData(int(key))
-                        if vinfo is not None:
-                            vinfo.update({'avgdmg': float(values.get('ad', 0)), 'topdmg': float(values.get('td', 0)), 'avgfrg': float(values.get('af', 0)), 'topfrg': float(values.get('tf', 0))})
-                    except (ValueError, KeyError) as e:
-                        logError(__CORE_NAME__, 'Error processing XTE data for vehicle {}: {}', key, e)
-        except (IOError, ValueError) as e:
-            logError(__CORE_NAME__, 'Error loading XTE data: {}', e)
-            self.xte_data = {}
+        self.xte_data = self._loadData('xte.json', URL_XTE)
+        for key, values in self.xte_data.items():
+            try:
+                vinfo = self.getVehicleInfoData(int(key))
+                expected = dict((name, float(values.get(field, 0))) for name, field in (
+                    ('avgdmg', 'ad'), ('topdmg', 'td'), ('avgfrg', 'af'), ('topfrg', 'tf')))
+                if not all(finite_number(value) for value in expected.values()):
+                    raise ValueError('Non-finite XTE expected value')
+                if vinfo is not None:
+                    vinfo.update(expected)
+            except (ValueError, KeyError, TypeError, AttributeError, OverflowError):
+                LOG.exception('Ignored invalid XTE vehicle record %s', key)
 
     def _loadXtdbData(self):
-        xtdb_path = os.path.join(self.config_path, 'xtdb.json')
-        if self.settings.get('onlineUpdateData', True):
-            self.loadJsonData(URL_XTDB, xtdb_path)
-        try:
-            with open(xtdb_path) as xtdb_scale:
-                self.xtdb_data = json.load(xtdb_scale)
-        except (IOError, ValueError) as e:
-            logError(__CORE_NAME__, 'Error loading XTDB data: {}', e)
-            self.xtdb_data = {}
+        self.xtdb_data = self._loadData('xtdb.json', URL_XTDB)
 
     def getVehicleInfoData(self, vehCD):
-        if not isinstance(vehCD, (int, long)):
+        if not isinstance(vehCD, integer_types):
             return None
         return self.vehicleInfoData.get(vehCD) if self.vehicleInfoData is not None else None
 
@@ -223,7 +234,7 @@ class ScaleValues(object):
 
     def calculateXvmScale(self, rating, value):
         data = self.getXvmScaleData(rating)
-        if data is None:
+        if not valid_scale(data) or not finite_number(value):
             return -1
         for i, v in enumerate(data):
             if v > value:
@@ -232,9 +243,11 @@ class ScaleValues(object):
 
     def calculateXTE(self, vehCD, dmg_per_battle, frg_per_battle):
         data = self.getXteData(vehCD)
-        if data is None:
+        if (not isinstance(data, dict) or not valid_scale(data.get('x')) or
+                not all(finite_number(data.get(key)) for key in ('td', 'ad', 'tf', 'af')) or
+                not finite_number(dmg_per_battle) or not finite_number(frg_per_battle)):
             return -1
-        if data['td'] == data['ad'] or data['tf'] == data['af']:
+        if data['td'] <= data['ad'] or data['tf'] <= data['af'] or data['ad'] <= 0 or data['af'] <= 0:
             return -1
         CD = 3.0  # Damage coefficient
         CF = 1.0  # Frag coefficient
@@ -265,7 +278,7 @@ class ScaleValues(object):
 
     def calculateXTDB(self, vehCD, dmg_per_battle):
         data = self.getXtdbData(vehCD)
-        if data is None:
+        if not isinstance(data, dict) or not valid_scale(data.get('x')) or not finite_number(dmg_per_battle):
             return -1
         for i, v in enumerate(data['x']):
             if v > dmg_per_battle:
@@ -274,7 +287,7 @@ class ScaleValues(object):
 
     def getXtdbDataArray(self, vehCD):
         data = self.getXtdbData(vehCD)
-        return data['x'] if data is not None else []
+        return data['x'] if isinstance(data, dict) and valid_scale(data.get('x')) else []
 
 
 try:
@@ -283,5 +296,5 @@ try:
     calculateXvmScale = scaleValuesInstance.calculateXvmScale
     calculateXTDB = scaleValuesInstance.calculateXTDB
     calculateXTE = scaleValuesInstance.calculateXTE
-except ImportError as error:
-    logError(__CORE_NAME__, 'Scale not imported: {}', error)
+except ImportError:
+    LOG.exception('Statistics scale could not be imported')

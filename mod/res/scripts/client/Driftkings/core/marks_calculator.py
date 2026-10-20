@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 """Only arithmetic proven identical in the existing Battle/Hangar paths."""
+from Driftkings.common.utils.numbers import finite_number
 import math
+
+from Driftkings._constants import MARK_LEVELS, MarksStatistics, BattleCurve
+from Driftkings._constants import MARK_THRESHOLDS as THRESHOLDS
 
 
 def valid_calibration(values):
@@ -38,7 +42,6 @@ def battle_target(percent, calibration, limit=30000):
     return damage if damage < limit and start > percent else None
 
 
-MARK_LEVELS = (0.0, 20.0, 40.0, 55.0, 65.0, 85.0, 95.0, 100.0)
 EMA_WEIGHT = 0.0198019801980198022206547392443098942749202251434326171875
 
 
@@ -73,7 +76,7 @@ def battle_curve(calibration, percent, moving_average, half_steps=False):
             start = p0 + (ema - d0) / (d1 - d0) * (p1 - p0)
         levels.append(target)
         damages.append(damage)
-    return levels, damages, stats, damages[1], damages[1] < limit, damage >= min(30000, damage * 5)
+    return BattleCurve(levels, damages, stats, damages[1], damages[1] < limit, damage >= min(30000, damage * 5))
 
 
 def threshold_damage(ema, start, end, d, p):
@@ -94,12 +97,12 @@ def statistics(p, d):
     p95 = threshold_damage(0, 0.0, 95.0, d, p)
     p100 = threshold_damage(0, 0.0, 100.0, d, p)
     data = [0, p20, p40, p55, p65, p85, p95, p100]
-    idx = filter(lambda x: x >= p, MARK_LEVELS)[0]
+    idx = next(x for x in MARK_LEVELS if x >= p)
     limit1 = dC
     limit2 = data[MARK_LEVELS.index(idx)]
     check = MARK_LEVELS.index(idx)
     delta = limit2 - limit1
-    for value in xrange(len(data)):
+    for value in range(len(data)):
         if data[value] == limit1 or data[value] == limit2:
             continue
         if value > check:
@@ -107,17 +110,12 @@ def statistics(p, d):
     if pC == 101:
         pC = 100
         dC = data[7]
-    return pC, dC, data[1], data[2], data[3], data[4], data[5], data[6], data[7]
+    return MarksStatistics(pC, dC, data[1], data[2], data[3], data[4], data[5], data[6], data[7])
 
 
-THRESHOLDS = (65, 85, 95)
 
 def safe_number(value, default=0.0):
-    try:
-        value = float(value)
-        return default if math.isnan(value) or math.isinf(value) else value
-    except (ValueError, TypeError, OverflowError):
-        return default
+    return finite_number(value, default)
 
 
 def hangar_goal(percent, moving_average, tier, selection=0, earned_marks=0):

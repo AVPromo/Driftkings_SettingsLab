@@ -11,7 +11,7 @@ class RetiredDefaultsTests(RuntimeTest):
     def definition(self, relative, name, section):
         schema = source('settings/controls_schema.py', {})
         api = source(relative, {
-            'Driftkings._constants': module(**{section: module(NAME=section)}),
+            'Driftkings._constants': self.load('_constants'),
             'Driftkings.settings.controls_schema': module(control=schema['control'], slider=schema['slider']),
             'Driftkings.settings.definitions.base': module(SectionDefinition=object),
         })

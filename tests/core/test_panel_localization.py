@@ -65,7 +65,7 @@ class PanelLocalizationTests(RuntimeTest):
             'Driftkings.core.battle_events': module(battleEvents=None),
             'Driftkings.core.panel_model': module(Roster=self.roster),
             'Driftkings.settings.settings_data': settings_data,
-            'Driftkings.common': module(getStatisticColor=lambda *args: '#FFFFFF'),
+            'Driftkings.common.utils.colorRatting': module(getStatisticColor=lambda *args: '#FFFFFF'),
         })
         self.view = self.api['RatingViews'](self.config, module(getPlayersInfo=lambda ident: {}))
 

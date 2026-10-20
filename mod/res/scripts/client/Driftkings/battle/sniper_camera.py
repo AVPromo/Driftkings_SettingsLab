@@ -7,7 +7,7 @@ from aih_constants import CTRL_MODE_NAME
 from helpers.bound_effects import ModelBoundEffects
 
 from Driftkings._constants import GLOBAL, SNIPER_CAMERA
-from Driftkings.common import isReplay, getPlayer
+from Driftkings.common.utils.wgUtils import isReplay, getPlayer
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service

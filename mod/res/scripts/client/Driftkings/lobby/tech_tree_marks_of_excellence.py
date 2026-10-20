@@ -3,6 +3,7 @@
 from Driftkings.interface_catalog import gameface_spec
 from Driftkings._constants import GLOBAL, TECH_TREE_MARKS_OF_EXCELLENCE
 from Driftkings.settings.service import settings_service, affects
+from Driftkings.core.settings_controller import SettingsController
 import json
 import logging
 import weakref
@@ -10,7 +11,7 @@ import weakref
 from dossiers2.ui.achievements import ACHIEVEMENT_BLOCK, MARK_OF_MASTERY_RECORD
 from gui.shared.personality import ServicesLocator
 
-from Driftkings.common import getStatisticColor
+from Driftkings.common.utils.colorRatting import getStatisticColor
 from Driftkings.settings.definitions.lobby.tech_tree_marks_of_excellence import TechTreeMarksOfExcellenceSettings as Settings
 from Driftkings.views.hangar.tech_tree_marks_of_excellence import install
 
@@ -20,19 +21,9 @@ RESOURCE = gameface_spec(FEATURE)['resource']
 _views = weakref.WeakKeyDictionary()
 
 
-class TechTreeController(object):
-    def __init__(self):
-        self.active = False
+class TechTreeController(SettingsController):
+    SETTINGS_SECTION = TECH_TREE_MARKS_OF_EXCELLENCE
 
-    def start(self):
-        if not self.active:
-            self.active = True
-            settings_service.onModSettingsChanged.connect(self.onSettingsChanged, TECH_TREE_MARKS_OF_EXCELLENCE)
-
-    def stop(self):
-        if self.active:
-            self.active = False
-            settings_service.onModSettingsChanged.disconnect(self.onSettingsChanged)
 
     def onSettingsChanged(self, component, changes):
         if not affects(changes, GLOBAL.ENABLED, TECH_TREE_MARKS_OF_EXCELLENCE.SHOW_IN_TECH_TREE,
@@ -48,7 +39,6 @@ class TechTreeController(object):
                 child.refresh(reload=False)
             except Exception:
                 LOG.exception('Could not apply tech tree settings to the active view')
-
 
 
 config = Settings()

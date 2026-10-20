@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import logging
+LOG = logging.getLogger('Driftkings.battle.aiming_reticles')
 import AvatarInputHandler
 import BattleReplay
 import BigWorld
@@ -20,7 +22,7 @@ from helpers import dependency
 from skeletons.account_helpers.settings_core import ISettingsCache, ISettingsCore
 
 from Driftkings._constants import AIMING_RETICLES, GLOBAL
-from Driftkings.common import logWarning, getPlayer
+from Driftkings.common.utils.wgUtils import getPlayer
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service, affects
 from Driftkings.settings.definitions.battle.aiming_reticles import AimingReticlesSettings as Settings
@@ -157,7 +159,7 @@ class CustomCrosshairContainer(CrosshairPanelContainer):
 
     def createGunMarkers(self, markersInfo, vehicleInfo):
         if self._CrosshairPanelContainer__gunMarkers is not None:
-            logWarning(config.NAME, 'Set of gun markers is already created.')
+            LOG.warning('Set of gun markers is already created.')
             return
         else:
             self._CrosshairPanelContainer__setGunMarkers(self.createMarkers(markersInfo, vehicleInfo, self.enableSpgStrategicReticle))
@@ -165,7 +167,7 @@ class CustomCrosshairContainer(CrosshairPanelContainer):
 
     def invalidateGunMarkers(self, markersInfo, vehicleInfo):
         if self._CrosshairPanelContainer__gunMarkers is None:
-            logWarning(config.NAME, 'Set of gun markers is not created')
+            LOG.warning('Set of gun markers is not created')
             return
         else:
             newSet = self.overrideMarkers(self._CrosshairPanelContainer__gunMarkers, markersInfo, vehicleInfo, self.enableSpgStrategicReticle)

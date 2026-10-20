@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import logging
+LOG = logging.getLogger('Driftkings.lobby.clan_reward_collection')
 from adisp import adisp_process
 from gui import SystemMessages
 from gui.clans.clan_cache import g_clanCache
@@ -16,7 +18,6 @@ from skeletons.gui.shared.utils import IHangarSpace
 from skeletons.gui.web import IWebController
 
 from Driftkings._constants import CLAN_REWARD_COLLECTION, GLOBAL
-from Driftkings.common import logWarning
 from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.lobby.clan_reward_collection import ClanRewardCollectionSettings as Settings
 
@@ -88,7 +89,7 @@ class AutoClaimClanReward(object):
             response = yield self.__webController.sendRequest(ctx=ClaimRewardsCtx())
             if not response.isSuccess():
                 SystemMessages.pushMessage('Battle Observer: Auto Claim Clan Reward - ' + backport.text(R.strings.clan_supply.messages.claimRewards.error()), type=SystemMessages.SM_TYPE.Error)
-                logWarning(self.config.NAME, 'Failed to claim rewards. Code: {}', response.getCode())
+                LOG.warning(('Failed to claim rewards. Code: {}').format(response.getCode()))
         finally:
             self.__claim_started = False
 
@@ -97,7 +98,7 @@ class AutoClaimClanReward(object):
         response = yield self.__webController.sendRequest(ctx=PurchaseProgressionStageCtx(stageID, price))
         if not response.isSuccess():
             SystemMessages.pushMessage(self.config.NAME + 'Auto Claim Clan Reward - Failed to claim Progression.', type=SystemMessages.SM_TYPE.Error)
-            logWarning(self.config.NAME, 'Failed to claim Progression. Code: {}', response.getCode())
+            LOG.warning(('Failed to claim Progression. Code: {}').format(response.getCode()))
 
     def parseQuests(self, data):
         if data is not None and not self.__claim_started and any(q.status in REWARD_STATUS_OK for q in data.quests):

@@ -18,4 +18,4 @@ class AutoaimTargetIndicatorSettings(SectionDefinition):
         return self.normalize_loaded(values)
 
     def getControlColumns(self):
-        return ((control('color', 'ColorChoice'),), ())
+        return ((control(AUTOAIM_TARGET_INDICATOR.COLOR, 'ColorChoice'),), ())

@@ -8,7 +8,9 @@ from gui.shared.gui_items import Vehicle
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
 from Driftkings._constants import ARTILLERY_BLAST_RADIUS, GLOBAL
-from Driftkings.common import checkKeys, getPlayer, sendPanelMessage, logException
+from Driftkings.common.utils.game import checkKeys, sendPanelMessage
+from Driftkings.common.utils.wgUtils import getPlayer
+from Driftkings.common.utils.exceptions import log_exceptions
 from Driftkings.core.hooks import override, on_event
 from Driftkings.core.keyboard import keyboard
 from Driftkings.settings.service import settings_service
@@ -163,7 +165,7 @@ class ArtySplashController(object):
         if self.modelDot is not None and self.modelDot.model and self.modelDot.model.visible:
             self.modelDot.model.visible = False
 
-    @logException
+    @log_exceptions
     def injectButton(self, event):
         if not self._started or not settings_service.getComponentDict(self.config)[GLOBAL.ENABLED]:
             return

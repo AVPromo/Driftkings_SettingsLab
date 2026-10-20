@@ -17,7 +17,7 @@ class TargetIndicatorTests(RuntimeTest):
         self.vehicle = Vehicle()
         self.player = module(isObserver=lambda: False, isVehicleAlive=True,
                              autoAimVehicle=self.vehicle, team=1)
-        constants = module(GLOBAL=module(ENABLED='enabled'))
+        constants = self.load('_constants')
         api = source('battle/autoaim_target_indicator.py', {
             'BigWorld': module(), 'Math': module(),
             'AvatarInputHandler': module(cameras=module()),

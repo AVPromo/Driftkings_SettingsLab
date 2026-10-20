@@ -6,22 +6,6 @@
     var lastPayload = null, timer = null;
 
     // Translate the configured Flash text to a small, safe HTML subset.
-    function copyText(source, target) {
-        for (var i = 0; i < source.childNodes.length; i++) {
-            var child = source.childNodes[i];
-            if (child.nodeType === 3) { target.appendChild(document.createTextNode(child.nodeValue)); continue; }
-            if (child.nodeType !== 1) { continue; }
-            var tag = child.tagName.toLowerCase();
-            if (tag === 'script' || tag === 'style' || tag === 'iframe') { continue; }
-            var dest = document.createElement(/^(b|i|u|br|p)$/.test(tag) ? tag : 'span');
-            if (tag === 'font') {
-                var color = child.getAttribute('color'), size = Number(child.getAttribute('size'));
-                if (/^#[0-9a-f]{6}$/i.test(color)) { dest.style.color = color; }
-                if (size >= 8 && size <= 40) { dest.style.fontSize = size + 'px'; }
-            }
-            copyText(child, dest); target.appendChild(dest);
-        }
-    }
     function hide() {
         if (node && node.parentNode) { node.parentNode.removeChild(node); }
         node = null;
@@ -34,7 +18,7 @@
         while (node.firstChild) { node.removeChild(node.firstChild); }
         var parsed = document.createElement('div');
         parsed.innerHTML = data.html;
-        copyText(parsed, node);
+        window.DriftkingsFlashText.copy(parsed, node);
     }
     function refresh() {
         if (disposed || !window.subViews) { return; }

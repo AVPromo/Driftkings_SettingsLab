@@ -1,0 +1,85 @@
+# -*- coding: utf-8 -*-
+"""Hangar controllers share subscription ownership without changing update order."""
+import ast
+import os
+from support import CLIENT, RuntimeTest, module, source
+
+
+class SettingsControllerTests(RuntimeTest):
+    def setUp(self):
+        super(SettingsControllerTests, self).setUp()
+        self.events = []
+        self.listeners = []
+        def connect(handler, section):
+            self.events.append(('connect', handler.__self__.active))
+            self.listeners.append((handler, section))
+        def disconnect(handler):
+            self.events.append(('disconnect', handler.__self__.active))
+            self.listeners[:] = [entry for entry in self.listeners if entry[0] != handler]
+        self.service = module(onModSettingsChanged=module(connect=connect, disconnect=disconnect))
+        self.base = source('core/settings_controller.py', {
+            'Driftkings.settings.service': module(settings_service=self.service)})['SettingsController']
+        self.constants = self.load('_constants')
+
+    def controller(self, relative, name, extra=None):
+        # Execute the real class while avoiding the module's unrelated game hooks.
+        with open(os.path.join(CLIENT, relative), 'rb') as stream:
+            text = stream.read().decode('utf-8-sig')
+        tree = ast.parse(text.encode('utf-8'))
+        index = next(i for i, node in enumerate(tree.body) if isinstance(node, ast.ClassDef) and node.name == name)
+        node = tree.body[index]
+        end = tree.body[index + 1].lineno - 1 if index + 1 < len(tree.body) else len(text.splitlines())
+        selected = '\n'.join(text.splitlines()[node.lineno - 1:end])
+        namespace = {'SettingsController': self.base, 'HANGAR_PREFERENCES': self.constants.HANGAR_PREFERENCES,
+                     'TECH_TREE_MARKS_OF_EXCELLENCE': self.constants.TECH_TREE_MARKS_OF_EXCELLENCE}
+        namespace.update(extra or {})
+        eval(compile(selected.encode('utf-8'), relative, 'exec'), namespace)
+        return namespace[name]()
+
+    def test_hangar_and_tree_are_idempotent_and_restartable(self):
+        for relative, name, section in (
+            ('lobby/hangar_preferences.py', 'HangarOptionsController', self.constants.HANGAR_PREFERENCES),
+            ('lobby/tech_tree_marks_of_excellence.py', 'TechTreeController', self.constants.TECH_TREE_MARKS_OF_EXCELLENCE)):
+            controller = self.controller(relative, name)
+            self.assertFalse(controller.active)
+            controller.stop()
+            self.assertEqual(self.events, [])
+            controller.start()
+            controller.start()
+            self.assertEqual(len(self.listeners), 1)
+            self.assertIs(self.listeners[0][1], section)
+            controller.stop()
+            controller.stop()
+            self.assertEqual(self.listeners, [])
+            self.assertEqual(self.events, [('connect', True), ('disconnect', False)])
+            controller.start()
+            self.assertTrue(controller.active)
+            controller.stop()
+            self.assertEqual(self.listeners, [])
+            self.events[:] = []
+
+    def test_clock_refreshes_after_connect_and_after_disconnect(self):
+        common = source('views/hangar/common.py', {'Driftkings.core.settings_controller': module(SettingsController=self.base)})
+        current = {'text': 'first'}
+        service = module(getComponentDict=lambda config: {self.constants.HANGAR_PREFERENCES.CUSTOM_CLOCK_TEXT: current['text']})
+        controller = self.controller('views/hangar/hangar_preferences.py', 'ClockController', {
+            'HangarController': common['HangarController'], 'settings_service': service,
+            '_component': lambda: module(config=object())})
+        class Parent(object):
+            pass
+        parent = Parent()
+        def refresh():
+            self.events.append(('refresh', controller.active, controller.clockText, len(self.listeners)))
+        child = module(refresh=refresh)
+        controller.views[parent] = child
+        controller.start()
+        controller.start()
+        controller.stop()
+        controller.stop()
+        self.assertEqual(self.events, [('connect', True), ('refresh', True, 'first', 1),
+                                       ('disconnect', False), ('refresh', False, 'first', 0)])
+        current['text'] = 'second'
+        controller.start()
+        self.assertEqual(controller.clockText, 'second')
+        controller.stop()
+        self.assertEqual(self.listeners, [])

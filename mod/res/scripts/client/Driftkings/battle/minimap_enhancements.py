@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import logging
+LOG = logging.getLogger('Driftkings.battle.minimap_enhancements')
 import weakref
 from math import degrees
 
@@ -12,7 +14,8 @@ from skeletons.gui.battle_session import IBattleSessionProvider
 
 from Driftkings._constants import BATTLE_ALIASES
 from Driftkings._constants import GLOBAL, MINIMAP_ENHANCEMENTS
-from Driftkings.common import hexToDecimal, logError, xvmInstalled, battle_range
+from Driftkings.common.utils.formatting import hexToDecimal
+from Driftkings.common.utils.wgUtils import isXvmInstalled, getBattleTypes
 from Driftkings.common.utils.game import checkKeys
 from Driftkings.core import minimap as policy
 from Driftkings.core.callbacks import callback, cancelCallback
@@ -441,8 +444,8 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
 def new_setupPlugins(func, self, arenaVisitor):
     args = func(self, arenaVisitor)
     try:
-        allowedMode = arenaVisitor.gui.guiType in battle_range
-        if not xvmInstalled and allowedMode:
+        allowedMode = arenaVisitor.gui.guiType in getBattleTypes()
+        if not isXvmInstalled() and allowedMode:
             # Preserve mode-specific subclasses rather than replacing event logic.
             for key, custom, base in (('vehicles', ArenaVehiclesPlugin, plugins.ArenaVehiclesPlugin),
                                       ('personal', PersonalEntriesPlugin, plugins.PersonalEntriesPlugin)):
@@ -452,7 +455,7 @@ def new_setupPlugins(func, self, arenaVisitor):
                 elif isinstance(native, type) and issubclass(native, base) and not issubclass(native, custom):
                     args[key] = type('Driftkings' + native.__name__, (custom, native), {})
     except Exception as err:
-        logError(config.NAME, repr(err))
+        LOG.error(repr(err))
     finally:
         return args
 

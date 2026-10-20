@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 """Explicit composition, dependency gating and reverse-order cleanup."""
+from collections import namedtuple
 import importlib
 import logging
 LOG = logging.getLogger('Driftkings.Loader')
 
 
-class ServiceSpec(object):
-    def __init__(self, name, factory, requires=(), phase='foundation'):
-        self.name, self.factory = name, factory
-        self.requires, self.phase = tuple(requires), phase
+class ServiceSpec(namedtuple('ServiceSpec', ('name', 'factory', 'requires', 'phase'))):
+    __slots__ = ()
+
+    def __new__(cls, name, factory, requires=(), phase='foundation'):
+        return super(ServiceSpec, cls).__new__(cls, name, factory, tuple(requires), phase)
 
 
 def runtime_service(path, construct=True):

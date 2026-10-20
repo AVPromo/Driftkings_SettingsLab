@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from build_tools.build_installer import definitions, generate_components, partial_choices, prepare_payload, supported_realms
+from build_tools.build_installer import definitions, generate_components, partial_choices, prepare_payload, supported_realms, attach_installer
 from build_tools.generate_ui_catalog import installer_catalog
 from build_tools.validate_build_data import build_plan
 from build_tools.validate_installer_assets import validate, validate_png, inventory_limit
@@ -39,13 +39,35 @@ class GeneratorTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         for relative in ('res/configs/Driftkings', 'installer/setup'):
-            shutil.copytree(ROOT / relative, self.root / relative)
+            shutil.copytree(ROOT / relative, self.root / relative,
+                            ignore=shutil.ignore_patterns('*.png', '*.bmp', '*.ico') if relative == 'installer/setup' else None)
         for relative in ('build_data/build_config.json', 'build_data/components.json',
                          'mod/res/scripts/client/Driftkings/_constants.py',
                          'mod/res/scripts/client/Driftkings/i18n/en.py', 'mod/res/scripts/client/Driftkings/i18n/pt.py'):
             path = self.root / relative
             path.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(ROOT / relative, path)
+
+    def test_installer_attachment_updates_release_inventory_and_checksums(self):
+        folder = self.root / 'release'
+        folder.mkdir()
+        manifest = {'version': '1.0.0-beta.1', 'gameVersion': '2.4.1.0'}
+        (folder / 'release.json').write_text(json.dumps(manifest))
+        report = dict(status='success', mode='release', publishable=True, version=manifest['version'],
+                      gameVersion=manifest['gameVersion'], artifacts={'release.json': {}})
+        (folder / 'build-report.json').write_text(json.dumps(report))
+        installer = self.root / 'Driftkings-1.0.0-beta.1-WoT-2.4.1.0-Setup.exe'
+        installer.write_bytes(b'MZtest installer')
+        attached = attach_installer(folder, installer)
+        report = json.loads((folder / 'build-report.json').read_text())
+        self.assertEqual(report['artifacts'][installer.name]['sha256'], hashlib.sha256(attached.read_bytes()).hexdigest())
+        sums = (folder / 'SHA256SUMS.txt').read_text().splitlines()
+        self.assertEqual(len(sums), 3)
+        for line in sums:
+            checksum, name = line.split('  ', 1)
+            self.assertEqual(checksum, hashlib.sha256((folder / name).read_bytes()).hexdigest())
+        with self.assertRaisesRegex(ValueError, 'filename'):
+            attach_installer(folder, folder / 'wrong.exe')
 
     def test_every_top_level_enabled_has_translated_labels_group_and_real_path(self):
         choices = installer_catalog(self.root)
@@ -216,7 +238,8 @@ class GeneratorTests(unittest.TestCase):
             namespace = {'__name__': '_installer_test', '__builtins__': dict(vars(builtins), __import__=importing)}
             eval(compile((client / relative).read_bytes(), str(client / relative), 'exec'), namespace)
             return types.SimpleNamespace(**{key: value for key, value in namespace.items() if not key.startswith('__')})
-        store = load('settings/store.py')
+        filesystem = load('common/utils/filesystem.py')
+        store = load('settings/store.py', {'Driftkings.common.utils.filesystem': filesystem})
         sections = load('settings/sections.py')
         loader = load('settings/loader.py', {
             'Driftkings.settings.settings_data': types.SimpleNamespace(SettingsData=object, user_settings={}, part_name=lambda value: value),

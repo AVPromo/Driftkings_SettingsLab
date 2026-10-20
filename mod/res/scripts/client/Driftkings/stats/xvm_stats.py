@@ -8,52 +8,18 @@ class _Stat(object):
 
     @staticmethod
     def _fix_common(value):
-        if '_id' in value:
-            value['player_id'] = value['_id']
-            del value['_id']
-        if 'nm' in value:
-            value['name_db'] = value['nm']
-            del value['nm']
-        if 'cid' in value:
-            value['clan_id'] = value['cid']
-            del value['cid']
-        if 'b' in value:
-            value['battles'] = value['b']
-            del value['b']
-        if 'w' in value:
-            value['wins'] = value['w']
-            del value['w']
-        if 'e' in value:
-            value['eff'] = value['e']
-            del value['e']
-        if 'lvl' in value:
-            value['avglvl'] = value['lvl']
-            del value['lvl']
-        if 'ver' in value:
-            del value['ver']
-        if 'st' in value:
-            del value['st']
-        if 'dt' in value:
-            del value['dt']
-        if 'cr' in value:
-            del value['cr']
-        if 'up' in value:
-            del value['up']
-        if 'rnd' in value:
-            del value['rnd']
-        if 'lang' in value:
-            del value['lang']
-
-        if 'v' not in value:
+        for original, renamed in (('_id', 'player_id'), ('nm', 'name_db'), ('cid', 'clan_id'),
+                                  ('b', 'battles'), ('w', 'wins'), ('e', 'eff'), ('lvl', 'avglvl')):
+            if original in value:
+                value[renamed] = value.pop(original)
+        for key in ('ver', 'st', 'dt', 'cr', 'up', 'rnd', 'lang'):
+            value.pop(key, None)
+        if not isinstance(value.get('v'), dict):
             value['v'] = {}
-        if value.get('eff', 0) <= 0:
-            value['eff'] = None
-        if value.get('wn8', 0) <= 0:
-            value['wn8'] = None
-        if value.get('wgr', 0) <= 0:
-            value['wgr'] = None
-        if value.get('wtr', 0) <= 0:
-            value['wtr'] = None
+        for key in ('eff', 'wn8', 'wgr', 'wtr'):
+            rating = value.get(key)
+            if rating is None or rating <= 0:
+                value[key] = None
 
     def _fix_common2(self, stat, orig_name):
         if orig_name is not None:
@@ -69,8 +35,13 @@ class _Stat(object):
                     self._calculateXTE(vData)
                     self._calculateVXWTR(vData)
             if 'vehicles' in stat:
-                for vehicleID, vData in stat['vehicles'].iteritems():
-                    vData['id'] = int(vehicleID)
+                for vehicleID, vData in stat['vehicles'].items():
+                    if not isinstance(vData, dict):
+                        continue
+                    try:
+                        vData['id'] = int(vehicleID)
+                    except (TypeError, ValueError, OverflowError):
+                        continue
                     self._calculateVehicleValues(stat, vData)
                     self._calculateXTDB(vData)
                     self._calculateXTE(vData)
@@ -84,15 +55,15 @@ class _Stat(object):
     # XVM Scale
     @staticmethod
     def _calculateXvmScale(stat):
-        if 'wtr' in stat and stat['wtr'] > 0:
+        if stat.get('wtr') is not None and stat['wtr'] > 0:
             stat['xwtr'] = calculateXvmScale('wtr', stat['wtr'])
-        if 'wn8' in stat and stat['wn8'] > 0:
+        if stat.get('wn8') is not None and stat['wn8'] > 0:
             stat['xwn8'] = calculateXvmScale('wn8', stat['wn8'])
-        if 'eff' in stat and stat['eff'] > 0:
+        if stat.get('eff') is not None and stat['eff'] > 0:
             stat['xeff'] = calculateXvmScale('eff', stat['eff'])
-        if 'wgr' in stat and stat['wgr'] > 0:
+        if stat.get('wgr') is not None and stat['wgr'] > 0:
             stat['xwgr'] = calculateXvmScale('wgr', stat['wgr'])
-        if 'winrate' in stat and stat['winrate'] > 0:
+        if stat.get('winrate') is not None and stat['winrate'] > 0:
             stat['xwr'] = calculateXvmScale('win', stat['winrate'])
 
     # calculate Vehicle values
@@ -122,7 +93,9 @@ class _Stat(object):
         vb = float(value['b'])
         if 'dmg' in value and value['dmg'] > 0:
             value['db'] = float(value['dmg']) / vb
-            value['dv'] = float(value['dmg']) / vb / vData['hpTop']
+            hp_top = vData.get('hpTop', 0)
+            if hp_top:
+                value['dv'] = value['db'] / hp_top
         if 'frg' in value and value['frg'] > 0:
             value['fb'] = float(value['frg']) / vb
         if 'spo' in value and value['spo'] > 0:
@@ -147,7 +120,7 @@ class _Stat(object):
     # calculate per-vehicle xWTR
     @staticmethod
     def _calculateVXWTR(value):
-        if 'wtr' in value and value['wtr'] > 0:
+        if value.get('wtr') is not None and value['wtr'] > 0:
             value['xwtr'] = calculateXvmScale('wtr', value['wtr'])
 
 

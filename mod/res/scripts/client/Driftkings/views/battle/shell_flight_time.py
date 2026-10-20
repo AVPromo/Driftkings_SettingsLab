@@ -7,7 +7,7 @@ from gui.battle_control import avatar_getter
 from math_utils import VectorConstant
 
 from Driftkings._constants import SHELL_FLIGHT_TIME, GLOBAL
-from Driftkings.common import getPlayer
+from Driftkings.common.utils.wgUtils import getPlayer
 from Driftkings.core.battle_policy import battle_policy
 from Driftkings.meta.battle.flight_timer import FlightTimeMeta
 

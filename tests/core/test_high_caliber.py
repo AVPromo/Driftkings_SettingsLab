@@ -59,7 +59,7 @@ class HighCaliberTests(RuntimeTest):
                 VehiclesInfoCollection=lambda: module(iterator=lambda dp: []))),
             'gui.battle_control.battle_constants': module(FEEDBACK_EVENT_ID=module(PLAYER_DAMAGED_HP_ENEMY=10)),
             'Driftkings._constants': self.constants,
-            'Driftkings.common': module(getPlayer=lambda: self.player),
+            'Driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player),
             'Driftkings.core.battle_events': module(battleEvents=self.events),
             'Driftkings.core.hooks': module(override=identity, on_event=identity),
             'Driftkings.settings.service': module(settings_service=self.service),
@@ -281,6 +281,9 @@ class HighCaliberTests(RuntimeTest):
             'Driftkings.interface_catalog': module(gameface_spec=lambda feature: {'resource': 'test'}),
             'GUI': module(mcursor=lambda: module(visible=False)),
         }
+        base = source('views/battle/common.py', deps)
+        base['setattr'] = lambda target, name, value: setattr(target, name, value)
+        deps['Driftkings.views.battle.common'] = module(BattleCardAdapter=base['BattleCardAdapter'])
         adapter = source('views/battle/high_caliber_gameface.py', deps)['MainGunAdapter']()
         adapter.install()
         adapter.install()

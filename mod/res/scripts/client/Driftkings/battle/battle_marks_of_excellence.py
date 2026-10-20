@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Driftkings._constants import MARK_THRESHOLDS, MARK_LEVELS
 from Driftkings.core.battle_events import battleEvents
 from Driftkings.common.utils import events
 
@@ -17,8 +18,12 @@ from gui.impl.lobby.hangar.presenters.crew_presenter import CrewPresenter
 from Driftkings.core.marks_calculator import ceil_damage, combined_damage, statistics, battle_estimate, battle_target, battle_curve, valid_calibration
 from Driftkings.views.marks_model import compact_model
 
-from Driftkings._constants import GLOBAL, BATTLE_MARKS_OF_EXCELLENCE, DAMAGE_EVENTS, BATTLE_EVENT_TYPE
-from Driftkings.common import loadJson, checkKeys, getPlayer, sendPanelMessage, getStatisticColor, getMoeDamageColor
+from Driftkings._constants import GLOBAL, BATTLE_MARKS_OF_EXCELLENCE
+from Driftkings.game_constants import DAMAGE_EVENTS, BATTLE_EVENT_TYPE
+from Driftkings.common.config.json_reader import loadJson
+from Driftkings.common.utils.game import checkKeys, sendPanelMessage
+from Driftkings.common.utils.wgUtils import getPlayer
+from Driftkings.common.utils.colorRatting import getStatisticColor, getMoeDamageColor
 from Driftkings.common.utils.achievement_dossiers import getAchievementDossier
 from Driftkings.core.cache import cache_directory
 from Driftkings.core.callbacks import callback
@@ -303,7 +308,7 @@ class Worker(object):
                 g_panel.unavailable(self.vehicleID)
                 return
             self.calcBattlePercents()
-            self.markTargets = dict((limit, battle_target(limit, self.values)) for limit in (65, 85, 95))
+            self.markTargets = dict((limit, battle_target(limit, self.values)) for limit in MARK_THRESHOLDS)
             g_panel.setupSize()
             self.calc()
             if not self.replay:
@@ -412,7 +417,7 @@ def new_getUserCondition(func, *args):
                     '_100': worker.getNormalizeDigits(p100)
                 }
                 data.update(('c%s' % level, getStatisticColor('mog', level, index))
-                            for level in (20, 40, 55, 65, 85, 95, 100))
+                            for level in map(int, MARK_LEVELS[1:]))
                 temp = config.i18n['UI_tooltips'].format(**data)
                 return temp
     return func(*args)

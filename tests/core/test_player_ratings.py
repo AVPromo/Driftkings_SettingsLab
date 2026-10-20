@@ -20,12 +20,18 @@ class PlayerRatingsTests(RuntimeTest):
             'messenger': module(g_settings=object()),
             'skeletons.gui.battle_session': module(IBattleSessionProvider=object),
             'Driftkings._constants': module(GLOBAL=object(), TEAM_PANELS=object()),
-            'Driftkings.common': module(getPlayer=lambda: None, logWarning=lambda *args: None,
+            'Driftkings.common.utils.wgUtils': module(getPlayer=lambda: None, logWarning=lambda *args: None,
+                                       getStatisticColor=colors.getStatisticColor,
+                                       callback=lambda *args: None, cancelCallback=lambda *args: None),
+            'Driftkings.common.utils.colorRatting': module(getPlayer=lambda: None, logWarning=lambda *args: None,
+                                       getStatisticColor=colors.getStatisticColor,
+                                       callback=lambda *args: None, cancelCallback=lambda *args: None),
+            'Driftkings.core.callbacks': module(getPlayer=lambda: None, logWarning=lambda *args: None,
                                        getStatisticColor=colors.getStatisticColor,
                                        callback=lambda *args: None, cancelCallback=lambda *args: None),
             'Driftkings.core.hooks': module(override=lambda *args: None),
             'Driftkings.settings.service': module(settings_service=object()),
-            'Driftkings.stats': module(calculateXvmScale=lambda metric, value: value,
+            'Driftkings.stats.vehinfo': module(calculateXvmScale=lambda metric, value: value,
                                       getVehicleInfoData=lambda value: None, scaleValuesInstance=object())})
 
     def test_unavailable_ratings_have_missing_marker_and_neutral_color(self):

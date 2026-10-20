@@ -3,9 +3,12 @@
 import json
 import weakref
 
+from Driftkings.core.settings_controller import SettingsController
 
-class HangarController(object):
+
+class HangarController(SettingsController):
     def __init__(self):
+        super(HangarController, self).__init__()
         self.views = weakref.WeakKeyDictionary()
         self.visible = weakref.WeakKeyDictionary()
 

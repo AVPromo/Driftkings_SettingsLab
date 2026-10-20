@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+import logging
+LOG = logging.getLogger('Driftkings.battle.target_distance')
 from AvatarInputHandler import AvatarInputHandler
 from gui.Scaleform.daapi.view.battle.shared.markers2d.vehicle_plugins import VehicleMarkerPlugin
 
 from Driftkings._constants import GLOBAL
-from Driftkings.common import logError
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.battle.target_distance import TargetDistanceSettings as Settings
@@ -29,7 +30,7 @@ def start(func, self):
         if g_distanceMarker is None and settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
             g_distanceMarker = DistanceMarkerController(self._clazz)
     except Exception as e:
-        logError(config.NAME, 'Failed to create distance marker app: {}', e, exc_info=True)
+        LOG.error(('Failed to create distance marker app: {}').format(e) , exc_info=True)
 
 
 @override(VehicleMarkerPlugin, 'stop')
@@ -41,7 +42,7 @@ def stop(func, self):
             g_distanceMarker.close()
             g_distanceMarker = None
     except Exception as e:
-        logError(config.NAME, 'Failed to close distance marker app: {}', e, exc_info=True)
+        LOG.error(('Failed to close distance marker app: {}').format(e) , exc_info=True)
 
 
 def fini():

@@ -8,11 +8,12 @@ from Avatar import PlayerAvatar
 from nations import NAMES
 
 from Driftkings._constants import GLOBAL, TARGET_INFORMATION
-from Driftkings.common import getPlayer, getTarget, checkKeys
+from Driftkings.common.utils.wgUtils import getPlayer, getTarget
+from Driftkings.common.utils.game import checkKeys
 from Driftkings.core.battle_events import battleEvents
 from Driftkings.core.gun_stats import damage_per_minute, reload_with_equipment
 from Driftkings.core.hooks import override
-from Driftkings.common import callback, cancelCallback
+from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.settings.service import settings_service, affects
 from Driftkings.settings.definitions.battle.target_information import TargetInformationSettings as Settings
 from Driftkings.views.battle.target_information import Flash

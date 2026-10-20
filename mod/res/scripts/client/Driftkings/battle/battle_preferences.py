@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import logging
+LOG = logging.getLogger('Driftkings.battle.battle_preferences')
 from Driftkings.common.utils import events
 import math
 from collections import defaultdict
@@ -30,7 +32,7 @@ from messenger.gui.Scaleform.data.contacts_data_provider import _ContactsCategor
 from messenger.storage import MessengerStorageDescriptor, UsersStorage
 
 from Driftkings._constants import BATTLE_PREFERENCES, GLOBAL
-from Driftkings.common import getPlayer, logInfo, square_position, isReplay
+from Driftkings.common.utils.wgUtils import getPlayer, square_position, isReplay
 from Driftkings.core.callbacks import callback
 from Driftkings.core.fog_package import FogPackageController
 from Driftkings.core.hooks import override, on_event
@@ -323,7 +325,7 @@ def onVehicleChanged(vehicle):
     if vehicle is None or vehicle.isLocked or isSpecialVehicle(vehicle):
         return
     if not hasattr(vehicle, 'battleBoosters') or vehicle.battleBoosters is None:
-        logInfo('No battle boosters available for this vehicle: {}', vehicle.userName)
+        LOG.info(('No battle boosters available for this vehicle: {}').format(vehicle.userName))
         return
     isAuto = vehicle.isAutoBattleBoosterEquip()
     boosters = vehicle.battleBoosters.installed.getItems()
@@ -331,7 +333,7 @@ def onVehicleChanged(vehicle):
         value = battleBooster.inventoryCount > GLOBAL.ZERO
         if value != isAuto:
             changeValue(vehicle, value)
-            logInfo(config.NAME, 'VehicleAutoBattleBoosterEquipProcessor: value={} vehicle={}, booster={}', value, vehicle.userName, battleBooster.userName)
+            LOG.info(('VehicleAutoBattleBoosterEquipProcessor: value={} vehicle={}, booster={}').format(value, vehicle.userName, battleBooster.userName))
 
 
 def __onGuiCacheSyncCompleted(_):
@@ -344,7 +346,7 @@ def init():
     try:
         fog_package.start()
     except Exception as error:
-        logInfo('Fog package unavailable: {}', error)
+        LOG.info(('Fog package unavailable: {}').format(error))
     battle_clock.createUI()
     g_playerEvents.onGuiCacheSyncCompleted += __onGuiCacheSyncCompleted
     g_events.onVehicleChangedDelayed += onVehicleChanged

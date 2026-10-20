@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import logging
+LOG = logging.getLogger('Driftkings.core.player_ratings')
 import json
 import math
 import re
@@ -18,11 +20,12 @@ from messenger import g_settings
 from skeletons.gui.battle_session import IBattleSessionProvider
 
 from Driftkings._constants import GLOBAL, TEAM_PANELS
-from Driftkings.common import getPlayer, logWarning, getStatisticColor
+from Driftkings.common.utils.wgUtils import getPlayer
+from Driftkings.common.utils.colorRatting import getStatisticColor
 from Driftkings.core.hooks import override
-from Driftkings.common import callback, cancelCallback
+from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.settings.service import settings_service
-from Driftkings.stats import calculateXvmScale, getVehicleInfoData, scaleValuesInstance
+from Driftkings.stats.vehinfo import calculateXvmScale, getVehicleInfoData, scaleValuesInstance
 
 MISSING = u'\u2014'
 NUMERIC = ('wn8', 'winrate', 'battles', 'kb', 'wgr', 'eff', 'xwn8', 'xeff',
@@ -215,7 +218,7 @@ class Events(object):
     @staticmethod
     def request(region, request, **kwargs):
         if region not in Events.SUPPORTED_REGIONS:
-            logWarning(config.NAME, 'Unsupported region for stats request: {}', region)
+            LOG.warning(('Unsupported region for stats request: {}').format(region))
             return None
         kwargs['application_id'] = '14f9ad61272e03b7a446433e732d6b7f'
         api = 'api.worldoftanks.%s' % region
@@ -227,11 +230,11 @@ class Events(object):
                 signature = (region, request, error.get('code'), error.get('message'))
                 if signature not in Events._apiErrors:
                     Events._apiErrors.add(signature)
-                    logWarning(config.NAME, 'Stats API rejected {}/{}: {} ({})', region, request, error.get('message'), error.get('code'))
+                    LOG.warning(('Stats API rejected {}/{}: {} ({})').format(region, request, error.get('message'), error.get('code')))
                 return None
             return response.get('data')
         except Exception as error:
-            logWarning(config.NAME, 'Stats request failed: {}', error)
+            LOG.warning(('Stats request failed: {}').format(error))
             return None
 
     @staticmethod
@@ -381,13 +384,13 @@ class Statistics(object):
             self._localStats = {'info': info, 'tanks': tanks}
         except Exception as error:
             self._localStats = None
-            logWarning(config.NAME, 'Local statistics unavailable, using API: {}', error)
+            LOG.warning(('Local statistics unavailable, using API: {}').format(error))
 
     def loadPlayerStats(self, databaseIDs, generation, tankIDs=None):
         try:
             info, tanks = self.fetchPlayerStats(databaseIDs)
         except Exception as error:
-            logWarning(config.NAME, 'Could not fetch player statistics: {}', error)
+            LOG.warning(('Could not fetch player statistics: {}').format(error))
             info, tanks = {}, {}
         self._responses.put((generation, databaseIDs, info, tanks))
         for dbID, tankID in (tankIDs or {}).items():
@@ -556,7 +559,7 @@ class Statistics(object):
             try:
                 self.applyPlayerStats(info, tanks)
             except Exception as error:
-                logWarning(config.NAME, 'Could not apply player statistics: {}', error)
+                LOG.warning(('Could not apply player statistics: {}').format(error))
         if getattr(getPlayer(), 'arena', None) is not None:
             self._poll = callback(0.2, self.pollStats)
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Mode-specific camera options and migration, independent of the client."""
 import math
+from Driftkings._constants import THIRD_PERSON_ZOOM
 
 
 def migrate(values):
@@ -24,7 +25,7 @@ def migrate(values):
 
 
 def validate(values):
-    for mode in ('arcade', 'postmortem', 'strategic', 'arty'):
+    for mode in THIRD_PERSON_ZOOM.MODES:
         options = values[mode]
         for key in ('min', 'max', 'scrollSensitivity'):
             value = options[key]

@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+import logging
+LOG = logging.getLogger('Driftkings.views.hangar.battle_performance_hooks')
 from Driftkings._constants import BATTLE_PERFORMANCE, GLOBAL
 from Driftkings.settings.service import settings_service
 """Presentation adapter for BattleEfficiency; gameplay state stays in its component."""
 import re
 from constants import ARENA_BONUS_TYPE
 from gui.Scaleform.daapi.view.battle_results_window import BattleResultsWindow
-from Driftkings.common import logError, replaceMacros
+from Driftkings.common.utils.formatting import replaceMacros
 from Driftkings.core.hooks import override
 
 from importlib import import_module
@@ -84,7 +86,7 @@ def new_setDataS(func, self, data):
         msg = replaceMacros(settings_service.getComponentDict(_component().config)[BATTLE_PERFORMANCE.BATTLE_RESULTS_FORMAT], macro_data)
         data['common']['arenaStr'] = msg
     except Exception as err:
-        logError(_component().config.NAME, 'Battle results parsing error: {}', err)
+        LOG.error(('Battle results parsing error: {}').format(err))
         # Preserve the original result window if the legacy data layout changed.
         _component().LOG.exception('Legacy battle results integration failed')
     return func(self, data)

@@ -4,9 +4,9 @@ Modpack for Wargaming World of Tanks: battle overlays, hangar improvements and a
 
 ## Downloads
 
-**[Download the beta](https://github.com/dkruben/Driftkings_SettingsLab/releases/tag/v0.1.2-beta.4)** · [All releases](https://github.com/dkruben/Driftkings_SettingsLab/releases)
+[Windows installer](https://github.com/dkruben/Driftkings_SettingsLab/releases/download/v0.1.2-beta.5/Driftkings-0.1.2-beta.5-WoT-2.4.1.0-Setup.exe) · **[Download the beta](https://github.com/dkruben/Driftkings_SettingsLab/releases/tag/v0.1.2-beta.5)** · [All releases](https://github.com/dkruben/Driftkings_SettingsLab/releases)
 
-Current version: **0.1.2-beta.4**, for **WoT 2.4.1.0**. Beta releases remain under refinement.
+Current version: **0.1.2-beta.5**, for **WoT 2.4.1.0**. Beta releases remain under refinement.
 
 ## Battle interface and statistics
 
@@ -33,8 +33,10 @@ Available behavior depends on configuration, vehicle and game mode.
 
 ## Installation
 
+For guided setup, download `Driftkings-0.1.2-beta.5-WoT-2.4.1.0-Setup.exe` from the beta release. Select a supported Wargaming game installation; the installer verifies its root, realm and game version.
+
 1. Close World of Tanks.
-2. Download `Driftkings-0.1.2-beta.4-WoT-2.4.1.0.zip` from the release assets.
+2. Download `Driftkings-0.1.2-beta.5-WoT-2.4.1.0.zip` from the release assets.
 3. Extract its `mods` folder into the game installation, merging folders. It includes Driftkings and the required ModsListAPI and OpenWG Gameface packages under `mods/2.4.1.0/`.
 4. For a new installation, extract the separate `Driftkings-defaults.zip` into the game installation. Preserve existing `mods/configs/Driftkings` settings when updating.
 5. Start the game and open Driftkings settings through the mods list.
@@ -63,7 +65,7 @@ On Windows, configure Python 3.10+, Python 2.7, Java/Flex, playerglobal and game
 python build_tools/compiler.py --plan
 python build_tools/validate_build_data.py
 .\debug.cmd
-.\release.cmd --version 0.1.2-beta.4 --channel beta
+.\release.cmd --version 0.1.2-beta.5 --channel beta
 ```
 
 Check portable logic with `python -m unittest discover -s tests/settings_panel -p 'test_*.py'` and `python -m unittest discover -s tests/core -p 'test_*.py'`; both suites also run on Python 2.7. Run `node tests/settings_panel/test_gameface.js` for the Gameface state tests. Install development dependencies with `npm ci --ignore-scripts`, then run `npm run lint` to enforce ES5 syntax and basic JavaScript checks. These tools run on Node 20.19+; client scripts remain ES5.
@@ -71,6 +73,14 @@ Check portable logic with `python -m unittest discover -s tests/settings_panel -
 Edit defaults in `res/configs/Driftkings/default/`, then run `python build_tools/generate_defaults.py --write` to regenerate the Python fallback. For intentional changes to the default values, also refresh the recorded snapshot with `python build_tools/generate_defaults.py --write --refresh-snapshot`. Use `python build_tools/generate_defaults.py --check` to check synchronization without writing files; never edit `settings/default_values.py` by hand.
 
 The current build contract uses the (EU, NA) installation as its resource source and an EU source reference. Local tool paths belong in ignored `build_data/toolchain.local.json`. Builds compile Python 2.7 to standard bytecode without obfuscation, Flash and native helpers, generate the carousel integration and verify the packages. Outputs go to `build/`; compilation does not install or publish them.
+
+To compile the Windows installer and include it in the release inventory and checksums:
+
+```powershell
+python build_tools/build_installer.py --artifacts build/releases/beta/0.1.2-beta.5 --compile --attach-to-release
+```
+
+Sign `release.json` after preparing all release assets, then publish with `build_tools/publish_release.py`. The installer is uploaded with the other verified assets.
 
 | Directory | Contents |
 | --- | --- |

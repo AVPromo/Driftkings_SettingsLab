@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Driftkings.common.utils.numbers import finite_number as number
 from Driftkings.interface_catalog import gameface_spec
 """Configurable own-vehicle statistics on EU Gameface carousel cards."""
 import logging
@@ -10,16 +11,18 @@ from dossiers2.ui.achievements import ACHIEVEMENT_BLOCK, MARK_OF_MASTERY_RECORD
 from gui.shared.personality import ServicesLocator
 from gui.shared.utils.requesters import REQ_CRITERIA
 
-from Driftkings.common import getStatisticColor
+from Driftkings.common.utils.colorRatting import getStatisticColor
 from Driftkings.core.hooks import override
 from Driftkings.core import carousel as layout
 from Driftkings.core.carousel_assets import CarouselImages
 from Driftkings.core.carousel_tiers import battle_tiers
 from Driftkings.core.carousel_options import STAT_SORT_KEYS
-from Driftkings.common import getPlayer
-from Driftkings.stats import getVehicleInfoData, calculateXvmScale
+from Driftkings.common.utils.wgUtils import getPlayer
+from Driftkings.stats.vehinfo import getVehicleInfoData, calculateXvmScale
 from Driftkings._constants import VEHICLE_CAROUSEL, GLOBAL
 from Driftkings.settings.service import settings_service
+from Driftkings.settings.definitions.lobby.vehicle_carousel import VehicleCarouselSettings as Settings
+from Driftkings.views.hangar.vehicle_carousel import CarouselController, get_view_config, install_gameface
 
 LOG = logging.getLogger('Driftkings.CarouselStats')
 FEATURE = 'DriftkingsCarouselStats'
@@ -45,12 +48,6 @@ CLASS_COLORS = {
 }
 
 
-def number(value, default=None):
-    try:
-        result = float(value)
-        return default if math.isnan(result) or math.isinf(result) else result
-    except (TypeError, ValueError, OverflowError):
-        return default
 
 
 def bounded(value, low, high, default):
@@ -147,9 +144,6 @@ def render_macro(template, values):
     return layout.render(template, values, color, icon)
 
 
-from Driftkings.settings.definitions.lobby.vehicle_carousel import VehicleCarouselSettings as Settings
-
-
 config = Settings()
 
 
@@ -203,10 +197,6 @@ class CarouselData(object):
 
 
 g_data = CarouselData()
-
-from Driftkings.views.hangar.vehicle_carousel import CarouselController, get_view_config, install_gameface
-
-
 g_rowModels = weakref.WeakKeyDictionary()
 g_filterPresenters = weakref.WeakSet()
 

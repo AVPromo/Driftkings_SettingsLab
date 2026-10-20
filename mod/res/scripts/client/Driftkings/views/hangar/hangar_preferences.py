@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+import logging
+LOG = logging.getLogger('Driftkings.views.hangar.hangar_preferences')
 from Driftkings.interface_catalog import gameface_spec
 from Driftkings._constants import GLOBAL, HANGAR_PREFERENCES
 from Driftkings.settings.service import settings_service, affects
 """Presentation adapter for HangarOptions; gameplay state stays in its component."""
 import weakref
 from helpers import getClientLanguage
-from Driftkings.common import logError
 from Driftkings.core.hooks import override
 from Driftkings.views.hangar.common import HangarController, publish_card
 
@@ -39,24 +40,22 @@ def calendar_names():
 
 
 class ClockController(HangarController):
+    SETTINGS_SECTION = HANGAR_PREFERENCES
     SETTINGS_KEYS = (HANGAR_PREFERENCES.CLOCK_X, HANGAR_PREFERENCES.CLOCK_Y, HANGAR_PREFERENCES.CLOCK_SCALE, HANGAR_PREFERENCES.CLOCK_BACKGROUND)
 
     def __init__(self):
         super(ClockController, self).__init__()
-        self.active = False
         self.clockText = None
 
     def start(self):
         if not self.active:
             self.clockText = settings_service.getComponentDict(_component().config)[HANGAR_PREFERENCES.CUSTOM_CLOCK_TEXT]
-            self.active = True
-            settings_service.onModSettingsChanged.connect(self.onSettingsChanged, HANGAR_PREFERENCES)
+            super(ClockController, self).start()
             self.onApplySettings()
 
     def stop(self):
         if self.active:
-            self.active = False
-            settings_service.onModSettingsChanged.disconnect(self.onSettingsChanged)
+            super(ClockController, self).stop()
             self.onApplySettings()
 
     def onSettingsChanged(self, component, changes):
@@ -68,7 +67,7 @@ class ClockController(HangarController):
             try:
                 child.refresh()
             except Exception:
-                logError(_component().config.NAME, 'Could not refresh Gameface clock view')
+                LOG.error('Could not refresh Gameface clock view')
 
 
 def install_clock_gameface():
@@ -124,7 +123,7 @@ def install_clock_gameface():
                 payload['config']['hidePrestige'] = bool(data[GLOBAL.ENABLED] and not data[HANGAR_PREFERENCES.SHOW_HANGAR_PRESTIGE_WIDGET])
                 publish_card(self, payload)
             except Exception:
-                logError(_component().config.NAME, 'Could not update Gameface clock')
+                LOG.error('Could not update Gameface clock')
                 publish_card(self, {'config': {'visible': False}})
 
     @override(RandomHangar, '_getChildComponents')
@@ -133,11 +132,11 @@ def install_clock_gameface():
         try:
             resource_id = resolve_resource(_component().RESOURCE)
             if resource_id == INVALID_RES_ID:
-                logError(_component().config.NAME, 'Missing Gameface clock resource: ' + _component().RESOURCE)
+                LOG.error('Missing Gameface clock resource: ' + _component().RESOURCE)
             else:
                 children[resource_id] = lambda: ClockView(parent, resource_id)
         except Exception:
-            logError(_component().config.NAME, 'Could not attach Gameface clock')
+            LOG.error('Could not attach Gameface clock')
         return children
 
     @override(RandomHangar, '_onShown')

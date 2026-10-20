@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+from Driftkings._constants import MARK_THRESHOLDS
 from Driftkings._constants import GLOBAL, HANGAR_MARKS_OF_EXCELLENCE
 """Presentation adapter for MarksOnGunHangar; gameplay state stays in its component."""
 from Driftkings.views.marks_model import number_locale
 from Driftkings.settings.service import settings_service, affects
-from Driftkings.common import getStatisticColor
+from Driftkings.common.utils.colorRatting import getStatisticColor
 import weakref
 from CurrentVehicle import g_currentVehicle
 from gui.shared.personality import ServicesLocator
@@ -23,12 +24,12 @@ def get_view_config(config):
     panel['compactMode'] = bool(settings[HANGAR_MARKS_OF_EXCELLENCE.COMPACT_MODE])
     panel['locked'] = bool(settings[HANGAR_MARKS_OF_EXCELLENCE.TEXT_LOCK])
     panel['visible'] = bool(settings[GLOBAL.ENABLED] and settings[HANGAR_MARKS_OF_EXCELLENCE.SHOW_IN_HANGAR])
-    panel.update(settings.get('gameface', {}))
+    panel.update(settings.get(HANGAR_MARKS_OF_EXCELLENCE.GAMEFACE, {}))
     card = settings[HANGAR_MARKS_OF_EXCELLENCE.CARD]
     for key in ('titleColor', 'backgroundColor', 'backgroundAlpha', 'accentColor'):
         panel[key] = card[key]
     scale = settings.get(HANGAR_MARKS_OF_EXCELLENCE.COLOR_RATING, 0)
-    for level in (65, 85, 95):
+    for level in MARK_THRESHOLDS:
         panel['starColor%s' % level] = getStatisticColor('mog', level, scale)
     panel.update(number_locale(config.lang))
     return panel
@@ -60,7 +61,7 @@ class MarksOnGunHangarController(HangarController):
                 HANGAR_MARKS_OF_EXCELLENCE.TEXT_LOCK, HANGAR_MARKS_OF_EXCELLENCE.GOAL_SELECTION,
                 HANGAR_MARKS_OF_EXCELLENCE.COMPACT_MODE, HANGAR_MARKS_OF_EXCELLENCE.HISTORY_BATTLES,
                 HANGAR_MARKS_OF_EXCELLENCE.COLOR_RATING,
-                HANGAR_MARKS_OF_EXCELLENCE.PANEL, HANGAR_MARKS_OF_EXCELLENCE.CARD, 'gameface'):
+                HANGAR_MARKS_OF_EXCELLENCE.PANEL, HANGAR_MARKS_OF_EXCELLENCE.CARD, HANGAR_MARKS_OF_EXCELLENCE.GAMEFACE):
             super(MarksOnGunHangarController, self).onApplySettings(changes)
 
 

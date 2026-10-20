@@ -14,11 +14,13 @@ from gui.Scaleform.genConsts.BATTLE_EFFICIENCY_TYPES import BATTLE_EFFICIENCY_TY
 from gui.battle_control.battle_constants import PERSONAL_EFFICIENCY_TYPE
 
 from Driftkings._constants import BATTLE_PERFORMANCE, GLOBAL
-from Driftkings.common import getPlayer, getStatisticColor, replaceMacros
+from Driftkings.common.utils.wgUtils import getPlayer
+from Driftkings.common.utils.colorRatting import getStatisticColor
+from Driftkings.common.utils.formatting import replaceMacros
 from Driftkings.core.hooks import override, on_event
 from Driftkings.settings.service import settings_service, affects
 from Driftkings.settings.definitions.components.battle_performance import BattlePerformanceSettings as Settings
-from Driftkings.stats import getVehicleInfoData, calculateXvmScale, calculateXTE
+from Driftkings.stats.vehinfo import getVehicleInfoData, calculateXvmScale, calculateXTE
 from Driftkings.views.battle.battle_performance import _startFlash
 from Driftkings.views.hangar.battle_performance import install_results_gameface
 

@@ -2,7 +2,7 @@
 from Driftkings._constants import GLOBAL, MINIMAP_ENHANCEMENTS
 from Driftkings.settings.service import settings_service
 """Presentation adapter for MinimapPlugins; gameplay state stays in its component."""
-from Driftkings.common import xvmInstalled
+from Driftkings.common.utils.wgUtils import isXvmInstalled
 from Driftkings.common.utils.game import checkKeys
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.meta.battle.minimap import MinimapMeta
@@ -64,7 +64,7 @@ class MinimapCentredView(MinimapMeta):
             self._releaseCallback = None
         if pressed:
             self._releaseCallback = callback(0.1, self._checkRelease)
-        if xvmInstalled:
+        if isXvmInstalled():
             return
         # Epic's segmented map keeps its native positioning; labels still switch.
         options = dict(settings_service.getComponentDict(_component().config)[MINIMAP_ENHANCEMENTS.PRESENTATION])
@@ -88,9 +88,9 @@ class MinimapCentredView(MinimapMeta):
         self.as_minimapPresentationS(options)
 
     def onVehicleData(self, payload):
-        if not xvmInstalled:
+        if not isXvmInstalled():
             self.as_minimapVehicleS(payload)
 
     def onRanges(self, payload):
-        if not xvmInstalled:
+        if not isXvmInstalled():
             self.as_minimapRangesS(payload)

@@ -90,7 +90,8 @@ GAMEFACE = {'DriftkingsMainGun': {
                                 'owner': '__dkBattleEfficiency',
                                 'python': 'Driftkings.views.hangar.battle_performance',
                                 'resource': 'mods/Driftkings/BattleEfficiency/model',
-                                'scripts': ['coui://gui/gameface/mods/Driftkings/BattleEfficiency/results.js'],
+                                'scripts': ['coui://gui/gameface/mods/Driftkings/shared/flash_text.js',
+                                            'coui://gui/gameface/mods/Driftkings/BattleEfficiency/results.js'],
                                 'section': 'battle_performance',
                                 'styles': ['coui://gui/gameface/mods/Driftkings/BattleEfficiency/results.css']},
  'DriftkingsCarouselStats': {'context': 'hangar',
@@ -165,7 +166,8 @@ GAMEFACE = {'DriftkingsMainGun': {
                              'owner': '__dkPlayerRatings',
                              'python': 'Driftkings.views.battle.panel_gameface',
                              'resource': 'mods/Driftkings/RatingPlayers/model',
-                             'scripts': ['coui://gui/gameface/mods/Driftkings/RatingPlayers/ratings.js'],
+                             'scripts': ['coui://gui/gameface/mods/Driftkings/shared/flash_text.js',
+                                            'coui://gui/gameface/mods/Driftkings/RatingPlayers/ratings.js'],
                              'section': 'team_panels',
                              'styles': ['coui://gui/gameface/mods/Driftkings/RatingPlayers/ratings.css']}}
 

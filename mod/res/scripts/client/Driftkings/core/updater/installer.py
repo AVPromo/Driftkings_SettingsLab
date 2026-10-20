@@ -9,6 +9,7 @@ import zipfile
 import xml.etree.ElementTree as ET
 
 from Driftkings import VERSION
+from Driftkings.common.utils.filesystem import file_sha256 as digest
 from Driftkings.core.updater.downloader import safe_directory, validate_package, validate_download
 from Driftkings.core.updater.manifest import Manifest, MAX_MANIFEST, bounded_json
 from Driftkings.core.updater.versioning import Version, TEXT, normalize_game_version
@@ -41,14 +42,6 @@ def file_signature(paths):
             value = None
         values.append((path, value))
     return tuple(values)
-
-
-def digest(path):
-    value = hashlib.sha256()
-    with open(path, 'rb') as source:
-        for block in iter(lambda: source.read(65536), b''):
-            value.update(block)
-    return value.hexdigest()
 
 
 def safe_file(path):

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Driftkings.common.utils.numbers import finite_number
 from Driftkings.interface_catalog import gameface_spec
 import logging
 import math
@@ -13,28 +14,25 @@ from Driftkings.core.marks_calculator import ceil_damage, combined_damage, stati
 from Driftkings.views.marks_model import delta_model, milestone_model, number_locale
 from Driftkings.core.marks_state import marks_state
 from Driftkings._constants import GLOBAL, HANGAR_MARKS_OF_EXCELLENCE
-from Driftkings.common import logException, getStatisticColor, getMoeDamageColor
-from Driftkings.common import loadJson
+from Driftkings.common.utils.exceptions import log_exceptions
+from Driftkings.common.utils.colorRatting import getStatisticColor, getMoeDamageColor
+from Driftkings.common.config.json_reader import loadJson
 from Driftkings.common.utils.achievement_dossiers import getAchievementDossier
 from Driftkings.core.cache import cache_directory
 from Driftkings.core.hooks import override
-from Driftkings.common import getPlayer
+from Driftkings.common.utils.wgUtils import getPlayer
 from Driftkings.settings.service import settings_service
-from Driftkings.stats import getVehicleInfoData
+from Driftkings.stats.vehinfo import getVehicleInfoData
 
 LOG = logging.getLogger('Driftkings.MarksOnGunHangar')
 FEATURE = 'DriftkingsMarksOnGunHangar'
 RESOURCE = gameface_spec(FEATURE)['resource']
 g_controller = None
-THRESHOLDS = (65, 85, 95)
+from Driftkings._constants import MARK_THRESHOLDS as THRESHOLDS
 
 
 def finite(value, default=0.0):
-    try:
-        value = float(value)
-        return default if math.isnan(value) or math.isinf(value) else value
-    except (ValueError, TypeError, OverflowError):
-        return default
+    return finite_number(value, default)
 
 
 def goal(percent, moving_average, tier, selection=0, earned_marks=0):
@@ -405,7 +403,7 @@ from Driftkings.views.hangar.hangar_marks_of_excellence import MarksOnGunHangarC
 
 
 @override(MarkOnGunAchievement, 'getUserCondition')
-@logException
+@log_exceptions
 def new__getUserCondition(func, *args):
     dossier = getAchievementDossier(args[0])
     if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[HANGAR_MARKS_OF_EXCELLENCE.SHOW_IN_STATISTIC] and dossier is not None:

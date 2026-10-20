@@ -15,7 +15,7 @@ from account_helpers.settings_core.options import InterfaceScaleSetting
 from aih_constants import CTRL_MODE_NAME
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 
-from Driftkings.common import getPlayer
+from Driftkings.common.utils.wgUtils import getPlayer
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.core.hooks import override, on_event
 from Driftkings.common.utils import events

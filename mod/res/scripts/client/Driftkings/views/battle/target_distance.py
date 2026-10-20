@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import logging
+LOG = logging.getLogger('Driftkings.views.battle.target_distance')
 from Driftkings._constants import TARGET_DISTANCE
 from Driftkings.settings.service import settings_service
 """Presentation adapter for DistanceMarker; gameplay state stays in its component."""
@@ -11,7 +13,6 @@ from Event import EventManager, Event
 from Driftkings.core.keyboard import keyboard
 from Driftkings.core.hud_visibility import hudVisibility
 from Driftkings.meta.battle.distance_marker import DistanceMarkerMeta
-from Driftkings.common import logWarning
 
 from importlib import import_module
 
@@ -168,7 +169,7 @@ class DistanceMarkerController(object):
             self._currentFrameData['observedVehicles'] = self._emptyList
             return self._requestFrameData()
         except Exception as e:
-            logWarning(_component().config.NAME, 'Occurred on requesting frame data by DistanceMarkerController, safely skipping frame rendering: {}', e, exc_info=True)
+            LOG.warning(('Occurred on requesting frame data by DistanceMarkerController, safely skipping frame rendering: {}').format(e) , exc_info=True)
             self._currentFrameData['observedVehicles'] = self._emptyList
             return self._currentFrameData
 
@@ -244,7 +245,7 @@ class DistanceMarkerController(object):
             self._tempMatrix.set(vehicleMarkerMatrixProvider)
             return self._tempMatrix.translation
         except Exception as e:
-            logWarning(_component().config.NAME, 'Error in _vehicleMarkerPositionProvider: {}'.format(e))
+            LOG.warning('Error in _vehicleMarkerPositionProvider: {}'.format(e))
             return self._vehicleCenterPositionProvider(vehicle)
 
     def _vehicleCenterPositionProvider(self, vehicle):

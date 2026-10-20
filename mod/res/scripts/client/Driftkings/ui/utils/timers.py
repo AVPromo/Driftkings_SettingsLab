@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from Driftkings.common import cancelCallback, callback
+from Driftkings.core.callbacks import cancelCallback, callback
 
 __all__ = ('Timer', 'CyclicTimerEvent',)
 

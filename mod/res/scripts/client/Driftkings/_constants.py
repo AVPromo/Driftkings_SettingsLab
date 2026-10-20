@@ -5,60 +5,36 @@ NAME is the single configuration key for registry, defaults and translations.
 """
 from collections import namedtuple
 
-from aih_constants import SHOT_RESULT as SHOT_RES
-from constants import SHELL_MECHANICS_TYPE as SHELL_MECHANICS
-from constants import SHELL_TYPES as  SHELL_NAME
-from BattleFeedbackCommon import BATTLE_EVENT_TYPE as BATTLE_EVENT
-
-# Constants
 MinMax = namedtuple('MinMax', ('min', 'max'))
+ScreenBounds = namedtuple('ScreenBounds', ('x', 'y', 'width', 'height'))
+MarksStatistics = namedtuple('MarksStatistics', (
+    'next_percent', 'next_damage', 'damage20', 'damage40', 'damage55',
+    'damage65', 'damage85', 'damage95', 'damage100'))
+BattleCurve = namedtuple('BattleCurve', (
+    'levels', 'damages', 'statistics', 'target_damage', 'target_reachable', 'limit_reached'))
 DEFAULT_RANDOMIZATION = MinMax(0.75, 1.25)
-BATTLE_EVENT_TYPE = BATTLE_EVENT
-SHELL_MECHANICS_TYPE = SHELL_MECHANICS
-SHELL_TYPES = SHELL_NAME
-SHOT_RESULT = SHOT_RES
-UNDEFINED_RESULT = (SHOT_RESULT.UNDEFINED, None, None, None, False, False)
-DAMAGE_EVENTS = frozenset([BATTLE_EVENT_TYPE.RADIO_ASSIST, BATTLE_EVENT_TYPE.TRACK_ASSIST, BATTLE_EVENT_TYPE.STUN_ASSIST, BATTLE_EVENT_TYPE.DAMAGE, BATTLE_EVENT_TYPE.TANKING, BATTLE_EVENT_TYPE.RECEIVED_DAMAGE])
 MARK_LEVELS = (0.0, 20.0, 40.0, 55.0, 65.0, 85.0, 95.0, 100.0)
+MARK_THRESHOLDS = (65, 85, 95)
 
 
 class GLOBAL(object):
     ENABLED = 'enabled'
     X = 'x'
     Y = 'y'
-    FONT = 'font'
     WIDTH = 'width'
     HEIGHT = 'height'
     ALPHA = 'alpha'
     COLOR = 'color'
-    ALIGN = 'align'
     ALIGN_X = 'alignX'
     ALIGN_Y = 'alignY'
     TOP = 'top'
     BOTTOM = 'bottom'
     RIGHT = 'right'
     LEFT = 'left'
-    CENTER = 'center'
-    DISTANCE = 'distance'
-    ANGLE = 'angle'
-    SIZE = 'size'
-    BLUR_X = 'blurX'
-    BLUR_Y = 'blurY'
-    STRENGTH = 'strength'
-    SHADOW = 'shadow'
-    QUALITY = 'quality'
-    LEADING = 'leading'
-    VISIBLE = 'visible'
     DRAG = 'drag'
-    BORDER = 'border'
-    INDEX = 'index'
     LIMIT = 'limit'
     ZERO = 0
     ONE = 1
-    LINE = '_'
-    EMPTY_LYNE = '  '
-    IMAGE = 'image'
-    BLUR = 'blur'
 
 
 class GUN_TRAVERSE_LIMITS(object):
@@ -68,18 +44,18 @@ class GUN_TRAVERSE_LIMITS(object):
 
 
 class THIRD_PERSON_ZOOM(object):
+    ARCADE = 'arcade'
+    POSTMORTEM = 'postmortem'
+    STRATEGIC = 'strategic'
+    ARTY = 'arty'
     NAME = 'third_person_zoom'
-    MAX = 'max'
-    MIN = 'min'
-    SCROLL_SENSITIVITY = 'scrollSensitivity'
-    START_DEAD_DIST = 'startDeadDist'
+    MODES = (ARCADE, POSTMORTEM, STRATEGIC, ARTY)
 
 
 class PENETRATION_INDICATOR(object):
     NAME = 'penetration_indicator'
     DISPLAY_ON_ALLIES = 'displayOnAllies'
     MESSAGES = 'messages'
-    POSITION = 'position'
     TEMPLATE = 'template'
 
 
@@ -97,6 +73,7 @@ class ARTILLERY_BLAST_RADIUS(object):
 
 
 class AUTOAIM_TARGET_INDICATOR(object):
+    COLOR = 'color'
     NAME = 'autoaim_target_indicator'
 
 
@@ -143,13 +120,11 @@ class BATTLE_STATISTICS(object):
     FORMAT = 'format'
     TEXT_LOCK = 'textLock'
     TEXT_POSITION = 'textPosition'
-    TEXT_SHADOW = 'textShadow'
     TEXT_FORMAT = 'textFormat'
 
 
 class AIMING_RETICLES(object):
     NAME = 'aiming_reticles'
-    SHOW_CLIENT_AND_SERVER_RETICLE = 'showClientAndServerReticle'
     GUN_MARKER_MINIMUM_SIZE = 'gunMarkerMinimumSize'
     PERCENT_CORRECTION = 'percentCorrection'
     SHOW_CLIENT_AND_SERVER_RETICLE_BETA = 'showClientAndServerReticleBeta'
@@ -213,15 +188,19 @@ class HIGH_CALIBER_PROGRESS(object):
     NAME = 'high_caliber_progress'
     BACK_GROUND_ENABLED = 'backGroundEnabled'
     TEXT_LOCK = 'textLock'
-    BACKGROUND = 'background'
     HIGH_CALIBER_PROGRESS = 'mainGun'
     TEXT_POSITION = 'textPosition'
 
 
 class BATTLE_MARKS_OF_EXCELLENCE(object):
+    GAMEFACE = 'gameface'
+    SHOW_MARKS = 'showMarks'
+    SHOW_DELTA = 'showDelta'
+    SHOW_DAMAGE = 'showDamage'
+    SHOW_PROGRESS = 'showProgress'
+    SHOW_TARGETS = 'showTargets'
     NAME = 'battle_marks_of_excellence'
     COLOR_RATING = 'colorRating'
-    BUTTON_SHOW = 'buttonShow'
     BUTTON_SIZE_UP = 'buttonSizeUp'
     BUTTON_SIZE_DOWN = 'buttonSizeDown'
     BUTTON_RESET = 'buttonReset'
@@ -229,47 +208,9 @@ class BATTLE_MARKS_OF_EXCELLENCE(object):
     SHOW_IN_BATTLE_HALF_PERCENTS = 'showInBattleHalfPercents'
     SHOW_IN_REPLAY = 'showInReplay'
     SHOW_IN_STATISTIC = 'showInStatistic'
-    SHOW_IN_HANGAR = 'showInHangar'
     BACKGROUND = 'background'
-    PANEL_SIZE = 'panelSize'
     PANEL = 'panel'
-    BATTLE_MESSAGE = 'battleMessage'
-    BATTLE_MESSAGE_ALT = 'battleMessageAlt'
-    BATTLE_MESSAGE_STATUS_UP = 'battleMessage{status}Up'
-    BATTLE_MESSAGE_C_STATUS_UP = 'battleMessage{c_status}Up'
-    BATTLE_MESSAGE_STATUS_DOWN = 'battleMessage{status}Down'
-    BATTLE_MESSAGE_C_STATUS_DOWN = 'battleMessage{c_status}Down'
-    BATTLE_MESSAGE_STATUS_UNKNOWN = 'battleMessage{status}Unknown'
-    BATTLE_MESSAGE_C_STATUS_UNKNOWN = 'battleMessage{c_status}Unknown'
-    BATTLE_MESSAGE_BATTLE_MARK_OF_GUN = 'battleMessage{battleMarkOfGun}'
-    BATTLE_MESSAGE_C_BATTLE_MARK_OF_GUN = 'battleMessage{c_battleMarkOfGun}'
-    BATTLE_MESSAGE_CURRENT_MARK_OF_GUN = 'battleMessage{currentMarkOfGun}'
-    BATTLE_MESSAGE_C_CURRENT_MARK_OF_GUN = 'battleMessage{c_currentMarkOfGun}'
-    BATTLE_MESSAGE_NEXT_MARK_OF_GUN = 'battleMessage{nextMarkOfGun}'
-    BATTLE_MESSAGE_C_NEXT_MARK_OF_GUN = 'battleMessage{c_nextMarkOfGun}'
-    BATTLE_MESSAGE_DAMAGE_CURRENT = 'battleMessage{damageCurrent}'
-    BATTLE_MESSAGE_C_DAMAGE_CURRENT = 'battleMessage{c_damageCurrent}'
-    BATTLE_MESSAGE_DAMAGE_CURRENT_PERCENT = 'battleMessage{damageCurrentPercent}'
-    BATTLE_MESSAGE_C_DAMAGE_CURRENT_PERCENT = 'battleMessage{c_damageCurrentPercent}'
-    BATTLE_MESSAGE_DAMAGE_NEXT_PERCENT = 'battleMessage{damageNextPercent}'
-    BATTLE_MESSAGE_C_DAMAGE_NEXT_PERCENT = 'battleMessage{c_damageNextPercent}'
-    BATTLE_MESSAGE_DAMAGE_TO_MARK65 = 'battleMessage{damageToMark65}'
-    BATTLE_MESSAGE_C_DAMAGE_TO_MARK65 = 'battleMessage{c_damageToMark65}'
-    BATTLE_MESSAGE_DAMAGE_TO_MARK85 = 'battleMessage{damageToMark85}'
-    BATTLE_MESSAGE_C_DAMAGE_TO_MARK85 = 'battleMessage{c_damageToMark85}'
-    BATTLE_MESSAGE_DAMAGE_TO_MARK95 = 'battleMessage{damageToMark95}'
-    BATTLE_MESSAGE_C_DAMAGE_TO_MARK95 = 'battleMessage{c_damageToMark95}'
-    BATTLE_MESSAGE_DAMAGE_TO_MARK100 = 'battleMessage{damageToMark100}'
-    BATTLE_MESSAGE_C_DAMAGE_TO_MARK100 = 'battleMessage{c_damageToMark100}'
-    BATTLE_MESSAGE_DAMAGE_TO_MARK_INFO = 'battleMessage{damageToMarkInfo}'
-    BATTLE_MESSAGE_C_DAMAGE_TO_MARK_INFO = 'battleMessage{c_damageToMarkInfo}'
-    BATTLE_MESSAGE_DAMAGE_TO_MARK_INFO_LEVEL = 'battleMessage{damageToMarkInfoLevel}'
-    BATTLE_MESSAGE_C_DAMAGE_TO_MARK_INFO_LEVEL = 'battleMessage{c_damageToMarkInfoLevel}'
     BATTLE_MESSAGE_SIZE_IN_PERCENT = 'battleMessageSizeInPercent'
-    BATTLE_MESSAGE_ASSIST_SPOT = 'battleMessage{assistSpot}'
-    BATTLE_MESSAGE_ASSIST_TRACK = 'battleMessage{assistTrack}'
-    BATTLE_MESSAGE_ASSIST_SPAM = 'battleMessage{assistSpam}'
-    UI = 'UI'
 
 
 class MINIMAP_ENHANCEMENTS(object):
@@ -305,7 +246,6 @@ class MINIMAP_ENHANCEMENTS(object):
 class VEHICLE_HEALTH(object):
     NAME = 'vehicle_health'
     AVG_COLOR = 'avgColor'
-    COLORS = 'colors'
 
 
 class TEAM_PANELS(object):
@@ -318,7 +258,6 @@ class TEAM_PANELS(object):
     HP_VISIBILITY = 'hpVisibility'
     HP_KEY = 'hpKey'
     SPOTTED_ENABLED = 'spottedEnabled'
-    SCHEMA_VERSION = 'schemaVersion'
     PLAYERS_PANEL = 'playersPanel'
     PROFILES = 'profiles'
     TEMPLATES = 'templates'
@@ -391,11 +330,11 @@ class SNIPER_CAMERA(object):
     DISABLE_CAM_AFTER_SHOT = 'disableCamAfterShot'
     DISABLE_CAM_AFTER_SHOT_LATENCY = 'disableCamAfterShotLatency'
     DISABLE_CAM_AFTER_SHOT_SKIP_CLIP = 'disableCamAfterShotSkipClip'
-    DYNAMIC_ZOOM = 'dynamicZoom'
     ZOOM_STEPS = 'zoomSteps'
 
 
 class ACCOUNT_MANAGER(object):
+    # Build tooling discovers canonical sections by their NAME attribute.
     NAME = 'account_manager'
 
 
@@ -414,6 +353,12 @@ class VEHICLE_CAROUSEL(object):
 
 
 class CREW_MANAGEMENT(object):
+    SHOW_CREW_PROGRESSION = 'showCrewProgression'
+    SHOW_REMAINING_X_P = 'showRemainingXP'
+    SHOW_ESTIMATED_BATTLES = 'showEstimatedBattles'
+    SHOW_CREW_DETAILS = 'showCrewDetails'
+    SHOW_CREW_TOOLTIPS = 'showCrewTooltips'
+    SHOW_BARRACKS_PROGRESSION = 'showBarracksProgression'
     NAME = 'crew_management'
     CREW_AUTO_RETURN = 'crewAutoReturn'
     CREW_RETURN_BY_DEFAULT = 'crewReturnByDefault'
@@ -455,12 +400,11 @@ class HANGAR_PREFERENCES(object):
     SHOW_BATTLE_PASS_WIDGET = 'showBattlePassWidget'
     BLOCK_VEHICLE_IF_LOW_AMMO = 'blockVehicleIfLowAmmo'
     LOW_AMMO_PERCENTAGE = 'lowAmmoPercentage'
-    TEXT = 'text'
     CUSTOM_CLOCK_TEXT = 'customClockText'
-    PANEL = 'panel'
 
 
 class HANGAR_MARKS_OF_EXCELLENCE(object):
+    GAMEFACE = 'gameface'
     NAME = 'hangar_marks_of_excellence'
     SHOW_IN_HANGAR = 'showInHangar'
     SHOW_IN_STATISTIC = 'showInStatistic'
@@ -470,7 +414,6 @@ class HANGAR_MARKS_OF_EXCELLENCE(object):
     HISTORY_BATTLES = 'historyBattles'
     SHOW_TOOLTIP_TARGETS = 'showTooltipTargets'
     COLOR_RATING = 'colorRating'
-    STAR_ANIMATION_WINDOW = 'starAnimationWindow'
     PANEL = 'panel'
     CARD = 'card'
 
@@ -489,12 +432,6 @@ class TECH_TREE_MARKS_OF_EXCELLENCE(object):
 
 class SOUND_BANK_LOADER(object):
     NAME = 'sound_bank_loader'
-    DEFAULT_POOL = 'defaultPool'
-    LOW_ENGINE_POOL = 'lowEnginePool'
-    MEMORY_LIMIT = 'memoryLimit'
-    STREAMING_POOL = 'streamingPool'
-    IOPOOL_SIZE = 'IOPoolSize'
-    MAX_VOICES = 'max_voices'
     DEBUG = 'debug'
 
 
@@ -504,43 +441,6 @@ class GAME_LOG_MANAGER(object):
     WG_LOG_HIDE_CRITICS = 'wgLogHideCritics'
     WG_LOG_HIDE_BLOCK = 'wgLogHideBlock'
     WG_LOG_HIDE_ASSIST = 'wgLogHideAssist'
-
-
-# Activation is owned by component_list.py; this is the settings catalogue.
-CONFIG_SECTIONS = (
-    GUN_TRAVERSE_LIMITS,
-    THIRD_PERSON_ZOOM,
-    PENETRATION_INDICATOR,
-    ARTILLERY_BLAST_RADIUS,
-    AUTOAIM_TARGET_INDICATOR,
-    BATTLE_PERFORMANCE,
-    BATTLE_PREFERENCES,
-    BATTLE_STATISTICS,
-    AIMING_RETICLES,
-    AIMING_COUNTDOWN,
-    TARGET_DISTANCE,
-    SHELL_FLIGHT_TIME,
-    TARGET_INFORMATION,
-    HIGH_CALIBER_PROGRESS,
-    BATTLE_MARKS_OF_EXCELLENCE,
-    MINIMAP_ENHANCEMENTS,
-    VEHICLE_HEALTH,
-    TEAM_PANELS,
-    REPAIR_CONTROLS,
-    SERVER_TURRET_SYNC,
-    SIXTH_SENSE_ALERT,
-    ENEMY_SPOTTING_STATUS,
-    SNIPER_CAMERA,
-    ACCOUNT_MANAGER,
-    CLAN_REWARD_COLLECTION,
-    VEHICLE_CAROUSEL,
-    CREW_MANAGEMENT,
-    HANGAR_PREFERENCES,
-    HANGAR_MARKS_OF_EXCELLENCE,
-    TECH_TREE_MARKS_OF_EXCELLENCE,
-    SOUND_BANK_LOADER,
-    GAME_LOG_MANAGER,
-)
 
 
 # Parent switch -> controls available only while it is enabled.

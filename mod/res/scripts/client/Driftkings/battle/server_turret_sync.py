@@ -4,7 +4,7 @@ import math
 import VehicleGunRotator
 import gun_rotation_shared
 from Driftkings._constants import GLOBAL, SERVER_TURRET_SYNC
-from Driftkings.common import sendPanelMessage
+from Driftkings.common.utils.game import sendPanelMessage
 from Driftkings.common.utils import events
 from Driftkings.core.callbacks import callback
 from Driftkings.core.hooks import override, on_event

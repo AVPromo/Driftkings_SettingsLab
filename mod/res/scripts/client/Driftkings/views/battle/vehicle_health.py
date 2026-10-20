@@ -9,7 +9,7 @@ from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from gui.battle_control.controllers.prebattle_setups_ctrl import IPrebattleSetupsListener
 
 from Driftkings._constants import VEHICLE_HEALTH, GLOBAL
-from Driftkings.common import percentToRgb
+from Driftkings.common.utils.formatting import percentToRgb
 from Driftkings.meta.battle.own_health import OwnHealthMeta
 from Driftkings.settings.service import settings_service
 

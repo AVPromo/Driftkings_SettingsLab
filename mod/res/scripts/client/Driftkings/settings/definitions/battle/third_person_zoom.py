@@ -11,7 +11,7 @@ class ThirdPersonZoomSettings(SectionDefinition):
 
     def getControlColumns(self):
         columns = [[], []]
-        for mode in ('arcade', 'postmortem', 'strategic', 'arty'):
+        for mode in THIRD_PERSON_ZOOM.MODES:
             column = columns[0 if mode in ('arcade', 'postmortem') else 1]
             title = self.i18n['UI_camera_' + mode] + ': '
             if mode in ('strategic', 'arty'):

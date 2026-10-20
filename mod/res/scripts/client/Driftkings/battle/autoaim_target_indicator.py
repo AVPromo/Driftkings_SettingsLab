@@ -8,7 +8,7 @@ import Math
 from AvatarInputHandler import cameras
 from Vehicle import Vehicle
 
-from Driftkings._constants import GLOBAL
+from Driftkings._constants import GLOBAL, ScreenBounds, AUTOAIM_TARGET_INDICATOR
 from Driftkings.core.battle_events import battleEvents
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.core.overlay import Align, ElementType, overlays
@@ -151,7 +151,7 @@ class AutoAimController(object):
         top_y, bottom_y = min(p[1] for p in points), max(p[1] for p in points)
         if right - left <= BOX_THICKNESS or bottom_y - top_y <= BOX_THICKNESS:
             return None
-        return left, top_y, right - left, bottom_y - top_y
+        return ScreenBounds(left, top_y, right - left, bottom_y - top_y)
 
     def updateBox(self):
         bounds = self.targetBounds(BigWorld.player())
@@ -159,7 +159,7 @@ class AutoAimController(object):
             self.hideBox()
             return
         x, y, width, height = bounds
-        color = settings_service.getComponentDict(self.config).get('color', BOX_COLOR)
+        color = settings_service.getComponentDict(self.config).get(AUTOAIM_TARGET_INDICATOR.COLOR, BOX_COLOR)
         if not self.created:
             overlays.create(self.config.NAME, ElementType.PANEL, {
                 GLOBAL.ALIGN_X: Align.LEFT, GLOBAL.ALIGN_Y: Align.TOP, GLOBAL.LIMIT: False,
