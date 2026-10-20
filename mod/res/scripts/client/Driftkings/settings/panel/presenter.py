@@ -174,6 +174,10 @@ class Presenter(object):
         # Fixed official page, never a URL supplied by the panel or a manifest.
         BigWorld.wg_openWebBrowser('https://github.com/' + REPOSITORY + '/releases')
 
+    def _on_open_discord(self, data, result):
+        import BigWorld
+        BigWorld.wg_openWebBrowser('https://discord.gg/GJcy4x7SP')
+
     def _on_cancel_update_download(self, data, result):
         updater = getattr(self.api, 'updater', None)
         if updater is None:

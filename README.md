@@ -89,6 +89,8 @@ Overlay images and custom Sixth Sense icons accept `gui/maps/Driftkings/...` res
 
 ## Support and credits
 
+[Join the Driftkings Discord community](https://discord.gg/GJcy4x7SP).
+
 [Report an issue](https://github.com/dkruben/Driftkings_SettingsLab/issues) with the mod version, game version/realm, reproduction steps and relevant `game.log` excerpts. Remove personal information before sharing logs.
 
 Dependencies: ModsListAPI by poliroid and OpenWG Gameface.

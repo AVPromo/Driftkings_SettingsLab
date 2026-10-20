@@ -212,6 +212,10 @@
             controls[def.id] = control;
         });
         if (modId === 'dk.settings') {
+            var community = el('div', 'dk-section', null, ui.controls);
+            var discord = footerButton(community, function () { send('open_discord'); });
+            discord.textContent = 'Discord';
+            discord.title = 'https://discord.gg/GJcy4x7SP';
             var updates = ui.updates = el('div', 'dk-updates', null, ui.controls);
             el('div', 'dk-section', text['updates.title'], updates);
             ui.updateInstalled = el('div', 'dk-update-line', null, updates);
