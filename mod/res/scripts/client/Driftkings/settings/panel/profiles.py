@@ -16,12 +16,12 @@ class Profiles(object):
         root = self.store.root
         if not os.path.isdir(root):
             return []
-        return sorted(name[:-5] for name in os.listdir(root) if re.match(r'^[A-Za-z0-9_-]{1,64}\.json$', name))
+        return sorted(name[:-5] for name in os.listdir(root) if re.match(r'^[A-Za-z0-9_-]{1,64}\.json\Z', name))
 
     def name(self, value):
         if not isinstance(value, type(u'')) and not isinstance(value, str):
             raise ValueError('Invalid profile name')
-        if not re.match(r'^[A-Za-z0-9_-]{1,64}\Z', value) or value.upper() in ('CON', 'PRN', 'AUX', 'NUL') or re.match(r'^(COM|LPT)[0-9]$', value.upper()):
+        if not re.match(r'^[A-Za-z0-9_-]{1,64}\Z', value) or value.upper() in ('CON', 'PRN', 'AUX', 'NUL') or re.match(r'^(COM|LPT)[0-9]\Z', value.upper()):
             raise ValueError('Invalid profile name')
         return value
 

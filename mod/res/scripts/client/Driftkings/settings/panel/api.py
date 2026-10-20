@@ -23,7 +23,7 @@ def migrate_preferences(destination, previous_root):
             continue
         names = ['dk_settings'] if not folder else [
             name[:-5] for name in os.listdir(previous.root)
-            if re.match(r'^[A-Za-z0-9_-]{1,64}\.json$', name)]
+            if re.match(r'^[A-Za-z0-9_-]{1,64}\.json\Z', name)]
         for name in names:
             if os.path.exists(target.path(name)):
                 continue
