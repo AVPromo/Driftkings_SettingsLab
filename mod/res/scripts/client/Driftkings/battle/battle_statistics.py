@@ -391,8 +391,9 @@ g_mod = BattleStatDisplay()
 
 # CompoundAppearance remains a feature-specific hook; common events belong to Core.
 @override(CompoundAppearance, 'prerequisites')
-def new__prerequisites(func, self, typeDescriptor, vehicleID, *args, **kwargs):
-    result = func(self, typeDescriptor, vehicleID, *args, **kwargs)
+def new__prerequisites(func, self, vehicleID, *args, **kwargs):
+    # Game signature: prerequisites(self, vID, vInfo, renderMode=None).
+    result = func(self, vehicleID, *args, **kwargs)
     if g_mod.inBattle:
         try:
             player = getPlayer()

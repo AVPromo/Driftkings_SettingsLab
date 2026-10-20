@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -187,10 +188,28 @@ internal static class FogPackage
         NoGame(root); Safe(target); Require(!File.Exists(target) || Owned(target), "Optional package changed");
         if (File.Exists(target)) File.Replace(ready, target, null); else File.Move(ready, target);
     }
+    [DllImport("kernel32.dll", SetLastError = true)]
+    static extern IntPtr OpenProcess(uint access, bool inherit, int pid);
+    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+    static extern bool QueryFullProcessImageName(IntPtr process, uint flags, StringBuilder name, ref int size);
+    [DllImport("kernel32.dll")]
+    static extern uint WaitForSingleObject(IntPtr handle, uint milliseconds);
+    [DllImport("kernel32.dll")]
+    static extern bool CloseHandle(IntPtr handle);
     static void NoGame(string root) {
         foreach (var process in Process.GetProcessesByName("WorldOfTanks")) using (process) {
-            string path = process.MainModule.FileName;
-            Require(!path.StartsWith(root + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase), "Another client from this installation is running");
+            // Limited query works for elevated clients; MainModule throws for them and for exited ones.
+            IntPtr handle = OpenProcess(0x00100000 | 0x1000, false, process.Id); // SYNCHRONIZE | QUERY_LIMITED_INFORMATION
+            if (handle == IntPtr.Zero) {
+                Require(Marshal.GetLastWin32Error() == 87, "Cannot inspect a running client"); // 87: process already gone
+                continue;
+            }
+            try {
+                if (WaitForSingleObject(handle, 0) == 0) continue; // exited, handle still enumerated
+                var image = new StringBuilder(32768); int length = image.Capacity;
+                Require(QueryFullProcessImageName(handle, 0, image, ref length), "Cannot inspect a running client");
+                Require(!image.ToString().StartsWith(root + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase), "Another client from this installation is running");
+            } finally { CloseHandle(handle); }
         }
     }
     static string Selection(string stage) {
