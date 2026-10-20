@@ -60,6 +60,15 @@ def override_version(text, version):
     return (raw[:start] + repr(version).encode('ascii') + raw[end:]).decode('utf-8')
 
 
+def sync_source_version(root, release, version):
+    """Persist the selected version without changing encoding or line endings."""
+    source = input_path(root, release['version_source'])
+    original = source.read_bytes()
+    updated = override_version(original.decode('utf-8'), version).encode('utf-8')
+    if updated != original:
+        source.write_bytes(updated)
+
+
 def output_path(root, value):
     path = input_path(root, value)
     require(path.resolve().is_relative_to((root / 'build').resolve()) and path.resolve() != (root / 'build').resolve(),
@@ -248,6 +257,9 @@ def build(args):
     require((version_xml.findtext('meta/realm') or '').strip() == config['game']['realm'], 'Installed game realm differs from build target')
     reference = Path(config['reference']['root']) / '.version_name'
     require(reference.read_text(encoding='utf-8-sig').strip() == config['reference']['version'], 'Reference source version mismatch')
+    if args.version and not args.keep_source_version:
+        sync_source_version(root, release, version)
+        source_version = version
     stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ') + '-' + uuid.uuid4().hex[:8]
     run = output_path(root, 'build/runs/' + stamp)
     run.mkdir(parents=True)
@@ -339,7 +351,9 @@ def build(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--mode', choices=('debug', 'release'), default='debug')
-    parser.add_argument('--version', help='Global artifact/runtime version; source file remains unchanged')
+    parser.add_argument('--version', help='Set artifact/runtime version and synchronize the source VERSION')
+    parser.add_argument('--keep-source-version', action='store_true',
+                        help='Override only packaged VERSION, for temporary compatibility/update tests')
     parser.add_argument('--channel', choices=('auto', 'stable', 'beta'), default='auto')
     parser.add_argument('--game-root', help='Read-only game installation override')
     parser.add_argument('--changelog', help='UTF-8 changelog, one entry per line')

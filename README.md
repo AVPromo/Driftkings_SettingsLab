@@ -68,6 +68,8 @@ python build_tools/validate_build_data.py
 .\release.cmd --version 0.1.2-beta.5 --channel beta
 ```
 
+An explicit `--version` also synchronizes `VERSION` in the original Python source after prerequisite validation. Subsequent builds without `--version` reuse it; the installer takes its version from the completed build. `--plan` never writes files. For temporary older-version updater tests, use `--keep-source-version`. A version change modifies the Git checkout: commit it and rebuild before signing and publishing, so the release records a clean source revision. Version numbers are never incremented automatically.
+
 Check portable logic with `python -m unittest discover -s tests/settings_panel -p 'test_*.py'` and `python -m unittest discover -s tests/core -p 'test_*.py'`; both suites also run on Python 2.7. Run `node tests/settings_panel/test_gameface.js` for the Gameface state tests. Install development dependencies with `npm ci --ignore-scripts`, then run `npm run lint` to enforce ES5 syntax and basic JavaScript checks. These tools run on Node 20.19+; client scripts remain ES5.
 
 Edit defaults in `res/configs/Driftkings/default/`, then run `python build_tools/generate_defaults.py --write` to regenerate the Python fallback. For intentional changes to the default values, also refresh the recorded snapshot with `python build_tools/generate_defaults.py --write --refresh-snapshot`. Use `python build_tools/generate_defaults.py --check` to check synchronization without writing files; never edit `settings/default_values.py` by hand.
@@ -81,6 +83,14 @@ python build_tools/build_installer.py --artifacts build/releases/beta/0.1.2-beta
 ```
 
 Sign `release.json` after preparing all release assets, then publish with `build_tools/publish_release.py`. The installer is uploaded with the other verified assets.
+
+To update an existing published release, first edit and save its release notes on GitHub, commit the intended code and source version, then run:
+
+```powershell
+python build_tools/update_release.py --key release-signing.key --publish
+```
+
+This imports those notes into the signed changelog, rebuilds the mod and installer, verifies the assets and replaces the existing release files. It also moves the remote release tag to the compiled source commit. Omit `--publish` to build and sign locally without changing GitHub. Notes must fit the panel contract: 50 nonempty lines, 500 characters per line and 16 KiB total UTF-8. The private key stays local. Replacing files under the same version does not trigger an automatic update for clients already running that version; editing GitHub notes alone does not change the signed changelog.
 
 | Directory | Contents |
 | --- | --- |
