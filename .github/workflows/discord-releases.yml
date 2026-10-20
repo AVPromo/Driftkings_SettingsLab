@@ -59,7 +59,10 @@ jobs:
           request = urllib.request.Request(
               url,
               data=json.dumps(payload).encode("utf-8"),
-              headers={"Content-Type": "application/json"},
+              headers={
+                  "Content-Type": "application/json",
+                  "User-Agent": "DriftkingsMods (https://github.com/dkruben/Driftkings_SettingsLab, 1.0)"
+              },
               method="POST"
           )
 
