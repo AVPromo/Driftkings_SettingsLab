@@ -66,8 +66,10 @@ internal static class WindowsFiles
                     // Lock directory ancestors against rename/delete and writes to their
                     // reparse metadata for the entire operation. File leafs may be
                     // replaced by ReplaceFileW; no copy/truncate fallback is allowed.
+                    // FILE_LIST_DIRECTORY is required: attribute-only handles skip share
+                    // checks, so omitting FILE_SHARE_DELETE would not block a rename.
                     if((attrs&0x10)!=0) {
-                        IntPtr h=CreateFileW(p,0x80,1,IntPtr.Zero,3,0x02200000,IntPtr.Zero);
+                        IntPtr h=CreateFileW(p,0x81,3,IntPtr.Zero,3,0x02200000,IntPtr.Zero);
                         if(h==new IntPtr(-1)) throw new Failure("Cannot lock ancestor",Marshal.GetLastWin32Error());
                         handles.Add(h);
                         uint again=GetFileAttributesW(p);

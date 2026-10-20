@@ -157,8 +157,9 @@ package driftkings.battle.components.sixth_sense
 			}
 			else
 			{
-				this.hideAnimation.finish = -afterScaleWH;
+				// finish derives change from begin, so begin must be set first.
 				this.hideAnimation.begin = this.POSITION_Y;
+				this.hideAnimation.finish = -afterScaleWH;
 			}
 			
 			if (!this.radial_progress)
@@ -271,6 +272,11 @@ package driftkings.battle.components.sixth_sense
 			this.updateParams();
             if (this.onIconReady != null) this.onIconReady();
 			this.loader.unload();
+		}
+
+		override protected function onResized():void
+		{
+			this.onResizeHandle(null);
 		}
 
 		public function onResizeHandle(event:Event):void

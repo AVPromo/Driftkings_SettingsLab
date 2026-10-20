@@ -52,7 +52,7 @@ jobs:
           docker run --rm -v "$PWD:/work:ro" -w /work python:2.7
           python -c "import ast, os; files = [os.path.join(root, name) for root, dirs, names in os.walk('mod/res/scripts/client') for name in names if name.endswith('.py')]; [ast.parse(open(path, 'rb').read(), path) for path in files]; print('%d Python sources parsed' % len(files))"
       - name: Check Gameface JavaScript
-        run: find mod/res/gui/gameface -name '*.js' -exec node --check {} \;
+        run: find mod/res/gui/gameface -name '*.js' -print0 | xargs -0 -n1 node --check
       - name: Install JavaScript check dependencies
         run: npm ci --ignore-scripts
       - name: Lint Gameface JavaScript as ES5
