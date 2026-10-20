@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Version 2: XVM-shaped JSON, shared references, atomic multi-file saves."""
 import copy
+import re
 import logging
 import os
 
@@ -82,6 +83,9 @@ def validate(data):
     for key,low,high in (('requestTimeout',1,30),('cacheExpiry',1,86400),('minBattlesToShow',0,100000)):
         if type(performance.get(key)) not in (int,float) or not low <= performance[key] <= high:
             raise ValueError('Invalid performance setting: '+key)
+    custom=performance.get('applicationId','')
+    if not isinstance(custom,string_types) or (custom and re.match(r'\A[0-9a-fA-F]{32}\Z',custom) is None):
+        raise ValueError('general.json: performance.applicationId: expected empty or a 32-character hex id')
     templates=data.get('templates')
     if not isinstance(templates,dict) or any(not isinstance(v,dict) or 'ref' in v for v in templates.values()):
         raise ValueError('Invalid field templates')
