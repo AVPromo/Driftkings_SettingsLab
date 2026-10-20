@@ -9,6 +9,7 @@ import re
 import subprocess
 import tempfile
 import threading
+import time
 try:
     import Queue as queue
 except ImportError:
@@ -114,16 +115,16 @@ class WindowsPathValidator(object):
             if self.process is not None:
                 try: self.process.stdin.close()
                 except Exception: pass
-                def stop_owned_process():
-                    try:
-                        if self.process.poll() is None: self.process.kill()
-                    except Exception: pass
-                timer = threading.Timer(3, stop_owned_process)
-                timer.daemon = True
-                timer.start()
-                try: self.process.wait()
+                # No helper thread: close() also runs from atexit, when starting or finishing a
+                # threading.Timer races interpreter teardown and logs "'NoneType' object is not callable".
+                deadline = time.time() + 3
+                try:
+                    while self.process.poll() is None and time.time() < deadline:
+                        time.sleep(0.02)
+                    if self.process.poll() is None:
+                        self.process.kill()
+                    self.process.wait()
                 except Exception: pass
-                finally: timer.cancel()
                 for stream in (self.process.stdout, self.process.stderr):
                     try: stream.close()
                     except Exception: pass
