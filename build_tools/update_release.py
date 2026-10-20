@@ -28,7 +28,7 @@ def changelog_lines(body):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--version', help='Existing version; defaults to source VERSION')
+    parser.add_argument('--version', help='Existing version; defaults to build_data/release.json')
     parser.add_argument('--key', type=Path, default=ROOT / 'release-signing.key')
     parser.add_argument('--publish', action='store_true', help='Replace existing release assets after validation')
     args = parser.parse_args()
@@ -36,7 +36,8 @@ def main():
         release = read_json(ROOT / 'build_data/release.json')
         version, channel, source = select_version(ROOT, release, args.version, 'auto')
         # Do not move a published tag or publish uncommitted code implicitly.
-        require(version == source, 'Set and commit source VERSION before updating this release')
+        require(version == source and version == release['version'],
+                'Build once to synchronize release.json and source VERSION, then commit and rerun')
         require(not subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT).strip(),
                 'Commit source changes before rebuilding a release')
         tag = 'v' + version

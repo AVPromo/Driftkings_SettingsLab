@@ -39,7 +39,11 @@ def select_version(root, release, requested, channel):
     tree = ast.parse(source.read_text(encoding='utf-8'))
     current = next(ast.literal_eval(node.value) for node in tree.body if isinstance(node, ast.Assign)
                    and any(isinstance(t, ast.Name) and t.id == 'VERSION' for t in node.targets))
-    version = version_contract(root).Version(requested or current)
+    configured = version_contract(root).Version(release['version'])
+    configured_channel = 'beta' if configured.prerelease else 'stable'
+    require(release['channel'] == configured_channel and configured.allowed(configured_channel),
+            'Configured release version and channel disagree')
+    version = version_contract(root).Version(requested or configured.text)
     resolved = 'beta' if version.prerelease else 'stable'
     require(channel in ('auto', resolved), 'Version and channel disagree: %s / %s' % (version.text, channel))
     require(version.allowed(resolved), 'Only beta/rc prereleases are supported by the updater')
@@ -67,6 +71,14 @@ def sync_source_version(root, release, version):
     updated = override_version(original.decode('utf-8'), version).encode('utf-8')
     if updated != original:
         source.write_bytes(updated)
+
+
+def sync_release_version(root, release, version, channel):
+    """Keep JSON authoritative, including explicit command-line version changes."""
+    sync_source_version(root, release, version)
+    if release['version'] != version or release['channel'] != channel:
+        release.update(version=version, channel=channel)
+        write_json(root / 'build_data/release.json', release)
 
 
 def output_path(root, value):
@@ -257,8 +269,8 @@ def build(args):
     require((version_xml.findtext('meta/realm') or '').strip() == config['game']['realm'], 'Installed game realm differs from build target')
     reference = Path(config['reference']['root']) / '.version_name'
     require(reference.read_text(encoding='utf-8-sig').strip() == config['reference']['version'], 'Reference source version mismatch')
-    if args.version and not args.keep_source_version:
-        sync_source_version(root, release, version)
+    if not args.keep_source_version:
+        sync_release_version(root, release, version, channel)
         source_version = version
     stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ') + '-' + uuid.uuid4().hex[:8]
     run = output_path(root, 'build/runs/' + stamp)
@@ -351,7 +363,7 @@ def build(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--mode', choices=('debug', 'release'), default='debug')
-    parser.add_argument('--version', help='Set artifact/runtime version and synchronize the source VERSION')
+    parser.add_argument('--version', help='Override JSON version and synchronize release.json and source VERSION')
     parser.add_argument('--keep-source-version', action='store_true',
                         help='Override only packaged VERSION, for temporary compatibility/update tests')
     parser.add_argument('--channel', choices=('auto', 'stable', 'beta'), default='auto')

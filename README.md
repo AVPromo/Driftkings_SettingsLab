@@ -65,10 +65,10 @@ On Windows, configure Python 3.10+, Python 2.7, Java/Flex, playerglobal and game
 python build_tools/compiler.py --plan
 python build_tools/validate_build_data.py
 .\debug.cmd
-.\release.cmd --version 0.1.2-beta.5 --channel beta
+.\release.cmd
 ```
 
-An explicit `--version` also synchronizes `VERSION` in the original Python source after prerequisite validation. Subsequent builds without `--version` reuse it; the installer takes its version from the completed build. `--plan` never writes files. For temporary older-version updater tests, use `--keep-source-version`. A version change modifies the Git checkout: commit it and rebuild before signing and publishing, so the release records a clean source revision. Version numbers are never incremented automatically.
+Set `version` and `channel` in `build_data/release.json`, for example `"version": "0.1.2-beta.5", "channel": "beta"` or `"version": "0.1.2", "channel": "stable"`. The compiler validates their agreement and synchronizes `VERSION` in the original Python source after prerequisite validation. The installer takes its version from the completed build. An explicit `--version` also updates the JSON and Python source; `--channel` validates the selected version. `--plan` never writes files. For temporary older-version updater tests, use `--version ... --keep-source-version` to leave both originals unchanged. A version change modifies the Git checkout: commit it and rebuild before signing and publishing, so the release records a clean source revision. Version numbers are never incremented automatically.
 
 Check portable logic with `python -m unittest discover -s tests/settings_panel -p 'test_*.py'` and `python -m unittest discover -s tests/core -p 'test_*.py'`; both suites also run on Python 2.7. Run `node tests/settings_panel/test_gameface.js` for the Gameface state tests. Install development dependencies with `npm ci --ignore-scripts`, then run `npm run lint` to enforce ES5 syntax and basic JavaScript checks. These tools run on Node 20.19+; client scripts remain ES5.
 
