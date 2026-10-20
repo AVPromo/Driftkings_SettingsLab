@@ -52,6 +52,7 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+.claude
 
 # PyCharm specific
 *.iws
