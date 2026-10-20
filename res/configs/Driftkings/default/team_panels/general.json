@@ -10,7 +10,6 @@
   ],
   "hpVisibility": "hold",
   "performance": {
-    "applicationId": "",
     "cacheEnabled": true,
     "cacheExpiry": 3600,
     "diagnostics": false,

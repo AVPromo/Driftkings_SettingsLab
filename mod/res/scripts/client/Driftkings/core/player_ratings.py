@@ -213,50 +213,24 @@ def format_rating(template, info, vehicle, available, scale=0):
 
 class Events(object):
     SUPPORTED_REGIONS = ('eu', 'com', 'asia')
-    # Public Wargaming application id shipped as a fallback; users may set their own in
-    # performance.applicationId (https://developers.wargaming.net) so one revoked/limited
-    # shared id cannot take statistics down for every installation.
-    DEFAULT_APPLICATION_ID = '14f9ad61272e03b7a446433e732d6b7f'
-    APPLICATION_ID = re.compile(r'\A[0-9a-f]{32}\Z')
-    # API error message -> seconds to stop querying (None: until the id or the client changes).
-    BACKOFF = {'REQUEST_LIMIT_EXCEEDED': 60, 'INVALID_APPLICATION_ID': None, 'APPLICATION_IS_BLOCKED': None}
     _apiErrors = set()
-    _blocked = {}
-
-    @staticmethod
-    def applicationId(performance):
-        custom = performance.get('applicationId')
-        if isinstance(custom, (str, type(u''))) and Events.APPLICATION_ID.match(custom.strip().lower()):
-            return custom.strip().lower()
-        return Events.DEFAULT_APPLICATION_ID
 
     @staticmethod
     def request(region, request, **kwargs):
         if region not in Events.SUPPORTED_REGIONS:
             LOG.warning(('Unsupported region for stats request: {}').format(region))
             return None
-        performance = settings_service.getComponentDict(config)[TEAM_PANELS.PERFORMANCE]
-        applicationId = Events.applicationId(performance)
-        blocked = Events._blocked.get(applicationId, False)
-        if blocked is None or (blocked and time.time() < blocked):
-            return None
-        kwargs['application_id'] = applicationId
+        kwargs['application_id'] = '14f9ad61272e03b7a446433e732d6b7f'
         api = 'api.worldoftanks.%s' % region
         url = 'https://%s/%s/?%s' % (api, request, urllib.urlencode(kwargs))
         try:
-            response = json.loads(urllib2.urlopen(url, timeout=performance['requestTimeout']).read().decode('utf-8-sig'))
+            response = json.loads(urllib2.urlopen(url, timeout=settings_service.getComponentDict(config)[TEAM_PANELS.PERFORMANCE]['requestTimeout']).read().decode('utf-8-sig'))
             if response.get('status') == 'error':
                 error = response.get('error') or {}
-                message = error.get('message')
-                if message in Events.BACKOFF:
-                    delay = Events.BACKOFF[message]
-                    Events._blocked[applicationId] = None if delay is None else time.time() + delay
-                signature = (region, request, error.get('code'), message)
+                signature = (region, request, error.get('code'), error.get('message'))
                 if signature not in Events._apiErrors:
                     Events._apiErrors.add(signature)
-                    LOG.warning(('Stats API rejected {}/{}: {} ({})').format(region, request, message, error.get('code')))
-                    if message in ('INVALID_APPLICATION_ID', 'APPLICATION_IS_BLOCKED'):
-                        LOG.warning('Set "applicationId" under "performance" in team_panels/general.json to your own id from developers.wargaming.net')
+                    LOG.warning(('Stats API rejected {}/{}: {} ({})').format(region, request, error.get('message'), error.get('code')))
                 return None
             return response.get('data')
         except Exception as error:
