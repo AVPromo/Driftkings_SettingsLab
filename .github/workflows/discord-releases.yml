@@ -1,0 +1,69 @@
+name: Driftkings Discord Releases
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  discord-notification:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Announce release on Discord
+        env:
+          STABLE_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_RELEASES }}
+          BETA_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_BETA }}
+          EVENT_FILE: ${{ github.event_path }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          with open(os.environ["EVENT_FILE"], encoding="utf-8") as f:
+              event = json.load(f)
+
+          release = event["release"]
+          beta = release["prerelease"]
+
+          url = os.environ["BETA_WEBHOOK"] if beta else os.environ["STABLE_WEBHOOK"]
+          if not url:
+              raise RuntimeError("Discord webhook is not configured")
+
+          version = release["tag_name"]
+          title = release["name"] or version
+          notes = release.get("body") or "No release notes provided."
+          channel = "BETA" if beta else "STABLE"
+
+          payload = {
+              "username": "DriftkingsMods",
+              "allowed_mentions": {"parse": []},
+              "embeds": [{
+                  "title": ("🧪 Beta Release: " if beta else "🚀 New Release: ")
+                           + title[:200],
+                  "url": release["html_url"],
+                  "description": notes[:3800],
+                  "color": 3447003 if beta else 5763719,
+                  "fields": [
+                      {"name": "Version", "value": version[:100], "inline": True},
+                      {"name": "Channel", "value": channel, "inline": True}
+                  ],
+                  "footer": {
+                      "text": "DriftkingsMods | World of Tanks"
+                  }
+              }]
+          }
+
+          request = urllib.request.Request(
+              url,
+              data=json.dumps(payload).encode("utf-8"),
+              headers={"Content-Type": "application/json"},
+              method="POST"
+          )
+
+          with urllib.request.urlopen(request, timeout=20) as response:
+              print("Discord notification sent:", response.status)
+          PY
