@@ -29,7 +29,9 @@ _results_views = weakref.WeakKeyDictionary()
 
 DEF_RESULTS_LEN = 16
 RANKED_OFFSET = 4
-SUPPORTED_BONUS_TYPES = {ARENA_BONUS_TYPE.REGULAR}
+# Battles that update the account statistics, including bot-filled randoms.
+SUPPORTED_BONUS_TYPES = set(getattr(ARENA_BONUS_TYPE, name) for name in ('REGULAR', 'RANDOM_NP2', 'WINBACK')
+                            if hasattr(ARENA_BONUS_TYPE, name))
 EXCLUDED_BONUS_TYPES = {
     ARENA_BONUS_TYPE.EVENT_BATTLES,
     ARENA_BONUS_TYPE.EPIC_RANDOM,

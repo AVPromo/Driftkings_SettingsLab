@@ -36,7 +36,7 @@ SOURCE_HASHES = {'default/aiming_countdown.json': '49d3755f130e78a2f6d4c460b0836
  'default/target_information.json': '7df9b23a50e8fcf458c4c8ae0d498317e8d9f4250aab38e11e96678199d819a0',
  'default/team_panels/battleLoading.json': '36065083cdb4ca359b31d198b36fcac829009ab0f3181ee4470e68a3c9ee5f23',
  'default/team_panels/general.json': '56dc62b6053b45879331fb21d92ae30f72895274743ec5084ed0d5d2ba23241c',
- 'default/team_panels/panelLarge.json': 'f5dc88dfb30b7f060a0ee318f4df0be2af8a9eab0ad9bdf071a9380e9d8c7443',
+ 'default/team_panels/panelLarge.json': '61189aff57e6494f3e1a429ecbaf67c0d93004bdcaa72ed333e67ba0cf122372',
  'default/team_panels/panelMedium.json': '9e4238be4865715c1ef17b2521a69933e9ecfe7ef239cc48a9e37aa2693dd9ba',
  'default/team_panels/panelMedium2.json': 'e1980ade8a085b969cdbeb55a3c5098ad0718bafcf4c63debdd44e19ab4de422',
  'default/team_panels/panelNone.json': 'ec6a955996806d81d90a5c51579c5083688099d332fccc850121e007cee6e669',
@@ -657,13 +657,13 @@ DEFAULTS = {'aiming_countdown': {'align': 'left',
                                         'nickFormatLeft': "<font face='$FieldFont' size='{{xvm-stat?13|0}}' "
                                                           "color='{{c:xr}}' "
                                                           "alpha='{{alive?#FF|#80}}'>{{r|{{r_size>2?----|--}}}}</font> "
-                                                          "<font{{xvm-stat? color='{{c:r}}'}} "
+                                                          "<font{{stat-color? color='{{c:r}}'}} "
                                                           "alpha='{{alive?#FF|#80}}'>{{name%.{{anonym?12|{{xvm-stat?{{r_size>2?10|13}}|15}}}}s~..}}{{anonym? "
                                                           "<font face='$FieldFont' "
                                                           "size='13'>*</font>}}</font><font "
                                                           "alpha='#A0'>{{clan}}</font>",
                                         'nickFormatRight': '<font '
-                                                           "alpha='#A0'>{{clan}}</font><font{{xvm-stat? "
+                                                           "alpha='#A0'>{{clan}}</font><font{{stat-color? "
                                                            "color='{{c:r}}'}} "
                                                            "alpha='{{alive?#FF|#80}}'>{{name%.{{xvm-stat?{{r_size>2?10|13}}|15}}s~..}}</font> "
                                                            "<font face='$FieldFont' size='{{xvm-stat?13|0}}' "
@@ -684,13 +684,13 @@ DEFAULTS = {'aiming_countdown': {'align': 'left',
                                         'spottedIndicatorOffsetY': 0,
                                         'squadIconAlpha': 100,
                                         'standardFields': ['frags', 'badge', 'nick', 'vehicle'],
-                                        'vehicleFormatLeft': "<font{{xvm-stat? color='{{c:r}}'}} "
+                                        'vehicleFormatLeft': "<font{{stat-color? color='{{c:r}}'}} "
                                                              "alpha='{{alive?#FF|#80}}'>{{vehicle}}</font>{{t-battles? "
                                                              '<font '
                                                              "color='{{c:t-winrate}}'>{{t-winrate%d~%}}</font>}}",
                                         'vehicleFormatRight': '{{t-battles?<font '
                                                               "color='{{c:t-winrate}}'>{{t-winrate%d~%}}</font> "
-                                                              "}}<font{{xvm-stat? color='{{c:r}}'}} "
+                                                              "}}<font{{stat-color? color='{{c:r}}'}} "
                                                               "alpha='{{alive?#FF|#80}}'>{{vehicle}}</font>",
                                         'vehicleIconOffsetXLeft': 0,
                                         'vehicleIconOffsetXRight': 0,

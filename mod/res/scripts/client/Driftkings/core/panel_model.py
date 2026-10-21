@@ -5,10 +5,17 @@ from Driftkings.settings.team_panel_store import resolve_fields
 
 ROMAN=('','I','II','III','IV','V','VI','VII','VIII','IX','X','XI')
 TYPES={'lightTank':'LT','mediumTank':'MT','heavyTank':'HT','AT-SPG':'TD','SPG':'SPG'}
+# Numeric account and vehicle statistics hidden in event modes (colours are kept).
+STATISTICS=('wn8','eff','wgr','winrate','xwn8','xeff','battles','kb','r','xr','t-kb','t-hb',
+            't_battles','t_winrate','t_wins','t-battles','t-winrate','t-wins','tdv','tdb','tfb','tsb',
+            'spg_battles','spg_percent','mark_of_mastery')
 
 class Roster(object):
     def __init__(self, translations=None):
         self.translations = translations or {}
+        # Event modes: colours stay, numbers and HP are hidden. Set per arena by
+        # the roster owner, so reset() between arena updates must not clear it.
+        self.restricted = False
         self.reset()
 
     def reset(self):
@@ -138,13 +145,20 @@ class Roster(object):
         for key,target in (('r',data[TEAM_PANELS.RATING]),('xr',data[TEAM_PANELS.RATING]),('kb','battles')):
             values['c:'+key]=values.get('c:'+target,'#AAAAAA')
             values['a:'+key]=values.get('a:'+target,0)
+        # Formats colour names with {{stat-color?..}}, which survives event modes.
+        values['stat-color']='stat' if available else ''
+        if self.restricted:
+            for key in STATISTICS: values[key]=None
+            values['xvm-stat']=''
         return values
 
     def screen(self,settings,values,data,side,dependencies=None):
         macros=Macros(values,data,self.translations,dependencies)
-        if dependencies is not None: dependencies.add('xvm-stat')
+        if dependencies is not None: dependencies.update(('xvm-stat','stat-color'))
         result=macros.resolve(settings)
-        result['enabled']=bool(settings.get('enabled',True) and (truth(values['xvm-stat']) or settings.get('showUnavailable',True)))
+        # In event modes the numbers are hidden, but the player still has statistics.
+        available=truth(values['xvm-stat']) or truth(values.get('stat-color'))
+        result['enabled']=bool(settings.get('enabled',True) and (available or settings.get('showUnavailable',True)))
         fields=[]
         entries=settings.get('extraFields'+side,[])
         if isinstance(settings.get('extraFields'),dict):
@@ -155,7 +169,7 @@ class Roster(object):
             isHP=field.get('id','').startswith('hp')
             if isHP:
                 mode=data.get(TEAM_PANELS.HP_VISIBILITY,'always')
-                if not data[TEAM_PANELS.HP_ENABLED] or mode=='never': continue
+                if not data[TEAM_PANELS.HP_ENABLED] or mode=='never' or self.restricted: continue
                 # Groups are combined with AND; keys within each group are alternatives.
                 if mode=='hold' and not all(any(code in self.keys for code in group)
                                             for group in data.get(TEAM_PANELS.HP_KEY,[[56,184]])): continue

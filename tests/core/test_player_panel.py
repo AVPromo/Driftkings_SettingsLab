@@ -181,3 +181,75 @@ class KeyStateTests(RuntimeTest):
         self.assertEqual(self.modes, [4, 4])
         self.view.hover(False)
         self.assertEqual(self.modes[-1], 1)
+
+
+class BattleModeTests(RuntimeTest):
+    """EU bonus types: bot-filled randoms count for statistics; extension modes are events."""
+    NAMES = {'UNKNOWN': 0, 'REGULAR': 1, 'TRAINING': 2, 'EVENT_BATTLES': 9, 'EPIC_BATTLE': 27, 'COMP7': 43,
+             'WINBACK': 44, 'RANDOM_NP2': 46, 'HALLOWEEN': 101, 'LAST_STAND': 107}
+
+    def setUp(self):
+        super(BattleModeTests, self).setUp()
+        capabilities = self.load('core.battle_capabilities')
+        names = dict(self.NAMES, RANGE=tuple(self.NAMES.values()), RANDOM_RANGE=(1, 46))
+        constants = module(ARENA_BONUS_TYPE=module(**names))
+        self.bonus = None
+        self.context = capabilities.BattleCapabilities(
+            player=lambda: module(arena=module(bonusType=self.bonus)), session=lambda: None,
+            modules={'constants': constants})
+        self.policy = self.load('core.battle_policy').BattlePolicy(self.context)
+
+    def at(self, name):
+        self.bonus = self.NAMES[name]
+        return self.context
+
+    def test_bot_randoms_count_as_statistics_battles(self):
+        for name in ('REGULAR', 'RANDOM_NP2', 'WINBACK'):
+            context = self.at(name)
+            self.assertTrue(context.is_statistics_battle(), name)
+            self.assertTrue(context.is_random(), name)
+            self.assertFalse(context.is_event_mode(), name)
+            self.assertTrue(self.policy.decision('battle_marks_of_excellence')[0], name)
+
+    def test_event_modes_are_restricted_and_standard_modes_are_not(self):
+        for name in ('HALLOWEEN', 'LAST_STAND', 'EVENT_BATTLES'):
+            context = self.at(name)
+            self.assertTrue(context.is_event_mode(), name)
+            self.assertEqual(self.policy.decision('high_caliber_progress'), (False, 'requires_statistics_battle'))
+        for name in ('TRAINING', 'EPIC_BATTLE', 'COMP7', 'UNKNOWN'):
+            self.assertFalse(self.at(name).is_event_mode(), name)
+
+
+class EventPanelTests(RuntimeTest):
+    def setUp(self):
+        super(EventPanelTests, self).setUp()
+        panels = self.load('_constants').TEAM_PANELS
+        self.roster = self.load('core.panel_model').Roster()
+        self.data = {panels.STATS_ENABLED: True, panels.PERFORMANCE: {'minBattlesToShow': 0},
+                     panels.SPOTTED_ENABLED: True, panels.RATING: 'wn8', panels.COLOR_SCALE: 0,
+                     panels.TEMPLATES: {}, panels.HP_ENABLED: True}
+        self.stats = {'battles': 12000, 'wn8': 2469, 'winrate': 57, 't-battles': 120, 't-winrate': 53}
+        self.vehicle = {'name': 'Player', 'clanAbbrev': 'CL', 'team': 1, 'isAlive': True}
+
+    def values(self):
+        return self.roster.values(5, self.vehicle, self.stats, 1, 1, self.data,
+                                  lambda kind, value, scale: '#5A3175')
+
+    def test_event_mode_keeps_wn8_colour_but_hides_numbers(self):
+        normal = self.values()
+        self.assertEqual((normal['r'], normal['xvm-stat'], normal['stat-color']), (2469, 'stat', 'stat'))
+        self.roster.restricted = True
+        event = self.values()
+        for key in ('r', 'wn8', 'winrate', 'battles', 'kb', 't-battles', 't-winrate'):
+            self.assertIsNone(event[key], key)
+        self.assertEqual((event['xvm-stat'], event['stat-color'], event['c:r']), ('', 'stat', '#5A3175'))
+        self.assertEqual((event['name'], event['nick']), ('Player', 'Player [CL]'))
+
+    def test_event_mode_hides_hp_fields_but_keeps_the_row(self):
+        settings = {'showUnavailable': False, 'extraFieldsLeft': [{'id': 'hpBar', 'format': 'hp'},
+                                                                  {'id': 'extra', 'format': 'text'}]}
+        self.assertEqual(len(self.roster.screen(settings, self.values(), self.data, 'Left')['fields']), 2)
+        self.roster.restricted = True
+        result = self.roster.screen(settings, self.values(), self.data, 'Left')
+        self.assertTrue(result['enabled'])
+        self.assertEqual([field['id'] for field in result['fields']], ['extra'])

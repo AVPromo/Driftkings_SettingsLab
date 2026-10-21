@@ -6,6 +6,15 @@ import sys
 from Driftkings.core.mod_compatibility import read
 
 LOG = logging.getLogger('Driftkings.BattleCapabilities')
+# Battles that update the account statistics: random battles, including the
+# bot-filled ones for new (RANDOM_NP2) and returning (WINBACK) players.
+STATISTICS_BATTLES = ('REGULAR', 'RANDOM_NP2', 'WINBACK')
+# Everything else outside this list is an event mode (Halloween, Last Stand,
+# Fort Rush, Fun Random, Battle Royale, Story Mode, client extensions...).
+STANDARD_BATTLES = STATISTICS_BATTLES + (
+    'EPIC_RANDOM', 'EPIC_RANDOM_TRAINING', 'EPIC_BATTLE', 'EPIC_BATTLE_TRAINING', 'TRAINING', 'MAPS_TRAINING',
+    'MAPBOX', 'TOURNAMENT', 'TOURNAMENT_REGULAR', 'TOURNAMENT_CLAN', 'CLAN', 'CYBERSPORT', 'GLOBAL_MAP',
+    'SORTIE_2', 'FORT_BATTLE_2', 'RANKED', 'COMP7', 'TOURNAMENT_COMP7', 'TRAINING_COMP7', 'COMP7_LIGHT')
 
 
 def call(obj, name, *args):
@@ -69,6 +78,16 @@ class BattleCapabilities(object):
         # Economy/marks rules require REGULAR, not the wider RANDOM_RANGE.
         return self.is_in_battle() and self._match('ARENA_BONUS_TYPE', self._bonus(), ('REGULAR',))
 
+    def is_statistics_battle(self):
+        return self.is_in_battle() and self._match('ARENA_BONUS_TYPE', self._bonus(), STATISTICS_BATTLES)
+
+    def is_event_mode(self):
+        # Unknown bonus types (missing arena data) are not treated as events.
+        value = self._bonus()
+        return self.is_in_battle() and value is not None and value != read(
+            read(self.modules.get('constants'), 'ARENA_BONUS_TYPE'), 'UNKNOWN') and not self._match(
+            'ARENA_BONUS_TYPE', value, STANDARD_BATTLES)
+
     def is_frontline(self):
         return self.is_in_battle() and (call(self._gui(), 'isEpicBattle') is True or
             self._match('ARENA_BONUS_TYPE', self._bonus(), ('EPIC_BATTLE', 'EPIC_BATTLE_TRAINING')))
@@ -79,6 +98,8 @@ class BattleCapabilities(object):
         bonus = read(self.modules.get('constants'), 'ARENA_BONUS_TYPE')
         value = self._bonus()
         random_range = read(bonus, 'RANDOM_RANGE', ())
+        if self._match('ARENA_BONUS_TYPE', value, ('WINBACK',)):
+            return True
         try:
             return value in random_range if value is not None and random_range else call(self._gui(), 'isRandomBattle') is True
         except Exception:
@@ -168,6 +189,8 @@ battle_capabilities = BattleCapabilities()
 current_mode = battle_capabilities.current_mode
 is_random = battle_capabilities.is_random
 is_regular = battle_capabilities.is_regular
+is_statistics_battle = battle_capabilities.is_statistics_battle
+is_event_mode = battle_capabilities.is_event_mode
 is_comp7 = battle_capabilities.is_comp7
 is_frontline = battle_capabilities.is_frontline
 is_replay = battle_capabilities.is_replay

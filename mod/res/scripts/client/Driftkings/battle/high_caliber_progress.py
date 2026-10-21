@@ -16,6 +16,10 @@ from Driftkings.settings.definitions.battle.high_caliber_progress import HighCal
 from Driftkings.views.battle.high_caliber_gameface import MainGunAdapter
 from Driftkings.core.high_caliber import project
 
+# RANDOM_NP2 battles use the RANDOM GUI; WINBACK has its own.
+RANDOM_GUI_TYPES = tuple(getattr(ARENA_GUI_TYPE, name) for name in ('RANDOM', 'EPIC_RANDOM', 'WINBACK')
+                         if hasattr(ARENA_GUI_TYPE, name))
+
 g_gameface = None
 config = Settings()
 
@@ -29,7 +33,7 @@ class MainGun(object):
 
     @property
     def showMainGun(self):
-        return settings_service.getComponentDict(config)[HIGH_CALIBER_PROGRESS.HIGH_CALIBER_PROGRESS]['enabled'] and scl.guiType in (ARENA_GUI_TYPE.RANDOM, ARENA_GUI_TYPE.EPIC_RANDOM)
+        return settings_service.getComponentDict(config)[HIGH_CALIBER_PROGRESS.HIGH_CALIBER_PROGRESS]['enabled'] and scl.guiType in RANDOM_GUI_TYPES
 
     def battleLoading(self):
         enemy_health = scl.health.get(scl.enemyTeam)
@@ -137,7 +141,7 @@ class SysClass(object):
         self.destroyBattle()
         player = getPlayer()
         # Match MarksOnGunBattle and BattleEfficiency: statistics-bearing
-        # regular battles only, before subscribing to damage/roster events.
+        # battles only (random, incl. RANDOM_NP2/WINBACK), before subscribing to damage/roster events.
         if not player or not player.arena or not battle_policy.decision('high_caliber_progress')[0]:
             return
         arena_dp = player.guiSessionProvider.getArenaDP()
@@ -215,7 +219,7 @@ class SysClass(object):
             self._health[index] = 0
 
     def onHealthChanged(self, vehicle, newHealth, _, attackerID, __):
-        if self.guiType in [ARENA_GUI_TYPE.RANDOM, ARENA_GUI_TYPE.EPIC_RANDOM]:
+        if self.guiType in RANDOM_GUI_TYPES:
             target = self.vehicles.get(vehicle.id)
             attacker = self.vehicles.get(attackerID)
             if target and target[0] > 0:

@@ -18,6 +18,7 @@ from Driftkings.core.battle_events import battleEvents
 from Driftkings.core.panel_model import Roster
 from Driftkings.settings.settings_data import PROFILES, profile_for_mode
 from Driftkings.common.utils.colorRatting import getStatisticColor
+from Driftkings.core.battle_capabilities import battle_capabilities
 
 LOG=logging.getLogger('Driftkings.PlayerPanelPro')
 ALIAS=BATTLE_ALIASES.PLAYERS_PANEL
@@ -291,6 +292,7 @@ class RatingViews(object):
                 TEAM_PANELS.HP_VISIBILITY, TEAM_PANELS.HP_KEY)
             if new_arena:
                 self.screenCache.clear()
+                self.model.restricted=battle_capabilities.is_event_mode()
             # Keep rendered screens whose formats and macro inputs did not change.
             for cache in self.screenCache.values():
                 for key in list(cache):
@@ -324,7 +326,7 @@ class RatingViews(object):
         contexts={}
         ownID=getattr(player,'playerVehicleID',0)
         self.resolvedRows=0
-        shared=(ownID,getattr(player,'team',0),self.model.mode,self.model.widths,getattr(arena,'guiType',None),CURRENT_REALM,
+        shared=(ownID,getattr(player,'team',0),self.model.mode,self.model.widths,getattr(arena,'guiType',None),CURRENT_REALM,self.model.restricted,
                 any(m.get('hasSelectedBadge') for m in self.model.metadata.values()))
         for ident,vehicle in arena.vehicles.items():
             stats=self.stats.getPlayersInfo(vehicle.get('accountDBID',0))

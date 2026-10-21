@@ -5,7 +5,8 @@ import logging
 from Driftkings.core.battle_capabilities import battle_capabilities
 
 LOG = logging.getLogger('Driftkings.BattlePolicy')
-REGULAR_ONLY = ('battle_marks_of_excellence', 'battle_statistics', 'high_caliber_progress')
+# Features that read account progress only run where battles update it.
+STATISTICS_ONLY = ('battle_marks_of_excellence', 'battle_statistics', 'high_caliber_progress')
 
 
 class BattlePolicy(object):
@@ -19,8 +20,8 @@ class BattlePolicy(object):
             reason = 'disabled_in_settings'
         elif not context.is_in_battle():
             reason = 'outside_battle'
-        elif feature in REGULAR_ONLY and not context.is_regular():
-            reason = 'requires_regular_battle'
+        elif feature in STATISTICS_ONLY and not context.is_statistics_battle():
+            reason = 'requires_statistics_battle'
         elif spg_only and not context.is_spg():
             reason = 'requires_spg'
         else:
