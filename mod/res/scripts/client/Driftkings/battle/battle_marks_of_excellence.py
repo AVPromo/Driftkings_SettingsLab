@@ -15,7 +15,7 @@ from gui.battle_control.controllers import feedback_events
 from gui.shared.gui_items.dossier.achievements.mark_on_gun import MarkOnGunAchievement
 from gui.impl.lobby.hangar.presenters.crew_presenter import CrewPresenter
 
-from Driftkings.core.marks_calculator import ceil_damage, combined_damage, statistics, battle_estimate, battle_target, battle_curve, valid_calibration
+from Driftkings.core.marks_calculator import ceil_damage, combined_damage, statistics, battle_estimate, battle_target, battle_curve, valid_calibration, replay_calibration
 from Driftkings.views.marks_model import compact_model
 
 from Driftkings._constants import GLOBAL, BATTLE_MARKS_OF_EXCELLENCE
@@ -69,6 +69,7 @@ class Worker(object):
         self.dossier = None
         self.initiated = False
         self.replay = False
+        self.approximate = False
         self.levels = []
         self.damages = []
         self.health = {}
@@ -93,6 +94,7 @@ class Worker(object):
         self.vehicleID = None
         self.initiated = False
         self.replay = False
+        self.approximate = False
         self.levels = []
         self.damages = []
         self.health.clear()
@@ -242,7 +244,8 @@ class Worker(object):
         unknown = unknown or not (d0 and self.initiated)
         g_panel.setVisible(True)
         payload = compact_model(self.vehicleID, self.damageRating, nextMark, self.battleDamage,
-                                assists, getattr(self, 'markTargets', {}), self.gunLevel, not unknown or self.replay)
+                                assists, getattr(self, 'markTargets', {}), self.gunLevel, not unknown or self.replay,
+                                self.approximate)
         g_panel.set_marks(payload)
 
     @staticmethod
@@ -290,8 +293,11 @@ class Worker(object):
         if dBid not in marks_cache.values:
             marks_cache.values[dBid] = {}
         if self.replay:
-            values = marks_cache.values[dBid].get(self.name)
-            if not valid_calibration(values):
+            settings = settings_service.getComponentDict(config)
+            values, self.approximate = replay_calibration(
+                marks_cache.values, dBid, self.name, settings[BATTLE_MARKS_OF_EXCELLENCE.REPLAY_BASE_PERCENT],
+                settings[BATTLE_MARKS_OF_EXCELLENCE.REPLAY_BASE_DAMAGE], self.dateTime)
+            if values is None:
                 g_panel.unavailable(self.vehicleID)
                 return
             self.damageRating, self.movingAvgDamage = values[2:4]
@@ -300,7 +306,11 @@ class Worker(object):
             keyboard.subscribe(self.keyPressed)
             self._arena = getPlayer().arena
             self._arena.onVehicleKilled += self.onVehicleKilled
-            if valid_calibration(marks_cache.values[dBid].get(self.name)):
+            if self.approximate:
+                # Borrowed or base data: never write it into the replay owner's cache.
+                self.values = values
+                self.initiated = False
+            elif valid_calibration(marks_cache.values[dBid].get(self.name)):
                 self.requestCurData(self.damageRating, self.movingAvgDamage)
             else:
                 self.requestNewData(self.damageRating, self.movingAvgDamage)

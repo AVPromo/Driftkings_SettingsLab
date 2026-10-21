@@ -44,7 +44,7 @@ def milestone_model(percent, earned=0):
             'gap': max(0.0, high - percent), 'completed': False}
 
 
-def compact_model(vehicle_id, current, estimated, damage, assists, targets, earned=0, valid=True):
+def compact_model(vehicle_id, current, estimated, damage, assists, targets, earned=0, valid=True, approximate=False):
     """All numeric values are supplied by the calculation engine, not JS."""
     current, estimated = finite(current), finite(estimated)
     valid = bool(valid and current is not None and estimated is not None)
@@ -53,7 +53,8 @@ def compact_model(vehicle_id, current, estimated, damage, assists, targets, earn
               'marksAchieved': max(0, min(3, int(finite(earned, 0)))),
               'directDamage': finite(damage, 0), 'assistance': list(assists),
               'combinedDamage': finite(damage, 0) + max(assists),
-              'trend': delta_model(estimated - current if valid else None)}
+              'trend': delta_model(estimated - current if valid else None),
+              'approximate': bool(approximate and valid)}
     result.update(milestone_model(estimated if valid else None, earned))
     target = targets.get(result['nextMilestone']) if valid else None
     result['targetDamage'] = target

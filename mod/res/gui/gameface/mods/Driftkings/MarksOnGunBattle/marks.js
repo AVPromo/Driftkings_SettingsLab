@@ -29,9 +29,11 @@
         K.style(root.firstChild,'pointerEvents',interactive?'auto':'none');
         K.style(root.firstChild,'cursor',interactive?'move':'default');
         K.text(title,K.label(data,'title',''));
-        K.text(context,K.label(data,'battle',''));
+        // Replays have no dossier: borrowed or base data is flagged so it is never read as the player's mark.
+        var approximate=valid&&data.approximate===true;
+        K.text(context,approximate?K.label(data,'approximate',''):K.label(data,'battle',''));
         K.text(estimatedLabel,K.label(data,'estimated',''));
-        K.text(estimated,valid?K.percent(data.estimatedMark):'\u2014'); K.style(estimated,'color',accent);
+        K.text(estimated,valid?(approximate?'\u2248':'')+K.percent(data.estimatedMark):'\u2014'); K.style(estimated,'color',accent);
         K.show(starRow,cfg.showStars!==false); K.updateStars(stars,data.marksAchieved||0);
         K.show(unavailable,!valid); K.text(unavailable,data.message||K.label(data,'unavailable',''));
         ['combined','target','needed'].forEach(function(key,i){ K.text(cards[i].label,K.label(data,key,'')); });

@@ -15,6 +15,24 @@ def valid_calibration(values):
         0 <= values[0] <= 100 and 0 <= values[2] <= 100 and values[1] >= 0 and values[3] > 0)
 
 
+def replay_calibration(cache, owner, name, base_percent, base_damage, today):
+    """Replays carry no dossier: prefer the owner's cache, then any account's, then the configured base.
+
+    Returns (values, approximate). Borrowed values are copies so the owner's cache is never touched.
+    """
+    if valid_calibration((cache.get(owner) or {}).get(name)):
+        return cache[owner][name], False
+    borrowed = [values for account, vehicles in cache.items() if account != owner and isinstance(vehicles, dict)
+                for values in [vehicles.get(name)] if valid_calibration(values) and values[1] != values[3]]
+    if borrowed:
+        values = list(max(borrowed, key=lambda item: item[5] if len(item) == 6 else 0))
+        return values + [today, today][len(values) - 4:], True
+    percent, damage = finite_number(base_percent, None), finite_number(base_damage, None)
+    if percent is not None and damage is not None and 0 < percent <= 100 and damage > 0:
+        return [0, 0, float(percent), float(damage), today, today], True
+    return None, False
+
+
 def ceil_damage(value):
     return int(math.ceil(value))
 

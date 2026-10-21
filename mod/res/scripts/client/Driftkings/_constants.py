@@ -207,6 +207,8 @@ class BATTLE_MARKS_OF_EXCELLENCE(object):
     SHOW_IN_BATTLE = 'showInBattle'
     SHOW_IN_BATTLE_HALF_PERCENTS = 'showInBattleHalfPercents'
     SHOW_IN_REPLAY = 'showInReplay'
+    REPLAY_BASE_PERCENT = 'replayBasePercent'
+    REPLAY_BASE_DAMAGE = 'replayBaseDamage'
     SHOW_IN_STATISTIC = 'showInStatistic'
     BACKGROUND = 'background'
     PANEL = 'panel'

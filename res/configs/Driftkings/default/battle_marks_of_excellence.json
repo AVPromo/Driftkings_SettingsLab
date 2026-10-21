@@ -41,6 +41,8 @@
   "showInBattle": false,
   "showInBattleHalfPercents": false,
   "showInReplay": true,
+  "replayBasePercent": 94.0,
+  "replayBaseDamage": 3500,
   "showInStatistic": true,
   "showMarks": true,
   "showProgress": true,
