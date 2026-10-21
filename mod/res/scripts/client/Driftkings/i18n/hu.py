@@ -208,8 +208,8 @@ TEXT = {'account_manager': {'UI_description': 'Fiókkezelő',
                     'UI_setting_muteTeamBaseSound_text': 'Csapatbázis hang némítása',
                     'UI_setting_muteTeamBaseSound_tooltip': 'Csapatbázis hang letiltása, ha ez az opció '
                                                             'engedélyezve van.',
-                    'UI_setting_postmortemTips_text': 'Halál utáni tippek elrejtése',
-                    'UI_setting_postmortemTips_tooltip': 'Halál után tiltsa le a felugró panelt az alján.',
+                    'UI_setting_postmortemTips_text': 'Tippek megjelenítése megsemmisülés után',
+                    'UI_setting_postmortemTips_tooltip': 'Megjeleníti az alsó panelt, miután a járműved megsemmisült.',
                     'UI_setting_showBattleHint_text': 'Pályanézet elrejtése.',
                     'UI_setting_showBattleHint_tooltip': 'A stratégiai módban változó célzási mód tippjeit '
                                                          'elrejti.',
@@ -219,9 +219,8 @@ TEXT = {'account_manager': {'UI_description': 'Fiókkezelő',
                                                                     'megjelenítése',
                     'UI_setting_showPlayerSatisfactionWidget_tooltip': 'A csata értékelésének „játékos '
                                                                        'elégedettsége” widget megjelenítése.',
-                    'UI_setting_showPostmortemDogTag_text': 'Postmortem DogTag megjelenítése',
-                    'UI_setting_showPostmortemDogTag_tooltip': 'A kutyacímkével rendelkező előugró panel '
-                                                               'letiltása.',
+                    'UI_setting_showPostmortemDogTag_text': 'Dögcédula megjelenítése megsemmisülés után',
+                    'UI_setting_showPostmortemDogTag_tooltip': 'Megjeleníti a dögcédulát tartalmazó panelt, miután a járműved megsemmisült.',
                     'UI_setting_stunSound_text': 'Lenyűgöző hanghatás',
                     'UI_setting_stunSound_tooltip': 'A Stun Sound Effect letiltása.'},
  'battle_statistics': {'UI_description': 'Csatastatisztikák',

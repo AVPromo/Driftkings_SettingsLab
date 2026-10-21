@@ -206,8 +206,8 @@ TEXT = {'account_manager': {'UI_description': 'Menedżer kont',
                     'UI_setting_muteTeamBaseSound_text': 'Wycisz dźwięk bazy zespołu',
                     'UI_setting_muteTeamBaseSound_tooltip': 'Wyłącz dźwięk bazy drużyny, jeśli ta opcja jest '
                                                             'włączona.',
-                    'UI_setting_postmortemTips_text': 'Ukryj wskazówki pośmiertne',
-                    'UI_setting_postmortemTips_tooltip': 'Wyłącz wyskakujący panel na dole po śmierci.',
+                    'UI_setting_postmortemTips_text': 'Pokaż wskazówki po zniszczeniu',
+                    'UI_setting_postmortemTips_tooltip': 'Wyświetla panel na dole po zniszczeniu pojazdu.',
                     'UI_setting_showBattleHint_text': 'Ukryj widok trajektorii.',
                     'UI_setting_showBattleHint_tooltip': 'Ukryj wskazówki dotyczące zmiany trybu celowania w '
                                                          'trybie strategicznym.',
@@ -216,9 +216,8 @@ TEXT = {'account_manager': {'UI_description': 'Menedżer kont',
                     'UI_setting_showPlayerSatisfactionWidget_text': 'Pokaż widżet zadowolenia gracza',
                     'UI_setting_showPlayerSatisfactionWidget_tooltip': 'Wyświetl widżet oceny bitwy '
                                                                        '„satysfakcja gracza”.',
-                    'UI_setting_showPostmortemDogTag_text': 'Pokaż nieśmiertelnik pośmiertny',
-                    'UI_setting_showPostmortemDogTag_tooltip': 'Wyłącz wyskakujący panel z '
-                                                               'nieśmiertelnikiem.',
+                    'UI_setting_showPostmortemDogTag_text': 'Pokaż nieśmiertelnik po zniszczeniu',
+                    'UI_setting_showPostmortemDogTag_tooltip': 'Wyświetla panel z nieśmiertelnikiem po zniszczeniu pojazdu.',
                     'UI_setting_stunSound_text': 'Dźwięk ogłuszenia',
                     'UI_setting_stunSound_tooltip': 'Wyłącz efekt dźwiękowy ogłuszenia.'},
  'battle_statistics': {'UI_description': 'Statystyki bitwy',

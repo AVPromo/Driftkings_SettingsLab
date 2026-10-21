@@ -215,9 +215,8 @@ TEXT = {'account_manager': {'UI_description': 'Gestor de cuentas',
                     'UI_setting_muteTeamBaseSound_text': 'Silenciar el sonido base del equipo',
                     'UI_setting_muteTeamBaseSound_tooltip': 'Deshabilite el sonido de la base del equipo '
                                                             'cuando esta opción esté habilitada.',
-                    'UI_setting_postmortemTips_text': 'Ocultar consejos post mortem',
-                    'UI_setting_postmortemTips_tooltip': 'Desactive el panel emergente en la parte inferior '
-                                                         'después de la muerte.',
+                    'UI_setting_postmortemTips_text': 'Mostrar consejos tras la destrucción',
+                    'UI_setting_postmortemTips_tooltip': 'Muestra el panel inferior después de que tu vehículo sea destruido.',
                     'UI_setting_showBattleHint_text': 'Ocultar vista de trayectoria.',
                     'UI_setting_showBattleHint_tooltip': 'Oculta el modo de apuntar de las puntas cambiando '
                                                          'en el modo estratégico.',
@@ -228,9 +227,8 @@ TEXT = {'account_manager': {'UI_description': 'Gestor de cuentas',
                     'UI_setting_showPlayerSatisfactionWidget_tooltip': 'Muestra el widget de "satisfacción '
                                                                        'del jugador" de clasificación de '
                                                                        'batalla.',
-                    'UI_setting_showPostmortemDogTag_text': 'Mostrar etiqueta de identificación postmortem',
-                    'UI_setting_showPostmortemDogTag_tooltip': 'Deshabilite el panel emergente con una placa '
-                                                               'de identificación.',
+                    'UI_setting_showPostmortemDogTag_text': 'Mostrar placa de identificación tras la destrucción',
+                    'UI_setting_showPostmortemDogTag_tooltip': 'Muestra el panel con la placa de identificación después de que tu vehículo sea destruido.',
                     'UI_setting_stunSound_text': 'Sonido de aturdimiento',
                     'UI_setting_stunSound_tooltip': 'Desactivar el efecto de sonido de aturdimiento.'},
  'battle_statistics': {'UI_description': 'Estadísticas de batalla',

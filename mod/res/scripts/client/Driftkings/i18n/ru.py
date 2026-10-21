@@ -207,8 +207,8 @@ TEXT = {'account_manager': {'UI_description': 'Менеджер аккаунто
                     'UI_setting_muteTeamBaseSound_text': 'Отключить звук базы команды',
                     'UI_setting_muteTeamBaseSound_tooltip': 'Отключите звук базы команды, если эта опция '
                                                             'включена.',
-                    'UI_setting_postmortemTips_text': 'Скрыть советы по вскрытию',
-                    'UI_setting_postmortemTips_tooltip': 'Отключить всплывающую панель внизу после смерти.',
+                    'UI_setting_postmortemTips_text': 'Показывать советы после уничтожения',
+                    'UI_setting_postmortemTips_tooltip': 'Показывает панель внизу экрана после уничтожения вашей машины.',
                     'UI_setting_showBattleHint_text': 'Скрыть вид траектории.',
                     'UI_setting_showBattleHint_tooltip': 'Скрыть подсказки, меняющие режим прицеливания в '
                                                          'стратегическом режиме.',
@@ -218,8 +218,8 @@ TEXT = {'account_manager': {'UI_description': 'Менеджер аккаунто
                                                                     'игроков',
                     'UI_setting_showPlayerSatisfactionWidget_tooltip': 'Отобразить виджет боевого рейтинга '
                                                                        '«удовлетворенность игроков».',
-                    'UI_setting_showPostmortemDogTag_text': 'Показать посмертный жетон DogTag',
-                    'UI_setting_showPostmortemDogTag_tooltip': 'Отключить всплывающую панель с жетоном.',
+                    'UI_setting_showPostmortemDogTag_text': 'Показывать жетон после уничтожения',
+                    'UI_setting_showPostmortemDogTag_tooltip': 'Показывает панель с жетоном после уничтожения вашей машины.',
                     'UI_setting_stunSound_text': 'Оглушающий звук',
                     'UI_setting_stunSound_tooltip': 'Отключить звуковой эффект оглушения.'},
  'battle_statistics': {'UI_description': 'Боевая статистика',

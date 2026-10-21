@@ -206,9 +206,8 @@ TEXT = {'account_manager': {'UI_description': 'Správce účtů',
                     'UI_setting_muteTeamBaseSound_text': 'Ztlumit týmový základní zvuk',
                     'UI_setting_muteTeamBaseSound_tooltip': 'Zakázat zvuk základny týmu, pokud je tato '
                                                             'možnost povolena.',
-                    'UI_setting_postmortemTips_text': 'Skrýt posmrtné tipy',
-                    'UI_setting_postmortemTips_tooltip': 'Po smrti deaktivujte vyskakovací panel ve spodní '
-                                                         'části.',
+                    'UI_setting_postmortemTips_text': 'Zobrazit tipy po zničení',
+                    'UI_setting_postmortemTips_tooltip': 'Zobrazí panel ve spodní části po zničení vozidla.',
                     'UI_setting_showBattleHint_text': 'Skrýt zobrazení trajektorie.',
                     'UI_setting_showBattleHint_tooltip': 'Skryjte režim zaměřování tipů, který se mění ve '
                                                          'strategickém režimu.',
@@ -217,8 +216,8 @@ TEXT = {'account_manager': {'UI_description': 'Správce účtů',
                     'UI_setting_showPlayerSatisfactionWidget_text': 'Zobrazit widget spokojenosti hráčů',
                     'UI_setting_showPlayerSatisfactionWidget_tooltip': 'Zobrazit widget hodnocení bitvy '
                                                                        '„spokojenost hráče“.',
-                    'UI_setting_showPostmortemDogTag_text': 'Zobrazit posmrtnou známku psa',
-                    'UI_setting_showPostmortemDogTag_tooltip': 'Deaktivujte vyskakovací panel s psí známkou.',
+                    'UI_setting_showPostmortemDogTag_text': 'Zobrazit psí známku po zničení',
+                    'UI_setting_showPostmortemDogTag_tooltip': 'Zobrazí panel s psí známkou po zničení vozidla.',
                     'UI_setting_stunSound_text': 'Omračující zvukový efekt',
                     'UI_setting_stunSound_tooltip': 'Zakázat efekt omračování.'},
  'battle_statistics': {'UI_description': 'Statistiky bitvy',

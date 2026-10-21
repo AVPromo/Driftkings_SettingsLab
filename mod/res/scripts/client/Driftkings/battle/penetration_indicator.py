@@ -6,14 +6,9 @@ from DestructibleEntity import DestructibleEntity
 from Vehicle import Vehicle
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
-from gui.battle_control import avatar_getter
-from gui.shared.gui_items import KPI
-from items.tankmen import getSkillsConfig
 
-from Driftkings._constants import MinMax, PENETRATION_INDICATOR, GLOBAL, DEFAULT_RANDOMIZATION
-from Driftkings.game_constants import SHOT_RESULT, SHELL_TYPES, SHELL_MECHANICS_TYPE
-from Driftkings._constants import BATTLE_ALIASES
-from Driftkings.game_constants import SHOT_RESULT, SHELL_TYPES, SHELL_MECHANICS_TYPE
+from Driftkings._constants import PENETRATION_INDICATOR, GLOBAL, BATTLE_ALIASES
+from Driftkings.game_constants import SHELL_TYPES, SHELL_MECHANICS_TYPE
 from Driftkings.common.utils.wgUtils import getPlayer
 from Driftkings.core.hooks import override
 from Driftkings.settings.service import settings_service
@@ -23,12 +18,10 @@ from Driftkings.views.battle.penetration_indicator import ArmorCalculator
 
 AS_BATTLE = BATTLE_ALIASES.PENETRATION_INDICATOR
 config = Settings()
-_isInitialized = False
 
 
 class _ShotResult(_CrosshairShotResults):
-    RANDOMIZATION = DEFAULT_RANDOMIZATION
-    UNDEFINED_RESULT = (SHOT_RESULT.UNDEFINED, None)
+    """Armour and penetration numbers along the shot; the marker colour comes from the client."""
     ENTITY_TYPES = (Vehicle, DestructibleEntity)
     JET_FACTOR = 0.001
     PP_REDUCTION_FACTOR = 3.0
@@ -40,17 +33,17 @@ class _ShotResult(_CrosshairShotResults):
     @classmethod
     def _getShotResult(cls, gunMarker, multiplier, player):
         if player is None or gunMarker.collData is None:
-            return cls.UNDEFINED_RESULT
+            return None
         entity = gunMarker.collData.entity
         if not isinstance(entity, cls.ENTITY_TYPES) or not entity.isAlive() or entity.publicInfo['team'] == player.team:
-            return cls.UNDEFINED_RESULT
+            return None
         return cls._result(gunMarker, multiplier, player)
 
     @classmethod
     def _result(cls, gunMarker, multiplier, player):
         collision_details = cls._getAllCollisionDetails(gunMarker.position, gunMarker.direction, gunMarker.collData.entity)
         if collision_details is None:
-            return cls.UNDEFINED_RESULT
+            return None
         vDesc = player.getVehicleDescriptor()
         gunInstallationSlot = vDesc.gunInstallations[gunMarker.gunInstallationIndex]
         shot = vDesc.shot if gunInstallationSlot.isMainInstallation() else gunInstallationSlot.gun.shots[0]
@@ -61,18 +54,6 @@ class _ShotResult(_CrosshairShotResults):
             return cls._computeArmorModernHE(collision_details, shell, piercing_power, gunMarker.collData.entity)
         else:
             return cls._computeArmorDefault(collision_details, shell, piercing_power, gunMarker.collData.entity)
-
-    @classmethod
-    def _checkShotResult(cls, data):
-        armor, piercing_power, _, ricochet, no_damage = data
-        if no_damage or ricochet:
-            return SHOT_RESULT.UNDEFINED
-        elif armor < piercing_power * cls.RANDOMIZATION.min:
-            return SHOT_RESULT.GREAT_PIERCED
-        elif armor > piercing_power * cls.RANDOMIZATION.max:
-            return SHOT_RESULT.NOT_PIERCED
-        else:
-            return SHOT_RESULT.LITTLE_PIERCED
 
     @staticmethod
     def _isModernMechanics(shell):
@@ -113,8 +94,7 @@ class _ShotResult(_CrosshairShotResults):
                 jet_start_dist = detail.dist + mat_info.armor * cls.JET_FACTOR
             if mat_info.collideOnceOnly:
                 ignored_materials.add((detail.compName, mat_info.kind))
-        data = (int(armor), int(piercing_power), int(shell.caliber), ricochet, no_damage)
-        return cls._checkShotResult(data), data
+        return int(armor), int(piercing_power), int(shell.caliber), ricochet, no_damage
 
     @classmethod
     def _computeArmorModernHE(cls, collision_details, shell, piercing_power, entity):
@@ -139,8 +119,7 @@ class _ShotResult(_CrosshairShotResults):
                 piercing_power = max(0, piercing_power - plate_armor * cls.PP_REDUCTION_FACTOR)
             if mat_info.collideOnceOnly:
                 ignored_materials.add((detail.compName, mat_info.kind))
-        data = (int(armor), int(piercing_power), int(shell.caliber), False, no_damage)
-        return cls._checkShotResult(data), data
+        return int(armor), int(piercing_power), int(shell.caliber), False, no_damage
 
 
 class _ShotResultAll(_ShotResult):
@@ -149,7 +128,7 @@ class _ShotResultAll(_ShotResult):
     def _getShotResult(cls, gunMarker, multiplier, player):
         collision = gunMarker.collData
         if player is None or collision is None or not isinstance(collision.entity, cls.ENTITY_TYPES) or not collision.entity.isAlive():
-            return cls.UNDEFINED_RESULT
+            return None
         return cls._result(gunMarker, multiplier, player)
 
 
@@ -161,10 +140,16 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
         self.__data = None
         self.__resolver = _ShotResultAll if settings_service.getComponentDict(config)[PENETRATION_INDICATOR.DISPLAY_ON_ALLIES] else _ShotResult
 
+    def _getShotResolverResult(self, gunMarker):
+        # The client's own resolver decides the colour; allies are included when the option asks for it.
+        team = 0 if self.__resolver is _ShotResultAll else self.__playerTeam
+        return self.__shotResultResolver.getShotResult(gunMarker, team, self.__piercingMultiplier)
+
     def __onGunMarkerStateChanged(self, markerType, gunMarkerState, supportMarkersInfo):
         if not self.__isEnabled:
             return
-        shot_result, data = self.__resolver._getShotResult(gunMarkerState, self.__piercingMultiplier, self.__player)
+        shot_result = self._getShotResult(gunMarkerState, supportMarkersInfo)
+        data = self.__resolver._getShotResult(gunMarkerState, self.__piercingMultiplier, self.__player)
         if shot_result in self.__colors:
             color = self.__colors[shot_result]
             if self.__cache[markerType] != shot_result and self._parentObj.setGunMarkerColor(markerType, color):
@@ -181,19 +166,6 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
     def start(self):
         super(ShotResultIndicatorPlugin, self).start()
         self.__player = getPlayer()
-        prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
-        if prebattleCtrl is not None:
-            prebattleCtrl.onVehicleChanged += self.__updateCurrVehicleInfo
-
-    def stop(self):
-        super(ShotResultIndicatorPlugin, self).stop()
-        prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
-        if prebattleCtrl is not None:
-            prebattleCtrl.onVehicleChanged -= self.__updateCurrVehicleInfo
-
-    def __updateCurrVehicleInfo(self, vehicle):
-        if not avatar_getter.isObserver(self.__player) and vehicle is not None:
-            Randomizer._updateRandomization(vehicle)
 
 
 @override(plugins, 'createPlugins')
@@ -202,75 +174,6 @@ def createPlugins(func, *args):
     if settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
         _plugins['shotResultIndicator'] = ShotResultIndicatorPlugin
     return _plugins
-
-
-class Randomizer(object):
-    GUNNER_ARMORER = 'gunner_armorer'
-    LOADER_AMMUNITION_IMPROVE = 'loader_ammunitionImprove'
-    RND_MIN_MAX_DEBUG = 'PIERCING_POWER_RANDOMIZATION: {}, vehicle: {}'
-    RND_SKILL_DIFF_DEBUG = 'PIERCING_POWER_RANDOMIZATION: skill_name: {} skill_lvl: {} level_increase: {} percent: {}'
-    RND_SET_PIERCING_DISTRIBUTION_BOUND_DEBUG = 'PIERCING_POWER_RANDOMIZATION: skill_name {}, percent {}'
-
-    PIERCING_DISTRIBUTION_BOUND = {}
-
-    @classmethod
-    def getBaseSkillPercent(cls, skill_name):
-        percent = cls.PIERCING_DISTRIBUTION_BOUND.get(skill_name, 0)
-        if not percent:
-            descrArgs = getSkillsConfig().getSkill(skill_name).uiSettings.descrArgs
-            for name, descr in descrArgs:
-                if name == KPI.Name.DAMAGE_AND_PIERCING_DISTRIBUTION_LOWER_BOUND:
-                    percent = cls.PIERCING_DISTRIBUTION_BOUND[skill_name] = round(descr.value, 4)
-                    LOG.debug((cls.RND_SET_PIERCING_DISTRIBUTION_BOUND_DEBUG).format(skill_name, percent))
-                    break
-        return percent
-
-    @classmethod
-    def getCurrentSkillEfficiency(cls, tman, skill_name):
-        skill = tman.skillsMap.get(skill_name)
-        if skill is None:
-            return 0
-        level_increase, bonuses = tman.crewLevelIncrease
-        result = (skill.level + level_increase) * tman.skillsEfficiency * cls.getBaseSkillPercent(skill_name)
-        LOG.debug((cls.RND_SKILL_DIFF_DEBUG).format(skill_name, skill.level, level_increase, result))
-        return result
-
-    @classmethod
-    def _updateRandomization(cls, vehicle):
-        if vehicle is None or not settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
-            _ShotResult.RANDOMIZATION = DEFAULT_RANDOMIZATION
-            return
-        data = {cls.GUNNER_ARMORER: [], cls.LOADER_AMMUNITION_IMPROVE: []}
-        for _, tman in vehicle.crew:
-            if not tman or not tman.canUseSkillsInCurrentVehicle:
-                continue
-            for skill_name in tman.getPossibleSkills().intersection(data):
-                data[skill_name].append(cls.getCurrentSkillEfficiency(tman, skill_name))
-        randomization_min, randomization_max = DEFAULT_RANDOMIZATION
-        for skill_name, value in data.items():
-            if value:
-                percent = sum(value) / len(value)
-                randomization_min += percent
-                if skill_name == cls.GUNNER_ARMORER:
-                    randomization_max -= percent
-        _ShotResult.RANDOMIZATION = MinMax(round(randomization_min, 4), round(randomization_max, 4))
-        LOG.debug((cls.RND_MIN_MAX_DEBUG).format(_ShotResult.RANDOMIZATION, vehicle.userName))
-
-
-def init():
-    global _isInitialized
-    if _isInitialized:
-        return
-    g_events.onVehicleChangedDelayed += Randomizer._updateRandomization
-    _isInitialized = True
-
-
-def fini():
-    global _isInitialized
-    if not _isInitialized:
-        return
-    g_events.onVehicleChangedDelayed -= Randomizer._updateRandomization
-    _isInitialized = False
 
 
 def getBattleViews():

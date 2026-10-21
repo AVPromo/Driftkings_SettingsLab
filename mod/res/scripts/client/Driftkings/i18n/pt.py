@@ -209,9 +209,8 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                     'UI_setting_muteTeamBaseSound_text': 'Silenciar som da base da equipa',
                     'UI_setting_muteTeamBaseSound_tooltip': 'Desactive o som da base da equipa quando esta '
                                                             'opção estiver activada.',
-                    'UI_setting_postmortemTips_text': 'Ocultar dicas post-mortem',
-                    'UI_setting_postmortemTips_tooltip': 'Desative o painel de pop-up na parte inferior após '
-                                                         'a morte.',
+                    'UI_setting_postmortemTips_text': 'Mostrar dicas após a destruição',
+                    'UI_setting_postmortemTips_tooltip': 'Mostra o painel na parte inferior depois de o veículo ser destruído.',
                     'UI_setting_showBattleHint_text': 'Ocultar visualização de trajetória.',
                     'UI_setting_showBattleHint_tooltip': 'Esconda as dicas mudando o modo de mira no modo '
                                                          'estratégico.',
@@ -221,8 +220,8 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                     'UI_setting_showPlayerSatisfactionWidget_tooltip': 'Exibir widget de "satisfação do '
                                                                        'jogador" de classificação de '
                                                                        'batalha.',
-                    'UI_setting_showPostmortemDogTag_text': 'Mostrar DogTag post-mortem',
-                    'UI_setting_showPostmortemDogTag_tooltip': 'Desative o painel de pop-up com uma dog tag.',
+                    'UI_setting_showPostmortemDogTag_text': 'Mostrar Dog Tag após a destruição',
+                    'UI_setting_showPostmortemDogTag_tooltip': 'Mostra o painel com a Dog Tag depois de o veículo ser destruído.',
                     'UI_setting_stunSound_text': 'Som de atordoamento',
                     'UI_setting_stunSound_tooltip': 'Desative o efeito sonoro de atordoamento.'},
  'battle_statistics': {'UI_description': 'Estatísticas de batalha',

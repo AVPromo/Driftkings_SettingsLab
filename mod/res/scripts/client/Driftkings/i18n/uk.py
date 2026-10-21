@@ -207,8 +207,8 @@ TEXT = {'account_manager': {'UI_description': 'Менеджер акаунтів
                     'UI_setting_muteTeamBaseSound_text': 'Вимкнути звук командної бази',
                     'UI_setting_muteTeamBaseSound_tooltip': 'Вимкнути звук командної бази, якщо цей параметр '
                                                             'увімкнено.',
-                    'UI_setting_postmortemTips_text': 'Приховати підказки щодо посмертного дослідження',
-                    'UI_setting_postmortemTips_tooltip': 'Вимкнути спливаючу панель внизу після смерті.',
+                    'UI_setting_postmortemTips_text': 'Показувати поради після знищення',
+                    'UI_setting_postmortemTips_tooltip': 'Показує панель унизу екрана після знищення вашої машини.',
                     'UI_setting_showBattleHint_text': 'Приховати перегляд траєкторії.',
                     'UI_setting_showBattleHint_tooltip': 'Сховайте підказки, змінюючи режим прицілювання в '
                                                          'стратегічному режимі.',
@@ -217,9 +217,8 @@ TEXT = {'account_manager': {'UI_description': 'Менеджер акаунтів
                     'UI_setting_showPlayerSatisfactionWidget_text': 'Показати віджет задоволення гравців',
                     'UI_setting_showPlayerSatisfactionWidget_tooltip': 'Відображати віджет "задоволеність '
                                                                        'гравця" рейтингом бою.',
-                    'UI_setting_showPostmortemDogTag_text': 'Показати Postmortem DogTag',
-                    'UI_setting_showPostmortemDogTag_tooltip': 'Вимкнути спливаючу панель із позначкою '
-                                                               'собаки.',
+                    'UI_setting_showPostmortemDogTag_text': 'Показувати жетон після знищення',
+                    'UI_setting_showPostmortemDogTag_tooltip': 'Показує панель із жетоном після знищення вашої машини.',
                     'UI_setting_stunSound_text': 'Звук приголомшення',
                     'UI_setting_stunSound_tooltip': 'Вимкнути звуковий ефект приголомшення.'},
  'battle_statistics': {'UI_description': 'Бойова статистика',

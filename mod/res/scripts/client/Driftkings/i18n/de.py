@@ -209,9 +209,8 @@ TEXT = {'account_manager': {'UI_description': 'Kontoverwaltung',
                     'UI_setting_muteTeamBaseSound_text': 'Ton der Teambasis stumm schalten',
                     'UI_setting_muteTeamBaseSound_tooltip': 'Deaktivieren Sie den Sound der Teambasis, wenn '
                                                             'diese Option aktiviert ist.',
-                    'UI_setting_postmortemTips_text': 'Postmortem-Tipps ausblenden',
-                    'UI_setting_postmortemTips_tooltip': 'Deaktivieren Sie das Popup-Panel unten nach dem '
-                                                         'Tod.',
+                    'UI_setting_postmortemTips_text': 'Tipps nach der Zerstörung anzeigen',
+                    'UI_setting_postmortemTips_tooltip': 'Zeigt das Panel unten an, nachdem Ihr Fahrzeug zerstört wurde.',
                     'UI_setting_showBattleHint_text': 'Flugbahnansicht ausblenden.',
                     'UI_setting_showBattleHint_tooltip': 'Verstecken Sie die Tipps zum Ändern des Zielmodus '
                                                          'im strategischen Modus.',
@@ -221,9 +220,8 @@ TEXT = {'account_manager': {'UI_description': 'Kontoverwaltung',
                                                                     'anzeigen',
                     'UI_setting_showPlayerSatisfactionWidget_tooltip': 'Zeigt das Kampfbewertungs-Widget '
                                                                        '„Spielerzufriedenheit“ an.',
-                    'UI_setting_showPostmortemDogTag_text': 'Postmortem DogTag anzeigen',
-                    'UI_setting_showPostmortemDogTag_tooltip': 'Deaktivieren Sie das Popup-Panel mit einer '
-                                                               'Erkennungsmarke.',
+                    'UI_setting_showPostmortemDogTag_text': 'Erkennungsmarke nach der Zerstörung anzeigen',
+                    'UI_setting_showPostmortemDogTag_tooltip': 'Zeigt das Panel mit der Erkennungsmarke an, nachdem Ihr Fahrzeug zerstört wurde.',
                     'UI_setting_stunSound_text': 'Betäubungsgeräusch',
                     'UI_setting_stunSound_tooltip': 'Deaktivieren Sie den Betäubungssoundeffekt.'},
  'battle_statistics': {'UI_description': 'Gefechtsstatistiken',

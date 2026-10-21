@@ -216,9 +216,8 @@ TEXT = {'account_manager': {'UI_description': 'Gestionnaire de comptes',
                     'UI_setting_muteTeamBaseSound_text': "Couper le son de la base de l'équipe",
                     'UI_setting_muteTeamBaseSound_tooltip': "Désactivez le son de la base d'équipe lorsque "
                                                             'cette option est activée.',
-                    'UI_setting_postmortemTips_text': 'Masquer les conseils post-mortem',
-                    'UI_setting_postmortemTips_tooltip': 'Désactivez le panneau contextuel en bas après la '
-                                                         'mort.',
+                    'UI_setting_postmortemTips_text': 'Afficher les conseils après la destruction',
+                    'UI_setting_postmortemTips_tooltip': 'Affiche le panneau en bas après la destruction de votre véhicule.',
                     'UI_setting_showBattleHint_text': 'Masquer la vue de la trajectoire.',
                     'UI_setting_showBattleHint_tooltip': 'Masquer les astuces en mode de visée changeant en '
                                                          'mode stratégique.',
@@ -229,9 +228,8 @@ TEXT = {'account_manager': {'UI_description': 'Gestionnaire de comptes',
                     'UI_setting_showPlayerSatisfactionWidget_tooltip': 'Afficher le widget "Satisfaction du '
                                                                        'joueur" pour l\'évaluation des '
                                                                        'batailles.',
-                    'UI_setting_showPostmortemDogTag_text': 'Afficher le DogTag post-mortem',
-                    'UI_setting_showPostmortemDogTag_tooltip': 'Désactivez le panneau contextuel avec une '
-                                                               "plaque d'identité.",
+                    'UI_setting_showPostmortemDogTag_text': "Afficher la plaque d'identité après la destruction",
+                    'UI_setting_showPostmortemDogTag_tooltip': "Affiche le panneau avec la plaque d'identité après la destruction de votre véhicule.",
                     'UI_setting_stunSound_text': 'Son étourdissant',
                     'UI_setting_stunSound_tooltip': "Désactivez l'effet sonore d'étourdissement."},
  'battle_statistics': {'UI_description': 'Statistiques de bataille',

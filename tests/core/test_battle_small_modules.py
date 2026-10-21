@@ -34,6 +34,11 @@ class ServerTurretSyncTests(RuntimeTest):
             self.assertEqual(rotator._VehicleGunRotator__turretYaw, 0.0)
             self.assertIs(call[-1], False)
 
+    def test_client_angle_decoding_is_left_alone(self):
+        # The client's decoders also draw its native server reticle; the mod must not replace them.
+        self.assertNotIn('decodeAngleFromUint', self.api)
+        self.assertNotIn('gun_rotation_shared', self.api)
+
     def test_activation_message_is_scheduled_at_battle_start(self):
         start = self.hooks.events['Driftkings.common.utils.events.PlayerAvatar.startGUI.after'][0]
         start()

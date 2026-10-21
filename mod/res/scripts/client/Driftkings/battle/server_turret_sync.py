@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-"""Server gun-angle synchronization; no vehicle movement or firing control."""
+"""Server gun-angle synchronization; no vehicle movement or firing control.
+
+The client's own angle decoding is used, as for its native server reticle.
+"""
 import VehicleGunRotator
-import gun_rotation_shared
-import math
 
 from Driftkings._constants import GLOBAL, SERVER_TURRET_SYNC
 from Driftkings.common.utils import events
@@ -31,17 +32,3 @@ def new__startGUI(*args):
     if settings[GLOBAL.ENABLED] and settings[SERVER_TURRET_SYNC.ACTIVATE_MESSAGE]:
         callback(5.0, lambda: sendPanelMessage(config.i18n['UI_battle_activateMessage']))
 
-
-def decodeRestrictedValueFromUint(code, bits, minBound, maxBound):
-    code -= 0.5
-    t = float(code) / ((1 << bits) - 1)
-    return minBound + t * (maxBound - minBound)
-
-
-def decodeAngleFromUint(code, bits):
-    code -= 0.5
-    return math.pi * 2.0 * code / (1 << bits) - math.pi
-
-
-gun_rotation_shared.decodeRestrictedValueFromUint = decodeRestrictedValueFromUint
-gun_rotation_shared.decodeAngleFromUint = decodeAngleFromUint

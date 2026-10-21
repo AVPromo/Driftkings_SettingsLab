@@ -207,8 +207,8 @@ TEXT = {'account_manager': {'UI_description': 'Quản lý tài khoản',
                     'UI_setting_muteTeamBaseSound_text': 'Tắt âm thanh cơ sở của nhóm',
                     'UI_setting_muteTeamBaseSound_tooltip': 'Tắt âm thanh cơ sở của nhóm khi tùy chọn này '
                                                             'được bật.',
-                    'UI_setting_postmortemTips_text': 'Ẩn lời khuyên khám nghiệm tử thi',
-                    'UI_setting_postmortemTips_tooltip': 'Tắt bảng bật lên ở phía dưới sau khi chết.',
+                    'UI_setting_postmortemTips_text': 'Hiển thị mẹo sau khi bị phá hủy',
+                    'UI_setting_postmortemTips_tooltip': 'Hiển thị bảng ở phía dưới sau khi xe của bạn bị phá hủy.',
                     'UI_setting_showBattleHint_text': 'Ẩn chế độ xem quỹ đạo.',
                     'UI_setting_showBattleHint_tooltip': 'Ẩn các mẹo thay đổi chế độ ngắm trong chế độ chiến '
                                                          'lược.',
@@ -218,9 +218,8 @@ TEXT = {'account_manager': {'UI_description': 'Quản lý tài khoản',
                                                                     'người chơi',
                     'UI_setting_showPlayerSatisfactionWidget_tooltip': 'Hiển thị tiện ích đánh giá trận '
                                                                        'chiến "sự hài lòng của người chơi".',
-                    'UI_setting_showPostmortemDogTag_text': 'Hiển thị thẻ chó sau khi chết',
-                    'UI_setting_showPostmortemDogTag_tooltip': 'Vô hiệu hóa bảng điều khiển bật lên bằng thẻ '
-                                                               'chó.',
+                    'UI_setting_showPostmortemDogTag_text': 'Hiển thị thẻ bài sau khi bị phá hủy',
+                    'UI_setting_showPostmortemDogTag_tooltip': 'Hiển thị bảng thẻ bài sau khi xe của bạn bị phá hủy.',
                     'UI_setting_stunSound_text': 'Âm thanh choáng váng',
                     'UI_setting_stunSound_tooltip': 'Tắt hiệu ứng âm thanh choáng.'},
  'battle_statistics': {'UI_description': 'Thống kê chiến đấu',

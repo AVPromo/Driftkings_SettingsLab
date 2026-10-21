@@ -214,9 +214,8 @@ TEXT = {'account_manager': {'UI_description': 'Gestione account',
                     'UI_setting_muteTeamBaseSound_text': 'Disattiva il suono della base della squadra',
                     'UI_setting_muteTeamBaseSound_tooltip': 'Disabilita il suono della base della squadra '
                                                             'quando questa opzione è abilitata.',
-                    'UI_setting_postmortemTips_text': 'Nascondi suggerimenti post-mortem',
-                    'UI_setting_postmortemTips_tooltip': 'Disabilita il pannello pop-up in basso dopo la '
-                                                         'morte.',
+                    'UI_setting_postmortemTips_text': 'Mostra suggerimenti dopo la distruzione',
+                    'UI_setting_postmortemTips_tooltip': 'Mostra il pannello in basso dopo la distruzione del tuo veicolo.',
                     'UI_setting_showBattleHint_text': 'Nascondi vista traiettoria.',
                     'UI_setting_showBattleHint_tooltip': 'Nascondi la modalità di mira dei suggerimenti '
                                                          'cambiando in modalità strategica.',
@@ -227,9 +226,8 @@ TEXT = {'account_manager': {'UI_description': 'Gestione account',
                     'UI_setting_showPlayerSatisfactionWidget_tooltip': 'Visualizza il widget "Soddisfazione '
                                                                        'del giocatore" per la valutazione '
                                                                        'della battaglia.',
-                    'UI_setting_showPostmortemDogTag_text': 'Mostra dogtag post-mortem',
-                    'UI_setting_showPostmortemDogTag_tooltip': 'Disabilita il pannello pop-up con una '
-                                                               'piastrina.',
+                    'UI_setting_showPostmortemDogTag_text': 'Mostra piastrina dopo la distruzione',
+                    'UI_setting_showPostmortemDogTag_tooltip': 'Mostra il pannello con la piastrina dopo la distruzione del tuo veicolo.',
                     'UI_setting_stunSound_text': 'Suono stordente',
                     'UI_setting_stunSound_tooltip': "Disattiva l'effetto sonoro stordente."},
  'battle_statistics': {'UI_description': 'Statistiche di battaglia',

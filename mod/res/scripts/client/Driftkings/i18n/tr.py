@@ -209,9 +209,8 @@ TEXT = {'account_manager': {'UI_description': 'Hesap yöneticisi',
                     'UI_setting_muteTeamBaseSound_text': 'Takım Üssü Sesini Kapat',
                     'UI_setting_muteTeamBaseSound_tooltip': 'Bu seçenek etkinleştirildiğinde ekip tabanı '
                                                             'sesini devre dışı bırakın.',
-                    'UI_setting_postmortemTips_text': 'Ölüm Sonrası İpuçlarını Gizle',
-                    'UI_setting_postmortemTips_tooltip': 'Ölümden sonra alttaki açılır paneli devre dışı '
-                                                         'bırakın.',
+                    'UI_setting_postmortemTips_text': 'İmha sonrası ipuçlarını göster',
+                    'UI_setting_postmortemTips_tooltip': 'Aracınız imha edildikten sonra alttaki paneli gösterir.',
                     'UI_setting_showBattleHint_text': 'Yörünge Görünümünü Gizle.',
                     'UI_setting_showBattleHint_tooltip': 'Stratejik modda mod değiştirmeyi hedefleyen '
                                                          'ipuçlarını gizleyin.',
@@ -221,9 +220,8 @@ TEXT = {'account_manager': {'UI_description': 'Hesap yöneticisi',
                     'UI_setting_showPlayerSatisfactionWidget_tooltip': 'Savaş derecelendirmesi "oyuncu '
                                                                        'memnuniyeti" widget\'ını '
                                                                        'görüntüleyin.',
-                    'UI_setting_showPostmortemDogTag_text': 'Ölüm Sonrası Köpek Etiketini Göster',
-                    'UI_setting_showPostmortemDogTag_tooltip': 'Açılır paneli köpek etiketiyle devre dışı '
-                                                               'bırakın.',
+                    'UI_setting_showPostmortemDogTag_text': 'İmha sonrası künyeyi göster',
+                    'UI_setting_showPostmortemDogTag_tooltip': 'Aracınız imha edildikten sonra künye panelini gösterir.',
                     'UI_setting_stunSound_text': 'Sersemletme Sesi',
                     'UI_setting_stunSound_tooltip': 'Sersemletme Ses Efektini devre dışı bırakın.'},
  'battle_statistics': {'UI_description': 'Savaş istatistikleri',
