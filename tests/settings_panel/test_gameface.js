@@ -34,7 +34,7 @@ function node() {
 const DK = {dom: {el() {}, setClass(n, name, on) {
     n.className = n.className.split(' ').filter(x => x && x !== name).concat(on ? [name] : []).join(' ');
 }}, bridge: {scale: () => scale, clientSizeRem: () => ({width, height}), dispose() {}},
-    modal: {close() {}}, layer: {close() {}, hideTip() {}}};
+    modal: {close() {}}, layer: {close() {}, hideTip() {}}, profileDialogs: {close() {}, isOpen() { return false; }}};
 const context = {window: {DK, removeEventListener() {}},
     document: {documentElement: node(), removeEventListener() {}},
     setTimeout(fn) { timers.set(++timerId, fn); return timerId; },

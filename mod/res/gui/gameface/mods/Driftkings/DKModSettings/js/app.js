@@ -1,12 +1,12 @@
-/* DK Mod Settings window: layout, sidebar, state patches, dialog and theme. */
+/* DK Mod Settings window: layout, sidebar, mod page, state patches and confirmation dialog. */
 (function () {
     'use strict';
     var DK = window.DK, el = DK.dom.el, setClass = DK.dom.setClass;
     var ICONS = 'coui://gui/gameface/mods/Driftkings/DKModSettings/assets/icons/';
     var KNOWN_ICONS = ['puzzle', 'gear', 'globe', 'chart', 'bars', 'speaker', 'palette'];
     var ui = {}, schema = null, state = null, mods = {}, controls = {}, rendered = null;
-    var query = '', activeTab = '', profileSelection = '', profileDialog = null;
-    var toastTimer = null, lastMessage = 0, lastAccent = null, disposed = false, confirmFocused = false;
+    var query = '', activeTab = '';
+    var toastTimer = null, lastMessage = 0, disposed = false, confirmFocused = false;
     var lastLayout = null, lastFilter = null, scrollbarTimer = null;
 
     function labels() { return (schema && schema.labels) || {}; }
@@ -93,7 +93,7 @@
         if (event.keyCode !== 27) { return; }
         if (DK.modal.isOpen()) { return; }
         if (state && state.capture) { return; }
-        if (profileDialog) { closeProfiles(); return; }
+        if (DK.profileDialogs.isOpen()) { closeProfiles(); return; }
         if (DK.layer.close()) { return; }
         if (state && state.restartPrompt) { send('restart', {choice: 'later'}); }
         else if (state && state.confirm) { send('confirm', {choice: 'stay'}); } else { send('close'); }
@@ -166,7 +166,7 @@
         controls = {}; rendered = modId; activeTab = '';
         ui.tabs.textContent = '';
         ui.controls.textContent = '';
-        ui.updates = null;
+        ui.updates = ui.updater = null;
         var mod = mods[modId], text = labels();
         ui.themeReset.style.display = modId === 'dk.settings' ? 'block' : 'none';
         if (!mod) {
@@ -216,35 +216,8 @@
             var discord = footerButton(community, function () { send('open_discord'); });
             discord.textContent = 'Discord';
             discord.title = 'https://discord.gg/GJcy4x7SP';
-            var updates = ui.updates = el('div', 'dk-updates', null, ui.controls);
-            el('div', 'dk-section', text['updates.title'], updates);
-            ui.updateInstalled = el('div', 'dk-update-line', null, updates);
-            ui.updateChannel = el('div', 'dk-update-line', null, updates);
-            ui.updateLastCheck = el('div', 'dk-update-line', null, updates);
-            ui.updateStatus = el('div', 'dk-update-line', null, updates);
-            ui.updateBlocked = el('div', 'dk-update-blocked', null, updates);
-            ui.updateOutcome = el('div', 'dk-update-result', null, updates);
-            ui.updateLatest = el('div', 'dk-update-line', null, updates);
-            ui.updateChanges = el('div', 'dk-update-changelog', null, updates);
-            ui.updateCheck = footerButton(updates, function () { send('check_updates'); });
-            ui.updateCheck.textContent = text['updates.check'];
-            ui.updateDownload = footerButton(updates, function () { send('download_update'); });
-            ui.updateDownload.className += ' dk-update-download';
-            ui.updateDownload.textContent = text['updates.download'];
-            ui.updateManual = footerButton(updates, function () { send('manual_update'); });
-            ui.updateManual.textContent = text['updates.manual'];
-            ui.updateCancel = footerButton(updates, function () { send('cancel_update_download'); });
-            ui.updateCancel.textContent = text['updates.cancelDownload'];
-            ui.updateInstall = footerButton(updates, function () { send('schedule_update'); });
-            ui.updateInstall.className += ' dk-update-install';
-            ui.updateInstall.textContent = text['updates.install'];
-            ui.updateRestart = footerButton(updates, function () { send('restart_update'); });
-            ui.updateRestart.className += ' dk-update-restart';
-            ui.updateRestart.textContent = text.restartNow;
-            ui.updateLater = footerButton(updates, function () { send('defer_update'); });
-            ui.updateLater.textContent = text['updates.later'];
-            ui.updateCancelInstall = footerButton(updates, function () { send('cancel_update_install'); });
-            ui.updateCancelInstall.textContent = text['updates.cancelInstall'];
+            ui.updater = DK.updaterPanel.build(ui.controls, text, footerButton, send);
+            ui.updates = ui.updater.root;
         }
         if (tabs.length) {
             [text.all].concat(tabs).forEach(function (name, index) { footerButton(ui.tabs, function () { activeTab = index ? name : ''; filter(); }).textContent = name; });
@@ -293,46 +266,7 @@
         layout();
         if (rendered !== state.selected) { renderMod(state.selected); }
         var modId = state.selected, values = state.values[modId] || {};
-        if (ui.updates) {
-            var update = state.updater, strings = labels();
-            if (update) {
-                ui.updateInstalled.textContent = strings['updates.installed'] + ': ' + update.installedVersion;
-                ui.updateChannel.textContent = strings['updates.channel'] + ': ' + update.channel;
-                ui.updateLastCheck.textContent = strings['updates.lastCheck'] + ': ' + (update.lastCheck === null ? strings['updates.never'] : new Date(update.lastCheck * 1000).toLocaleString());
-                ui.updateStatus.textContent = strings['updates.' + update.status] || update.status;
-                if (update.status === 'IDLE' && update.lastCheck === null) { ui.updateStatus.textContent = strings['updates.notChecked']; }
-                if (update.error === 'transportUnavailable') { ui.updateStatus.textContent = strings['updates.transportUnavailable']; }
-                if (update.latestVersion && update.compatible === false) { ui.updateStatus.textContent += ' ' + strings['updates.incompatible']; }
-                ui.updateLatest.textContent = update.latestVersion ? strings['updates.latest'] + ': ' + update.latestVersion : '';
-                ui.updateChanges.textContent = (update.changelog || []).join('\n');
-                var busy = ['CHECKING', 'DOWNLOADING', 'VERIFYING', 'INSTALLING', 'RESTART_REQUIRED'].indexOf(update.status) >= 0;
-                ui.updateCheck.disabled = busy || update.status === 'READY' || !!update.cancellingInstall;
-                var downloadable = update.canDownload && update.compatible === true && ['AVAILABLE', 'ERROR'].indexOf(update.status) >= 0;
-                ui.updateDownload.style.display = downloadable ? '' : 'none';
-                ui.updateDownload.disabled = !downloadable;
-                ui.updateManual.disabled = ['INSTALLING', 'RESTART_REQUIRED'].indexOf(update.status) >= 0;
-                ui.updateCancel.style.display = update.canCancel ? '' : 'none';
-                ui.updateCancel.disabled = !update.canCancel;
-                var installable = update.canInstall && update.compatible === true && ['READY', 'ERROR'].indexOf(update.status) >= 0 && !update.cancellingInstall;
-                ui.updateInstall.style.display = installable ? '' : 'none';
-                ui.updateInstall.disabled = !installable;
-                var prepared = update.status === 'RESTART_REQUIRED' && update.installScheduled === true && !update.cancellingInstall;
-                ui.updateRestart.style.display = prepared ? '' : 'none';
-                ui.updateRestart.disabled = !prepared || !update.canRestart || !!state.unsaved;
-                ui.updateLater.style.display = prepared && !update.restartDeferred ? '' : 'none';
-                ui.updateLater.disabled = !prepared;
-                ui.updateCancelInstall.style.display = update.status === 'INSTALLING' || update.installScheduled || update.cancellingInstall ? '' : 'none';
-                ui.updateCancelInstall.disabled = !!update.cancellingInstall;
-                ui.updateBlocked.textContent = update.installBlocked ? (strings['updates.block.' + update.installBlocked] || strings['updates.installBlocked']) : '';
-                if (prepared) { ui.updateBlocked.textContent += ' ' + strings['updates.wgcLimit']; }
-                if (update.cancellingInstall) { ui.updateStatus.textContent = strings['updates.cancelling']; }
-                var outcome = update.lastInstallResult;
-                ui.updateOutcome.textContent = outcome ? (strings['updates.result.' + outcome.status] || strings['updates.result.failed']).replace('{version}', outcome.version || '') : '';
-                if (update.status === 'DOWNLOADING' && typeof update.downloadPercent === 'number') {
-                    ui.updateStatus.textContent += ' ' + update.downloadPercent + '%';
-                }
-            }
-        }
+        if (ui.updater && state.updater) { DK.updaterPanel.render(ui.updater, state.updater, labels(), state.unsaved); }
         var changed = state.changed[modId] || [], disabled = state.disabled[modId] || [];
         var updaterBusy = state.updater && ['CHECKING', 'DOWNLOADING', 'VERIFYING', 'INSTALLING'].indexOf(state.updater.status) >= 0;
         var secrets = state.secrets[modId] || [];
@@ -371,7 +305,7 @@
         ui.save.disabled = false;
         ui.undo.disabled = !state.canUndo;
         [ui.reset, ui.cancel, ui.apply, ui.save, ui.undo].forEach(function (node) { setClass(node, 'is-disabled', node.disabled); });
-        if (profileDialog && profileDialog.area && profileDialog.exported !== state.profileText) { profileDialog.area.value = state.profileText || ''; profileDialog.exported = state.profileText; }
+        DK.profileDialogs.showExport(state.profileText);
         setClass(ui.unsaved, 'is-visible', !!state.unsaved || !!state.pending);
         ui.dialogTitle.textContent = state.restartPrompt ? text.restartTitle : text.confirmTitle;
         ui.dialogText.textContent = state.restartPrompt ? (state.restartReason === 'updater' ? text['updates.restartText'] : text.restartText) : text.confirmText;
@@ -444,45 +378,7 @@
         scheduleScrollbars();
     }
 
-    function shade(hex, amount) {
-        var value = parseInt(hex.slice(1), 16), channels = [(value >> 16) & 255, (value >> 8) & 255, value & 255];
-        return 'rgb(' + channels.map(function (channel) {
-            return Math.round(amount >= 0 ? channel + (255 - channel) * amount : channel * (1 + amount));
-        }).join(',') + ')';
-    }
-    function themeCss(accent) {
-        var light = shade(accent, 0.25), dark = shade(accent, -0.35);
-        return [
-            '.dk-nav-item.is-selected{border-left-color:' + accent + '}',
-            '.dk-nav-badge,.dk-nav-dot,.dk-row.is-changed:before,.dk-slider-fill{background:' + accent + '}',
-            '.dk-unsaved,.dk-section,.dk-option.is-selected{color:' + accent + '}',
-            '.dk-btn.is-primary{background:' + accent + ';border-color:' + light + '}',
-            '.dk-btn.is-primary:hover{background:' + light + ';color:#000}',
-            '.dk-switch.is-on .dk-switch-track{background:' + dark + ';border-color:' + accent + '}',
-            '.dk-switch.is-on .dk-switch-text{color:' + accent + '}',
-            '.dk-checkbox.is-on{background:' + accent + ';border-color:' + light + '}',
-            '.dk-text:focus,.dk-dropdown:focus{border-color:' + accent + '}',
-            '.dk-btn:focus,.dk-switch:focus,.dk-checkbox:focus,.dk-nav-item:focus,.dk-dropdown:focus,.dk-text:focus,.dk-slider-track:focus,.dk-toast:focus{outline:2px solid ' + accent + ';outline-offset:2px;box-shadow:none}',
-            '.dk-slider-thumb{border-color:' + dark + '}',
-            '.dk-window{border-color:' + shade(accent, -0.6) + '}'
-        ].join('\n');
-    }
-    function theme(values) {
-        var signature = JSON.stringify(values);
-        if (signature === lastAccent) { return; }
-        lastAccent = signature;
-        var accent = DK.controls.normalizeHex(values.accent) || '#D98219';
-        var bg = DK.controls.normalizeHex(values.background) || '#101113';
-        var n = parseInt(bg.slice(1), 16);
-        var rgba = 'rgba(' + [(n >> 16) & 255, (n >> 8) & 255, n & 255, (values.opacity || 96) / 100].join(',') + ')';
-        var css = '.dk-label,.dk-text,.dk-dropdown{font-size:' + (values.fontSize || 15) + 'rem}' + themeCss(accent) + '.dk-window{background:' + rgba + ';color:' + (values.textColor || '#E8E4DA') + ';font-size:' + (values.fontSize || 15) + 'rem}';
-        css += '.dk-section{font-size:' + (values.sectionFontSize || 18) + 'rem}.dk-sidebar{background:rgba(0,0,0,' + (Number(values.sidebarOpacity === undefined ? 35 : values.sidebarOpacity) / 100) + ')}';
-        css += '.dk-label,.dk-text{color:' + (values.textColor || '#E8E4DA') + '}.dk-window{border-color:' + (values.border || '#4A463E') + '}.dk-nav-item:hover{background:' + (values.hover || '#39352B') + '}';
-        if (values.secondary) {
-            css += '.dk-mod-description,.dk-mod-meta,.dk-nav-status,.dk-apply-timing{color:' + values.secondary + '}';
-        }
-        document.getElementById('dk-theme').textContent = css;
-    }
+    function theme(values) { DK.theme.apply(values); }
 
     function matches(def) {
         return !query || [def.name, def.label, def.category, def.category !== undefined || def.name !== undefined ? categoryLabel(def.category) : '', def.description, (def.keywords || []).join(' ')].join(' ').toLowerCase().indexOf(query) >= 0;
@@ -510,51 +406,12 @@
         });
         scheduleScrollbars();
     }
-    function closeProfiles() {
-        if (profileDialog) { DK.modal.close(null); if (profileDialog.root.parentNode) { profileDialog.root.parentNode.removeChild(profileDialog.root); } profileDialog = null; }
+    function dialogContext() {
+        return {window: ui.window, labels: labels(), state: state, schema: schema, button: footerButton, send: send};
     }
-    function showInstalled() {
-        closeProfiles();
-        var text = labels(), root = el('div', 'dk-overlay is-visible', null, ui.window);
-        var panel = el('div', 'dk-dialog dk-profile-dialog', null, root);
-        el('div', 'dk-dialog-title', text.installed, panel);
-        schema.mods.forEach(function (mod) {
-            var row = el('div', 'dk-installed-row', null, panel), status = state.status[mod.id] || {};
-            el('div', 'dk-nav-name', mod.name, row);
-            el('div', 'dk-mod-meta', [mod.version, mod.author, status.enabled === false ? text.off : text.on].filter(Boolean).join(' • '), row);
-            (mod.dependencies || []).forEach(function (dependency) { if (!dependency.installed) { el('div', 'dk-error', text.dependencyMissing + ': ' + dependency.id, row); } });
-        });
-        if (state.diagnostics) { var debug = el('textarea', 'dk-text dk-profile-json', null, panel); debug.readOnly = true; debug.value = JSON.stringify(state.diagnostics, null, 2); }
-        footerButton(panel, closeProfiles).textContent = text.close;
-        profileDialog = {root: root};
-        DK.modal.bind(panel, {cancel: closeProfiles});
-    }
-    function showProfiles() {
-        if (profileDialog) { closeProfiles(); return; }
-        var text = labels(), root = el('div', 'dk-overlay is-visible', null, ui.window);
-        var panel = el('div', 'dk-dialog dk-profile-dialog', null, root);
-        el('div', 'dk-dialog-title', text.profiles, panel);
-        el('div', 'dk-dialog-text', text.profileHelp, panel);
-        var selector = DK.controls.create({id: 'profile', type: 'dropdown', label: text.profiles, options: (state.profiles || []).map(function (name) { return {value: name, label: name}; })}, {
-            labels: text, commit: function (key, value) { profileSelection = value; name.value = value; }
-        });
-        panel.appendChild(selector.node);
-        profileSelection = (state.profiles || [])[0] || ''; selector.update(profileSelection);
-        var name = el('input', 'dk-text', null, panel); name.type = 'text'; name.placeholder = text.profileName; name.value = profileSelection;
-        var actions = el('div', 'dk-profile-actions', null, panel);
-        function action(operation, extra) { var data = extra || {}; data.operation = operation; send('profile', data); }
-        footerButton(actions, function () { action('create', {name: name.value}); }).textContent = text.profileCreate;
-        footerButton(actions, function () { action('load', {name: profileSelection}); closeProfiles(); }).textContent = text.profileLoad;
-        footerButton(actions, function () { action('rename', {name: profileSelection, target: name.value}); closeProfiles(); }).textContent = text.profileRename;
-        var deleting = false, del = footerButton(actions, function () { if (!deleting) { deleting = true; del.textContent = text.confirmDelete; } else { action('delete', {name: profileSelection}); closeProfiles(); } }); del.textContent = text.profileDelete;
-        var area = el('textarea', 'dk-text dk-profile-json', null, panel); area.maxLength = 2000000;
-        profileDialog = {root: root, area: area, exported: ''};
-        var bottom = el('div', 'dk-profile-actions', null, panel);
-        footerButton(bottom, function () { action('export'); }).textContent = text.profileExport;
-        footerButton(bottom, function () { action('import', {text: area.value}); }).textContent = text.profileImport;
-        footerButton(bottom, closeProfiles).textContent = text.close;
-        DK.modal.bind(panel, {cancel: closeProfiles});
-    }
+    function closeProfiles() { DK.profileDialogs.close(); }
+    function showInstalled() { DK.profileDialogs.installed(dialogContext()); }
+    function showProfiles() { DK.profileDialogs.profiles(dialogContext()); }
 
     function dispose() {
         if (disposed) { return; }
@@ -574,5 +431,5 @@
     window.addEventListener('resize', layout);
     window.addEventListener('unload', dispose);
     DK.bridge.start({schema: onSchema, state: onState, layout: layout});
-    DK.app = {dispose: dispose, themeCss: themeCss};
+    DK.app = {dispose: dispose, themeCss: DK.theme.css};
 }());
