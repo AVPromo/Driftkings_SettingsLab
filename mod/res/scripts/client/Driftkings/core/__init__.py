@@ -5,6 +5,22 @@ import logging
 from collections import namedtuple
 
 LOG = logging.getLogger('Driftkings.Loader')
+# Garage and login components; a replay never shows those screens, so they are not imported.
+LOBBY_ONLY = ('components.account_manager',)
+
+
+def lobby_only(name):
+    return name.startswith('lobby.') or name in LOBBY_ONLY
+
+
+def replay_session():
+    """True when the client was started to watch a replay (known before mods load)."""
+    try:
+        import BattleReplay
+        return bool(BattleReplay.isLoading() or BattleReplay.isPlaying())
+    except Exception:
+        LOG.warning('Replay state unavailable; loading every component', exc_info=True)
+        return False
 
 
 class ServiceSpec(namedtuple('ServiceSpec', ('name', 'factory', 'requires', 'phase'))):
@@ -49,8 +65,9 @@ def default_services():
 
 
 class Core(object):
-    def __init__(self, names=None, importer=None, services=None, hook_manager=None, context_factory=None):
+    def __init__(self, names=None, importer=None, services=None, hook_manager=None, context_factory=None, replay=None):
         self.names = tuple(names) if names is not None else None
+        self.replay = replay
         self.importer = importer or importlib.import_module
         self.runtime = services is None
         self.specs = default_services() if self.runtime else tuple(
@@ -143,8 +160,13 @@ class Core(object):
         if self.names is None:
             from Driftkings.component_list import COMPONENTS
             self.names = tuple(COMPONENTS)
+        if self.replay is None:
+            self.replay = replay_session() if self.runtime else False
         self._startServices('foundation')
         for name in self.names:
+            if self.replay and lobby_only(name):
+                self.disabled[name] = 'Not used in replays'
+                continue
             missing = self._missing(name)
             if missing:
                 self.disabled[name] = 'Unavailable dependencies: ' + ', '.join(missing)
@@ -222,8 +244,8 @@ class Core(object):
                 metadata.update(game=getClientVersion(), realm=CURRENT_REALM)
             except Exception:
                 LOG.warning('Client startup metadata unavailable', exc_info=True)
-        message = 'Startup complete: metadata=%s components=%s services=%s failures=%s disabled=%s' % (
-            metadata, [name for name, module in self.initialized], self.service_state, self.failures, self.disabled)
+        message = 'Startup complete: metadata=%s replay=%s components=%s services=%s failures=%s disabled=%s' % (
+            metadata, self.replay, [name for name, module in self.initialized], self.service_state, self.failures, self.disabled)
         if self.runtime:
             try:
                 import BigWorld
