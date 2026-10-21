@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Python defaults, selected profile and per-feature JSON persistence."""
 import copy
+import logging
 import math
 import os
 import re
@@ -18,6 +19,10 @@ try:
 except NameError:
     string_types = (str,)
     number_types = (int, float)
+
+LOG = logging.getLogger('Driftkings.Settings')
+# Features removed from the mod; their files are never read again.
+REMOVED_SECTIONS = ('safe_shot',)
 
 
 def validate_types(defaults, values, path=''):
@@ -194,8 +199,42 @@ class SettingsLoader(object):
                 shutil.rmtree(staging)
         return True
 
+    def discard_previous(self, component):
+        """Remove the renamed files and folders of a component once its own store exists."""
+        profile = self.directory(self.active)
+        if not (os.path.isfile(self.path(component)) or os.path.isdir(os.path.join(profile, component))):
+            return
+        for name in previous_sections(component) + (previous_name(component),):
+            if name == component:
+                continue
+            path = os.path.join(profile, name)
+            try:
+                for document in (path + '.json', path + '.json.previous'):
+                    if os.path.isfile(document) and not os.path.islink(document):
+                        os.remove(document)
+                if name in previous_sections(component) and os.path.isdir(path) and not os.path.islink(path):
+                    remove_settings_folder(path)
+            except (IOError, OSError, ValueError):
+                LOG.warning('Could not remove previous settings %s', path, exc_info=True)
+
+    def discard_removed(self):
+        profile = self.directory(self.active)
+        for name in REMOVED_SECTIONS:
+            path = os.path.join(profile, name + '.json')
+            try:
+                if os.path.isfile(path) and not os.path.islink(path):
+                    os.remove(path)
+            except (IOError, OSError):
+                LOG.warning('Could not remove settings of a removed feature %s', path, exc_info=True)
+
     def load(self, component, defaults, legacy=None):
         component = part_name(component)
+        values = self._load(component, defaults, legacy)
+        # Migrated and written: the previous copy is no longer a needed backup.
+        self.discard_previous(component)
+        return values
+
+    def _load(self, component, defaults, legacy=None):
         if component not in self.defaults:
             self.defaults[component] = copy.deepcopy(defaults)
         defaults = self.defaults[component]
@@ -255,6 +294,11 @@ class SettingsLoader(object):
 
     def split_store(self, component, factory, files, legacy_directory):
         component = part_name(component)
+        store = self._split_store(component, factory, files, legacy_directory)
+        self.discard_previous(component)
+        return store
+
+    def _split_store(self, component, factory, files, legacy_directory):
         target = os.path.join(self.directory(self.active), part_name(component))
         def create(directory, migrating=False):
             if component == 'team_panels':
@@ -286,6 +330,18 @@ class SettingsLoader(object):
             if os.path.isdir(staging):
                 shutil.rmtree(staging)
         return create(target)
+
+
+def remove_settings_folder(path):
+    """Delete a previous settings folder only when it holds nothing but JSON documents."""
+    for directory, dirs, files in os.walk(path):
+        for name in dirs + files:
+            if os.path.islink(os.path.join(directory, name)):
+                raise ValueError('Link in previous settings folder')
+        for name in files:
+            if not (name.endswith('.json') or name.endswith('.json.previous')):
+                raise ValueError('Unexpected file in previous settings folder: ' + name)
+    shutil.rmtree(path)
 
 
 settings_loader = SettingsLoader('./mods/configs/Driftkings', user_settings)

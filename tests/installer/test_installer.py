@@ -258,6 +258,50 @@ class GeneratorTests(unittest.TestCase):
         self.assertEqual(value, expected)
         self.assertEqual(path.read_bytes(), original)
 
+    def test_runtime_loader_removes_previous_settings_after_migration(self):
+        client = ROOT / 'mod/res/scripts/client/Driftkings'
+        def load(relative, dependencies=None):
+            dependencies = dependencies or {}
+            def importing(name, globals=None, locals=None, fromlist=(), level=0):
+                return dependencies[name] if name in dependencies else builtins.__import__(name, globals, locals, fromlist, level)
+            namespace = {'__name__': '_installer_test', '__builtins__': dict(vars(builtins), __import__=importing)}
+            eval(compile((client / relative).read_bytes(), str(client / relative), 'exec'), namespace)
+            return types.SimpleNamespace(**{key: value for key, value in namespace.items() if not key.startswith('__')})
+        filesystem = load('common/utils/filesystem.py')
+        store = load('settings/store.py', {'Driftkings.common.utils.filesystem': filesystem})
+        sections = load('settings/sections.py')
+        loader = load('settings/loader.py', {
+            'Driftkings.settings.settings_data': types.SimpleNamespace(SettingsData=object, user_settings={}, part_name=lambda value: value),
+            'Driftkings.settings.default_values': types.SimpleNamespace(SELECTOR={'loadConfig': 'default'}),
+            'Driftkings.settings.sections': sections, 'Driftkings.settings.store': store})
+        folder = self.root / 'migration'
+        profile = folder / 'default'
+        profile.mkdir(parents=True)
+        (folder / 'load.json').write_text('{"loadConfig":"default"}')
+        (profile / 'auto_claim_clan.json').write_text('{"enabled": false}')
+        (profile / 'safe_shot.json').write_text('{}')
+        (profile / 'own_notes.json').write_text('{}')
+        kept = profile / 'carousel_stats'
+        kept.mkdir()
+        (kept / 'carousel.json').write_text('{}')
+        (kept / 'readme.txt').write_text('user file')
+        defaults = json.loads((ROOT / 'res/configs/Driftkings/default/clan_reward_collection.json').read_text())
+        settings = loader.SettingsLoader(str(folder), settings=object())
+        settings.discard_removed()
+        value = settings.load('clan_reward_collection', defaults)
+        self.assertFalse(value['enabled'])
+        self.assertTrue((profile / 'clan_reward_collection.json').is_file())
+        self.assertFalse((profile / 'auto_claim_clan.json').exists())
+        self.assertFalse((profile / 'safe_shot.json').exists())
+        self.assertTrue((profile / 'own_notes.json').is_file())
+        # A previous folder holding anything but settings documents is left alone.
+        (profile / 'vehicle_carousel').mkdir()
+        settings.discard_previous('vehicle_carousel')
+        self.assertTrue((kept / 'readme.txt').is_file())
+        (kept / 'readme.txt').unlink()
+        settings.discard_previous('vehicle_carousel')
+        self.assertFalse(kept.exists())
+
 
 class AssetTests(unittest.TestCase):
     @classmethod

@@ -5,6 +5,7 @@ import json
 import os
 import shutil
 import tempfile
+import time
 import zipfile
 
 from support import RuntimeTest, module
@@ -311,6 +312,27 @@ class StageCleanupTests(RuntimeTest):
             self.assertFalse(os.path.exists(folder))
         for folder in (unfinished, current, newer, nested, os.path.join(self.cache, 'unrelated')):
             self.assertTrue(os.path.isdir(folder))
+
+    def test_prune_removes_reported_orphans_and_old_interrupted_downloads(self):
+        orphan = self.stage('download-orphan', '1.3.0', 'installed')
+        pending = self.stage('download-pending', '1.3.0', 'installing')
+        for folder in (orphan, pending):
+            for filename in ('install.json', 'release.json'):
+                os.remove(os.path.join(folder, filename))
+        old = os.path.join(self.cache, 'download-old-partial')
+        recent = os.path.join(self.cache, 'download-recent-partial')
+        for folder in (old, recent):
+            os.makedirs(folder)
+            with open(os.path.join(folder, 'Driftkings.wotmod.download'), 'wb') as stream:
+                stream.write(b'partial')
+        stamp = time.time() - 2 * self.api.ABANDONED_SECONDS
+        os.utime(os.path.join(old, 'Driftkings.wotmod.download'), (stamp, stamp))
+        os.utime(old, (stamp, stamp))
+        self.assertEqual(self.results.prune(), 2)
+        self.assertFalse(os.path.exists(orphan))
+        self.assertFalse(os.path.exists(old))
+        self.assertTrue(os.path.isdir(pending))
+        self.assertTrue(os.path.isdir(recent))
 
     def test_scan_skips_superseded_results_and_orders_by_result_time(self):
         self.stage('download-b', '1.1.0', 'installed', stamp=100)

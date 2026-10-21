@@ -5,6 +5,7 @@ import json
 import logging
 import os
 import re
+import time
 
 from Driftkings import VERSION
 from Driftkings.core.updater.installer import read_json, digest, validate_package, write_new
@@ -13,6 +14,8 @@ from Driftkings.core.updater.versioning import Version, TEXT, normalize_game_ver
 
 LOG = logging.getLogger('Driftkings.Updater')
 FINAL_STATUSES = frozenset(('installed', 'rolledBack', 'rolled_back', 'cancelled', 'error', 'failed'))
+# Interrupted downloads are kept this long in case the same session is still writing them.
+ABANDONED_SECONDS = 24 * 60 * 60
 TICKET_KEYS = frozenset(('schema', 'gameVersion', 'version', 'size', 'sha256', 'installedVersion', 'installedSize', 'installedSha256'))
 
 
@@ -222,19 +225,37 @@ class Results(object):
         version = release.get('version') if isinstance(release, dict) else None
         return version if isinstance(version, TEXT) else None
 
+    def _abandoned(self, folder, now):
+        """A folder without ticket or release: a reported outcome or an old interrupted download."""
+        if os.path.lexists(os.path.join(folder, 'install.json')) or os.path.lexists(os.path.join(folder, 'release.json')):
+            return False
+        result_path = os.path.join(folder, 'result.json')
+        if os.path.isfile(result_path):
+            # scan() can never report it again and nothing is left to resume.
+            result = read_json(safe_path(result_path))
+            return isinstance(result, dict) and result.get('status') in FINAL_STATUSES
+        # No result yet: only a download untouched for a day, never one in progress.
+        stamps = [os.path.getmtime(os.path.join(folder, name)) for name in os.listdir(folder)]
+        return max(stamps + [os.path.getmtime(folder)]) < now - ABANDONED_SECONDS
+
     def prune(self):
-        """Remove stage folders of releases older than the loaded one, including their backups."""
+        """Remove stage folders of releases older than the loaded one, including their backups,
+        and abandoned folders that can no longer be resumed or reported."""
         if not os.path.isdir(self.cache):
             return 0
         safe_path(self.cache)
         removed = 0
+        now = time.time()
         for name in sorted(os.listdir(self.cache)):
             folder = os.path.join(self.cache, name)
             if not name.startswith('download-') or not os.path.isdir(folder):
                 continue
             try:
                 version = self._stage_version(folder)
-                if version is None or not self._superseded(version):
+                if version is None:
+                    if not self._abandoned(folder, now):
+                        continue
+                elif not self._superseded(version):
                     continue
                 remove_flat_directory(folder)
                 removed += 1

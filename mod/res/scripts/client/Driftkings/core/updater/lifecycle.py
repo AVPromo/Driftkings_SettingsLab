@@ -66,12 +66,12 @@ class LifecycleMixin(object):
             client = getattr(self.api, 'client_version', None)
             results = self.results
             def scan():
-                reports = results.scan(client)
+                # Prune first: removed folders are ones scan() skips or only warns about.
                 try:
                     results.prune()
                 except Exception:
-                    LOG.warning('Superseded update cleanup failed', exc_info=True)
-                return reports
+                    LOG.warning('Update cache cleanup failed', exc_info=True)
+                return results.scan(client)
             if self.file_work is not None:
                 try:
                     self.file_work.submit(scan, self._previous_results_received)

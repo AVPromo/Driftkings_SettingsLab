@@ -4,6 +4,7 @@ class SettingsRuntime(object):
     def start(self):
         from Driftkings.settings.loader import settings_loader
         settings_loader.directory(settings_loader.active)
+        settings_loader.discard_removed()
 
     def stop(self):
         pass
