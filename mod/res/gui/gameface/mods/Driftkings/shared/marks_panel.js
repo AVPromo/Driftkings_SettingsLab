@@ -142,7 +142,22 @@
     function connect(feature, owner, root, render, position, savePosition) {
         if (window[owner]) { window[owner].dispose(); }
         var disposed = false, model = null, resourceId = null, callbackId = null;
-        var lastPayload = null, pending = null, drag = null, data = {};
+        var lastPayload = null, pending = null, drag = null, shield = null, data = {};
+        function capture(active) {
+            // Battle views only receive input over hit-testable nodes. A full-screen layer keeps
+            // mousemove/mouseup flowing once the cursor leaves the panel during a drag.
+            if (active && !shield) {
+                shield = node('div', 'dk-drag-shield', document.body);
+                style(shield, 'position', 'fixed'); style(shield, 'left', '0'); style(shield, 'top', '0');
+                style(shield, 'width', '100%'); style(shield, 'height', '100%'); style(shield, 'zIndex', '9999');
+                style(shield, 'pointerEvents', 'auto'); style(shield, 'cursor', 'move');
+                style(shield, 'backgroundColor', 'rgba(0,0,0,0.004)');
+            } else if (!active && shield) {
+                if (shield.parentNode) { shield.parentNode.removeChild(shield); }
+                shield = null;
+            }
+        }
+        function cancel() { drag = null; capture(false); }
         function input(event) {
             // Capture before the native UI or nested header nodes stop bubbling.
             var target = event.target, header = root.firstChild;
@@ -166,7 +181,7 @@
                     if (child && child.model && child.model.DriftkingsUI && child.model.DriftkingsUI.name === feature) { found = child.model; id = ids[i]; break; }
                 }
             }
-            if (!found) { release(); data = {}; drag = null; show(root, false); return; }
+            if (!found) { release(); data = {}; cancel(); show(root, false); return; }
             if (id !== resourceId || found !== model) {
                 release(); resourceId = id; model = found;
                 callbackId = viewEnv.addDataChangedCallback('model', resourceId, true);
@@ -174,10 +189,10 @@
             if (lastPayload === model.payload) { return; }
             lastPayload = model.payload;
             try { data = JSON.parse(model.payload || '{}'); } catch (error) { data = {}; }
-            if ((data.config || {}).locked || (data.config || {}).draggable === false) { drag = null; }
+            if ((data.config || {}).locked || (data.config || {}).draggable === false) { cancel(); }
             var visible = !!(data.config || {}).visible;
             style(root, 'display', visible ? 'block' : 'none');
-            if (!visible) { drag = null; return; }
+            if (!visible) { cancel(); return; }
             render(data); position(root, data.config || {});
         }
         function schedule() { if (!disposed && pending === null) { pending = setTimeout(update, 0); } }
@@ -186,6 +201,7 @@
         function start(event) {
             if (!savePosition || event.button !== 0 || !model || !(data.config || {}).visible || (data.config || {}).locked || (data.config || {}).draggable === false) { return; }
             var rect = root.getBoundingClientRect(); drag = {x: event.clientX, y: event.clientY, left: rect.left, top: rect.top};
+            capture(true);
             event.preventDefault(); event.stopPropagation();
         }
         function move(event) {
@@ -197,13 +213,13 @@
         }
         function end() {
             if (!drag) { return; }
-            drag = null;
+            cancel();
             if (model && typeof model.onSavePosition === 'function') { model.onSavePosition(savePosition(root, data.config || {})); }
         }
         function stop(event) { event.stopPropagation(); }
         function dispose() {
             if (disposed) { return; }
-            disposed = true; drag = null;
+            disposed = true; cancel();
             if (pending !== null) { clearTimeout(pending); pending = null; }
             engine.off('viewEnv.onDataChanged', changed); engine.off('subViews.onAdded', schedule); engine.off('subViews.onRemoved', schedule);
             window.removeEventListener('resize', resize); window.removeEventListener('unload', dispose);

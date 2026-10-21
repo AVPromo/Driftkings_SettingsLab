@@ -74,7 +74,12 @@ assert.strictEqual(root.style.pointerEvents, 'auto');
 var event = {target: find('dk-main-gun__value'), button: 0, clientX: 210, clientY: 210,
     preventDefault: function () {}, stopPropagation: function () {}};
 document.fire('mousedown', event); event.clientX = 230; event.clientY = 240;
+// While dragging, a full-screen layer keeps input flowing after the cursor leaves the panel.
+var shield = document.body.children[1];
+assert.strictEqual(shield.className, 'dk-drag-shield'); assert.strictEqual(shield.style.pointerEvents, 'auto');
+event.target = shield;
 document.fire('mousemove', event); document.fire('mouseup', event);
+assert.strictEqual(document.body.children.length, 1); assert.strictEqual(shield.parentNode, null);
 assert.strictEqual(saved.length, 1); assert.strictEqual(saved[0].x, 220); assert.strictEqual(saved[0].y, 230);
 window.innerWidth = 320; window.innerHeight = 100; data.config.scale = 3; update();
 var bounds = root.getBoundingClientRect(); assert(bounds.width <= 320 && bounds.height <= 100);
