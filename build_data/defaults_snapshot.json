@@ -176,7 +176,7 @@
     {
       "path": "default/team_panels/panelLarge.json",
       "source_sha256": "5ef252f56c2cbec9c3a7c94493345daaadfa7a0ffd23d6b2db366d8f31b57489",
-      "sha256": "e72081a26e297f40ab4e59020803bad9104f6a5913c6f3c45830efa7af3238b8"
+      "sha256": "b83b445d91e78e21a10bf1fcf8560a0723c6f1900b3c7537bf6f26e65b92438b"
     },
     {
       "path": "default/team_panels/panelMedium.json",
@@ -206,7 +206,7 @@
     {
       "path": "default/team_panels/statisticForm.json",
       "source_sha256": "b3231bd35a8d4c6a4f1863bcc321fe0d32722a48fdaf950978dd79dd130426f8",
-      "sha256": "8421c6bdb54d01ab1598c232efd20b512b31dfe20cfdadd89681237014ab7a99"
+      "sha256": "df8c8b9d33c5eb00493c606f5020e39377f8d1a3bd838be942067074d2f36495"
     },
     {
       "path": "default/repair_controls.json",

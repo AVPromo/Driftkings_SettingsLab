@@ -36,13 +36,13 @@ SOURCE_HASHES = {'default/aiming_countdown.json': '49d3755f130e78a2f6d4c460b0836
  'default/target_information.json': '7df9b23a50e8fcf458c4c8ae0d498317e8d9f4250aab38e11e96678199d819a0',
  'default/team_panels/battleLoading.json': '36065083cdb4ca359b31d198b36fcac829009ab0f3181ee4470e68a3c9ee5f23',
  'default/team_panels/general.json': '56dc62b6053b45879331fb21d92ae30f72895274743ec5084ed0d5d2ba23241c',
- 'default/team_panels/panelLarge.json': '8536ea0209f7a0feaed5774dc8ed5aa8624a16c25bd3522188b45b3befba3616',
+ 'default/team_panels/panelLarge.json': 'f5dc88dfb30b7f060a0ee318f4df0be2af8a9eab0ad9bdf071a9380e9d8c7443',
  'default/team_panels/panelMedium.json': '9e4238be4865715c1ef17b2521a69933e9ecfe7ef239cc48a9e37aa2693dd9ba',
  'default/team_panels/panelMedium2.json': 'e1980ade8a085b969cdbeb55a3c5098ad0718bafcf4c63debdd44e19ab4de422',
  'default/team_panels/panelNone.json': 'ec6a955996806d81d90a5c51579c5083688099d332fccc850121e007cee6e669',
  'default/team_panels/panelShort.json': 'd0868d255e7793fee2d7462af401c6ef73b251578b74e2faf212aa95524888e7',
  'default/team_panels/playersPanel.json': '90db54d32b1cad680eb63dc1af81515c75354ea563c8a7e6c04fc59780e41899',
- 'default/team_panels/statisticForm.json': 'd6000af11e8ce781618b7903b515fa7de15aba2469055cdc72cd8bad4a7ec38c',
+ 'default/team_panels/statisticForm.json': 'af8aa22017536a23e4d7a8fb8c779a051388d7f1a78811da19bad36eeabb0a58',
  'default/tech_tree_marks_of_excellence.json': 'dfe623cc4b208518bc23e55355b86e3b8c1a95643450586af6b72bf3b882fc44',
  'default/third_person_zoom.json': '1ff0d367944ae905d511b944dc1bfd758b8f510c26de37b91b74069ac0d78b09',
  'default/vehicle_carousel/carousel.json': 'da059d83e3f3bd9b14962cd380f05f587c265cedb73c68b2784c83aac7ac7bce',
@@ -657,11 +657,15 @@ DEFAULTS = {'aiming_countdown': {'align': 'left',
                                         'nickFormatLeft': "<font face='$FieldFont' size='{{xvm-stat?13|0}}' "
                                                           "color='{{c:xr}}' "
                                                           "alpha='{{alive?#FF|#80}}'>{{r|{{r_size>2?----|--}}}}</font> "
-                                                          '{{name%.{{anonym?12|{{xvm-stat?{{r_size>2?10|13}}|15}}}}s~..}}{{anonym? '
-                                                          "<font face='$FieldFont' size='13'>*</font>}}<font "
+                                                          "<font{{xvm-stat? color='{{c:r}}'}} "
+                                                          "alpha='{{alive?#FF|#80}}'>{{name%.{{anonym?12|{{xvm-stat?{{r_size>2?10|13}}|15}}}}s~..}}{{anonym? "
+                                                          "<font face='$FieldFont' "
+                                                          "size='13'>*</font>}}</font><font "
                                                           "alpha='#A0'>{{clan}}</font>",
                                         'nickFormatRight': '<font '
-                                                           "alpha='#A0'>{{clan}}</font>{{name%.{{xvm-stat?{{r_size>2?10|13}}|15}}s~..}} "
+                                                           "alpha='#A0'>{{clan}}</font><font{{xvm-stat? "
+                                                           "color='{{c:r}}'}} "
+                                                           "alpha='{{alive?#FF|#80}}'>{{name%.{{xvm-stat?{{r_size>2?10|13}}|15}}s~..}}</font> "
                                                            "<font face='$FieldFont' size='{{xvm-stat?13|0}}' "
                                                            "color='{{c:xr}}' "
                                                            "alpha='{{alive?#FF|#80}}'>{{r|{{r_size>2?----|--}}}}</font>",
@@ -680,8 +684,14 @@ DEFAULTS = {'aiming_countdown': {'align': 'left',
                                         'spottedIndicatorOffsetY': 0,
                                         'squadIconAlpha': 100,
                                         'standardFields': ['frags', 'badge', 'nick', 'vehicle'],
-                                        'vehicleFormatLeft': '{{vehicle}}',
-                                        'vehicleFormatRight': '{{vehicle}}',
+                                        'vehicleFormatLeft': "<font{{xvm-stat? color='{{c:r}}'}} "
+                                                             "alpha='{{alive?#FF|#80}}'>{{vehicle}}</font>{{t-battles? "
+                                                             '<font '
+                                                             "color='{{c:t-winrate}}'>{{t-winrate%d~%}}</font>}}",
+                                        'vehicleFormatRight': '{{t-battles?<font '
+                                                              "color='{{c:t-winrate}}'>{{t-winrate%d~%}}</font> "
+                                                              "}}<font{{xvm-stat? color='{{c:r}}'}} "
+                                                              "alpha='{{alive?#FF|#80}}'>{{vehicle}}</font>",
                                         'vehicleIconOffsetXLeft': 0,
                                         'vehicleIconOffsetXRight': 0,
                                         'vehicleLevelAlpha': 100,
@@ -691,7 +701,7 @@ DEFAULTS = {'aiming_countdown': {'align': 'left',
                                         'vehicleOffsetXRight': 0,
                                         'vehicleShadowLeft': None,
                                         'vehicleShadowRight': None,
-                                        'vehicleWidth': 72},
+                                        'vehicleWidth': 100},
                               'medium': {'badgeAlpha': '{{alive?100|70}}',
                                          'badgeOffsetXLeft': 0,
                                          'badgeOffsetXRight': 0,
@@ -892,21 +902,21 @@ DEFAULTS = {'aiming_countdown': {'align': 'left',
                                            "size='13'><b>*</b></font>}} <font alpha='#A0'>{{clan}}</font>",
                          'formatLeftVehicle': "{{vehicle}}<font face='$FieldFont' size='{{xvm-stat?13|0}}'> "
                                               "<font color='{{c:kb}}'>{{kb%2d~k|--k}}</font> <font "
-                                              "color='{{c:xr}}'>{{r}}</font><font "
+                                              "color='{{c:xr}}'>{{r}}</font> <font "
                                               "color='{{c:winrate}}'>{{winrate%2d~%|--%}}</font></font>",
                          'formatRightFrags': '{{frags}}',
                          'formatRightNick': "<font alpha='#A0'>{{clan}}</font> {{name%.15s~..}} ",
                          'formatRightVehicle': "<font face='$FieldFont' size='{{xvm-stat?13|0}}'><font "
                                                "color='{{c:winrate}}'>{{winrate%2d~%|--%}}</font> <font "
                                                "color='{{c:xr}}'>{{r}}</font> <font "
-                                               "color='{{c:kb}}'>{{kb%2d~k|--k}}</font></font>{{vehicle}}",
+                                               "color='{{c:kb}}'>{{kb%2d~k|--k}}</font> </font>{{vehicle}}",
                          'fragsFieldOffsetXLeft': 19,
                          'fragsFieldOffsetXRight': 15,
                          'fragsFieldShowBorder': False,
                          'fragsFieldWidthLeft': 30,
                          'fragsFieldWidthRight': 30,
-                         'nameFieldOffsetXLeft': -15,
-                         'nameFieldOffsetXRight': -15,
+                         'nameFieldOffsetXLeft': 0,
+                         'nameFieldOffsetXRight': 0,
                          'nameFieldShowBorder': False,
                          'nameFieldWidthLeft': 200,
                          'nameFieldWidthRight': 200,
@@ -922,8 +932,8 @@ DEFAULTS = {'aiming_countdown': {'align': 'left',
                          'showUnavailable': True,
                          'squadIconOffsetXLeft': -1,
                          'squadIconOffsetXRight': 0,
-                         'vehicleFieldOffsetXLeft': 55,
-                         'vehicleFieldOffsetXRight': 36,
+                         'vehicleFieldOffsetXLeft': 31,
+                         'vehicleFieldOffsetXRight': 27,
                          'vehicleFieldShowBorder': False,
                          'vehicleFieldWidthLeft': 160,
                          'vehicleFieldWidthRight': 160,
