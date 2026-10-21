@@ -253,3 +253,15 @@ class EventPanelTests(RuntimeTest):
         result = self.roster.screen(settings, self.values(), self.data, 'Left')
         self.assertTrue(result['enabled'])
         self.assertEqual([field['id'] for field in result['fields']], ['extra'])
+
+
+class MacroValidationTests(RuntimeTest):
+    def test_default_large_panel_formats_use_only_known_macros(self):
+        import json, os
+        issues = self.load('settings.panel_validation').macro_issues
+        path = os.path.join(os.path.dirname(__file__), '..', '..', 'res', 'configs', 'Driftkings', 'default',
+                            'team_panels', 'panelLarge.json')
+        with open(path, 'rb') as stream:
+            data = json.loads(stream.read().decode('utf-8'))
+        for key in ('nickFormatLeft', 'nickFormatRight', 'vehicleFormatLeft', 'vehicleFormatRight'):
+            self.assertEqual(issues(data[key], {}), [], key)
