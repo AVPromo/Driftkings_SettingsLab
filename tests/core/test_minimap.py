@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
-"""Minimap policy: shell range lookup and validation of lines in metres, hull line and shell circle."""
+"""Minimap policy (ranges, validation, labels, colours) and the four-document settings store."""
 import json
 import os
+import shutil
+import sys
+import tempfile
+import types
 
-from support import RuntimeTest, module
+from support import CLIENT, RuntimeTest, module, source
 
 ROOT = os.path.join(os.path.dirname(__file__), '..', '..', 'res', 'configs', 'Driftkings', 'default', 'minimap_enhancements')
 
@@ -113,3 +117,104 @@ class MinimapPolicyTests(RuntimeTest):
             data = defaults()
             data['lostMarker'][key] = value
             self.assertRaises(ValueError, self.policy.validate, data)
+
+    def test_labels_render_plain_text_with_limits(self):
+        render = self.policy.render
+        self.assertEqual(render(u'{{vehicle}} {{name%.6s}}', {'vehicle': 'T-34', 'name': 'LongPlayerName'}), u'T-34 Long..')
+        # Unknown macros stay, missing values are empty and player HTML is stripped.
+        self.assertEqual(render(u'{{unknown}}|{{hp}}', {}), u'{{unknown}}|')
+        self.assertEqual(render(u'{{name}}', {'name': '<b>x</b>'}), u'bx/b')
+        self.assertEqual(render(b'{{level}}', {'level': 8}), u'8')
+        self.assertEqual(len(render(u'x' * 400, {})), 256)
+
+    def test_label_template_follows_state_group_and_alternative_mode(self):
+        options = dict(defaults()['labels'], enemy=u'E {{vehicle}}', alternativeEnemy=u'',
+                       dead=u'D {{vehicle}}', lost=u'L {{lostSeconds}}')
+        values = {'vehicle': 'IS-7', 'name': 'Player', 'group': 'enemy', 'lostSeconds': 12}
+        label = self.policy.label
+        self.assertEqual(label(options, dict(values, state='alive')), u'E IS-7')
+        # An empty group template falls back to the general alternative one.
+        self.assertEqual(label(options, dict(values, state='alive'), alternative=True), u'IS-7 \u00b7 Player')
+        self.assertEqual(label(options, dict(values, state='dead')), u'D IS-7')
+        self.assertEqual(label(options, dict(values, state='lost'), alternative=True), u'L 12')
+        self.assertEqual(label(dict(options, enabled=False), dict(values, state='alive')), u'')
+
+    def test_health_values_reject_unknown_or_inconsistent_health(self):
+        health = self.policy.health_values
+        self.assertEqual(health(750, 1500), {'hp': 750, 'maxHp': 1500, 'hpPercent': 50})
+        self.assertEqual(health(-20, 1500)['hp'], 0)
+        self.assertEqual(health(None, 1500), {'hp': '--', 'maxHp': 1500, 'hpPercent': '--'})
+        self.assertEqual(health(2000, 1500)['hpPercent'], '--')
+        self.assertEqual(health(10, 0)['maxHp'], '--')
+
+    def test_visibility_modes_and_artillery_aim_migration(self):
+        visible = self.policy.visible
+        self.assertEqual([visible('client', True), visible('client', False), visible('on', False), visible('off', True)],
+                         [True, False, True, False])
+        data = {'artilleryAim': {'src': 'gui/maps/Driftkings/Minimap/MinimapAim.png'}}
+        self.policy.migrate_artillery_aim(data)
+        self.assertEqual(data['artilleryAim']['src'], self.policy.ARTILLERY_AIMS[0])
+        custom = {'artilleryAim': {'src': 'gui/maps/custom.png'}}
+        self.policy.migrate_artillery_aim(custom)
+        self.assertEqual(custom['artilleryAim']['src'], 'gui/maps/custom.png')
+        self.assertEqual(self.policy.artillery_aim_choices('gui/maps/custom.png')[-1], 'gui/maps/custom.png')
+        self.assertEqual(len(self.policy.artillery_aim_choices(self.policy.ARTILLERY_AIMS[3])), 7)
+
+
+class MinimapStoreTests(RuntimeTest):
+    def setUp(self):
+        super(MinimapStoreTests, self).setUp()
+        self.root = tempfile.mkdtemp(prefix='dk-minimap-test-')
+        self.addCleanup(shutil.rmtree, self.root)
+        # Real imports for the stores: source() runs Python 2.7 in restricted mode, without file access.
+        package = types.ModuleType('Driftkings.settings')
+        package.__path__ = [os.path.join(CLIENT, 'settings')]
+        sys.modules['Driftkings.settings'] = package
+        store = self.load('settings.store')
+        sys.modules['Driftkings.settings.loader'] = module(validate_types=source('settings/loader.py', {
+            'Driftkings.settings.settings_data': module(SettingsData=object, user_settings={}, part_name=lambda value: value),
+            'Driftkings.settings.default_values': module(SELECTOR={'loadConfig': 'default'}),
+            'Driftkings.settings.sections': module(previous_name=None, previous_sections=None, section_aliases=None),
+            'Driftkings.settings.store': store})['validate_types'])
+        self.api = vars(self.load('settings.minimap_store'))
+        self.store = self.api['MinimapStore'](self.root)
+
+    def read(self, name):
+        with open(os.path.join(self.root, name), 'rb') as stream:
+            return json.loads(stream.read().decode('utf-8'))
+
+    def test_first_load_writes_four_documents_split_by_section(self):
+        data = self.store.load(defaults())
+        self.assertEqual(sorted(os.listdir(self.root)), sorted(self.api['FILES']))
+        self.assertEqual(set(self.read('minimap_labels.json')), set(('labels', 'health', 'lostMarker')))
+        self.assertEqual(set(self.read('minimap_circles.json')), set(('circles', 'extraCircles')))
+        self.assertEqual(set(self.read('minimap_lines.json')), set(('lines',)))
+        self.assertNotIn('labels', self.read('minimap.json'))
+        self.assertEqual(data, defaults())
+
+    def test_saved_values_survive_a_reload_and_old_aim_is_migrated(self):
+        self.store.load(defaults())
+        changed = defaults()
+        changed['lastPositionDuration'] = 30
+        changed['lostMarker']['style'] = 'grey'
+        self.store.save(changed)
+        labels = self.read('minimap_labels.json')
+        labels['labels']['normal'] = u'{{name}}'
+        main = self.read('minimap.json')
+        main['artilleryAim']['src'] = 'gui/maps/Driftkings/Minimap/MinimapAim.png'
+        for name, document in (('minimap_labels.json', labels), ('minimap.json', main)):
+            with open(os.path.join(self.root, name), 'wb') as stream:
+                stream.write(json.dumps(document).encode('utf-8'))
+        data = self.api['MinimapStore'](self.root).load(defaults())
+        self.assertEqual(data['lastPositionDuration'], 30)
+        self.assertEqual(data['lostMarker']['style'], 'grey')
+        self.assertEqual(data['labels']['normal'], u'{{name}}')
+        self.assertTrue(data['artilleryAim']['src'].endswith('MinimapAim_0.png'))
+
+    def test_invalid_values_are_never_published(self):
+        self.store.load(defaults())
+        before = self.read('minimap_labels.json')
+        broken = defaults()
+        broken['lostMarker']['style'] = 'blue'
+        self.assertRaises(ValueError, self.store.save, broken)
+        self.assertEqual(self.read('minimap_labels.json'), before)

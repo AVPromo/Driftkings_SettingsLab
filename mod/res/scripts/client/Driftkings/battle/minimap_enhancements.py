@@ -552,8 +552,7 @@ def new_setupPlugins(func, self, arenaVisitor):
                     args[key] = type('Driftkings' + native.__name__, (custom, native), {})
     except Exception as err:
         LOG.error(repr(err))
-    finally:
-        return args
+    return args
 
 
 def getBattleViews():
