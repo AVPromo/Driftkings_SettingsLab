@@ -35,7 +35,7 @@ from Driftkings._constants import GLOBAL, HANGAR_PREFERENCES
 from Driftkings.common.utils.wgUtils import isReplay
 from Driftkings.core.introspection import find_attr_name
 from Driftkings.core.callbacks import callback
-from Driftkings.core.hooks import override, overrideMethod
+from Driftkings.core.hooks import override, overrideMethod, overrideClassMethod
 from Driftkings.settings.service import settings_service, affects
 from Driftkings.core.settings_controller import SettingsController
 from Driftkings.settings.definitions.lobby.hangar_preferences import HangarPreferencesSettings as Settings
@@ -147,12 +147,13 @@ def new_validateCurrentVehicle(func, self):
     return res
 
 
-# low ammo => show carousel text
-@override(i18n, 'makeString')
-def new_makeString(func, key, *args, **kwargs):
-    if _cfg(GLOBAL.ENABLED, True) and key == MENU.TANKCAROUSEL_VEHICLESTATES_AMMONOTFULL:
-        return func(MENU.TANKCAROUSEL_VEHICLESTATES_AMMONOTFULLEVENTS, *args, **kwargs) or func('#dialogs:lowAmmo/title')
-    return func(key, *args, **kwargs)
+# low ammo => show the low ammo carousel text; only the state key lookup is wrapped,
+# not every client translation.
+@overrideClassMethod(MENU, 'tankcarousel_vehiclestates')
+def new_tankCarouselVehicleStates(base, cls, key0):
+    if _cfg(GLOBAL.ENABLED, True) and key0 == Vehicle.VEHICLE_STATE.AMMO_NOT_FULL:
+        return base(Vehicle.VEHICLE_STATE.AMMO_NOT_FULL_EVENTS)
+    return base(key0)
 
 
 # hide shared chat button

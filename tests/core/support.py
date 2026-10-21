@@ -124,6 +124,10 @@ class Hooks(object):
             return function
         return record(handler) if handler is not None else record
 
+    def typed(self, target, name):
+        # overrideMethod / overrideClassMethod / overrideStaticMethod: always decorators.
+        return self.override(target, name)
+
     def get(self, target, name):
         return self.overrides[(target, name)]
 
@@ -137,7 +141,9 @@ def game_source(relative, stubs=None, real=(), extra_builtins=None):
     stubs = dict(stubs or {})
     hooks = stubs.setdefault('Driftkings.core.hooks', None) or Hooks()
     if isinstance(hooks, Hooks):
-        stubs['Driftkings.core.hooks'] = module(override=hooks.override, on_event=hooks.on_event, hooks=module(current=None))
+        stubs['Driftkings.core.hooks'] = module(override=hooks.override, on_event=hooks.on_event, hooks=module(current=None),
+                                                overrideMethod=hooks.typed, overrideClassMethod=hooks.typed,
+                                                overrideStaticMethod=hooks.typed)
     original = builtins.__import__
 
     def importing(name, globals=None, locals=None, fromlist=(), level=0):
