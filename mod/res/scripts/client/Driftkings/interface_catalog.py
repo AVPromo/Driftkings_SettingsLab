@@ -166,7 +166,9 @@ GAMEFACE = {'DriftkingsMainGun': {
                              'owner': '__dkPlayerRatings',
                              'python': 'Driftkings.views.battle.panel_gameface',
                              'resource': 'mods/Driftkings/RatingPlayers/model',
-                             'scripts': ['coui://gui/gameface/mods/Driftkings/RatingPlayers/ratings.js'],
+                             'scripts': ['coui://gui/gameface/mods/Driftkings/RatingPlayers/rating_text.js',
+                                         'coui://gui/gameface/mods/Driftkings/RatingPlayers/rating_rows.js',
+                                         'coui://gui/gameface/mods/Driftkings/RatingPlayers/ratings.js'],
                              'section': 'team_panels',
                              'styles': []}}
 

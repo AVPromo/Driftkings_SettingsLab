@@ -2,6 +2,9 @@
     'use strict';
     var FEATURE = 'DriftkingsRatingPlayers';
     if (window.__dkPlayerRatings) { window.__dkPlayerRatings.dispose(); }
+    // Helpers loaded before this script (see interface_catalog.py).
+    var text = window.DKRatingText, rows = window.DKRatingRows;
+    var flag = text.flag, number = text.number, localImage = text.localImage, color = text.color, writeRuns = text.writeRuns;
     var disposed = false, resourceId = null, callbackId = null;
     var lastPayload = null, timer = null;
     var tabData = null, tabFields = [], tabStyles = [];
@@ -183,16 +186,7 @@
     }
     function indexRows(data) {
         if (lookupData===data) { return; }
-        lookupData=data; lookup={left:{ids:{},names:{}},right:{ids:{},names:{}}};
-        data.rows.forEach(function(row) {
-            var team=lookup[row.ally?'left':'right']; team.ids[row.id]=row;
-            row._dkSignature=JSON.stringify(row.cfg);
-            (row.aliases || []).forEach(function(alias) {
-                var key='$'+alias.replace(/\s/g,'');
-                if (!team.names[key]) { team.names[key]=[]; }
-                if (team.names[key].indexOf(row)<0) { team.names[key].push(row); }
-            });
-        });
+        lookupData=data; lookup=rows.index(data);
     }
     function clock() {
         return window.performance && typeof window.performance.now === 'function' ? window.performance.now() : Date.now();
@@ -207,17 +201,6 @@
                 windowMs:Math.max(0,clock()-sample.since),rows:sample.rows,reason:reason,
                 rowsDrawn:sample.drawn,rowsReused:sample.reused,searches:sample.searches});
         } catch (error) {}
-    }
-    function flag(value) { return !(value === false || value === null || value === undefined || value === '' || value === 0 || value === '0' || value === 'false'); }
-    function number(value, fallback) { var n=Number(value); return value === null || value === undefined || !isFinite(n) ? fallback : n; }
-    function localImage(value) {
-        value=String(value || '').replace(/^img:\/\//,'coui://');
-        return /^coui:\/\/gui\/[a-z0-9_./-]+\.(png|dds|webp)$/i.test(value) && value.indexOf('..')<0 ? value : '';
-    }
-    function color(value) {
-        if (typeof value === 'number') { return '#'+('000000'+value.toString(16)).slice(-6); }
-        value=String(value || '').replace(/^0x/,'#');
-        return /^#[a-f0-9]{6}$/i.test(value) ? value : 'transparent';
     }
     function extraFields(element, fields, ally, rowOpacity) {
         if (!fields || !fields.length) { return; }
@@ -401,9 +384,7 @@
             }
             var team=ally?'left':'right', index=counts[team]++,source=record.refs.UserInfo_userNameWrapper_;
             if (!source) { pending.push({record:record}); return; }
-            var candidates=lookup[team].names['$'+source.textContent.replace(/\s/g,'')] || [];
-            var id=data.order && data.order[team] && data.order[team][index];
-            var row=candidates.length===1 ? candidates[0] : lookup[team].ids[id];
+            var row=rows.match(lookup,data,team,index,source.textContent);
             if (!row || !row.cfg.enabled) { pending.push({record:record}); return; }
             // Leave native content visible until this row can be prepared.
             // Bound initial construction without slowing existing row updates.
@@ -459,62 +440,6 @@
             if (row.cfg[entry[0]]) { tabHidden(findField(element,entry[1])); }
         });
         extraFields(element,row.cfg.fields,ally,rowOpacity);
-    }
-
-    function writeRuns(target,html) {
-        if (!html) { return; }
-        if (!/[<&]/.test(html)) {
-            var run=document.createElement('span'); run.style.flexShrink='0'; run.style.whiteSpace='pre';
-            run.textContent=html; target.appendChild(run); return;
-        }
-        var parsed=document.createElement('div'); parsed.innerHTML=html; copyRuns(parsed,target,{});
-    }
-    function copyRuns(source, target, inherited) {
-        for (var i = 0; i < source.childNodes.length; i++) {
-            var child = source.childNodes[i];
-            if (child.nodeType === 3) {
-                if (inherited.hidden || !child.nodeValue) { continue; }
-                var run = document.createElement('span');
-                run.style.flexShrink = '0'; run.style.whiteSpace = 'pre';
-                Object.keys(inherited).forEach(function (key) { if (key !== 'hidden') { run.style[key] = inherited[key]; } });
-                run.textContent = child.nodeValue; target.appendChild(run);
-                continue;
-            }
-            if (child.nodeType !== 1) { continue; }
-            var tag = child.tagName.toLowerCase();
-            if (/^(script|style|iframe|object)$/.test(tag)) { continue; }
-            if (inherited.hidden) { continue; }
-            if (tag==='img') {
-                var src=localImage(child.getAttribute('src'));
-                if (src) {
-                    var image=document.createElement('img'); image.src=src; image.style.flexShrink='0';
-                    image.style.width=Math.max(0,number(child.getAttribute('width'),22))+'rem';
-                    image.style.height=Math.max(0,number(child.getAttribute('height'),22))+'rem';
-                    target.appendChild(image);
-                }
-                continue;
-            }
-            if (tag==='br') {
-                var line=document.createElement('span'); line.style.flexBasis='100%'; line.style.height='0'; target.appendChild(line); continue;
-            }
-            var style = {};
-            Object.keys(inherited).forEach(function (key) { style[key] = inherited[key]; });
-            if (tag === 'b') { style.fontWeight = 'bold'; }
-            if (tag === 'i') { style.fontStyle = 'italic'; }
-            if (tag === 'u') { style.textDecoration = 'underline'; }
-            if (tag === 'font') {
-                var color = child.getAttribute('color'), size = child.getAttribute('size');
-                var face = child.getAttribute('face'), alpha = child.getAttribute('alpha');
-                if (/^#[0-9a-f]{6}$/i.test(color)) { style.color = color; }
-                if (size === '0') { style.hidden = true; }
-                else if (Number(size) >= 8 && Number(size) <= 40) { style.fontSize = Number(size) + 'rem'; }
-                // $FieldFont means the native font, not a wider Arial substitute.
-                if (face === '$FieldFont') { delete style.fontFamily; }
-                else if (face && /^[a-z0-9 _-]+$/i.test(face)) { style.fontFamily = face; }
-                if (/^#[0-9a-f]{2}$/i.test(alpha)) { style.opacity = (inherited.opacity === undefined ? 1 : inherited.opacity) * parseInt(alpha.slice(1), 16) / 255; }
-            }
-            copyRuns(child, target, style);
-        }
     }
 
     function hide() {
