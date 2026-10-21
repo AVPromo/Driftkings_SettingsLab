@@ -9,7 +9,7 @@ from gui.impl.lobby.hangar.presenters.crew_presenter import CrewPresenter
 from gui.shared.gui_items.dossier.achievements.mark_on_gun import MarkOnGunAchievement
 
 from Driftkings._constants import GLOBAL, BATTLE_MARKS_OF_EXCELLENCE
-from Driftkings._constants import MARK_THRESHOLDS, MARK_LEVELS
+from Driftkings._constants import MARK_THRESHOLDS, MARK_LEVELS, MARKS_MIN_TIER
 from Driftkings.common.config.json_reader import loadJson
 from Driftkings.common.utils import events
 from Driftkings.common.utils.achievement_dossiers import getAchievementDossier
@@ -102,7 +102,7 @@ class Worker(object):
             self.damageRating = g_currentVehicle.getDossier().getRecordValue(ACHIEVEMENT_BLOCK.TOTAL, 'damageRating') / 100.0
             self.movingAvgDamage = g_currentVehicle.getDossier().getRecordValue(ACHIEVEMENT_BLOCK.TOTAL, 'movingAvgDamage')
             self.battleCount = g_currentVehicle.getDossier().getRandomStats().getBattlesCountVer2()
-            self.level = g_currentVehicle.item.level > 4
+            self.level = g_currentVehicle.item.level >= MARKS_MIN_TIER
             self.name = '%s' % g_currentVehicle.item.name
             if self.level and self.movingAvgDamage:
                 dBid = self.check_player_thread()
@@ -285,7 +285,10 @@ class Worker(object):
         self.gunLevel = vehicle.publicInfo['marksOnGun']
         self.name = vehicle.typeDescriptor.name
         self.vehicleID = vehicle.typeDescriptor.type.compactDescr
-        self.level = vehicle.typeDescriptor.level > 4
+        self.level = vehicle.typeDescriptor.level >= MARKS_MIN_TIER
+        if not self.level:
+            # Lower tiers show no panel at all, not even the "unavailable" state.
+            return
         if dBid not in marks_cache.values:
             marks_cache.values[dBid] = {}
         if self.replay:

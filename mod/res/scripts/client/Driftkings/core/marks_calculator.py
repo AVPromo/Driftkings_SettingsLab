@@ -2,7 +2,7 @@
 """Only arithmetic proven identical in the existing Battle/Hangar paths."""
 import math
 
-from Driftkings._constants import MARK_LEVELS, MarksStatistics, BattleCurve
+from Driftkings._constants import MARK_LEVELS, MARKS_MIN_TIER, MarksStatistics, BattleCurve
 from Driftkings._constants import MARK_THRESHOLDS as THRESHOLDS
 from Driftkings.common.utils.numbers import finite_number
 
@@ -144,7 +144,7 @@ def hangar_goal(percent, moving_average, tier, selection=0, earned_marks=0):
     progress_marks = max(earned_marks, sum(percent >= limit for limit in THRESHOLDS))
     mark = selection or min(3, progress_marks + 1)
     threshold = THRESHOLDS[mark - 1]
-    eligible = safe_number(tier) >= 5
+    eligible = safe_number(tier) >= MARKS_MIN_TIER
     achieved = eligible and (earned_marks >= mark or percent >= threshold)
     estimate = None
     average = safe_number(moving_average)

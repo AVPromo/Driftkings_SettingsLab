@@ -15,6 +15,8 @@ BattleCurve = namedtuple('BattleCurve', (
 DEFAULT_RANDOMIZATION = MinMax(0.75, 1.25)
 MARK_LEVELS = (0.0, 20.0, 40.0, 55.0, 65.0, 85.0, 95.0, 100.0)
 MARK_THRESHOLDS = (65, 85, 95)
+# Marks of excellence panels are shown only for tier 5 and above, where marks exist.
+MARKS_MIN_TIER = 5
 
 
 class GLOBAL(object):

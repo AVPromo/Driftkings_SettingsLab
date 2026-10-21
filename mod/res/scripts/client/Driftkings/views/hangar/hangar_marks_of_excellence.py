@@ -118,7 +118,8 @@ def install_gameface():
             try:
                 parent = self._hangarRef()
                 visible = bool(parent is not None and _component().g_controller.visible.get(parent, False)
-                               and settings_service.getComponentDict(_component().config)[GLOBAL.ENABLED] and settings_service.getComponentDict(_component().config)[HANGAR_MARKS_OF_EXCELLENCE.SHOW_IN_HANGAR])
+                               and settings_service.getComponentDict(_component().config)[GLOBAL.ENABLED] and settings_service.getComponentDict(_component().config)[HANGAR_MARKS_OF_EXCELLENCE.SHOW_IN_HANGAR]
+                               and _component().has_marks_tier())
                 payload = card_payload(self._lastPayload, kwargs.get('config_only', False), visible,
                                        lambda: get_view_config(_component().config), _component().g_data.build_panel_model)
                 publish_card(self, payload)

@@ -7,7 +7,7 @@ from gui.Scaleform.daapi.view.lobby.profile.ProfileUtils import ProfileUtils
 from gui.shared.gui_items.dossier.achievements.mark_on_gun import MarkOnGunAchievement
 from gui.shared.personality import ServicesLocator
 
-from Driftkings._constants import GLOBAL, HANGAR_MARKS_OF_EXCELLENCE
+from Driftkings._constants import GLOBAL, HANGAR_MARKS_OF_EXCELLENCE, MARKS_MIN_TIER
 from Driftkings.common.config.json_reader import loadJson
 from Driftkings.common.utils.achievement_dossiers import getAchievementDossier
 from Driftkings.common.utils.colorRatting import getStatisticColor, getMoeDamageColor
@@ -32,6 +32,13 @@ from Driftkings._constants import MARK_THRESHOLDS as THRESHOLDS
 
 def finite(value, default=0.0):
     return finite_number(value, default)
+
+
+def has_marks_tier(vehicle=None):
+    """The hangar panel is shown only for a selected vehicle of tier 5 or above."""
+    if vehicle is None:
+        vehicle = g_currentVehicle.item if g_currentVehicle.isPresent() else None
+    return vehicle is not None and vehicle.level >= MARKS_MIN_TIER
 
 
 def goal(percent, moving_average, tier, selection=0, earned_marks=0):
@@ -241,7 +248,7 @@ class MarksOnGunData(object):
             'wn8Color': self._color_by_wn8(wn8),
             'masteryValue': mastery['value'],
             'masteryIcon': mastery['icon'],
-            'hasMoE': vehicle.level >= 5 and damage_rating > 0.0
+            'hasMoE': has_marks_tier(vehicle) and damage_rating > 0.0
         }
 
         if damage_rating <= 0.0:
