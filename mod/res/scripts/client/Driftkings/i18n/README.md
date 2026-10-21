@@ -34,7 +34,9 @@ translation. Existing localized text was preserved. New translations need
 native-speaker review; complete key coverage is not a linguistic quality rating.
 
 `python build_tools/validate_locales.py` checks exact key coverage, value types,
-nonempty strings, formatting macros, HTML and colors. The compiler runs this
+nonempty strings, formatting macros, HTML and colors. It also reports values that are still
+an English phrase (`untranslated`); `tests/installer/test_locales.py` keeps that at zero,
+except for names listed in `ENGLISH_NAMES`. The compiler runs this
 validation before building. Add new English keys to every catalog in the same
 change. Names and identifiers may legitimately be identical across languages.
 The loader retains the English fallback and user JSON overrides.

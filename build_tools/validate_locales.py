@@ -64,7 +64,29 @@ def validate_catalogs(root=ROOT):
     english = catalog(folder / 'en.py')
     return {'locales': len(manifest['locales']),
             'componentKeys': sum(len(section) for section in english['TEXT'].values()),
-            'panelKeys': len(english['PANEL']), 'status': 'passed'}
+            'panelKeys': len(english['PANEL']), 'untranslated': len(english_prose(root)), 'status': 'passed'}
+
+
+# Names kept in English on purpose (sound and preset names).
+ENGLISH_NAMES = frozenset(('Super Mario',))
+
+
+def english_prose(root=ROOT):
+    """Catalog values still identical to an English phrase of two or more words."""
+    folder = root / 'mod/res/scripts/client/Driftkings/i18n'
+    manifest = json.loads((root / 'build_data/locales.json').read_text(encoding='utf-8'))
+    reference = dict(leaves(catalog(folder / 'en.py')))
+    found = []
+    for code in manifest['locales']:
+        if code == 'en':
+            continue
+        actual = dict(leaves(catalog(folder / (code + '.py'))))
+        for key, source in reference.items():
+            if not isinstance(source, str) or source in ENGLISH_NAMES or actual.get(key) != source:
+                continue
+            if len(re.findall(r'[A-Za-z]{3,}', FORMATTING.sub(' ', source))) >= 2:
+                found.append((code, '.'.join(key)))
+    return found
 
 
 if __name__ == '__main__':
