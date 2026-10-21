@@ -401,7 +401,7 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
         if props is None:
             props = self._arenaDP.getPlayerGuiProps(vehicleID, info.team)
         gui = self._getGuiPropsName(props)
-        group = 'squad' if 'squad' in gui.lower() else 'enemy' if entry.isEnemy() else 'ally'
+        group = policy.vehicle_group(gui, entry.isEnemy())
         lost = self._lastPositions.get(entry.getID())
         state = 'dead' if not info.isAlive() else 'lost' if lost else 'alive'
         age = max(0, int(BigWorld.time() - (lost[1] - settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LAST_POSITION_DURATION]))) if lost else 0
@@ -421,7 +421,7 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
             minimum = settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LOST_MARKER]['minimumAlpha']
             opacity = max(minimum, 100 - (100 - minimum) * age / float(max(1, settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LAST_POSITION_DURATION])))
         payload = dict(id=vehicleID, text=text, group=group, guiLabel=gui, state=state, hp=values['hp'],
-                       percent=values['hpPercent'], alpha=opacity)
+                       percent=values['hpPercent'], alpha=opacity, color=policy.team_color(group, state))
         if self._presentations.get(vehicleID) == payload:
             return
         self._presentations[vehicleID] = payload

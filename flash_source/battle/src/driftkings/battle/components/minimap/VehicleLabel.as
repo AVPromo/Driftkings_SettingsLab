@@ -44,7 +44,10 @@ package driftkings.battle.components.minimap
             visible = true;
             var labels:Object = options.labels;
             var health:Object = options.health;
-            var color:uint = labels.customColors ? parseColor(labels[(data.state == "dead" ? "dead" : data.group) + "Color"]) : App.colorSchemeMgr.getRGB(VehicleMinimapEntryConst.TEXT_COLOR_SCHEME_PREFIX +
+            // Own colours first, then the shared team scheme (per group and state), then the client's.
+            var color:uint = labels.customColors ? parseColor(labels[(data.state == "dead" ? "dead" : data.group) + "Color"]) :
+                labels.teamColors && data.color ? parseColor(String(data.color)) :
+                App.colorSchemeMgr.getRGB(VehicleMinimapEntryConst.TEXT_COLOR_SCHEME_PREFIX +
                     String(data.guiLabel ? data.guiLabel : (data.group == "squad" ? "squadman" : data.group)) +
                     VehicleMinimapEntryConst.TEXT_COLOR_SCHEME_POSTFIX);
             if (previous != data || settings != options || previousColor != color)

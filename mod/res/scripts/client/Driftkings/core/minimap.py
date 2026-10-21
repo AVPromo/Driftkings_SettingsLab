@@ -37,6 +37,23 @@ def visible(mode, native):
     return native if mode == 'client' else mode == 'on'
 
 
+def vehicle_group(gui_label, enemy):
+    """Minimap group from the native GUI properties (ally, teamKiller, squadman, enemy)."""
+    label = (gui_label or '').lower()
+    if 'squad' in label:
+        return 'squad'
+    if enemy:
+        return 'enemy'
+    return 'teamKiller' if 'teamkiller' in label else 'ally'
+
+
+def team_color(group, state):
+    """Shared team scheme colour; lost vehicles keep their alive colour (the icon is desaturated)."""
+    from Driftkings.common.utils.color_rating_data import system_colors
+    key = {'squad': 'squadman'}.get(group, group) + ('_dead' if state == 'dead' else '_alive')
+    return system_colors.get(key, system_colors['ally_alive'])
+
+
 def shell_range(descriptor, shell_cd):
     """Maximum shot distance in metres of the selected shell, falling back to the active shot."""
     gun = getattr(descriptor, 'gun', None)
@@ -164,8 +181,12 @@ def validate(data):
         for key in keys:
             if type(data[section].get(key)) is not bool:
                 raise ValueError('Invalid minimap switch: ' + section + '.' + key)
-    for key in ('allyColor', 'enemyColor', 'squadColor', 'deadColor'):
+    for key in ('allyColor', 'enemyColor', 'squadColor', 'teamKillerColor', 'deadColor'):
         color(labels.get(key))
+    if type(labels.get('teamColors')) is not bool:
+        raise ValueError('Invalid minimap switch: labels.teamColors')
+    numeric(data['icons'].get('deadAlpha'), 0, 100)
+    numeric(data['lostMarker'].get('desaturate'), 0, 100)
     color(data['icons'].get('selfColor'))
     color(data['mapSize'].get('color'))
     numeric(labels.get('compactLength'), 4, 40)

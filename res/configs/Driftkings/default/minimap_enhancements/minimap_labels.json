@@ -31,10 +31,13 @@
     "shadow": true,
     "squad": "",
     "squadColor": "FFB964",
+    "teamColors": true,
+    "teamKillerColor": "00EAFF",
     "x": 0,
     "y": 0
   },
   "lostMarker": {
+    "desaturate": 60,
     "fade": false,
     "minimumAlpha": 25,
     "showSeconds": false

@@ -50,3 +50,30 @@ class MinimapPolicyTests(RuntimeTest):
         data = defaults()
         del data['circles']['shell']
         self.assertRaises(ValueError, self.policy.validate, data)
+
+    def test_groups_follow_native_gui_properties(self):
+        group = self.policy.vehicle_group
+        self.assertEqual([group('ally', False), group('teamKiller', False), group('squadman', False), group('enemy', True)],
+                         ['ally', 'teamKiller', 'squad', 'enemy'])
+        # A squadmate is never an enemy; a missing label falls back to the side.
+        self.assertEqual((group(None, True), group('', False)), ('enemy', 'ally'))
+
+    def test_team_colors_come_from_the_shared_scheme(self):
+        system = self.load('common.utils.color_rating_data').system_colors
+        color = self.policy.team_color
+        self.assertEqual(color('enemy', 'dead'), system['enemy_dead'])
+        self.assertEqual(color('squad', 'alive'), system['squadman_alive'])
+        self.assertEqual(color('teamKiller', 'dead'), system['teamKiller_dead'])
+        # Lost vehicles keep the alive colour; the icon is desaturated instead.
+        self.assertEqual(color('ally', 'lost'), system['ally_alive'])
+
+    def test_palettes_share_one_system_table(self):
+        data = self.load('common.utils.color_rating_data')
+        self.assertTrue(data.noob_meter_colors['system'] is data.xvm_colors['system'] is data.wot_labs_colors['system'])
+
+    def test_dead_and_lost_options_are_validated(self):
+        for section, key, value in (('icons', 'deadAlpha', 150), ('lostMarker', 'desaturate', -1),
+                                    ('labels', 'teamColors', 1), ('labels', 'teamKillerColor', 'blue')):
+            data = defaults()
+            data[section][key] = value
+            self.assertRaises(ValueError, self.policy.validate, data)

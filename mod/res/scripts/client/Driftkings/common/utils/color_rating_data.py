@@ -40,25 +40,29 @@ noob_meter_definitions = {
     }
 }
 
+# Team colours by group and state (XVM 'system' scheme). Identical for every
+# rating palette, so defined once; the minimap and markers read it from here.
+system_colors = {
+    'ally_alive': noob_meter_definitions['al'],
+    'ally_dead': '#B8FFC1',
+    'ally_blowedup': '#007700',
+    'squadman_alive': noob_meter_definitions['sq'],
+    'squadman_dead': '#CA7000',
+    'squadman_blowedup': '#A45A00',
+    'teamKiller_alive': noob_meter_definitions['tk'],
+    'teamKiller_dead': '#097783',
+    'teamKiller_blowedup': '#096A75',
+    'enemy_alive': noob_meter_definitions['en'],
+    'enemy_dead': '#E29188',
+    'enemy_blowedup': '#5A0401',
+    'ally_base': noob_meter_definitions['al'],
+    'enemy_base': noob_meter_definitions['en']
+}
+
 noob_meter_colors = {
     'colorRating': noob_meter_definitions['colorRating'],
     'colorHP': noob_meter_definitions['colorHP'],
-    'system': {
-        'ally_alive': noob_meter_definitions['al'],
-        'ally_dead': '#B8FFC1',
-        'ally_blowedup': '#007700',
-        'squadman_alive': noob_meter_definitions['sq'],
-        'squadman_dead': '#CA7000',
-        'squadman_blowedup': '#A45A00',
-        'teamKiller_alive': noob_meter_definitions['tk'],
-        'teamKiller_dead': '#097783',
-        'teamKiller_blowedup': '#096A75',
-        'enemy_alive': noob_meter_definitions['en'],
-        'enemy_dead': '#E29188',
-        'enemy_blowedup': '#5A0401',
-        'ally_base': noob_meter_definitions['al'],
-        'enemy_base': noob_meter_definitions['en']
-    },
+    'system': system_colors,
     'dmg_kind': {
         'attack': '#FFAA55',
         'fire': '#FF6655',
@@ -359,22 +363,7 @@ xvm_definitions = {
 xvm_colors = {
     'colorRating': xvm_definitions['colorRating'],
     'colorHP': xvm_definitions['colorHP'],
-    'system': {
-        'ally_alive': xvm_definitions['al'],
-        'ally_dead': '#B8FFC1',
-        'ally_blowedup': '#007700',
-        'squadman_alive': xvm_definitions['sq'],
-        'squadman_dead': '#CA7000',
-        'squadman_blowedup': '#A45A00',
-        'teamKiller_alive': xvm_definitions['tk'],
-        'teamKiller_dead': '#097783',
-        'teamKiller_blowedup': '#096A75',
-        'enemy_alive': xvm_definitions['en'],
-        'enemy_dead': '#E29188',
-        'enemy_blowedup': '#5A0401',
-        'ally_base': xvm_definitions['al'],
-        'enemy_base': xvm_definitions['en']
-    },
+    'system': system_colors,
     'dmg_kind': {
         'attack': '#FFAA55',
         'fire': '#FF6655',
@@ -674,22 +663,7 @@ wot_labs_colors = {
     'colorRating': wot_labs_definitions['colorRating'],
     'colorRatingNew': wot_labs_definitions['colorRatingNew'],
     'colorHP': wot_labs_definitions['colorHP'],
-    'system': {
-        'ally_alive': wot_labs_definitions['al'],
-        'ally_dead': '#B8FFC1',
-        'ally_blowedup': '#007700',
-        'squadman_alive': wot_labs_definitions['sq'],
-        'squadman_dead': '#CA7000',
-        'squadman_blowedup': '#A45A00',
-        'teamKiller_alive': wot_labs_definitions['tk'],
-        'teamKiller_dead': '#097783',
-        'teamKiller_blowedup': '#096A75',
-        'enemy_alive': wot_labs_definitions['en'],
-        'enemy_dead': '#E29188',
-        'enemy_blowedup': '#5A0401',
-        'ally_base': wot_labs_definitions['al'],
-        'enemy_base': wot_labs_definitions['en']
-    },
+    'system': system_colors,
     'dmg_kind': {
         'attack': '#FFAA55',
         'fire': '#FF6655',

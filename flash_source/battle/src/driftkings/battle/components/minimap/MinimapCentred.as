@@ -6,6 +6,7 @@ package driftkings.battle.components.minimap
     import flash.geom.Rectangle;
     import flash.geom.Matrix;
     import flash.display.Graphics;
+    import flash.filters.ColorMatrixFilter;
     import flash.geom.Point;
     import flash.text.TextFieldAutoSize;
     import net.wg.gui.battle.views.minimap.components.entries.personal.ViewRangeCirclesMinimapEntry;
@@ -34,6 +35,9 @@ package driftkings.battle.components.minimap
         private var rangeVersion:int = 0;
         // Native circles entry: its local space spans 210 units per map width.
         private var circleReference:DisplayObject;
+        // Vehicle entries seen in this refresh, layered dead < lost < alive.
+        private var layered:Array;
+        private static const DEAD_ICONS:Array = ["deadAnimation", "deadPermanentAnimation"];
         private var sizeLabel:TextField;
         private var visibleLabels:Array;
         private var zoomed:Boolean = false;
@@ -133,7 +137,7 @@ package driftkings.battle.components.minimap
         private function remember(target:DisplayObject):Object
         {
             if (!styles[target])
-                styles[target] = {alpha:target.alpha, color:target.transform.colorTransform,
+                styles[target] = {alpha:target.alpha, color:target.transform.colorTransform, filters:target.filters,
                     sx:target.scaleX, sy:target.scaleY, size:target is TextField ? TextField(target).defaultTextFormat.size : null};
             return styles[target];
         }
@@ -173,13 +177,58 @@ package driftkings.battle.components.minimap
             sizeLabel.y = origin.y + Math.max(0, Math.min(bounds.height - sizeLabel.height, Number(options.mapSize.y)));
         }
 
-        private function iconStyle(target:DisplayObject, scale:Number, alpha:Number):void
+        private function iconStyle(target:DisplayObject, scale:Number, alpha:Number, desaturate:Number = 0):void
         {
             if (!target) return;
             var saved:Object = remember(target);
             saved.scaleChanged = true;
             target.scaleX = saved.sx * scale; target.scaleY = saved.sy * scale;
             target.alpha = alpha / 100;
+            // Lost vehicles: fade the icon towards grey, keeping the native filters.
+            var amount:Number = Math.max(0, Math.min(100, desaturate)) / 100;
+            if (amount > 0 || saved.filtersChanged)
+            {
+                saved.filtersChanged = true;
+                target.filters = amount > 0 ? saved.filters.concat([desaturation(amount)]) : saved.filters;
+            }
+        }
+
+        private static function desaturation(amount:Number):ColorMatrixFilter
+        {
+            var s:Number = 1 - amount, r:Number = 0.3086 * amount, g:Number = 0.6094 * amount, b:Number = 0.082 * amount;
+            return new ColorMatrixFilter([r + s, g, b, 0, 0,  r, g + s, b, 0, 0,  r, g, b + s, 0, 0,  0, 0, 0, 1, 0]);
+        }
+
+        private static function rank(state:String):int
+        {
+            return state == "dead" ? 0 : state == "lost" ? 1 : 2;
+        }
+
+        // Keep dead vehicles below lost ones and both below spotted vehicles, so a
+        // destroyed or old marker never hides a live one at the same position.
+        private function orderLayers():void
+        {
+            var byParent:Dictionary = new Dictionary(true);
+            for each (var item:Object in layered)
+            {
+                var parent:DisplayObjectContainer = DisplayObject(item.entry).parent;
+                if (!parent) continue;
+                if (!byParent[parent]) byParent[parent] = [];
+                byParent[parent].push(item);
+            }
+            for (var key:Object in byParent)
+            {
+                var container:DisplayObjectContainer = key as DisplayObjectContainer, items:Array = byParent[key];
+                var slots:Array = [];
+                for each (item in items) slots.push(container.getChildIndex(item.entry));
+                slots.sort(Array.NUMERIC);
+                // Only reorder a contiguous block of vehicles; never move them past other layers.
+                if (slots.length < 2 || slots[slots.length - 1] - slots[0] != slots.length - 1) continue;
+                items.sort(function(a:Object, b:Object):Number
+                { return a.rank - b.rank || container.getChildIndex(a.entry) - container.getChildIndex(b.entry); });
+                for (var i:int = 0; i < items.length; ++i)
+                    if (container.getChildIndex(items[i].entry) != slots[0] + i) container.setChildIndex(items[i].entry, slots[0] + i);
+            }
         }
 
         private static function scaleOf(target:DisplayObject):Number
@@ -329,11 +378,17 @@ package driftkings.battle.components.minimap
                 owned.update(data, options, native);
                 if (entry.visible && owned.caption.visible) visibleLabels.push(owned);
             }
+            var state:String = data ? String(data.state) : "alive";
+            if (data) layered.push({entry:entry, rank:rank(state)});
             for each (var name:String in ["enemyRedAnimation", "enemyPurpleAnimation", "deadAnimation",
                 "deadPermanentAnimation", "squadmanYellowAnimation", "squadmanGoldAnimation",
                 "teamKillerBlueAnimation", "allyGreenAnimation"])
+            {
+                var alpha:Number = DEAD_ICONS.indexOf(name) >= 0 ? Number(options.icons.deadAlpha) : Number(options.icons.alpha);
                 iconStyle(entry[name] as DisplayObject, options.icons.scale,
-                    options.showVehicleTypes ? Number(options.icons.alpha) * (data ? Number(data.alpha)/100 : 1) : 0);
+                    options.showVehicleTypes ? alpha * (data ? Number(data.alpha)/100 : 1) : 0,
+                    state == "lost" ? Number(options.lostMarker.desaturate) : 0);
+            }
         }
 
         private function updateViewPoint(point:ViewPointMinimapEntry):void
@@ -398,8 +453,10 @@ package driftkings.battle.components.minimap
             removeDetachedEntries();
             positionMapSize();
             visibleLabels = [];
+            layered = [];
             remaining = 4000;
             scan(minimap);
+            orderLayers();
             resolveLabelOverlaps();
         }
 
@@ -453,6 +510,7 @@ package driftkings.battle.components.minimap
                 var target:DisplayObject = key as DisplayObject;
                 var saved:Object = styles[key];
                 target.alpha = saved.alpha;
+                if (saved.filtersChanged) target.filters = saved.filters;
                 if (saved.scaleChanged) { target.scaleX = saved.sx; target.scaleY = saved.sy; }
                 target.transform.colorTransform = saved.color;
                 if (target is TextField && saved.size != null)

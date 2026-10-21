@@ -113,16 +113,16 @@ class MinimapEnhancementsSettings(SectionDefinition):
         for key in ('x', 'y'):
             columns[0].append(nested(MINIMAP_ENHANCEMENTS.LABELS, key, 'Slider', -100, 100))
         columns[0].append(nested(MINIMAP_ENHANCEMENTS.LABELS, 'align', 'Dropdown', choices=['left', 'center', 'right']))
-        for key in ('shadow', 'customColors', 'avoidOverlap'):
+        for key in ('shadow', 'teamColors', 'customColors', 'avoidOverlap'):
             columns[0].append(nested(MINIMAP_ENHANCEMENTS.LABELS, key))
-        for key in ('allyColor', 'enemyColor', 'squadColor', 'deadColor'):
+        for key in ('allyColor', 'enemyColor', 'squadColor', 'teamKillerColor', 'deadColor'):
             columns[0].append(nested(MINIMAP_ENHANCEMENTS.LABELS, key, 'ColorChoice'))
         columns[0].append(nested(MINIMAP_ENHANCEMENTS.LABELS, 'compactLength', 'Slider', 4, 40))
         for key in ('scale', 'selfScale'):
             item = nested(MINIMAP_ENHANCEMENTS.ICONS, key, 'Slider', .5, 3)
             item['snapInterval'] = .1
             columns[0].append(item)
-        for key in (GLOBAL.ALPHA, 'selfAlpha'):
+        for key in (GLOBAL.ALPHA, 'deadAlpha', 'selfAlpha'):
             columns[0].append(nested(MINIMAP_ENHANCEMENTS.ICONS, key, 'Slider', 0, 100))
         columns[0].append(nested(MINIMAP_ENHANCEMENTS.ICONS, 'selfColor', 'ColorChoice'))
         columns[0].append(nested(MINIMAP_ENHANCEMENTS.HEALTH, 'visibility', 'Dropdown', choices=['never', 'key', 'always']))
@@ -132,6 +132,7 @@ class MinimapEnhancementsSettings(SectionDefinition):
         for key in ('showSeconds', 'fade'):
             columns[1].append(nested(MINIMAP_ENHANCEMENTS.LOST_MARKER, key))
         columns[1].append(nested(MINIMAP_ENHANCEMENTS.LOST_MARKER, 'minimumAlpha', 'Slider', 0, 100))
+        columns[1].append(nested(MINIMAP_ENHANCEMENTS.LOST_MARKER, 'desaturate', 'Slider', 0, 100))
         columns[1].append(nested(MINIMAP_ENHANCEMENTS.MAP_SIZE, GLOBAL.ENABLED))
         for key, low, high in (('x', -300, 300), ('y', -300, 300), ('fontSize', 8, 24)):
             columns[1].append(nested(MINIMAP_ENHANCEMENTS.MAP_SIZE, key, 'Slider', low, high))

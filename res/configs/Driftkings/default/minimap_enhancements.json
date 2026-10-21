@@ -68,6 +68,7 @@
   },
   "icons": {
     "alpha": 100,
+    "deadAlpha": 70,
     "scale": 1.0,
     "selfAlpha": 100,
     "selfColor": "FFFFFF",
@@ -96,6 +97,8 @@
     "shadow": true,
     "squad": "",
     "squadColor": "FFB964",
+    "teamColors": true,
+    "teamKillerColor": "00EAFF",
     "x": 0,
     "y": 0
   },
@@ -117,6 +120,7 @@
     "thickness": 1
   },
   "lostMarker": {
+    "desaturate": 60,
     "fade": false,
     "minimumAlpha": 25,
     "showSeconds": false

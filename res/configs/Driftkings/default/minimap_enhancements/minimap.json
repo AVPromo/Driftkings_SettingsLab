@@ -20,6 +20,7 @@
   "enabled": true,
   "icons": {
     "alpha": 100,
+    "deadAlpha": 70,
     "scale": 1.0,
     "selfAlpha": 100,
     "selfColor": "FFFFFF",
