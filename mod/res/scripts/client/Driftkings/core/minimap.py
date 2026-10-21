@@ -63,6 +63,21 @@ def vehicle_names(icon_name, short_name):
     return [name for name in names if name]
 
 
+LOST_STYLES = ('tint', 'grey')
+
+
+def lost_color(group, lost):
+    """Dull team colour for last positions: enemies red, allies green, squadmates amber."""
+    return '#' + str(lost.get({'enemy': 'enemyColor', 'squad': 'squadColor'}.get(group, 'allyColor'))).lstrip('#')
+
+
+def marker_color(group, state, lost):
+    """Label colour: the team scheme, or the dull team colour for tinted last positions."""
+    if state == 'lost' and lost.get('style') == 'tint':
+        return lost_color(group, lost)
+    return team_color(group, state)
+
+
 def shell_range(descriptor, shell_cd):
     """Maximum shot distance in metres of the selected shell, falling back to the active shot."""
     gun = getattr(descriptor, 'gun', None)
@@ -208,6 +223,10 @@ def validate(data):
     numeric(data['lostMarker'].get('desaturate'), 0, 100)
     if type(data['lostMarker'].get('icon')) is not bool:
         raise ValueError('Invalid minimap switch: lostMarker.icon')
+    if data['lostMarker'].get('style') not in LOST_STYLES:
+        raise ValueError('Invalid lost marker style')
+    for key in ('allyColor', 'enemyColor', 'squadColor'):
+        color(data['lostMarker'].get(key))
     color(data['icons'].get('selfColor'))
     color(data['mapSize'].get('color'))
     numeric(labels.get('compactLength'), 4, 40)

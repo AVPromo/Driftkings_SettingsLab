@@ -96,3 +96,20 @@ class MinimapPolicyTests(RuntimeTest):
             self.assertRaises(ValueError, self.policy.validate, broken)
         data['extraCircles'][0]['vehicle'] = 'x' * 65
         self.assertRaises(ValueError, self.policy.validate, data)
+
+    def test_last_positions_use_a_dull_team_colour(self):
+        lost = defaults()['lostMarker']
+        self.assertEqual(lost['style'], 'tint')
+        self.assertEqual(self.policy.marker_color('enemy', 'lost', lost), '#' + lost['enemyColor'])
+        self.assertEqual(self.policy.marker_color('squad', 'lost', lost), '#' + lost['squadColor'])
+        self.assertEqual(self.policy.marker_color('teamKiller', 'lost', lost), '#' + lost['allyColor'])
+        # Spotted and destroyed vehicles keep the team scheme; grey style keeps the alive colour.
+        self.assertEqual(self.policy.marker_color('enemy', 'dead', lost), self.policy.team_color('enemy', 'dead'))
+        grey = dict(lost, style='grey')
+        self.assertEqual(self.policy.marker_color('enemy', 'lost', grey), self.policy.team_color('enemy', 'alive'))
+
+    def test_lost_style_and_colours_are_validated(self):
+        for key, value in (('style', 'blue'), ('enemyColor', 'red'), ('allyColor', None)):
+            data = defaults()
+            data['lostMarker'][key] = value
+            self.assertRaises(ValueError, self.policy.validate, data)

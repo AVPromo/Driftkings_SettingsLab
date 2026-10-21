@@ -459,7 +459,9 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
             window = settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LAST_POSITION_DURATION] or 60
             opacity = max(minimum, 100 - (100 - minimum) * age / float(max(1, window)))
         payload = dict(id=vehicleID, text=text, group=group, guiLabel=gui, state=state, hp=values['hp'],
-                       percent=values['hpPercent'], alpha=opacity, color=policy.team_color(group, state))
+                       percent=values['hpPercent'], alpha=opacity,
+                       color=policy.marker_color(group, state, settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LOST_MARKER]),
+                       lostColor=policy.lost_color(group, settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LOST_MARKER]))
         if self._presentations.get(vehicleID) == payload:
             return
         self._presentations[vehicleID] = payload

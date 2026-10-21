@@ -38,23 +38,25 @@ package driftkings.battle.components.minimap
                 var alpha:Number = DEAD_ICONS.indexOf(name) >= 0 ? Number(icons.deadAlpha) : Number(icons.alpha);
                 style(entry[name] as DisplayObject, size,
                     options.showVehicleTypes ? alpha * (data ? Number(data.alpha) / 100 : 1) : 0,
-                    state == "lost" ? Number(options.lostMarker.desaturate) : 0);
+                    state == "lost" ? Number(options.lostMarker.desaturate) : 0,
+                    options.lostMarker.style == "tint" && data && data.lostColor ? VehicleLabel.parseColor(String(data.lostColor)) : -1);
             }
         }
 
-        public function style(target:DisplayObject, scale:Number, alpha:Number, desaturate:Number = 0):void
+        // tint: RGB of a dull team colour, or -1 for plain grey.
+        public function style(target:DisplayObject, scale:Number, alpha:Number, desaturate:Number = 0, tint:int = -1):void
         {
             if (!target) return;
             var saved:Object = styles.remember(target);
             saved.scaleChanged = true;
             target.scaleX = saved.sx * scale; target.scaleY = saved.sy * scale;
             target.alpha = alpha / 100;
-            // Lost vehicles: fade the icon towards grey, keeping the native filters.
+            // Lost vehicles: fade the icon towards grey or a dull team colour, keeping the native filters.
             var amount:Number = Math.max(0, Math.min(100, desaturate)) / 100;
             if (amount > 0 || saved.filtersChanged)
             {
                 saved.filtersChanged = true;
-                target.filters = amount > 0 ? saved.filters.concat([desaturation(amount)]) : saved.filters;
+                target.filters = amount > 0 ? saved.filters.concat([recolour(amount, tint)]) : saved.filters;
             }
         }
 
@@ -90,10 +92,16 @@ package driftkings.battle.components.minimap
             return state == "dead" ? 0 : state == "lost" ? 1 : 2;
         }
 
-        private static function desaturation(amount:Number):ColorMatrixFilter
+        // Blend each pixel towards its luminance, multiplied by the tint (white = grey).
+        private static function recolour(amount:Number, tint:int):ColorMatrixFilter
         {
+            var colour:uint = tint < 0 ? 0xFFFFFF : uint(tint);
+            var cr:Number = (colour >> 16 & 0xFF) / 255, cg:Number = (colour >> 8 & 0xFF) / 255, cb:Number = (colour & 0xFF) / 255;
             var s:Number = 1 - amount, r:Number = 0.3086 * amount, g:Number = 0.6094 * amount, b:Number = 0.082 * amount;
-            return new ColorMatrixFilter([r + s, g, b, 0, 0,  r, g + s, b, 0, 0,  r, g, b + s, 0, 0,  0, 0, 0, 1, 0]);
+            return new ColorMatrixFilter([s + r * cr, g * cr, b * cr, 0, 0,
+                                          r * cg, s + g * cg, b * cg, 0, 0,
+                                          r * cb, g * cb, s + b * cb, 0, 0,
+                                          0, 0, 0, 1, 0]);
         }
     }
 }

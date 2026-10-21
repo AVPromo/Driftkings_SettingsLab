@@ -60,7 +60,12 @@ class MinimapEnhancementsSettings(SectionDefinition):
             title = self.i18n.get('UI_setting_' + section + '_' + key + '_text', key)
             labels = [self.i18n.get('UI_mode_' + value, value) for value in choices] if choices else None
             return nested_field([section, key], title, kind, low, high, choices, choice_labels=labels)
+        # Centred/zoomed minimap: general options, kept together and ahead of the labels.
+        for key in ('alternativeEnabled', 'zoom', 'center'):
+            columns[0].append(nested(MINIMAP_ENHANCEMENTS.PRESENTATION, key))
         columns[0].append(slider(MINIMAP_ENHANCEMENTS.ZOOM_FACTOR, 1.0, 3.0, 0.1, '{{value}}'))
+        for key, low, high in (('sizeIndex', 0, 5), ('normalAlpha', 10, 100), ('alternativeAlpha', 10, 100), ('backgroundAlpha', 0, 100)):
+            columns[0].append(nested(MINIMAP_ENHANCEMENTS.PRESENTATION, key, 'Slider', low, high))
         columns[0].append(nested(MINIMAP_ENHANCEMENTS.LABELS, GLOBAL.ENABLED))
         for key in ('normal', 'alternative', 'dead', 'lost'):
             columns[0].append(nested(MINIMAP_ENHANCEMENTS.LABELS, key, 'TextInput'))
@@ -106,10 +111,6 @@ class MinimapEnhancementsSettings(SectionDefinition):
             item['varName'] += '.' + field
             item['text'] += ' / ' + self.i18n.get('UI_field_' + field, field)
             columns[1].append(item)
-        for key in ('alternativeEnabled', 'zoom', 'center'):
-            columns[0].append(nested(MINIMAP_ENHANCEMENTS.PRESENTATION, key))
-        for key, low, high in (('sizeIndex', 0, 5), ('normalAlpha', 10, 100), ('alternativeAlpha', 10, 100), ('backgroundAlpha', 0, 100)):
-            columns[0].append(nested(MINIMAP_ENHANCEMENTS.PRESENTATION, key, 'Slider', low, high))
         for key in ('ally', 'enemy', 'squad', 'alternativeAlly', 'alternativeEnemy', 'alternativeSquad'):
             columns[0].append(nested(MINIMAP_ENHANCEMENTS.LABELS, key, 'TextInput'))
         for key in ('x', 'y'):
@@ -134,7 +135,10 @@ class MinimapEnhancementsSettings(SectionDefinition):
         for key in ('icon', 'showSeconds', 'fade'):
             columns[1].append(nested(MINIMAP_ENHANCEMENTS.LOST_MARKER, key))
         columns[1].append(nested(MINIMAP_ENHANCEMENTS.LOST_MARKER, 'minimumAlpha', 'Slider', 0, 100))
+        columns[1].append(nested(MINIMAP_ENHANCEMENTS.LOST_MARKER, 'style', 'Dropdown', choices=list(policy.LOST_STYLES)))
         columns[1].append(nested(MINIMAP_ENHANCEMENTS.LOST_MARKER, 'desaturate', 'Slider', 0, 100))
+        for key in ('enemyColor', 'allyColor', 'squadColor'):
+            columns[1].append(nested(MINIMAP_ENHANCEMENTS.LOST_MARKER, key, 'ColorChoice'))
         columns[1].append(nested(MINIMAP_ENHANCEMENTS.NEARBY, GLOBAL.ENABLED))
         columns[1].append(nested(MINIMAP_ENHANCEMENTS.NEARBY, 'range', 'Dropdown', choices=list(policy.NEARBY_RANGES)))
         columns[1].append(nested(MINIMAP_ENHANCEMENTS.NEARBY, 'distance', 'Slider', 50, 1500))

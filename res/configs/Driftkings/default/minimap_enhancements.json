@@ -124,11 +124,15 @@
     "triangleAlpha": 100
   },
   "lostMarker": {
+    "allyColor": "6A9A5A",
     "desaturate": 60,
+    "enemyColor": "B06060",
     "fade": false,
     "icon": true,
     "minimumAlpha": 25,
-    "showSeconds": false
+    "showSeconds": false,
+    "squadColor": "B08A55",
+    "style": "tint"
   },
   "mapSize": {
     "color": "FFFFFF",
