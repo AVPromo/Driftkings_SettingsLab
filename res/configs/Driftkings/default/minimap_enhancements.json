@@ -104,7 +104,7 @@
     "x": 0,
     "y": 0
   },
-  "lastPositionDuration": 30,
+  "lastPositionDuration": 0,
   "lines": {
     "alpha": 80,
     "customStyle": false,
@@ -126,6 +126,7 @@
   "lostMarker": {
     "desaturate": 60,
     "fade": false,
+    "icon": true,
     "minimumAlpha": 25,
     "showSeconds": false
   },

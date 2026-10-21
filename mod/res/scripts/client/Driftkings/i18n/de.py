@@ -985,6 +985,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_lines_geometry_text': 'Benutzerdefinierte Liniengeometrie '
                                                        '(benutzerdefinierter Stil erforderlich)',
                      'UI_setting_lines_length_text': u'Linienlänge (m)',
+                     'UI_setting_lostMarker_icon_text': u'Fahrzeugsymbol an der letzten Position (statt Punkt)',
                      'UI_setting_icons_deadScale_text': u'Symbolgröße zerstörter Fahrzeuge',
                      'UI_setting_icons_lostScale_text': u'Symbolgröße verlorener Fahrzeuge',
                      'UI_setting_lines_triangleAlpha_text': u'Deckkraft des Kameradreiecks',

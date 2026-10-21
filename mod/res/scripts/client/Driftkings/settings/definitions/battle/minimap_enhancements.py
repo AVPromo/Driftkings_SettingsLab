@@ -131,7 +131,7 @@ class MinimapEnhancementsSettings(SectionDefinition):
         columns[0].append(nested(MINIMAP_ENHANCEMENTS.HEALTH, 'mode', 'Dropdown', choices=['value', 'percent', 'bar']))
         for key, low, high in (('x', -100, 100), ('y', -100, 100), ('width', 10, 100), ('height', 1, 10), ('fontSize', 8, 24)):
             columns[0].append(nested(MINIMAP_ENHANCEMENTS.HEALTH, key, 'Slider', low, high))
-        for key in ('showSeconds', 'fade'):
+        for key in ('icon', 'showSeconds', 'fade'):
             columns[1].append(nested(MINIMAP_ENHANCEMENTS.LOST_MARKER, key))
         columns[1].append(nested(MINIMAP_ENHANCEMENTS.LOST_MARKER, 'minimumAlpha', 'Slider', 0, 100))
         columns[1].append(nested(MINIMAP_ENHANCEMENTS.LOST_MARKER, 'desaturate', 'Slider', 0, 100))

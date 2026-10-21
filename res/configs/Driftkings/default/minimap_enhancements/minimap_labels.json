@@ -39,6 +39,7 @@
   "lostMarker": {
     "desaturate": 60,
     "fade": false,
+    "icon": true,
     "minimumAlpha": 25,
     "showSeconds": false
   }

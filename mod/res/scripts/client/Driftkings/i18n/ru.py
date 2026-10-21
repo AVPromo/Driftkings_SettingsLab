@@ -962,6 +962,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_lines_geometry_text': 'Пользовательская геометрия линий (требуется '
                                                        'собственный стиль)',
                      'UI_setting_lines_length_text': u'Длина линий (м)',
+                     'UI_setting_lostMarker_icon_text': u'Иконка техники на последней позиции (вместо точки)',
                      'UI_setting_icons_deadScale_text': u'Масштаб иконок уничтоженной техники',
                      'UI_setting_icons_lostScale_text': u'Масштаб иконок потерянной техники',
                      'UI_setting_lines_triangleAlpha_text': u'Непрозрачность треугольника камеры',

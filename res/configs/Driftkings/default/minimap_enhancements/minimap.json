@@ -28,7 +28,7 @@
     "selfColor": "FFFFFF",
     "selfScale": 1.0
   },
-  "lastPositionDuration": 30,
+  "lastPositionDuration": 0,
   "mapSize": {
     "color": "FFFFFF",
     "enabled": false,

@@ -206,6 +206,8 @@ def validate(data):
     numeric(nearby.get('alpha'), 0, 100)
     color(nearby.get('color'))
     numeric(data['lostMarker'].get('desaturate'), 0, 100)
+    if type(data['lostMarker'].get('icon')) is not bool:
+        raise ValueError('Invalid minimap switch: lostMarker.icon')
     color(data['icons'].get('selfColor'))
     color(data['mapSize'].get('color'))
     numeric(labels.get('compactLength'), 4, 40)

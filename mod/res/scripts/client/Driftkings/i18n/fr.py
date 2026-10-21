@@ -1001,6 +1001,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_lines_geometry_text': 'Géométrie de ligne personnalisée (nécessite un style '
                                                        'personnalisé)',
                      'UI_setting_lines_length_text': u'Longueur des lignes (m)',
+                     'UI_setting_lostMarker_icon_text': u'Icône du véhicule à la dernière position (au lieu du point)',
                      'UI_setting_icons_deadScale_text': u'Taille des icônes de véhicules détruits',
                      'UI_setting_icons_lostScale_text': u'Taille des icônes de véhicules perdus',
                      'UI_setting_lines_triangleAlpha_text': u'Opacité du triangle de caméra',

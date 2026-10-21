@@ -327,6 +327,37 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
         self.refreshLabel(vehicleID, entry)
         return result
 
+    def _vehicleOf(self, entry):
+        for vehicleID, saved in self._entries.items():
+            if saved is entry:
+                return vehicleID
+        return None
+
+    def _lostIcon(self, entry, lost):
+        # The client draws a 'last seen' dot for vehicles outside the area of interest.
+        # Tell only the Flash entry it is still in AoI so it keeps the vehicle icon;
+        # the model stays out of AoI, so the next spotting is handled natively.
+        icon = settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LOST_MARKER]['icon']
+        if not entry.isInAoI() and (icon or not lost):
+            self._invoke(entry.getID(), 'setInAoI', bool(lost and icon))
+
+    def _clearLost(self, entry):
+        if entry.getID() not in self._lastPositions and entry.getID() not in self._expiredPositions:
+            return
+        self._lastPositions.pop(entry.getID(), None)
+        self._expiredPositions.discard(entry.getID())
+        vehicleID = self._vehicleOf(entry)
+        if vehicleID is not None:
+            self.refreshLabel(vehicleID, entry)
+
+    def _setInAoI(self, entry, isInAoI):
+        result = super(ArenaVehiclesPlugin, self)._setInAoI(entry, isInAoI)
+        # Spotted again. Vehicles spotted by allies outside our area of interest come
+        # back through updatePositions (FAR), which never calls _showVehicle.
+        if isInAoI:
+            self._clearLost(entry)
+        return result
+
     def _hideVehicle(self, entry):
         self._expiredPositions.discard(entry.getID())
         result = super(ArenaVehiclesPlugin, self)._hideVehicle(entry)
@@ -336,8 +367,11 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
             wasActive = entry.isActive()
             if entry.setActive(True):
                 self._setActive(entry.getID(), True)
+            # A duration of 0 keeps the last position until the vehicle is seen again or dies.
             duration = max(0.0, float(settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LAST_POSITION_DURATION]))
-            self._lastPositions[entry.getID()] = (entry, BigWorld.time() + duration, wasActive)
+            now = BigWorld.time()
+            self._lastPositions[entry.getID()] = (entry, now + duration if duration > 0 else None, wasActive, now)
+            self._lostIcon(entry, True)
             if self._running and self._lastPositionCallback is None:
                 self._lastPositionCallback = callback(0.25, self.updateLastPositions)
         for vehicleID, saved in self._entries.items():
@@ -406,7 +440,7 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
         group = policy.vehicle_group(gui, entry.isEnemy())
         lost = self._lastPositions.get(entry.getID())
         state = 'dead' if not info.isAlive() else 'lost' if lost else 'alive'
-        age = max(0, int(BigWorld.time() - (lost[1] - settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LAST_POSITION_DURATION]))) if lost else 0
+        age = max(0, int(BigWorld.time() - lost[3])) if lost else 0
         current, maximum = self._health.get(vehicleID, (None, info.vehicleType.maxHealth))
         if state == 'dead':
             current = 0
@@ -421,7 +455,9 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
         opacity = 100
         if state == 'lost' and settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LOST_MARKER]['fade']:
             minimum = settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LOST_MARKER]['minimumAlpha']
-            opacity = max(minimum, 100 - (100 - minimum) * age / float(max(1, settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LAST_POSITION_DURATION])))
+            # Permanent markers fade over a minute, then stay at the minimum opacity.
+            window = settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LAST_POSITION_DURATION] or 60
+            opacity = max(minimum, 100 - (100 - minimum) * age / float(max(1, window)))
         payload = dict(id=vehicleID, text=text, group=group, guiLabel=gui, state=state, hp=values['hp'],
                        percent=values['hpPercent'], alpha=opacity, color=policy.team_color(group, state))
         if self._presentations.get(vehicleID) == payload:
@@ -440,8 +476,11 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
         self.__showDestroyEntries, self.__isDestroyImmediately = self._nativeDestroyed
         if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.PERMANENT_MINIMAP_DEATH]:
             self.__showDestroyEntries = self.__isDestroyImmediately = True
-        if not settings_service.getComponentDict(config)[GLOBAL.ENABLED] or not settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.SHOW_LAST_POSITIONS]:
-            for entry, expires, wasActive in self._lastPositions.values():
+        keep = settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.SHOW_LAST_POSITIONS]
+        for entry, expires, wasActive, since in self._lastPositions.values():
+            self._lostIcon(entry, keep)
+        if not keep:
+            for entry, expires, wasActive, since in self._lastPositions.values():
                 if entry.isAlive() and not entry.isInAoI() and entry.setActive(wasActive):
                     self._setActive(entry.getID(), wasActive)
             self._lastPositions.clear()
@@ -457,10 +496,12 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
         updateLabels = self._lastLostSecond != int(now)
         self._lastLostSecond = int(now)
         enabled = settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.SHOW_LAST_POSITIONS]
-        for entryID, (entry, expires, wasActive) in list(self._lastPositions.items()):
+        for entryID, (entry, expires, wasActive, since) in list(self._lastPositions.items()):
             if not entry.isAlive() or entry.isInAoI() or not entry.getID():
+                # Seen again or destroyed: drop the 'lost' label and colours too.
+                self._clearLost(entry)
                 self._lastPositions.pop(entryID, None)
-            elif not enabled or now >= expires:
+            elif not enabled or expires is not None and now >= expires:
                 if enabled:
                     self._expiredPositions.add(entryID)
                 active = wasActive if not enabled else False

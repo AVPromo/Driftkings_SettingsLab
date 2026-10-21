@@ -961,6 +961,7 @@ TEXT = {'account_manager': {'UI_description': 'AccountManager',
                      'UI_setting_lines_geometry_text': 'Niestandardowa geometria linii (wymaga '
                                                        'niestandardowego stylu)',
                      'UI_setting_lines_length_text': u'Długość linii (m)',
+                     'UI_setting_lostMarker_icon_text': u'Ikona pojazdu w ostatniej pozycji (zamiast kropki)',
                      'UI_setting_icons_deadScale_text': u'Skala ikon zniszczonych pojazdów',
                      'UI_setting_icons_lostScale_text': u'Skala ikon utraconych pojazdów',
                      'UI_setting_lines_triangleAlpha_text': u'Krycie trójkąta kamery',
