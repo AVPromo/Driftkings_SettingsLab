@@ -161,15 +161,14 @@ GAMEFACE = {'DriftkingsMainGun': {
                                   'section': 'tech_tree_marks_of_excellence',
                                   'styles': ['coui://gui/gameface/mods/Driftkings/shared/marks_tokens.css',
                                              'coui://gui/gameface/mods/Driftkings/MarksOnGunTechTree/marks.css']},
- 'DriftkingsRatingPlayers': {'context': 'loading_tab',
+ 'DriftkingsRatingPlayers': {'context': 'tab',
                              'layout': 'coui://gui/gameface/mods/Driftkings/RatingPlayers/model.html',
                              'owner': '__dkPlayerRatings',
                              'python': 'Driftkings.views.battle.panel_gameface',
                              'resource': 'mods/Driftkings/RatingPlayers/model',
-                             'scripts': ['coui://gui/gameface/mods/Driftkings/shared/flash_text.js',
-                                            'coui://gui/gameface/mods/Driftkings/RatingPlayers/ratings.js'],
+                             'scripts': ['coui://gui/gameface/mods/Driftkings/RatingPlayers/ratings.js'],
                              'section': 'team_panels',
-                             'styles': ['coui://gui/gameface/mods/Driftkings/RatingPlayers/ratings.css']}}
+                             'styles': []}}
 
 
 def gameface_spec(name):

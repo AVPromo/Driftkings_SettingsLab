@@ -103,12 +103,9 @@
         "DriftkingsRatingPlayers": {
             "owner": "__dkPlayerRatings",
             "scripts": [
-                "coui://gui/gameface/mods/Driftkings/shared/flash_text.js",
                 "coui://gui/gameface/mods/Driftkings/RatingPlayers/ratings.js"
             ],
-            "styles": [
-                "coui://gui/gameface/mods/Driftkings/RatingPlayers/ratings.css"
-            ]
+            "styles": []
         }
     };
     /* GENERATED CATALOG END */

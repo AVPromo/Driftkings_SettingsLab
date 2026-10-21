@@ -50,14 +50,6 @@ for (const size of ['8', '40']) {
     assert.strictEqual(result.childNodes[0].style.fontSize, size + 'rem');
 }
 assert.strictEqual(output(element('div', {}, [element('font', {face: 'Times New Roman'}, [])]), options).childNodes[0].style.fontFamily, 'Times New Roman');
-// Exercise the actual ratings wrapper, including the tab-dependent units.
-const source = fs.readFileSync(path.join(root, 'mod/res/gui/gameface/mods/Driftkings/RatingPlayers/ratings.js'), 'utf8');
-const start = source.indexOf('    function copyText('), end = source.indexOf('    function applyLayout(', start);
-vm.runInContext('var tabData = null; ' + source.slice(start, end) + '; this.copyText = copyText;', context);
-let target = element('div'); context.copyText(rich, target);
-assert.strictEqual(target.childNodes[1].style.fontSize, '16px');
-context.tabData = {}; target = element('div'); context.copyText(rich, target);
-assert.strictEqual(target.childNodes[1].style.fontSize, '16rem');
 // A second load is safe when two injected features request the shared script.
 vm.runInContext(fs.readFileSync(path.join(root, 'mod/res/gui/gameface/mods/Driftkings/shared/flash_text.js'), 'utf8'), context);
 assert.deepStrictEqual(output(rich, options).childNodes[1].style, ratings.childNodes[1].style);

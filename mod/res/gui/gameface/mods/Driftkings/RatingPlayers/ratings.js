@@ -2,7 +2,7 @@
     'use strict';
     var FEATURE = 'DriftkingsRatingPlayers';
     if (window.__dkPlayerRatings) { window.__dkPlayerRatings.dispose(); }
-    var disposed = false, node = null, resourceId = null, callbackId = null;
+    var disposed = false, resourceId = null, callbackId = null;
     var lastPayload = null, timer = null;
     var tabData = null, tabFields = [], tabStyles = [];
     var tabExtras = [], profile = null, diagnosticModel = null;
@@ -517,57 +517,15 @@
         }
     }
 
-    function copyText(source, target) {
-        window.DriftkingsFlashText.copy(source, target, {
-            fontFamily: true,
-            fontAlpha: true,
-            hideZeroSize: true,
-            sizeUnit: tabData ? 'rem' : 'px'
-        });
-    }
-    function applyLayout(node, style) {
-        if (!style) { return; }
-        if (style.useColor && /^#[0-9a-f]{6}$/i.test(style.color)) {
-            node.style.color = style.color;
-            var children = node.getElementsByTagName('*');
-            for (var i = 0; i < children.length; i++) { children[i].style.color = style.color; }
-        }
-        if (/^(left|center|right)$/.test(style.align)) { node.style.textAlign = style.align; }
-        var x = Number(style.dx) || 0, y = Number(style.dy) || 0, width = Number(style.width) || 0;
-        node.style.position = 'relative';
-        node.style.left = Math.max(-500, Math.min(500, x)) + 'px';
-        node.style.top = Math.max(-500, Math.min(500, y)) + 'px';
-        if (width > 0) { node.style.width = Math.min(1000, width) + 'px'; node.style.flex = 'none'; }
-    }
     function hide() {
         tabData = null; renderTab(null);
-        if (node && node.parentNode) { node.parentNode.removeChild(node); }
-        node = null;
     }
     function render(payload) {
         var data;
         try { data = JSON.parse(payload || '{}'); } catch (e) { data = {}; }
+        // Only the random-battle TAB is supported; any other payload hides the overlay.
         if (data.screen === 'tab') { tabData = data; renderTab(data); return; }
-        if (!data.enabled || !data.rows || !data.rows.some(function (row) { return row.loadingEnabled && (typeof row.loadingNick === 'string' || typeof row.loadingVehicle === 'string'); })) { hide(); return; }
-        if (!node) { node = document.createElement('div'); node.id = 'dk-player-ratings'; document.body.appendChild(node); }
-        while (node.firstChild) { node.removeChild(node.firstChild); }
-        var title = document.createElement('div'); title.textContent = 'Player statistics'; node.appendChild(title);
-        var rows = data.rows.slice().sort(function (a, b) { return Number(b.ally) - Number(a.ally) || a.vehicleID - b.vehicleID; });
-        rows.forEach(function (row) {
-            if (!row.loadingEnabled || (typeof row.loadingNick !== 'string' && typeof row.loadingVehicle !== 'string')) { return; }
-            var line = document.createElement('div'); line.className = 'dk-rating-row';
-            var name = document.createElement('span');
-            if (typeof row.loadingNick === 'string') {
-                var nickMarkup = document.createElement('div'); nickMarkup.innerHTML = row.loadingNick;
-                copyText(nickMarkup, name);
-            } else { name.textContent = row.fullName; }
-            var rating = document.createElement('span');
-            var parsed = document.createElement('div'); parsed.innerHTML = typeof row.loadingVehicle === 'string' ? row.loadingVehicle : '';
-            copyText(parsed, rating);
-            if (/^#[0-9a-f]{6}$/i.test(row.color)) { rating.style.color = row.color; }
-            applyLayout(name, row.loadingNickStyle); applyLayout(rating, row.loadingVehicleStyle);
-            line.appendChild(name); line.appendChild(rating); node.appendChild(line);
-        });
+        hide();
     }
     function refresh(pollLayout) {
         if (disposed || !window.subViews) { return; }

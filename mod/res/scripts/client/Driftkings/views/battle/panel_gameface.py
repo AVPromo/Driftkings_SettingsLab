@@ -2,7 +2,7 @@
 from Driftkings.interface_catalog import gameface_spec
 from Driftkings._constants import GLOBAL, TEAM_PANELS
 from Driftkings.settings.service import settings_service
-"""Gameface roster bridge for the current random TAB and White Tiger loading."""
+"""Gameface roster bridge for the current random TAB."""
 import json
 import logging
 import math
@@ -66,11 +66,6 @@ class GamefaceLoading(object):
             install(TabView,'_onLoaded','tab')
         except ImportError:
             logging.getLogger('Driftkings.PlayerPanelPro').debug('TabView unavailable in this client')
-        try:
-            from white_tiger.gui.impl.battle.white_tiger_battle_loading import WhiteTigerBattleLoadingView
-            install(WhiteTigerBattleLoadingView,'_onLoading','loading')
-        except ImportError:
-            logging.getLogger('Driftkings.PlayerPanelPro').debug('WhiteTiger loading view unavailable in this client')
 
     def active_screens(self):
         return set(record['screen'] for record in self.children.values() if record.get('visible',True))
@@ -111,21 +106,13 @@ class GamefaceLoading(object):
             screen=record['screen']
             if not record.get('visible',True) or not enabled:
                 data={'enabled':False,'screen':screen,'rows':[]}
-            elif screen=='tab':
+            else:
                 result=[{'id':row['id'],'ally':row['ally'],'aliases':row['aliases'],'cfg':row['tab']} for row in rows]
                 players=view.viewModel.playerList
                 order={'left':[p.getVehicleId() for p in players.getAllies()],
                        'right':[p.getVehicleId() for p in players.getEnemies()]}
                 data={'enabled':enabled,'screen':screen,'rows':result,'order':order,
                       'diagnostics':settings_service.getComponentDict(self.owner.config)[TEAM_PANELS.PERFORMANCE].get('diagnostics',False)}
-            else:
-                result=[]
-                for row in rows:
-                    side='Left' if row['ally'] else 'Right'
-                    cfg=row['loading']
-                    result.append({'ally':row['ally'],'loadingEnabled':cfg['enabled'],
-                        'loadingNick':cfg.get('format'+side+'Nick'), 'loadingVehicle':cfg.get('format'+side+'Vehicle')})
-                data={'enabled':enabled,'screen':screen,'rows':result}
             # Resolved row configs are immutable snapshots. Compare before
             # serializing: most battle ticks have no TAB/loading changes.
             if data!=record.get('data'):
