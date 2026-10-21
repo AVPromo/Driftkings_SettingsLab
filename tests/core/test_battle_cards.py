@@ -182,7 +182,8 @@ class BattleCardTests(RuntimeTest):
             'Driftkings.core.marks_state': module(marks_state=state),
             'Driftkings.core.hud_visibility': module(hudVisibility=module(
                 attach=lambda adapter: attached.append(adapter), detach=lambda adapter: attached.remove(adapter))),
-            'Driftkings.views.marks_model': module(finite=lambda value: float(value),
+            'Driftkings.views.marks_model': module(moved_panel=self.load('views.marks_model').moved_panel,
+                                                  finite=lambda value: float(value),
                 number_locale=lambda language: {'decimalSeparator': '.', 'groupSeparator': ','}),
             'BattleReplay': module(isPlaying=lambda: True),
         })

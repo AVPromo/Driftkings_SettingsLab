@@ -17,6 +17,24 @@ def number_locale(language):
     return {'decimalSeparator': decimal, 'groupSeparator': group}
 
 
+ANCHORS = {'alignX': ('left', 'center', 'right'), 'alignY': ('top', 'center', 'bottom')}
+
+
+def moved_panel(panel, args):
+    """Apply a dragged position; the anchor travels with it so a resolution change keeps the panel by its edge."""
+    if not isinstance(args, dict):
+        return None
+    x, y = finite(args.get('x')), finite(args.get('y'))
+    if x is None or y is None:
+        return None
+    panel = dict(panel)
+    panel.update(x=max(-7680, min(7680, x)), y=max(-4320, min(4320, y)))
+    for key, choices in ANCHORS.items():
+        if args.get(key) in choices:
+            panel[key] = args[key]
+    return panel
+
+
 
 def delta_model(value):
     value = finite(value)

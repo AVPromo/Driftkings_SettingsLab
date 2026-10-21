@@ -260,13 +260,21 @@
         style(root, 'left', Math.max(0, Math.min(window.innerWidth - width, x)) + 'px');
         style(root, 'top', Math.max(0, Math.min(window.innerHeight - height, y)) + 'px');
     }
-    function savedPosition(root, cfg) {
+    function anchor(start, size, total, names) {
+        var middle = start + size / 2;
+        return middle < total / 3 ? names[0] : middle > total * 2 / 3 ? names[2] : names[1];
+    }
+    function savedPosition(root) {
+        // Anchor to the nearest screen edge, like the native HUD, so a resolution change keeps the
+        // panel beside the elements it was placed next to instead of sliding underneath them.
         var x = parseFloat(root.style.left), y = parseFloat(root.style.top), rect = root.getBoundingClientRect();
-        if (cfg.alignX === 'right') { x -= window.innerWidth - rect.width; }
-        else if (cfg.alignX === 'center') { x -= (window.innerWidth - rect.width) / 2; }
-        if (cfg.alignY === 'bottom') { y -= window.innerHeight - rect.height; }
-        else if (cfg.alignY === 'center') { y -= (window.innerHeight - rect.height) / 2; }
-        return {x: Math.round(x / unit()), y: Math.round(y / unit())};
+        var alignX = anchor(x, rect.width, window.innerWidth, ['left', 'center', 'right']);
+        var alignY = anchor(y, rect.height, window.innerHeight, ['top', 'center', 'bottom']);
+        if (alignX === 'right') { x -= window.innerWidth - rect.width; }
+        else if (alignX === 'center') { x -= (window.innerWidth - rect.width) / 2; }
+        if (alignY === 'bottom') { y -= window.innerHeight - rect.height; }
+        else if (alignY === 'center') { y -= (window.innerHeight - rect.height) / 2; }
+        return {x: Math.round(x / unit()), y: Math.round(y / unit()), alignX: alignX, alignY: alignY};
     }
     function theme(root, cfg, compact, baseWidth) {
         var accent = color(cfg.accentColor, '#E8C55A'), bg = color(cfg.backgroundColor, '#0b141b');

@@ -8,7 +8,7 @@ from Driftkings.core.marks_state import marks_state
 from Driftkings.core.hud_visibility import hudVisibility
 from Driftkings.settings.service import settings_service
 from Driftkings.views.battle.common import BattleCardAdapter
-from Driftkings.views.marks_model import finite, number_locale
+from Driftkings.views.marks_model import moved_panel, number_locale
 
 LOG = logging.getLogger('Driftkings.MarksOnGunBattle')
 FEATURE = 'DriftkingsMarksOnGunBattle'
@@ -68,13 +68,11 @@ class BattleMarksAdapter(BattleCardAdapter):
 
     def savePosition(self, child, args):
         settings = settings_service.getComponentDict(_component().config)
-        if not self.active or settings.get(BATTLE_MARKS_OF_EXCELLENCE.GAMEFACE, {}).get('locked', True) or not isinstance(args, dict):
+        if not self.active or settings.get(BATTLE_MARKS_OF_EXCELLENCE.GAMEFACE, {}).get('locked', True):
             return
-        x, y = finite(args.get('x')), finite(args.get('y'))
-        if x is None or y is None:
+        panel = moved_panel(settings[BATTLE_MARKS_OF_EXCELLENCE.PANEL], args)
+        if panel is None:
             return
-        panel = dict(settings[BATTLE_MARKS_OF_EXCELLENCE.PANEL])
-        panel.update(x=max(-7680, min(7680, x)), y=max(-4320, min(4320, y)))
         settings_service.apply(_component().config, {BATTLE_MARKS_OF_EXCELLENCE.PANEL: panel})
 
     def refresh(self):

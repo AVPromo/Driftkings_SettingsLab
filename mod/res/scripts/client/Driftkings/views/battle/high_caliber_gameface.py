@@ -7,7 +7,7 @@ from Driftkings._constants import GLOBAL, HIGH_CALIBER_PROGRESS
 from Driftkings.core.hud_visibility import hudVisibility
 from Driftkings.settings.service import settings_service
 from Driftkings.views.battle.common import BattleCardAdapter
-from Driftkings.views.marks_model import finite, number_locale
+from Driftkings.views.marks_model import moved_panel, number_locale
 
 LOG = logging.getLogger('Driftkings.MainGunBattle')
 FEATURE = 'DriftkingsMainGun'
@@ -32,14 +32,11 @@ class MainGunAdapter(BattleCardAdapter):
         settings = settings_service.getComponentDict(_component().config)
         if (not self.active or not self.hudVisible or not child._guiVisible
                 or not child._cursorVisible or settings.get('textLock', False)
-                or not _component().mainGuns.payload.get('visible')
-                or not isinstance(args, dict)):
+                or not _component().mainGuns.payload.get('visible')):
             return
-        x, y = finite(args.get('x')), finite(args.get('y'))
-        if x is None or y is None:
+        panel = moved_panel(settings[HIGH_CALIBER_PROGRESS.TEXT_POSITION], args)
+        if panel is None:
             return
-        panel = dict(settings[HIGH_CALIBER_PROGRESS.TEXT_POSITION])
-        panel.update(x=max(-7680, min(7680, x)), y=max(-4320, min(4320, y)))
         settings_service.apply(_component().config, {HIGH_CALIBER_PROGRESS.TEXT_POSITION: panel})
 
     def refresh(self):

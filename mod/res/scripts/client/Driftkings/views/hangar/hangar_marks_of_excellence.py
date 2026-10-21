@@ -2,7 +2,7 @@
 from Driftkings._constants import MARK_THRESHOLDS
 from Driftkings._constants import GLOBAL, HANGAR_MARKS_OF_EXCELLENCE
 """Presentation adapter for MarksOnGunHangar; gameplay state stays in its component."""
-from Driftkings.views.marks_model import number_locale
+from Driftkings.views.marks_model import moved_panel, number_locale
 from Driftkings.settings.service import settings_service, affects
 from Driftkings.common.utils.colorRatting import getStatisticColor
 import weakref
@@ -130,11 +130,12 @@ def install_gameface():
                     model._setString(0, '{"config":{"visible":false}}')
 
         def savePosition(self, args):
-            if settings_service.getComponentDict(_component().config)[HANGAR_MARKS_OF_EXCELLENCE.TEXT_LOCK] or not isinstance(args, dict):
+            settings = settings_service.getComponentDict(_component().config)
+            if settings[HANGAR_MARKS_OF_EXCELLENCE.TEXT_LOCK]:
                 return
-            panel = dict(settings_service.getComponentDict(_component().config)[HANGAR_MARKS_OF_EXCELLENCE.PANEL])
-            panel['x'] = max(-7680, min(7680, _component().finite(args.get('x'), panel['x'])))
-            panel['y'] = max(-4320, min(4320, _component().finite(args.get('y'), panel['y'])))
+            panel = moved_panel(settings[HANGAR_MARKS_OF_EXCELLENCE.PANEL], args)
+            if panel is None:
+                return
             settings_service.apply(_component().config, {HANGAR_MARKS_OF_EXCELLENCE.PANEL: panel})
 
     install_card(_component, MarksView, __name__)

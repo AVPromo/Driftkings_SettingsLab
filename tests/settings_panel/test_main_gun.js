@@ -81,6 +81,14 @@ event.target = shield;
 document.fire('mousemove', event); document.fire('mouseup', event);
 assert.strictEqual(document.body.children.length, 1); assert.strictEqual(shield.parentNode, null);
 assert.strictEqual(saved.length, 1); assert.strictEqual(saved[0].x, 220); assert.strictEqual(saved[0].y, 230);
+assert.strictEqual(saved[0].alignX, 'left'); assert.strictEqual(saved[0].alignY, 'top');
+// Dropped near the bottom-right corner, the position is stored relative to that corner.
+event.target = find('dk-main-gun__value'); event.clientX = 230; event.clientY = 240;
+document.fire('mousedown', event); event.clientX = 2000; event.clientY = 2000;
+document.fire('mousemove', event); document.fire('mouseup', event);
+assert.strictEqual(saved.length, 2);
+assert.strictEqual(JSON.stringify(saved[1]), JSON.stringify({x: 0, y: 0, alignX: 'right', alignY: 'bottom'}));
+saved.pop();
 window.innerWidth = 320; window.innerHeight = 100; data.config.scale = 3; update();
 var bounds = root.getBoundingClientRect(); assert(bounds.width <= 320 && bounds.height <= 100);
 data.config.locked = true; update(); document.fire('mousedown', event); document.fire('mouseup', event);
