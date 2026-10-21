@@ -7,6 +7,8 @@ except NameError:
     text_type = str
 
 CIRCLES = ('draw', 'maxView', 'proximity', 'view')
+# Distance that marks an enemy as nearby: own view range, shell range or a fixed value.
+NEARBY_RANGES = ('view', 'shell', 'distance')
 ARTILLERY_AIMS = tuple('gui/maps/Driftkings/Minimap/MinimapAim_%d.png' % i for i in range(7))
 
 
@@ -52,6 +54,13 @@ def team_color(group, state):
     from Driftkings.common.utils.color_rating_data import system_colors
     key = {'squad': 'squadman'}.get(group, group) + ('_dead' if state == 'dead' else '_alive')
     return system_colors.get(key, system_colors['ally_alive'])
+
+
+def vehicle_names(icon_name, short_name):
+    """Names an extra circle may use for one vehicle: 'germany-G04_PzVI_Tiger_I', 'G04_PzVI_Tiger_I' or 'Tiger I'."""
+    icon = (icon_name or '').replace(':', '-').lower()
+    names = [icon, icon.partition('-')[2], (short_name or '').lower()]
+    return [name for name in names if name]
 
 
 def shell_range(descriptor, shell_cd):
@@ -186,6 +195,16 @@ def validate(data):
     if type(labels.get('teamColors')) is not bool:
         raise ValueError('Invalid minimap switch: labels.teamColors')
     numeric(data['icons'].get('deadAlpha'), 0, 100)
+    for key in ('deadScale', 'lostScale'):
+        numeric(data['icons'].get(key), .5, 3)
+    for key in ('triangleAlpha', 'directionAlpha'):
+        numeric(data['lines'].get(key), 0, 100)
+    nearby = data.get('nearby')
+    if not isinstance(nearby, dict) or type(nearby.get('enabled')) is not bool or nearby.get('range') not in NEARBY_RANGES:
+        raise ValueError('Invalid minimap section: nearby')
+    numeric(nearby.get('distance'), 50, 1500)
+    numeric(nearby.get('alpha'), 0, 100)
+    color(nearby.get('color'))
     numeric(data['lostMarker'].get('desaturate'), 0, 100)
     color(data['icons'].get('selfColor'))
     color(data['mapSize'].get('color'))
@@ -221,6 +240,9 @@ def validate(data):
         color(item.get('color'))
         if item.get('vehicleClass') not in ('all', 'lightTank', 'mediumTank', 'heavyTank', 'AT-SPG', 'SPG'):
             raise ValueError('Invalid circle vehicle class')
+        vehicle = item.get('vehicle', '')
+        if not isinstance(vehicle, (str, text_type)) or len(vehicle) > 64:
+            raise ValueError('Invalid circle vehicle name')
 
 
 def numeric(value, lo, hi):

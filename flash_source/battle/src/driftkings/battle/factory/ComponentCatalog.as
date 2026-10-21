@@ -6,7 +6,7 @@ package driftkings.battle.factory
     import driftkings.battle.components.distance_marker.DistanceMarkerUI;
     import driftkings.battle.components.flight_timer.FlightTimerUI;
     import driftkings.battle.components.health.OwnHealthUI;
-    import driftkings.battle.components.minimap.MinimapCentred;
+    import driftkings.battle.components.minimap.MinimapEnhancementsUI;
     import driftkings.battle.components.overlay.OverlayUI;
     import driftkings.battle.components.ratings.RatingScreens;
     import driftkings.battle.components.sixth_sense.SixthSenseUI;
@@ -22,7 +22,7 @@ package driftkings.battle.factory
                 DriftkingsOverlay:OverlayUI,
                 DriftkingsRatingScreens:RatingScreens,
                 FlightTimerView:FlightTimerUI,
-                MinimapCentredView:MinimapCentred,
+                MinimapEnhancementsView:MinimapEnhancementsUI,
                 OwnHealthView:OwnHealthUI,
                 SixthSenseView:SixthSenseUI
             };

@@ -21,6 +21,8 @@
   "icons": {
     "alpha": 100,
     "deadAlpha": 70,
+    "deadScale": 0.8,
+    "lostScale": 0.9,
     "scale": 1.0,
     "selfAlpha": 100,
     "selfColor": "FFFFFF",
@@ -36,6 +38,13 @@
     "y": 5
   },
   "minimapSchema": 1,
+  "nearby": {
+    "alpha": 90,
+    "color": "FF3020",
+    "distance": 300,
+    "enabled": true,
+    "range": "view"
+  },
   "permanentMinimapDeath": false,
   "presentation": {
     "alternativeAlpha": 100,

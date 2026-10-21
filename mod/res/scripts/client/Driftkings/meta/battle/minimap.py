@@ -3,7 +3,7 @@ from Driftkings.meta.battle.base import BattleMeta
 
 
 class MinimapMeta(BattleMeta):
-    FLASH_CLASS = 'driftkings.battle.components.minimap.MinimapCentred'
+    FLASH_CLASS = 'driftkings.battle.components.minimap.MinimapEnhancementsUI'
 
     def as_minimapPresentationS(self, options):
         if self._isDAAPIInited():

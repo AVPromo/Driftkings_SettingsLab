@@ -237,6 +237,7 @@ class MINIMAP_ENHANCEMENTS(object):
     HEALTH = 'health'
     LOST_MARKER = 'lostMarker'
     MAP_SIZE = 'mapSize'
+    NEARBY = 'nearby'
     CIRCLES = 'circles'
     EXTRA_CIRCLES = 'extraCircles'
     LINES = 'lines'
@@ -474,13 +475,15 @@ HANDLER_VALUES = {
             MINIMAP_ENHANCEMENTS.COLOR_DRAW_CIRCLE, MINIMAP_ENHANCEMENTS.COLOR_MAX_VIEW_CIRCLE,
             MINIMAP_ENHANCEMENTS.COLOR_MIN_SPOTTING_CIRCLE, MINIMAP_ENHANCEMENTS.COLOR_VIEW_CIRCLE),
         MINIMAP_ENHANCEMENTS.LABELS + '.customColors': tuple(MINIMAP_ENHANCEMENTS.LABELS + '.' + key
-            for key in ('allyColor', 'enemyColor', 'squadColor', 'deadColor')),
+            for key in ('allyColor', 'enemyColor', 'squadColor', 'teamKillerColor', 'deadColor')),
+        MINIMAP_ENHANCEMENTS.NEARBY + '.enabled': tuple(MINIMAP_ENHANCEMENTS.NEARBY + '.' + key
+            for key in ('range', 'distance', 'color', 'alpha')),
         MINIMAP_ENHANCEMENTS.LABELS + '.avoidOverlap': (MINIMAP_ENHANCEMENTS.LABELS + '.compactLength',),
         MINIMAP_ENHANCEMENTS.LOST_MARKER + '.fade': (MINIMAP_ENHANCEMENTS.LOST_MARKER + '.minimumAlpha',),
         MINIMAP_ENHANCEMENTS.LINES + '.customStyle': tuple(MINIMAP_ENHANCEMENTS.LINES + '.' + key
-            for key in ('directionColor', 'sectorColor', 'alpha', 'geometry', 'length', 'thickness', 'dash', 'gap')),
+            for key in ('directionColor', 'sectorColor', 'alpha', 'geometry', 'thickness', 'dash', 'gap')),
         MINIMAP_ENHANCEMENTS.LINES + '.geometry': tuple(MINIMAP_ENHANCEMENTS.LINES + '.' + key
-            for key in ('length', 'thickness', 'dash', 'gap')),
+            for key in ('thickness', 'dash', 'gap')),
         MINIMAP_ENHANCEMENTS.PRESENTATION + '.alternativeEnabled': (
             MINIMAP_ENHANCEMENTS.BUTTON, MINIMAP_ENHANCEMENTS.ZOOM_FACTOR, MINIMAP_ENHANCEMENTS.ZOOM_FACTOR_MAX,
             MINIMAP_ENHANCEMENTS.PRESENTATION + '.zoom', MINIMAP_ENHANCEMENTS.PRESENTATION + '.center',
@@ -516,6 +519,6 @@ class BATTLE_ALIASES(object):
     SHELL_FLIGHT_TIME = 'FlightTimerView'
     VEHICLE_HEALTH = 'OwnHealthView'
     SIXTH_SENSE_ALERT = 'SixthSenseView'
-    MINIMAP = 'MinimapCentredView'
+    MINIMAP = 'MinimapEnhancementsView'
     PLAYERS_PANEL = 'DriftkingsRatingScreens'
     OVERLAY = 'DriftkingsOverlay'

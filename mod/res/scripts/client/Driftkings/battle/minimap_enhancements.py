@@ -77,7 +77,8 @@ class MinimapController(object):
                                  MINIMAP_ENHANCEMENTS.ZOOM_FACTOR_MAX, MINIMAP_ENHANCEMENTS.ICONS, MINIMAP_ENHANCEMENTS.HEALTH,
                                  MINIMAP_ENHANCEMENTS.LOST_MARKER, MINIMAP_ENHANCEMENTS.MAP_SIZE, MINIMAP_ENHANCEMENTS.CIRCLES,
                                  MINIMAP_ENHANCEMENTS.EXTRA_CIRCLES, MINIMAP_ENHANCEMENTS.LABELS, MINIMAP_ENHANCEMENTS.LINES,
-                                 MINIMAP_ENHANCEMENTS.ARTILLERY_AIM, MINIMAP_ENHANCEMENTS.SHOW_VEHICLE_TYPES)):
+                                 MINIMAP_ENHANCEMENTS.ARTILLERY_AIM, MINIMAP_ENHANCEMENTS.SHOW_VEHICLE_TYPES,
+                                 MINIMAP_ENHANCEMENTS.NEARBY)):
             for view in list(VIEWS):
                 view.onAltKey(self.minimapZoom)
 
@@ -103,14 +104,15 @@ config = Settings()
 controller = MinimapController(config)
 
 
-from Driftkings.views.battle.minimap_enhancements import MinimapCentredView
+from Driftkings.views.battle.minimap_enhancements import MinimapEnhancementsView
 
 
 class PersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
 
     def _rangeState(self):
         if not hasattr(self, '_ranges'):
-            self._ranges = {'width': 1000, 'height': 1000, 'circles': {}, 'vehicleClass': getattr(self, '_vehicleClass', None)}
+            # Width 0 until as_initArenaSize: Flash then uses the arena bounding box instead.
+            self._ranges = {'width': 0, 'height': 0, 'circles': {}, 'vehicleClass': getattr(self, '_vehicleClass', None)}
         return self._ranges
 
     def _publishRanges(self):
@@ -169,12 +171,12 @@ class PersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
 
     def _refreshYawLimits(self):
         info = self._arenaDP.getVehicleInfo()
-        if getattr(self, '_vehicleClass', None) != info.vehicleType.classTag:
+        names = policy.vehicle_names(getattr(info.vehicleType, 'iconName', ''), getattr(info.vehicleType, 'shortName', ''))
+        ranges = self._rangeState()
+        if getattr(self, '_vehicleClass', None) != info.vehicleType.classTag or ranges.get('vehicleNames') != names:
             self._vehicleClass = info.vehicleType.classTag
-            if hasattr(self, '_ranges'):
-                self._ranges['vehicleClass'] = self._vehicleClass
-                for view in list(VIEWS):
-                    view.onRanges(self._ranges)
+            ranges.update(vehicleClass=self._vehicleClass, vehicleNames=names)
+            self._publishRanges()
         limits = info.vehicleType.turretYawLimits
         extended = settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.YAW]
         updated = (degrees(limits[0]), degrees(limits[1])) if limits is not None and (extended or info.isSPG()) else None
@@ -495,7 +497,7 @@ def new_setupPlugins(func, self, arenaVisitor):
 
 
 def getBattleViews():
-    return ((AS_BATTLE, MinimapCentredView, config),)
+    return ((AS_BATTLE, MinimapEnhancementsView, config),)
 
 
 def fini():

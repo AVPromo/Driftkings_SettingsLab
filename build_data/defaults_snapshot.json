@@ -136,7 +136,7 @@
     {
       "path": "default/minimap_enhancements/minimap.json",
       "source_sha256": "de64e128582a012f20414e5aab72e09f8462db98ad1a2c17b0aabb2448d0dd33",
-      "sha256": "c31694cacfcadd793e8eec7c812a5c99c18c877f49f31f8e70715b4554106487"
+      "sha256": "1516638d1b69839c865ece24c9004be3fb221742e6e92be4ce1d87f878fa1350"
     },
     {
       "path": "default/minimap_enhancements/minimap_circles.json",
@@ -151,12 +151,12 @@
     {
       "path": "default/minimap_enhancements/minimap_lines.json",
       "source_sha256": "59d1ff8edd5a5b497c1d0a4888e7446f953f6fe2745e4480e0f93f07685c76f6",
-      "sha256": "de917a63cd317e384f099526b129ce643157aac9b1f2737a6d96169ba37bed4d"
+      "sha256": "b3c6d7257bb1a801f7dd9532d1bb2aa9466c91d36d852e837bfff03c67a2146e"
     },
     {
       "path": "default/minimap_enhancements.json",
       "source_sha256": "dfaa52eb85cb1a534dec7230085819638293ffd3220ac3ed81a87ac6869acb41",
-      "sha256": "c76d7d98008e21ecabe51c425748bcdfc5ca9ad99f3cd15ceae8b035e22dd066"
+      "sha256": "f05ab78dfb7c69a34ed48d4bb1bc849a3a9bade84efa11c2348d30532ee62f94"
     },
     {
       "path": "default/vehicle_health.json",

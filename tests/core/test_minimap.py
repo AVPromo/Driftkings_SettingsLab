@@ -77,3 +77,22 @@ class MinimapPolicyTests(RuntimeTest):
             data = defaults()
             data[section][key] = value
             self.assertRaises(ValueError, self.policy.validate, data)
+
+    def test_vehicle_names_cover_tag_and_display_name(self):
+        names = self.policy.vehicle_names('germany:G04_PzVI_Tiger_I', 'Tiger I')
+        self.assertEqual(names, ['germany-g04_pzvi_tiger_i', 'g04_pzvi_tiger_i', 'tiger i'])
+        self.assertEqual(self.policy.vehicle_names('', None), [])
+
+    def test_state_scales_nearby_and_vehicle_circles_are_validated(self):
+        data = defaults()
+        data['extraCircles'] = [{'radius': 445, 'alpha': 60, 'color': 'FFFFFF', 'thickness': 1, 'dash': 0,
+                                 'gap': 5, 'vehicleClass': 'all', 'vehicle': 'Tiger I'}]
+        self.policy.validate(data)
+        for section, key, value in (('icons', 'deadScale', 0.1), ('icons', 'lostScale', 4), ('lines', 'triangleAlpha', 120),
+                                    ('lines', 'directionAlpha', -5), ('nearby', 'range', 'radar'),
+                                    ('nearby', 'distance', 10), ('nearby', 'enabled', 'yes'), ('nearby', 'color', 'red')):
+            broken = defaults()
+            broken[section][key] = value
+            self.assertRaises(ValueError, self.policy.validate, broken)
+        data['extraCircles'][0]['vehicle'] = 'x' * 65
+        self.assertRaises(ValueError, self.policy.validate, data)

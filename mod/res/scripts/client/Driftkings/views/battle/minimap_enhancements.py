@@ -16,15 +16,15 @@ def _component():
     return import_module('Driftkings.battle.minimap_enhancements')
 
 
-class MinimapCentredView(MinimapMeta):
+class MinimapEnhancementsView(MinimapMeta):
     def __init__(self):
-        super(MinimapCentredView, self).__init__(_component().config.NAME)
+        super(MinimapEnhancementsView, self).__init__(_component().config.NAME)
         self._releaseCallback = None
 
 
     def _populate(self):
         # noinspection PyProtectedMember
-        super(MinimapCentredView, self)._populate()
+        super(MinimapEnhancementsView, self)._populate()
         g_events.onAltKey += self.onAltKey
         _component().VIEWS.add(self)
         _component().controller.activate()
@@ -46,7 +46,7 @@ class MinimapCentredView(MinimapMeta):
             _component().controller.deactivate()
         g_events.onAltKey -= self.onAltKey
         # noinspection PyProtectedMember
-        super(MinimapCentredView, self)._dispose()
+        super(MinimapEnhancementsView, self)._dispose()
 
     def _checkRelease(self):
         self._releaseCallback = None
@@ -69,7 +69,7 @@ class MinimapCentredView(MinimapMeta):
         # Epic's segmented map keeps its native positioning; labels still switch.
         options = dict(settings_service.getComponentDict(_component().config)[MINIMAP_ENHANCEMENTS.PRESENTATION])
         data = settings_service.getComponentDict(_component().config)
-        for section in ('icons', 'health', 'lostMarker', 'mapSize', 'circles', 'extraCircles'):
+        for section in ('icons', 'health', 'lostMarker', 'mapSize', 'circles', 'extraCircles', 'nearby'):
             options[section] = data[section]
         visitor = _component().controller.sessionProvider.arenaVisitor
         bottom, top = visitor.type.getBoundingBox()
