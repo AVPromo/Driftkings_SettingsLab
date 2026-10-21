@@ -203,14 +203,6 @@ TEXT = {'account_manager': {'UI_description': 'Gestor de cuentas',
                                                                     'del almacenamiento.',
                     'UI_setting_disableSoundCommander_text': 'Desactivar el comandante de sonido',
                     'UI_setting_disableSoundCommander_tooltip': 'Desactiva Sound Commander en la batalla.',
-                    'UI_setting_hideBadges_text': 'Ocultar insignias',
-                    'UI_setting_hideBadges_tooltip': 'Ocultar insignias en el panel de jugadores.',
-                    'UI_setting_hideBattlePrestige_text': 'Ocultar prestigio de batalla',
-                    'UI_setting_hideBattlePrestige_tooltip': 'Ocultar Battle Prestige en el panel de '
-                                                             'jugadores.',
-                    'UI_setting_hideClanName_text': 'Ocultar nombre del clan',
-                    'UI_setting_hideClanName_tooltip': 'Eliminar el nombre del clan en el panel de '
-                                                       'jugadores.',
                     'UI_setting_hideHint_text': 'Ocultar pista',
                     'UI_setting_hideHint_tooltip': 'Desactiva la pista de batalla.',
                     'UI_setting_inBattle_text': 'Reloj en batalla',
@@ -226,9 +218,6 @@ TEXT = {'account_manager': {'UI_description': 'Gestor de cuentas',
                     'UI_setting_postmortemTips_text': 'Ocultar consejos post mortem',
                     'UI_setting_postmortemTips_tooltip': 'Desactive el panel emergente en la parte inferior '
                                                          'después de la muerte.',
-                    'UI_setting_showAnonymous_text': 'Mostrar anónimo',
-                    'UI_setting_showAnonymous_tooltip': "Mostrar el nombre 'Anónimo' en el panel de "
-                                                        'jugadores.',
                     'UI_setting_showBattleHint_text': 'Ocultar vista de trayectoria.',
                     'UI_setting_showBattleHint_tooltip': 'Oculta el modo de apuntar de las puntas cambiando '
                                                          'en el modo estratégico.',

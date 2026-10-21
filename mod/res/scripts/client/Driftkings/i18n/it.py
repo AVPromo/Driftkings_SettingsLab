@@ -202,13 +202,6 @@ TEXT = {'account_manager': {'UI_description': 'Gestione account',
                                                                     "dall'archivio.",
                     'UI_setting_disableSoundCommander_text': 'Disabilita il comandante del suono',
                     'UI_setting_disableSoundCommander_tooltip': 'Disabilita Sound Commander in battaglia.',
-                    'UI_setting_hideBadges_text': 'Nascondi badge',
-                    'UI_setting_hideBadges_tooltip': 'Nascondi i badge nel pannello dei giocatori.',
-                    'UI_setting_hideBattlePrestige_text': 'Nascondi prestigio in battaglia',
-                    'UI_setting_hideBattlePrestige_tooltip': 'Nascondi Prestigio Battaglia nel pannello dei '
-                                                             'giocatori.',
-                    'UI_setting_hideClanName_text': 'Nascondi il nome del clan',
-                    'UI_setting_hideClanName_tooltip': 'Rimuovi il nome del clan nel pannello dei giocatori.',
                     'UI_setting_hideHint_text': 'Nascondi suggerimento',
                     'UI_setting_hideHint_tooltip': 'Disattiva il suggerimento di battaglia.',
                     'UI_setting_inBattle_text': 'Orologio in battaglia',
@@ -224,9 +217,6 @@ TEXT = {'account_manager': {'UI_description': 'Gestione account',
                     'UI_setting_postmortemTips_text': 'Nascondi suggerimenti post-mortem',
                     'UI_setting_postmortemTips_tooltip': 'Disabilita il pannello pop-up in basso dopo la '
                                                          'morte.',
-                    'UI_setting_showAnonymous_text': 'Mostra anonimo',
-                    'UI_setting_showAnonymous_tooltip': 'Mostra il nome "Anonimo" nel pannello dei '
-                                                        'giocatori.',
                     'UI_setting_showBattleHint_text': 'Nascondi vista traiettoria.',
                     'UI_setting_showBattleHint_tooltip': 'Nascondi la modalità di mira dei suggerimenti '
                                                          'cambiando in modalità strategica.',

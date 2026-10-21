@@ -18,10 +18,6 @@ class BattlePreferencesSettings(SectionDefinition):
                 control(BATTLE_PREFERENCES.SHOW_BATTLE_HINT),
                 control(BATTLE_PREFERENCES.SHOW_POSTMORTEM_DOG_TAG),
                 control(BATTLE_PREFERENCES.STUN_SOUND),
-                control(BATTLE_PREFERENCES.SHOW_ANONYMOUS),
-                control(BATTLE_PREFERENCES.HIDE_CLAN_NAME),
-                control(BATTLE_PREFERENCES.HIDE_BADGES),
-                control(BATTLE_PREFERENCES.HIDE_BATTLE_PRESTIGE),
                 slider(BATTLE_PREFERENCES.MAX_CHAT_LINES, 1, 15, 1, '{{value}} Lines'),
                 control(BATTLE_PREFERENCES.MUTE_TEAM_BASE_SOUND),
                 control(BATTLE_PREFERENCES.POSTMORTEM_TIPS)

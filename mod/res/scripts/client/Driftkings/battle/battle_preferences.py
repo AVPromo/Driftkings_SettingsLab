@@ -19,7 +19,7 @@ from gui.Scaleform.daapi.view.battle.shared.hint_panel import plugins as hint_pl
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.daapi.view.battle.shared.stats_exchange import BattleStatisticsDataController
 from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
-from gui.battle_control.arena_info.arena_vos import PlayerInfoVO, VehicleArenaInfoVO, VehicleTypeInfoVO
+from gui.battle_control.arena_info.arena_vos import VehicleTypeInfoVO
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from gui.battle_control.controllers.arena_border_ctrl import ArenaBorderController
@@ -133,7 +133,8 @@ def new_playStunSoundIfNeed(func, *args, **kwargs):
 
 @override(_EquipmentZoneSoundPlayer, '_onVehicleStateUpdated')
 def new_onVehicleStateUpdated(func, self, state, value):
-    if state == VEHICLE_VIEW_STATE.STUN and settings_service.getComponentDict(config)[BATTLE_PREFERENCES.STUN_SOUND]:
+    settings = settings_service.getComponentDict(config)
+    if state == VEHICLE_VIEW_STATE.STUN and settings[GLOBAL.ENABLED] and settings[BATTLE_PREFERENCES.STUN_SOUND]:
         return
     return func(self, state, value)
 
@@ -234,41 +235,13 @@ def new__handleKey(func, self, isDown, key, mods):
     return result
 
 
-# hide badges
-@override(VehicleArenaInfoVO, '__init__')
-def new__VehicleArenaInfoVO(func, self, *args, **kwargs):
-    settings = settings_service.getComponentDict(config)
-    if kwargs:
-        if settings[BATTLE_PREFERENCES.HIDE_BADGES] and 'badges' in kwargs:
-            kwargs['badges'] = None
-            kwargs['overriddenBadge'] = None
-        if settings[BATTLE_PREFERENCES.SHOW_ANONYMOUS] and 'accountDBID' in kwargs:
-            if kwargs['accountDBID'] == GLOBAL.ZERO:
-                kwargs['name'] = kwargs['fakeName'] = 'Anonymous'
-        if settings[BATTLE_PREFERENCES.HIDE_CLAN_NAME] and 'clanAbbrev' in kwargs:
-            kwargs['clanAbbrev'] = ''
-        if settings[BATTLE_PREFERENCES.HIDE_BATTLE_PRESTIGE]:
-            kwargs['prestigeLevel'] = kwargs['prestigeGradeMarkID'] = None
-    return func(self, *args, **kwargs)
-
-
-@override(PlayerInfoVO, 'update')
-def new__PlayerInfoVO_update(func, self, **kwargs):
-    settings = settings_service.getComponentDict(config)
-    if kwargs:
-        if settings[BATTLE_PREFERENCES.SHOW_ANONYMOUS] and 'accountDBID' in kwargs:
-            if kwargs['accountDBID'] == GLOBAL.ZERO:
-                kwargs['name'] = kwargs['fakeName'] = 'Anonymous'
-        if settings[BATTLE_PREFERENCES.HIDE_CLAN_NAME] and 'clanAbbrev' in kwargs:
-            kwargs['clanAbbrev'] = ''
-    return func(self, **kwargs)
-
-
 # limit of lines in battle
 @override(messenger_view, '_makeSettingsVO')
 def new__makeSettingsVO(func, self):
     makeSettingsVO = func(self)
-    makeSettingsVO['numberOfMessagesInHistory'] = settings_service.getComponentDict(config)[BATTLE_PREFERENCES.MAX_CHAT_LINES]
+    settings = settings_service.getComponentDict(config)
+    if settings[GLOBAL.ENABLED]:
+        makeSettingsVO['numberOfMessagesInHistory'] = settings[BATTLE_PREFERENCES.MAX_CHAT_LINES]
     return makeSettingsVO
 
 

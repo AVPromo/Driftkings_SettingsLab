@@ -91,11 +91,15 @@ class EfficiencyCalculator(object):
         return WN8, XWN8, EFF, XEFF, XTE, DMG, DIFF
 
     def calculate_ratios(self, damage, spotted, frags, defence, isWin):
-        rDAMAGE = float(damage) / max(1.0, float(self.expectedValues['wn8expDamage']))
-        rSPOT = float(spotted) / max(1.0, float(self.expectedValues['wn8expSpot']))
-        rFRAG = float(frags) / max(1.0, float(self.expectedValues['wn8expFrag']))
-        rDEF = float(defence) / max(1.0, float(self.expectedValues['wn8expDef']))
-        rWIN = (100.0 if isWin else 0) / max(1.0, float(self.expectedValues['wn8expWinRate']))
+        def ratio(value, key):
+            # Expected frags, spots and defence are often below 1: only guard against zero.
+            expected = float(self.expectedValues[key])
+            return float(value) / expected if expected > 0 else 0.0
+        rDAMAGE = ratio(damage, 'wn8expDamage')
+        rSPOT = ratio(spotted, 'wn8expSpot')
+        rFRAG = ratio(frags, 'wn8expFrag')
+        rDEF = ratio(defence, 'wn8expDef')
+        rWIN = ratio(100.0 if isWin else 0, 'wn8expWinRate')
         return rDAMAGE, rSPOT, rFRAG, rDEF, rWIN
 
     @staticmethod

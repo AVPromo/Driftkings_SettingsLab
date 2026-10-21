@@ -204,14 +204,6 @@ TEXT = {'account_manager': {'UI_description': 'Gestionnaire de comptes',
                                                                     'substitution du stockage.',
                     'UI_setting_disableSoundCommander_text': 'Désactiver le commandant de son',
                     'UI_setting_disableSoundCommander_tooltip': 'Désactivez Sound Commander au combat.',
-                    'UI_setting_hideBadges_text': 'Masquer les insignes',
-                    'UI_setting_hideBadges_tooltip': 'Masquer les badges dans le panneau des joueurs.',
-                    'UI_setting_hideBattlePrestige_text': 'Masquer le prestige de bataille',
-                    'UI_setting_hideBattlePrestige_tooltip': 'Masquer Battle Prestige dans le panneau des '
-                                                             'joueurs.',
-                    'UI_setting_hideClanName_text': 'Masquer le nom du clan',
-                    'UI_setting_hideClanName_tooltip': 'Supprimez le nom du clan dans le panneau des '
-                                                       'joueurs.',
                     'UI_setting_hideHint_text': "Masquer l'indice",
                     'UI_setting_hideHint_tooltip': "Désactivez l'indice de combat.",
                     'UI_setting_inBattle_text': 'Horloge en bataille',
@@ -227,9 +219,6 @@ TEXT = {'account_manager': {'UI_description': 'Gestionnaire de comptes',
                     'UI_setting_postmortemTips_text': 'Masquer les conseils post-mortem',
                     'UI_setting_postmortemTips_tooltip': 'Désactivez le panneau contextuel en bas après la '
                                                          'mort.',
-                    'UI_setting_showAnonymous_text': 'Afficher anonyme',
-                    'UI_setting_showAnonymous_tooltip': 'Afficher le nom «\xa0Anonyme\xa0» dans le panneau '
-                                                        'des joueurs.',
                     'UI_setting_showBattleHint_text': 'Masquer la vue de la trajectoire.',
                     'UI_setting_showBattleHint_tooltip': 'Masquer les astuces en mode de visée changeant en '
                                                          'mode stratégique.',

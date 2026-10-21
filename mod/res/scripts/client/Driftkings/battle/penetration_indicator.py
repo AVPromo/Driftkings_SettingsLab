@@ -129,12 +129,14 @@ class _ShotResult(_CrosshairShotResults):
             if not mat_info or (detail.compName, mat_info.kind) in ignored_materials:
                 continue
             hitAngleCos = detail.hitAngleCos if mat_info.useHitAngle else 1.0
-            armor += cls._computePenetrationArmor(shell, hitAngleCos, mat_info)
+            plate_armor = cls._computePenetrationArmor(shell, hitAngleCos, mat_info)
+            armor += plate_armor
             if mat_info.vehicleDamageFactor:
                 no_damage = False
                 break
             if shell.type.shieldPenetration:
-                piercing_power = max(0, piercing_power - armor * cls.PP_REDUCTION_FACTOR)
+                # Each shield reduces the power by its own armour, as in the client.
+                piercing_power = max(0, piercing_power - plate_armor * cls.PP_REDUCTION_FACTOR)
             if mat_info.collideOnceOnly:
                 ignored_materials.add((detail.compName, mat_info.kind))
         data = (int(armor), int(piercing_power), int(shell.caliber), False, no_damage)
@@ -220,7 +222,7 @@ class Randomizer(object):
                 if name == KPI.Name.DAMAGE_AND_PIERCING_DISTRIBUTION_LOWER_BOUND:
                     percent = cls.PIERCING_DISTRIBUTION_BOUND[skill_name] = round(descr.value, 4)
                     LOG.debug((cls.RND_SET_PIERCING_DISTRIBUTION_BOUND_DEBUG).format(skill_name, percent))
-                break
+                    break
         return percent
 
     @classmethod

@@ -155,11 +155,12 @@ class MarksOnGunData(object):
         frags = self._safe(ProfileUtils.getValueOrUnavailable(random_stats.getAvgFrags()))
         defence = self._safe(ProfileUtils.getValueOrUnavailable(random_stats._getAvgValue(random_stats.getBattlesCount, random_stats.getDroppedCapturePoints)))
 
-        r_damage = float(damage) / max(1.0, expected['wn8expDamage'])
-        r_spot = float(spot) / max(1.0, expected['wn8expSpot'])
-        r_frag = float(frags) / max(1.0, expected['wn8expFrag'])
-        r_def = float(defence) / max(1.0, expected['wn8expDef'])
-        r_win = float(winrate) / max(1.0, expected['wn8expWinRate'])
+        # Expected values are non-zero (checked above); frags, spots and defence are often below 1.
+        r_damage = float(damage) / expected['wn8expDamage']
+        r_spot = float(spot) / expected['wn8expSpot']
+        r_frag = float(frags) / expected['wn8expFrag']
+        r_def = float(defence) / expected['wn8expDef']
+        r_win = float(winrate) / expected['wn8expWinRate']
 
         r_winc = max(0.0, (r_win - 0.71) / (1.0 - 0.71))
         r_damagec = max(0.0, (r_damage - 0.22) / (1.0 - 0.22))

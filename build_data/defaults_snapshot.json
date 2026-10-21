@@ -51,7 +51,7 @@
     {
       "path": "default/battle_preferences.json",
       "source_sha256": "353c0981c97751352ac897a1b18599ae23fb8e54aada1a4b350fd678cf58bd01",
-      "sha256": "d9f3a564344785b8251aa10bf4787cdcf809ee90a1cefa4df844770c2616bf54"
+      "sha256": "c5b688dcda713ce74faab3bc4e651a7c928f5d9fafd7d9392aa2d2633a487125"
     },
     {
       "path": "default/battle_statistics.json",

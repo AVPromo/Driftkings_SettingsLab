@@ -173,15 +173,7 @@ class Repair(object):
         if settings_service.getComponentDict(config)[REPAIR_CONTROLS.USE_GOLD_KITS] and self.items[equipment_tag][3]:
             equipment = self.items[equipment_tag][3]
             if equipment is not None:
-                devices = [name for name, state in equipment.getEntitiesIterator() if state and state != DEVICE_STATE_NORMAL]
-                result = []
-                for device in devices:
-                    if device in self.complex_item:
-                        itemName = self.complex_item[device]
-                    else:
-                        itemName = device
-                    if itemName in specific:
-                        result.append(device)
+                result = self._damagedByPriority(equipment, specific)
                 if len(result) > 1:
                     self.useItemGold(equipment_tag)
                 elif result:
@@ -189,17 +181,18 @@ class Repair(object):
         elif self.items[equipment_tag][2]:
             equipment = self.items[equipment_tag][2]
             if equipment is not None:
-                devices = [name for name, state in equipment.getEntitiesIterator() if state and state != DEVICE_STATE_NORMAL]
-                result = []
-                for device in devices:
-                    if device in self.complex_item:
-                        itemName = self.complex_item[device]
-                    else:
-                        itemName = device
-                    if itemName in specific:
-                        result.append(device)
+                result = self._damagedByPriority(equipment, specific)
                 if result:
                     self.useItemManual(equipment_tag, result[0])
+
+    def _damagedByPriority(self, equipment, specific):
+        # Damaged devices or crew in the configured priority order, not the client's iteration order.
+        result = []
+        for name, state in equipment.getEntitiesIterator():
+            if state and state != DEVICE_STATE_NORMAL and self.complex_item.get(name, name) in specific:
+                result.append(name)
+        result.sort(key=lambda name: specific.index(self.complex_item.get(name, name)))
+        return result
 
     def repairAll(self):
         settings = settings_service.getComponentDict(config)
