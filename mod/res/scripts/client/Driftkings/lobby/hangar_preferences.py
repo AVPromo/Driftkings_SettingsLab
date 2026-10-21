@@ -98,7 +98,7 @@ def new_isAmmoFull(base, self):
             mult = max(0.0, float(_cfg(HANGAR_PREFERENCES.LOW_AMMO_PERCENTAGE, 20))) / 100.0
         return sum(shell.count for shell in self.shells.installed.getItems()) >= self.ammoMaxSize * mult
     except Exception:
-        LOG.error(('Vehicle.isAmmoFull').format('fallback to base'))
+        LOG.exception('Vehicle.isAmmoFull failed; using the client value')
         return original(self)
 
 
@@ -111,8 +111,8 @@ def new_isReadyToPrebattle(func, self, *args, **kwargs):
     try:
         if _cfg(GLOBAL.ENABLED, True) and _cfg(HANGAR_PREFERENCES.BLOCK_VEHICLE_IF_LOW_AMMO, False) and not self.hasLockMode() and not self.isAmmoFull:
             return False
-    except Exception as err:
-        LOG.error(('Vehicle.isReadyToPrebattle').format(str(err)))
+    except Exception:
+        LOG.exception('Vehicle.isReadyToPrebattle failed')
     return result
 
 
@@ -126,8 +126,8 @@ def new_isReadyToFight(base, self, *args, **kwargs):
     try:
         if _cfg(GLOBAL.ENABLED, True) and _cfg(HANGAR_PREFERENCES.BLOCK_VEHICLE_IF_LOW_AMMO, False) and not self.hasLockMode() and not self.isAmmoFull:
             return False
-    except Exception as err:
-        LOG.error(('Vehicle.isReadyToFight').format(str(err)))
+    except Exception:
+        LOG.exception('Vehicle.isReadyToFight failed')
     return result
 
 
@@ -142,8 +142,8 @@ def new_validateCurrentVehicle(func, self):
             item = getattr(g_currentVehicle, 'item', None)
             if _cfg(GLOBAL.ENABLED, True) and _cfg(HANGAR_PREFERENCES.BLOCK_VEHICLE_IF_LOW_AMMO, False) and item and not item.isAmmoFull and not g_currentVehicle.isReadyToFight():
                 return ValidationResult(False, PREBATTLE_RESTRICTION.VEHICLE_NOT_READY)
-        except Exception as err:
-            LOG.error(('CurrentVehicleActionsValidator._validate').format(str(err)))
+        except Exception:
+            LOG.exception('CurrentVehicleActionsValidator._validate failed')
     return res
 
 
@@ -362,8 +362,8 @@ def new__getAllVehiclePossibleXP(func, self, nodeCD, unlockStats):
     try:
         if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.ALLOW_EXCHANGE_XPIN_TECH_TREE, True):
             return unlockStats.getVehTotalXP(nodeCD)
-    except Exception as err:
-        LOG.error(('_TechTreeDataProvider_getAllVehiclePossibleXP').format(str(err)))
+    except Exception:
+        LOG.exception('_TechTreeDataProvider.getAllVehiclePossibleXP failed')
     return func(self, nodeCD, unlockStats)
 
 
