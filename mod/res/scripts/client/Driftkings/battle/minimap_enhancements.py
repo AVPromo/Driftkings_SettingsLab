@@ -249,7 +249,11 @@ class PersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
     def _calcCircularVisionRadius(self):
         settings = settings_service.getComponentDict(config)
         if settings[GLOBAL.ENABLED] and settings[MINIMAP_ENHANCEMENTS.VIEW_RADIUS]:
-            vehAttrs = self.sessionProvider.shared.feedback.getVehicleAttrs()
+            # Feedback can be absent while battle services start or stop.
+            feedback = self.sessionProvider.shared.feedback
+            vehAttrs = feedback.getVehicleAttrs() if feedback is not None else None
+            if vehAttrs is None:
+                return self._arenaVisitor.getVisibilityMinRadius()
             return vehAttrs.get('circularVisionRadius', self._arenaVisitor.getVisibilityMinRadius())
         # noinspection PyProtectedMember
         return super(PersonalEntriesPlugin, self)._calcCircularVisionRadius()

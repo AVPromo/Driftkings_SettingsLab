@@ -84,6 +84,10 @@ class MinimapVehiclesTests(RuntimeTest):
                 return props
 
         NativeVehicles.__name__ = 'ArenaVehiclesPlugin'
+        class NativePersonal(object):
+            def _calcCircularVisionRadius(self):
+                return 445
+
         signal = module(connect=lambda *args: None, disconnect=lambda *args: None)
         service = module(onModSettingsChanged=signal, getComponentDict=lambda config: self.data)
         self.info = module(isAlive=lambda: True, team=2, player=module(name='Enemy'), getDisplayedName=lambda: 'IS-7',
@@ -95,7 +99,7 @@ class MinimapVehiclesTests(RuntimeTest):
             'BigWorld': module(time=lambda: self.now),
             'account_helpers.settings_core': module(settings_constants=module()),
             'gui.Scaleform.daapi.view.battle.shared.minimap': module(plugins=module(
-                ArenaVehiclesPlugin=NativeVehicles, PersonalEntriesPlugin=object)),
+                ArenaVehiclesPlugin=NativeVehicles, PersonalEntriesPlugin=NativePersonal)),
             'gui.Scaleform.daapi.view.battle.shared.minimap.component': module(MinimapComponent=object),
             'gui.Scaleform.daapi.view.battle.shared.minimap.settings': module(
                 CIRCLE_TYPE=module(), CIRCLE_STYLE=module(), VIEW_RANGE_CIRCLES_AS3_DESCR=module()),
@@ -123,6 +127,24 @@ class MinimapVehiclesTests(RuntimeTest):
 
     def onVehicleData(self, payload):
         self.published.append(payload)
+
+    def test_view_radius_handles_missing_feedback_and_recovers(self):
+        plugin = self.api['PersonalEntriesPlugin']()
+        shared = module(feedback=None)
+        plugin.sessionProvider = module(shared=shared)
+        plugin._arenaVisitor = module(getVisibilityMinRadius=lambda: 50)
+        self.data['viewRadius'] = True
+        self.assertEqual(plugin._calcCircularVisionRadius(), 50)
+        shared.feedback = module(getVehicleAttrs=lambda: None)
+        self.assertEqual(plugin._calcCircularVisionRadius(), 50)
+        shared.feedback = module(getVehicleAttrs=lambda: {})
+        self.assertEqual(plugin._calcCircularVisionRadius(), 50)
+        shared.feedback = module(getVehicleAttrs=lambda: {'circularVisionRadius': 470})
+        self.assertEqual(plugin._calcCircularVisionRadius(), 470)
+        self.data['viewRadius'] = False
+        self.assertEqual(plugin._calcCircularVisionRadius(), 445)
+        self.data.update(enabled=False, viewRadius=True)
+        self.assertEqual(plugin._calcCircularVisionRadius(), 445)
 
     def tick(self, seconds):
         self.now += seconds
