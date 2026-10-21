@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from BattleFeedbackCommon import BATTLE_EVENT_TYPE
+from gui.shared.gui_items.Vehicle import getIconPath, getContourIconPath
 from gui.battle_control.controllers.personal_efficiency_ctrl import _AGGREGATED_DAMAGE_EFFICIENCY_TYPES, \
     _createEfficiencyInfoFromFeedbackEvent
 
@@ -8,6 +9,7 @@ from Driftkings.common.utils.game import sendPanelMessage
 from Driftkings.common.utils.wgUtils import getPlayer
 from Driftkings.core.battle_events import battleEvents
 from Driftkings.core.hooks import on_event
+from Driftkings.core.vehicle_images import resolve_vehicle_images
 from Driftkings.settings.definitions.battle.enemy_spotting_status import EnemySpottingStatusSettings as Settings
 from Driftkings.settings.service import settings_service
 
@@ -88,6 +90,7 @@ class SpottedLightController(object):
             if not vehicleInfo:
                 continue
             icon = '<img src=\'img://%s\' width=\'%s\' height=\'%s\' />' % (vehicleInfo.vehicleType.iconPath.replace('..', 'gui'), settings[ENEMY_SPOTTING_STATUS.ICON_SIZE_X], settings[ENEMY_SPOTTING_STATUS.ICON_SIZE_Y])
+            icon = resolve_vehicle_images(icon, getIconPath, getContourIconPath)
             targetInfo = guiSessionProvider.getCtx().getPlayerFullNameParts(vID=vehicleID)
             if self.check_macros('{icons}'):
                 self.format_str['icons'] += icon

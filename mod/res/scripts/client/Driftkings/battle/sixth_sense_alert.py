@@ -2,6 +2,7 @@
 from chat_commands_consts import BATTLE_CHAT_COMMAND_NAMES
 from collections import defaultdict
 from functools import partial
+from SoundGroups import SoundGroups
 from gui.Scaleform.daapi.view.battle.shared.indicators import SixthSenseIndicator
 
 from Driftkings._constants import BATTLE_ALIASES
@@ -42,6 +43,18 @@ class MessagesSpotted(object):
 
 g_messages = MessagesSpotted()
 g_view = None
+
+
+@override(SoundGroups, 'prepareMP3')
+def prepare_sixth_sense_mp3(func, self, event):
+    # The native indicator prepares its custom MP3 independently of our Wwise
+    # event. Leave all other MP3 events and the disabled-mod fallback intact.
+    if event == 'sixthSense' and g_view is not None:
+        settings = settings_service.getComponentDict(config)
+        if (settings[GLOBAL.ENABLED] and settings[SIXTH_SENSE_ALERT.USER_SOUND]
+                and not settings[SIXTH_SENSE_ALERT.PLAY_TICK_SOUND]):
+            return
+    return func(self, event)
 
 
 @override(SixthSenseIndicator, '_sixthSenseToggle')

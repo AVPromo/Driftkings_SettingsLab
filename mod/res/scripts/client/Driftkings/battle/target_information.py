@@ -4,6 +4,7 @@ import re
 from math import degrees
 from nations import NAMES
 from xml.sax.saxutils import escape
+from gui.shared.gui_items.Vehicle import getIconPath, getContourIconPath
 
 from Driftkings._constants import GLOBAL, TARGET_INFORMATION
 from Driftkings.common.utils.game import checkKeys
@@ -11,6 +12,7 @@ from Driftkings.common.utils.wgUtils import getPlayer, getTarget
 from Driftkings.core.battle_events import battleEvents
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.core.gun_stats import damage_per_minute, reload_with_equipment
+from Driftkings.core.vehicle_images import resolve_vehicle_images
 from Driftkings.settings.definitions.battle.target_information import TargetInformationSettings as Settings
 from Driftkings.settings.service import settings_service, affects
 from Driftkings.views.battle.target_information import Flash
@@ -542,7 +544,7 @@ class InfoPanel(DataConstants):
         textFormat = self.textFormats or self.getText()
         textFormat = self.replaceMacros(textFormat, self._macroHandlers.keys())
         textFormat = self.replaceCompareMacros(textFormat, COMPARE_MACROS)
-        return textFormat
+        return resolve_vehicle_images(textFormat, getIconPath, getContourIconPath)
 
     def replaceMacros(self, textFormat, macros):
         for macro in macros:

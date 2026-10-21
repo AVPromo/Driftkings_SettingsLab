@@ -44,11 +44,14 @@ class EnemySpottingStatusTests(RuntimeTest):
             'Driftkings.settings.service': Settings(self.data).service(),
             'Driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player),
             'Driftkings.common.utils.game': module(sendPanelMessage=self.messages.append),
+            'gui.shared.gui_items.Vehicle': module(
+                getIconPath=lambda name: 'gui/maps/icons/vehicle/' + name.replace(':', '-', 1) + '.png',
+                getContourIconPath=lambda name: 'gui/maps/icons/vehicle/contour/' + name.replace(':', '-', 1) + '.png'),
             'gui.battle_control.controllers.personal_efficiency_ctrl': module(
                 _AGGREGATED_DAMAGE_EFFICIENCY_TYPES=(DAMAGE,), _createEfficiencyInfoFromFeedbackEvent=efficiency),
             'Driftkings.settings.definitions.battle.enemy_spotting_status': module(
                 EnemySpottingStatusSettings=lambda: module(i18n=i18n)),
-        }, real=('Driftkings._constants',))
+        }, real=('Driftkings._constants', 'Driftkings.core.vehicle_images'))
         handlers = self.hooks.events['Driftkings.core.battle_events.battleEvents.feedback']
         self.feedback = lambda *events: handlers[0](self.player, list(events))
 
