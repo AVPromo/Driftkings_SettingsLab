@@ -7,7 +7,10 @@
     "directionColor": "F2BB35",
     "gap": 5,
     "geometry": false,
+    "hull": true,
+    "hullColor": "60FF00",
     "length": 500,
+    "marks": 100,
     "sector": "client",
     "sectorColor": "FFFFFF",
     "thickness": 1

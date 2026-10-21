@@ -4,6 +4,8 @@ package driftkings.battle.components.minimap
     import flash.display.DisplayObject;
     import flash.display.Sprite;
     import flash.geom.Rectangle;
+    import flash.geom.Matrix;
+    import flash.display.Graphics;
     import flash.geom.Point;
     import flash.text.TextFieldAutoSize;
     import net.wg.gui.battle.views.minimap.components.entries.personal.ViewRangeCirclesMinimapEntry;
@@ -30,6 +32,8 @@ package driftkings.battle.components.minimap
         private var geometry:Dictionary = new Dictionary(true);
         private var rangeData:Object;
         private var rangeVersion:int = 0;
+        // Native circles entry: its local space spans 210 units per map width.
+        private var circleReference:DisplayObject;
         private var sizeLabel:TextField;
         private var visibleLabels:Array;
         private var zoomed:Boolean = false;
@@ -178,27 +182,76 @@ package driftkings.battle.components.minimap
             target.alpha = alpha / 100;
         }
 
-        private function line(target:DisplayObject, color:String):void
+        private static function scaleOf(target:DisplayObject):Number
         {
-            if (!target || !options.lines.customStyle) return;
-            remember(target);
-            if (options.lines.geometry && target.parent)
+            var m:Matrix = target.transform.concatenatedMatrix;
+            return Math.sqrt(m.a * m.a + m.b * m.b);
+        }
+
+        // Map metres to target-local units. Entries are counter-scaled per minimap
+        // size, so measure against the circles entry, where the map is 210 wide.
+        private function metres(target:DisplayObject, value:Number):Number
+        {
+            var width:Number = rangeData && Number(rangeData.width) > 0 ? Number(rangeData.width) : Number(options.mapWidth);
+            if (!(width > 0)) return 0;
+            var units:Number = value * 210 / width;
+            if (circleReference && circleReference.stage && target.stage)
             {
-                var shape:Sprite = geometry[target] as Sprite;
-                if (!shape)
-                {
-                    shape = new Sprite(); shape.mouseEnabled = shape.mouseChildren = false;
-                    shape.name = "dkMinimapGeometry";
-                    geometry[target] = shape;
-                    target.parent.addChild(shape);
-                    MapGeometry.stroke(shape.graphics, options.lines, VehicleLabel.parseColor(color), options.lines.alpha);
-                    MapGeometry.line(shape.graphics, options.lines.length, options.lines);
-                }
-                shape.transform.matrix = target.transform.matrix;
-                shape.visible = target.visible;
-                target.alpha = 0;
+                var own:Number = scaleOf(target), reference:Number = scaleOf(circleReference);
+                if (own > 0 && reference > 0) units *= reference / own;
             }
-            else
+            return units;
+        }
+
+        private function overlay(owner:Object, parent:DisplayObjectContainer, index:int = -1):Object
+        {
+            var stored:Object = geometry[owner];
+            if (!stored)
+            {
+                var shape:Sprite = new Sprite(); shape.mouseEnabled = shape.mouseChildren = false;
+                shape.name = "dkMinimapGeometry";
+                if (index >= 0) parent.addChildAt(shape, Math.min(index, parent.numChildren));
+                else parent.addChild(shape);
+                stored = geometry[owner] = {shape:shape, key:null};
+            }
+            return stored;
+        }
+
+        private function line(target:DisplayObject, color:String, withMarks:Boolean = false):void
+        {
+            if (!target) return;
+            var custom:Boolean = Boolean(options.lines.customStyle);
+            var drawn:Boolean = custom && Boolean(options.lines.geometry);
+            var marks:Boolean = withMarks && Number(options.lines.marks) > 0;
+            if (!custom && !marks) return;
+            remember(target);
+            if ((drawn || marks) && target.parent)
+            {
+                var stored:Object = overlay(target, target.parent);
+                var shape:Sprite = stored.shape;
+                // Copy position and rotation only: a scaled native placeholder
+                // must not stretch a line measured in metres.
+                var m:Matrix = target.transform.matrix, angle:Number = Math.atan2(m.b, m.a);
+                shape.transform.matrix = new Matrix(Math.cos(angle), Math.sin(angle), -Math.sin(angle), Math.cos(angle), m.tx, m.ty);
+                shape.visible = target.visible;
+                var length:Number = metres(shape, Number(options.lines.length));
+                var step:Number = marks ? metres(shape, Number(options.lines.marks)) : 0;
+                var key:String = [Math.round(length * 10), Math.round(step * 10), drawn, color].join(":");
+                if (stored.key != key)
+                {
+                    stored.key = key;
+                    var g:Graphics = shape.graphics, tint:uint = VehicleLabel.parseColor(color);
+                    g.clear();
+                    if (drawn)
+                    {
+                        MapGeometry.stroke(g, options.lines, tint, options.lines.alpha);
+                        MapGeometry.line(g, length, options.lines);
+                    }
+                    if (step > 0) MapGeometry.marks(g, length, step, tint, options.lines.alpha, 1.5 / Math.max(0.0001, scaleOf(shape)));
+                }
+                if (drawn) target.alpha = 0;
+            }
+            if (custom && !drawn)
             {
                 var transform:ColorTransform = new ColorTransform();
                 transform.color = VehicleLabel.parseColor(color);
@@ -207,10 +260,28 @@ package driftkings.battle.components.minimap
             }
         }
 
+        // The view point entry is rotated with the hull: local -y is forward.
+        private function hullLine(point:ViewPointMinimapEntry):void
+        {
+            if (!options.lines.hull || !point.visible) return;
+            var stored:Object = overlay(point, point, 0);
+            var shape:Sprite = stored.shape;
+            var length:Number = metres(shape, Number(options.lines.length));
+            var key:String = String(Math.round(length * 10));
+            if (stored.key == key) return;
+            stored.key = key;
+            var g:Graphics = shape.graphics;
+            g.clear();
+            MapGeometry.stroke(g, options.lines, VehicleLabel.parseColor(options.lines.hullColor), options.lines.alpha);
+            MapGeometry.line(g, length, options.lines);
+        }
+
         private function circles(target:ViewRangeCirclesMinimapEntry):void
         {
+            circleReference = target;
             if (!rangeData || Number(rangeData.width) <= 0) return;
-            var custom:Boolean = options.extraCircles.length > 0;
+            // The shell range has no native circle: drawing it needs the custom layer.
+            var custom:Boolean = options.extraCircles.length > 0 || Boolean(rangeData.circles && rangeData.circles.shell);
             for each (var style:Object in options.circles)
                 if (style.thickness != 1 || style.dash > 0) custom = true;
             if (!custom) return;
@@ -276,6 +347,7 @@ package driftkings.battle.components.minimap
             }
             line(point.sectorLeft, options.lines.sectorColor);
             line(point.sectorRight, options.lines.sectorColor);
+            hullLine(point);
         }
 
         private function scan(target:DisplayObject):void
@@ -295,7 +367,7 @@ package driftkings.battle.components.minimap
                 return;
             }
             var camera:ArcadeCameraMinimapEntry = target as ArcadeCameraMinimapEntry;
-            if (camera) { line(camera.directionLinePlaceholder, options.lines.directionColor); return; }
+            if (camera) { line(camera.directionLinePlaceholder, options.lines.directionColor, true); return; }
             var point:ViewPointMinimapEntry = target as ViewPointMinimapEntry;
             if (point)
             {

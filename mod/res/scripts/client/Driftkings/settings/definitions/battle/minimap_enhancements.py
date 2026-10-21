@@ -71,6 +71,11 @@ class MinimapEnhancementsSettings(SectionDefinition):
         columns[1].append(nested(MINIMAP_ENHANCEMENTS.LINES, 'customStyle'))
         for key in ('directionColor', 'sectorColor'):
             columns[1].append(nested(MINIMAP_ENHANCEMENTS.LINES, key, 'ColorChoice'))
+        columns[1].append(nested(MINIMAP_ENHANCEMENTS.LINES, 'hull'))
+        columns[1].append(nested(MINIMAP_ENHANCEMENTS.LINES, 'hullColor', 'ColorChoice'))
+        marks = nested(MINIMAP_ENHANCEMENTS.LINES, 'marks', 'Slider', 0, 500)
+        marks['snapInterval'] = 50
+        columns[1].append(marks)
         columns[1].append(nested(MINIMAP_ENHANCEMENTS.LINES, GLOBAL.ALPHA, 'Slider', 0, 100))
         columns[1].append(nested(MINIMAP_ENHANCEMENTS.ARTILLERY_AIM, GLOBAL.ENABLED))
         columns[1].append(nested(MINIMAP_ENHANCEMENTS.ARTILLERY_AIM, 'scale', 'Slider', 10, 200))
@@ -91,6 +96,14 @@ class MinimapEnhancementsSettings(SectionDefinition):
                 item['varName'] += '.' + field
                 item['text'] += ' / ' + self.i18n.get('UI_field_' + field, field)
                 columns[1].append(item)
+        for field, kind, low, high, choices in (('mode', 'Dropdown', None, None, ['on', 'off']),
+                                                (GLOBAL.ALPHA, 'Slider', 0, 100, None),
+                                                ('color', 'ColorChoice', None, None, None)):
+            item = nested(MINIMAP_ENHANCEMENTS.CIRCLES, 'shell', kind, low, high, choices)
+            item['path'].append(field)
+            item['varName'] += '.' + field
+            item['text'] += ' / ' + self.i18n.get('UI_field_' + field, field)
+            columns[1].append(item)
         for key in ('alternativeEnabled', 'zoom', 'center'):
             columns[0].append(nested(MINIMAP_ENHANCEMENTS.PRESENTATION, key))
         for key, low, high in (('sizeIndex', 0, 5), ('normalAlpha', 10, 100), ('alternativeAlpha', 10, 100), ('backgroundAlpha', 0, 100)):
@@ -127,7 +140,7 @@ class MinimapEnhancementsSettings(SectionDefinition):
         columns[1].append(nested(MINIMAP_ENHANCEMENTS.LINES, 'geometry'))
         for key, low, high in (('length', 50, 1500), ('thickness', 1, 5), ('dash', 0, 100), ('gap', 1, 100)):
             columns[1].append(nested(MINIMAP_ENHANCEMENTS.LINES, key, 'Slider', low, high))
-        for circle in policy.CIRCLES:
+        for circle in policy.CIRCLES + ('shell',):
             for key, low, high in (('thickness', 1, 5), ('dash', 0, 100), ('gap', 1, 100)):
                 item = nested(MINIMAP_ENHANCEMENTS.CIRCLES, circle, 'Slider', low, high)
                 item['path'].append(key)

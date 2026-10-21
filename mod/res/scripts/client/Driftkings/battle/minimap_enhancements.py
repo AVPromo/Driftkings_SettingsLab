@@ -108,12 +108,36 @@ from Driftkings.views.battle.minimap_enhancements import MinimapCentredView
 
 class PersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
 
+    def _rangeState(self):
+        if not hasattr(self, '_ranges'):
+            self._ranges = {'width': 1000, 'height': 1000, 'circles': {}, 'vehicleClass': getattr(self, '_vehicleClass', None)}
+        return self._ranges
+
+    def _publishRanges(self):
+        for view in list(VIEWS):
+            view.onRanges(self._rangeState())
+
+    def _updateShellRange(self, *args):
+        circles = self._rangeState()['circles']
+        settings = settings_service.getComponentDict(config)
+        style = settings[MINIMAP_ENHANCEMENTS.CIRCLES]['shell']
+        radius = None
+        if settings[GLOBAL.ENABLED] and style['mode'] == 'on' and self.__isAlive and not self.__isObserver:
+            ammo = self.sessionProvider.shared.ammo
+            descriptor = getattr(BigWorld.player(), 'vehicleTypeDescriptor', None)
+            radius = policy.shell_range(descriptor, ammo.getCurrentShellCD() if ammo is not None else None)
+        shell = dict(color=hexToDecimal(style['color']), alpha=style['alpha'], radius=radius) if radius else None
+        if circles.get('shell') != shell:
+            if shell:
+                circles['shell'] = shell
+            else:
+                circles.pop('shell', None)
+            self._publishRanges()
+
     def _invoke(self, entryID, method, *args):
         result = super(PersonalEntriesPlugin, self)._invoke(entryID, method, *args)
         if method.startswith('as_'):
-            if not hasattr(self, '_ranges'):
-                self._ranges = {'width': 1000, 'height': 1000, 'circles': {}, 'vehicleClass': getattr(self, '_vehicleClass', None)}
-            ranges = self._ranges
+            ranges = self._rangeState()
             add = {'as_addDrawRange': 'draw', 'as_addDynamicViewRange': 'view', 'as_addMaxViewRage': 'maxView', 'as_addMinSpottingRange': 'proximity'}
             remove = {'as_delDrawRange': 'draw', 'as_delDynRange': 'view', 'as_delMaxViewRage': 'maxView', 'as_delMinSpottingRange': 'proximity'}
             if method == 'as_initArenaSize':
@@ -123,7 +147,9 @@ class PersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
             elif method in remove:
                 ranges['circles'].pop(remove[method], None)
             elif method == 'as_removeAllCircles':
-                ranges['circles'].clear()
+                # Only native circles are removed; the shell range is ours.
+                for key in [key for key in ranges['circles'] if key != 'shell']:
+                    ranges['circles'].pop(key)
             elif method == 'as_updateDynRange' and 'view' in ranges['circles']:
                 ranges['circles']['view']['radius'] = args[0]
             else:
@@ -136,6 +162,10 @@ class PersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
         PERSONAL.add(self)
         super(PersonalEntriesPlugin, self).start()
         self._refreshYawLimits()
+        ammo = self.sessionProvider.shared.ammo
+        if ammo is not None:
+            ammo.onCurrentShellChanged += self._updateShellRange
+        self._updateShellRange()
 
     def _refreshYawLimits(self):
         info = self._arenaDP.getVehicleInfo()
@@ -154,12 +184,16 @@ class PersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
 
     def stop(self):
         PERSONAL.discard(self)
+        ammo = self.sessionProvider.shared.ammo
+        if ammo is not None:
+            ammo.onCurrentShellChanged -= self._updateShellRange
         super(PersonalEntriesPlugin, self).stop()
 
     def refreshPresentation(self):
         self._refreshYawLimits()
         self.__removeAllCircles()
         self.setSettings()
+        self._updateShellRange()
 
     def _invalidateMarkup(self, *args, **kwargs):
         self._refreshYawLimits()

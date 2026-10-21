@@ -37,6 +37,15 @@ def visible(mode, native):
     return native if mode == 'client' else mode == 'on'
 
 
+def shell_range(descriptor, shell_cd):
+    """Maximum shot distance in metres of the selected shell, falling back to the active shot."""
+    gun = getattr(descriptor, 'gun', None)
+    for shot in getattr(gun, 'shots', None) or ():
+        if getattr(getattr(shot, 'shell', None), 'compactDescr', None) == shell_cd:
+            return getattr(shot, 'maxDistance', None)
+    return getattr(getattr(descriptor, 'shot', None), 'maxDistance', None)
+
+
 def render(template, values):
     """Plain text only; never evaluate arbitrary expressions or player HTML."""
     if not isinstance(template, text_type):
@@ -98,7 +107,16 @@ def validate(data):
     for key in ('direction', 'sector'):
         if data['lines'].get(key) not in ('client', 'on', 'off'):
             raise ValueError('Invalid minimap line mode')
-    for key in ('directionColor', 'sectorColor'):
+    shell = data['circles'].get('shell')
+    if not isinstance(shell, dict) or shell.get('mode') not in ('on', 'off'):
+        raise ValueError('Invalid minimap circle: shell')
+    numeric(shell.get('alpha'), 0, 100)
+    stroke(shell)
+    color(shell.get('color'))
+    if type(data['lines'].get('hull')) is not bool:
+        raise ValueError('Invalid minimap switch: lines.hull')
+    numeric(data['lines'].get('marks'), 0, 500)
+    for key in ('directionColor', 'sectorColor', 'hullColor'):
         if not re.match(r'^(?:#|0x)?[a-fA-F0-9]{6}$', str(data['lines'].get(key, ''))):
             raise ValueError('Invalid minimap line color')
     for key in ('normal', 'alternative', 'dead', 'lost'):

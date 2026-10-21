@@ -41,6 +41,14 @@
       "gap": 5,
       "mode": "client",
       "thickness": 1
+    },
+    "shell": {
+      "alpha": 60,
+      "color": "FF6666",
+      "dash": 0,
+      "gap": 5,
+      "mode": "on",
+      "thickness": 1
     }
   },
   "colorDrawCircle": "2B28D1",
@@ -100,7 +108,10 @@
     "directionColor": "F2BB35",
     "gap": 5,
     "geometry": false,
+    "hull": true,
+    "hullColor": "60FF00",
     "length": 500,
+    "marks": 100,
     "sector": "client",
     "sectorColor": "FFFFFF",
     "thickness": 1

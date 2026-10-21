@@ -15,6 +15,14 @@ package driftkings.battle.components.minimap
             for (var n:Number = 0; n < length; n += dash + gap)
             { g.moveTo(0,-n); g.lineTo(0,-Math.min(length,n+dash)); }
         }
+        // Filled dots along a line pointing up (-y), one every step units.
+        public static function marks(g:Graphics, length:Number, step:Number, color:uint, alpha:Number, radius:Number):void
+        {
+            if (!(step > 0)) return;
+            g.lineStyle();
+            for (var d:Number = step; d <= length + 0.001; d += step)
+            { g.beginFill(color, alpha / 100); g.drawCircle(0, -d, radius); g.endFill(); }
+        }
         public static function circle(g:Graphics, radius:Number, style:Object):void
         {
             if (Number(style.dash) <= 0) { g.drawCircle(0,0,radius); return; }

@@ -27,6 +27,14 @@
       "gap": 5,
       "mode": "client",
       "thickness": 1
+    },
+    "shell": {
+      "alpha": 60,
+      "color": "FF6666",
+      "dash": 0,
+      "gap": 5,
+      "mode": "on",
+      "thickness": 1
     }
   },
   "extraCircles": []
