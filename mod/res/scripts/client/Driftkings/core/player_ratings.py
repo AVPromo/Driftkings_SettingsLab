@@ -28,6 +28,10 @@ from Driftkings.settings.service import settings_service
 from Driftkings.stats.vehinfo import calculateXvmScale, getVehicleInfoData, scaleValuesInstance
 
 MISSING = u'\u2014'
+# Accounts with no usable answer (closed profiles, API errors) are retried at this pace.
+RETRY_SECONDS = 60
+# Upper bound on cached accounts; each one holds the full vehicle list.
+CACHE_LIMIT = 300
 NUMERIC = ('wn8', 'winrate', 'battles', 'kb', 'wgr', 'eff', 'xwn8', 'xeff',
            't_battles', 't_winrate', 'spg_battles', 'spg_percent', 'mark_of_mastery', 'tdv')
 
@@ -338,6 +342,9 @@ class Statistics(object):
         self.statsCache = {}
         self.cacheTimestamp = {}
         self._pending = set()
+        self._attempts = {}
+        self._received = set()
+        self._workers = 0
         self._responses = Queue()
         self._generation = 0
         self._detailRequested = set()
@@ -387,6 +394,13 @@ class Statistics(object):
             LOG.warning(('Local statistics unavailable, using API: {}').format(error))
 
     def loadPlayerStats(self, databaseIDs, generation, tankIDs=None):
+        try:
+            self._loadPlayerStats(databaseIDs, generation, tankIDs)
+        finally:
+            # Completion marker: the main thread polls only while workers run.
+            self._responses.put((generation, None, None, None))
+
+    def _loadPlayerStats(self, databaseIDs, generation, tankIDs=None):
         try:
             info, tanks = self.fetchPlayerStats(databaseIDs)
         except Exception as error:
@@ -555,12 +569,16 @@ class Statistics(object):
                 break
             if generation != self._generation:
                 continue
+            if ids is None:
+                self._workers = max(0, self._workers - 1)
+                continue
             self._pending.difference_update(ids)
+            self._received.update(dbID for dbID in info if info[dbID] is not None and tanks.get(dbID) is not None)
             try:
                 self.applyPlayerStats(info, tanks)
             except Exception as error:
                 LOG.warning(('Could not apply player statistics: {}').format(error))
-        if getattr(getPlayer(), 'arena', None) is not None:
+        if self._workers and getattr(getPlayer(), 'arena', None) is not None:
             self._poll = callback(0.2, self.pollStats)
 
     def loadStats(self):
@@ -592,20 +610,39 @@ class Statistics(object):
                     self._appliedCache[dbID] = stamp
                 if not local and dbID in currentTanks and (dbID, currentTanks[dbID]) not in self._detailRequested and dbID not in self._pending:
                     missing.append(dbID)
-            elif dbID not in self._pending:
+            elif (dbID not in self._pending and dbID not in self._received
+                  and time.time() - self._attempts.get(dbID, 0) >= RETRY_SECONDS):
+                # Without the cache, an account answered once this battle is not
+                # fetched again; accounts without data wait before a retry.
                 missing.append(dbID)
         if cachedInfo:
             self.applyPlayerStats(cachedInfo, cachedTanks, updateCache=False)
         for offset in range(0, len(missing), 100):
             batch = missing[offset:offset + 100]
             self._pending.update(batch)
+            now = time.time()
+            self._attempts.update((dbID, now) for dbID in batch)
             tankIDs = dict((dbID, currentTanks[dbID]) for dbID in batch if dbID in currentTanks)
             self._detailRequested.update(tankIDs.items())
             worker = threading.Thread(target=self.loadPlayerStats, args=(batch, self._generation, tankIDs))
             worker.setDaemon(True)
+            self._workers += 1
             worker.start()
-        if self._pending and self._poll is None:
+        if self._workers and self._poll is None:
             self._poll = callback(0.2, self.pollStats)
+
+    def pruneCache(self):
+        performance = settings_service.getComponentDict(config)[TEAM_PANELS.PERFORMANCE]
+        if not performance['cacheEnabled']:
+            self.statsCache.clear(); self.cacheTimestamp.clear()
+            return
+        oldest = time.time() - performance['cacheExpiry']
+        for dbID in [dbID for dbID, stamp in self.cacheTimestamp.items() if stamp < oldest]:
+            self.statsCache.pop(dbID, None); self.cacheTimestamp.pop(dbID, None)
+        if len(self.statsCache) > CACHE_LIMIT:
+            keep = set(sorted(self.cacheTimestamp, key=self.cacheTimestamp.get, reverse=True)[:CACHE_LIMIT])
+            for dbID in [dbID for dbID in self.statsCache if dbID not in keep]:
+                self.statsCache.pop(dbID, None); self.cacheTimestamp.pop(dbID, None)
 
     def reset(self):
         self._generation += 1
@@ -614,8 +651,15 @@ class Statistics(object):
             self._poll = None
         self._pending.clear()
         self._detailRequested.clear()
+        self._attempts.clear()
+        self._received.clear()
+        self._workers = 0
         self.playersInfo = {}
         self._appliedCache.clear()
+        try:
+            self.pruneCache()
+        except Exception as error:
+            LOG.warning(('Could not prune statistics cache: {}').format(error))
 
     def new__buildVehiclesData(self, func, orig, vehicles):
         result = func(orig, vehicles)

@@ -163,6 +163,10 @@ class Roster(object):
             # including older templates which carried their own ALT conditions.
             hotkey=None if isHP else field.get('hotKeyCode')
             if hotkey is not None:
+                # A macro may resolve to text; like rows(), treat it as no hotkey.
+                try: hotkey=int(hotkey)
+                except (ValueError,TypeError,OverflowError): hotkey=None
+            if hotkey is not None:
                 # Left/right ALT are interchangeable in the default XVM fields.
                 codes=(56,184) if int(hotkey)==56 else (int(hotkey),)
                 active=any(code in (self.keys if truth(field.get('onHold',False)) else self.toggled) for code in codes)

@@ -45,6 +45,7 @@ class RatingViews(object):
         self.cacheConfig=None
         self.cacheArena=None
         self.lastPayload=None
+        self.failures={}
         owner=self
         class RosterView(PlayersPanelMeta):
             def _populate(self):
@@ -210,19 +211,45 @@ class RatingViews(object):
         panel=self.panel() if self.panel is not None else None
         if panel is not None: panel.as_setPanelModeS(mode)
 
+    def restingMode(self):
+        return 4 if self.hovered else self.baseMode
+
     def hover(self,expanded):
-        if not self.active or self.alt or self.hovered==bool(expanded): return
-        self.hovered=bool(expanded)
-        self.setMode(4 if self.hovered else self.baseMode)
+        expanded=bool(expanded)
+        if not self.active or self.hovered==expanded: return
+        # Track the pointer during ALT too, so releasing ALT restores the right mode.
+        self.hovered=expanded
+        if not self.alt: self.setMode(self.restingMode())
+
+    def setAlt(self):
+        selected=settings_service.getComponentDict(self.config)[TEAM_PANELS.PLAYERS_PANEL].get('altMode')
+        if selected not in PROFILES: return
+        alt=any(code in self.model.keys for code in (56,184))
+        if alt!=self.alt:
+            self.alt=alt
+            self.setMode(PROFILES.index(selected) if alt else self.restingMode())
 
     def key(self,event):
         down=event.isKeyDown()
         self.model.key(event.key,down)
-        selected=settings_service.getComponentDict(self.config)[TEAM_PANELS.PLAYERS_PANEL].get('altMode')
-        if event.key in (56,184) and selected in PROFILES:
-            self.alt=any(code in self.model.keys for code in (56,184))
-            self.setMode(PROFILES.index(selected) if self.alt else self.baseMode)
+        if event.key in (56,184): self.setAlt()
         self.refresh()
+
+    def releaseKeys(self):
+        # Key-up is lost while the settings window blocks input or the client
+        # loses focus (Alt+Tab); never leave ALT modes or HP holds stuck on.
+        isKeyDown=getattr(BigWorld,'isKeyDown',None)
+        if isKeyDown is None or not self.model.keys: return
+        released=[code for code in self.model.keys if not isKeyDown(code)]
+        for code in released: self.model.key(code,False)
+        if released and set(released)&set((56,184)): self.setAlt()
+
+    def logFailure(self,where):
+        # Called from an except block; one traceback per part every 10 s.
+        now=time.time()
+        if now-self.failures.get(where,0)>=10:
+            self.failures[where]=now
+            LOG.exception('%s update failed',where)
 
     def resolvedScreen(self,ident,key,settings,values,data,side,hotkeys):
         cache=self.screenCache.setdefault(ident,{})
@@ -368,15 +395,28 @@ class RatingViews(object):
         if arena is None: return
         if arena is not self.arena:
             self.model.reset(); self.arena=arena; self.lastRequest=0
+        # Statistics, Gameface and Flash fail independently: a broken TAB must not
+        # freeze the side panel, and a persistent error must not flood the log.
         try:
+            self.releaseKeys()
             if not self.lastRequest or BigWorld.time()-self.lastRequest>15:
-                self.stats.loadStats(); self.lastRequest=BigWorld.time()
+                self.lastRequest=BigWorld.time(); self.stats.loadStats()
+        except Exception:
+            self.logFailure('Statistics')
+        try:
             enabled=settings_service.getComponentDict(self.config)[GLOBAL.ENABLED]
             screens=set(self.visibleScreens)
             if hasattr(self,'gameface'): screens.update(self.gameface.active_screens())
             rows=self.rows(self.model.mode,screens) if enabled else []
-            if hasattr(self,'gameface'): self.gameface.update(settings_service.getComponentDict(self.config)[GLOBAL.ENABLED],rows)
-            if self.view and self.view._isDAAPIInited():
+        except Exception:
+            self.logFailure('Roster'); rows=None
+        if rows is not None and hasattr(self,'gameface'):
+            try:
+                self.gameface.update(enabled,rows)
+            except Exception:
+                self.logFailure('Gameface roster')
+        try:
+            if rows is not None and self.view and self.view._isDAAPIInited():
                 payload={'enabled':enabled,
                     'rows':rows,'panel':deepcopy(settings_service.getComponentDict(self.config)[TEAM_PANELS.PLAYERS_PANEL]), 'mode':self.model.mode,
                     'loadingClock':{'enabled':settings_service.getComponentDict(self.config)[TEAM_PANELS.LOADING][GLOBAL.ENABLED],
@@ -398,7 +438,7 @@ class RatingViews(object):
                     # a snapshot to detect edits made by the configuration UI.
                     self.lastPayload=payload
         except Exception:
-            LOG.exception('Roster update failed')
+            self.logFailure('Flash roster')
         if settings_service.getComponentDict(self.config)[TEAM_PANELS.PERFORMANCE].get('diagnostics',False):
             elapsed=(time.time()-started)*1000; metrics=self.metrics
             metrics['ticks']+=1; metrics['ms']+=elapsed; metrics['max']=max(metrics['max'],elapsed)
