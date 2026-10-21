@@ -133,9 +133,10 @@ class Crew(object):
             SystemMessages.pushI18nMessage(result.userMsg, type=result.sysMsgType)
 
     def handleVehicleChange(self):
-        if not settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
+        settings = settings_service.getComponentDict(config)
+        if not settings[GLOBAL.ENABLED]:
             return
-        if settings_service.getComponentDict(config)[CREW_MANAGEMENT.CREW_AUTO_RETURN] and settings_service.getComponentDict(config)[CREW_MANAGEMENT.CREW_RETURN_BY_DEFAULT]:
+        if settings[CREW_MANAGEMENT.CREW_AUTO_RETURN] and settings[CREW_MANAGEMENT.CREW_RETURN_BY_DEFAULT]:
             if self.__callbackID is not None:
                 cancelCallback(self.__callbackID)
                 self.__callbackID = None
@@ -143,7 +144,7 @@ class Crew(object):
                 return
             vehicle = g_currentVehicle.item
             intCD = vehicle.intCD
-            if settings_service.getComponentDict(config)[CREW_MANAGEMENT.EXCLUDE_PREMIUM_VEHICLES] and vehicle.isPremium:
+            if settings[CREW_MANAGEMENT.EXCLUDE_PREMIUM_VEHICLES] and vehicle.isPremium:
                 return
             if self.__skipNextAutoReturnInvID == vehicle.invID:
                 self.__skipNextAutoReturnInvID = None
@@ -153,18 +154,19 @@ class Crew(object):
                 self.intCD = intCD
                 return
             if intCD != self.intCD:
-                self.__callbackID = callback(settings_service.getComponentDict(config)[CREW_MANAGEMENT.AUTO_RETURN_DELAY], self.returnCrew)
+                self.__callbackID = callback(settings[CREW_MANAGEMENT.AUTO_RETURN_DELAY], self.returnCrew)
                 self.intCD = intCD
 
     @log_exceptions
     def handlePopupSelect(self, items):
-        if not items or not settings_service.getComponentDict(config)[GLOBAL.ENABLED] or not settings_service.getComponentDict(config)[CREW_MANAGEMENT.CREW_AUTO_RETURN]:
+        settings = settings_service.getComponentDict(config)
+        if not items or not settings[GLOBAL.ENABLED] or not settings[CREW_MANAGEMENT.CREW_AUTO_RETURN]:
             return
         if len(items) == 1:
             cd = int(items[0])
             vehicle = self.itemsCache.items.getItemByCD(cd)
             if vehicle and vehicle.isInInventory and not (vehicle.isCrewFull or vehicle.isInBattle or vehicle.isLocked):
-                if settings_service.getComponentDict(config)[CREW_MANAGEMENT.EXCLUDE_PREMIUM_VEHICLES] and vehicle.isPremium:
+                if settings[CREW_MANAGEMENT.EXCLUDE_PREMIUM_VEHICLES] and vehicle.isPremium:
                     return
                 self.__skipNextAutoReturnInvID = vehicle.invID
                 self.processReturnCrewForVehicleSelectorPopup(vehicle)
@@ -199,17 +201,18 @@ class Crew(object):
         self.processReturnCrew()
 
     def toggleAutoReturnForCurrentVehicle(self):
+        settings = settings_service.getComponentDict(config)
         if not g_currentVehicle.isPresent():
             return False
         vehicle_id = str(g_currentVehicle.item.invID)
         if vehicle_id in ignored_vehicles:
             removeIgnoredVehicle(vehicle_id)
-            if settings_service.getComponentDict(config)[CREW_MANAGEMENT.SHOW_NOTIFICATIONS]:
+            if settings[CREW_MANAGEMENT.SHOW_NOTIFICATIONS]:
                 SystemMessages.pushMessage('Auto-return enabled for this vehicle', type=SystemMessages.SM_TYPE.Information)
             return True
         else:
             updateIgnoredVehicles(vehicle_id)
-            if settings_service.getComponentDict(config)[CREW_MANAGEMENT.SHOW_NOTIFICATIONS]:
+            if settings[CREW_MANAGEMENT.SHOW_NOTIFICATIONS]:
                 SystemMessages.pushMessage("Auto-return disabled for this vehicle", type=SystemMessages.SM_TYPE.Information)
             return False
 

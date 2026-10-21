@@ -16,8 +16,9 @@ config = Settings()
 
 @override(VehicleGunRotator.VehicleGunRotator, 'setShotPosition')
 def new__vehicleGunRotatorSetShotPosition(func, self, vehicleID, shotPos, shotVec, dispersionAngle, forceValueRefresh=False):
-    if settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
-        if self._avatar.vehicle and settings_service.getComponentDict(config)[SERVER_TURRET_SYNC.SERVER_TURRET]:
+    settings = settings_service.getComponentDict(config)
+    if settings[GLOBAL.ENABLED]:
+        if self._avatar.vehicle and settings[SERVER_TURRET_SYNC.SERVER_TURRET]:
             self._VehicleGunRotator__turretYaw, self._VehicleGunRotator__gunPitch = self._avatar.vehicle.getServerGunAngles()
             forceValueRefresh = True
     return func(self, vehicleID, shotPos, shotVec, dispersionAngle, forceValueRefresh)

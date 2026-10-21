@@ -157,13 +157,14 @@ class CarouselData(object):
         self.cache.clear()
 
     def build_panel_model(self, requested):
+        settings = settings_service.getComponentDict(config)
         account = getattr(getPlayer(), 'databaseID', None)
         if account != self.account:
             self.account = account
             self.invalidate()
         result = {'config': get_view_config(config, g_rowModels), 'vehicles': {}}
         inventory = ServicesLocator.itemsCache.items.getVehicles(REQ_CRITERIA.INVENTORY)
-        criteria = set(key.lstrip('-') for key in settings_service.getComponentDict(config)[VEHICLE_CAROUSEL.CAROUSEL]['sorting_criteria'])
+        criteria = set(key.lstrip('-') for key in settings[VEHICLE_CAROUSEL.CAROUSEL]['sorting_criteria'])
         result['sortValues'] = {}
         if criteria.intersection(STAT_SORT_KEYS):
             for cd, vehicle in inventory.items():
@@ -188,8 +189,8 @@ class CarouselData(object):
                 if cd not in self.cache:
                     self.cache[cd] = collect(vehicle)
                 values = dict(self.cache[cd], selected=bool(g_currentVehicle.isPresent() and g_currentVehicle.intCD == cd))
-                result['vehicles'][str(cd)] = dict((mode, layout.build_profile(settings_service.getComponentDict(config)[VEHICLE_CAROUSEL.CAROUSEL][mode],
-                    lambda template: render_macro(template, values), settings_service.getComponentDict(config)[VEHICLE_CAROUSEL.SHOW_ICONS])) for mode in ('normal','small'))
+                result['vehicles'][str(cd)] = dict((mode, layout.build_profile(settings[VEHICLE_CAROUSEL.CAROUSEL][mode],
+                    lambda template: render_macro(template, values), settings[VEHICLE_CAROUSEL.SHOW_ICONS])) for mode in ('normal','small'))
             except Exception:
                 LOG.debug('Dossier unavailable for %s',cd,exc_info=True)
         result['images'] = self.images.collect(result['vehicles'])

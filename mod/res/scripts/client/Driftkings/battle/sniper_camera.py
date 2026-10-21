@@ -20,15 +20,16 @@ config = Settings()
 
 @override(SniperCamera, '_readConfigs')
 def new__readConfigs(func, self, data):
+    settings = settings_service.getComponentDict(config)
     for cfg in (self._baseCfg, self._userCfg, self._cfg):
         cfg.clear()
     func(self, data)
-    if not settings_service.getComponentDict(config)[GLOBAL.ENABLED] or isReplay():
+    if not settings[GLOBAL.ENABLED] or isReplay():
         return
-    if settings_service.getComponentDict(config)[SNIPER_CAMERA.NO_SNIPER_DYNAMIC] and self.isCameraDynamic():
+    if settings[SNIPER_CAMERA.NO_SNIPER_DYNAMIC] and self.isCameraDynamic():
         self.enableDynamicCamera(False)
-    if settings_service.getComponentDict(config)[SNIPER_CAMERA.ZOOM_STEPS]['enabled']:
-        steps = [step for step in settings_service.getComponentDict(config)[SNIPER_CAMERA.ZOOM_STEPS]['steps'] if step >= MIN_ZOOM]
+    if settings[SNIPER_CAMERA.ZOOM_STEPS]['enabled']:
+        steps = [step for step in settings[SNIPER_CAMERA.ZOOM_STEPS]['steps'] if step >= MIN_ZOOM]
         if len(steps) > 3:
             steps.sort()
             for cfg in (self._cfg, self._userCfg, self._baseCfg):
@@ -123,18 +124,20 @@ controller = ZoomController(config)
 
 @override(SniperControlMode, '__setupBinoculars')
 def new__setupBinoculars(func, self, optDevices):
+    settings = settings_service.getComponentDict(config)
     result = func(self, optDevices)
-    if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[SNIPER_CAMERA.NO_BINOCULARS]:
+    if settings[GLOBAL.ENABLED] and settings[SNIPER_CAMERA.NO_BINOCULARS]:
         self._binoculars.resetTextures()
     return result
 
 
 @override(ModelBoundEffects, 'addNewToNode')
 def new__effectsListPlayer(func, *args, **kwargs):
-    if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and kwargs.get('isPlayerVehicle', False):
-        if settings_service.getComponentDict(config)[SNIPER_CAMERA.NO_FLASH_BANG] and 'showFlashBang' in kwargs:
+    settings = settings_service.getComponentDict(config)
+    if settings[GLOBAL.ENABLED] and kwargs.get('isPlayerVehicle', False):
+        if settings[SNIPER_CAMERA.NO_FLASH_BANG] and 'showFlashBang' in kwargs:
             kwargs['showFlashBang'] = False
-        if settings_service.getComponentDict(config)[SNIPER_CAMERA.NO_SHOCK_WAVE] and 'showShockWave' in kwargs:
+        if settings[SNIPER_CAMERA.NO_SHOCK_WAVE] and 'showShockWave' in kwargs:
             kwargs['showShockWave'] = False
     return func(*args, **kwargs)
 

@@ -260,15 +260,16 @@ class Worker(object):
             self.calc()
 
     def startBattle(self):
-        if not settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
+        settings = settings_service.getComponentDict(config)
+        if not settings[GLOBAL.ENABLED]:
             return
-        if settings_service.getComponentDict(config)[BATTLE_MARKS_OF_EXCELLENCE.SHOW_IN_BATTLE]:
+        if settings[BATTLE_MARKS_OF_EXCELLENCE.SHOW_IN_BATTLE]:
             message = 'Mod: Marks of Excellence %s [by github.com/spoter]' % config.NAME
             message += '\nRe-Worked for [Driftkings]'
             color = 'Purple'
             sendPanelMessage(message, color)
         self.replay = BattleReplay.isPlaying()
-        if self.replay and not settings_service.getComponentDict(config)[BATTLE_MARKS_OF_EXCELLENCE.SHOW_IN_REPLAY]:
+        if self.replay and not settings[BATTLE_MARKS_OF_EXCELLENCE.SHOW_IN_REPLAY]:
             return
         self.startCount = 0
         callback(1.0, self.treadStartBattle)

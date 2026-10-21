@@ -97,3 +97,12 @@ class PanelLocalizationTests(RuntimeTest):
         result = self.roster().screen({'format': '{{l10n:Unknown}}'}, {'xvm-stat': ''},
                                       {'templates': {}}, 'Left')
         self.assertEqual(result['format'], 'Unknown')
+
+    def test_settings_are_reread_only_after_a_change_signal(self):
+        first = self.view.rows()[0]['panels']['large']['format']
+        self.data['profiles']['large']['format'] = 'Changed'
+        # No deep comparison per tick: the cached screen stays until the settings signal.
+        self.assertEqual(self.view.rows()[0]['panels']['large']['format'], first)
+        self.view.stats._appliedCache = {}
+        self.view.onSettingsChanged('team_panels', ())
+        self.assertEqual(self.view.rows()[0]['panels']['large']['format'], 'Changed')

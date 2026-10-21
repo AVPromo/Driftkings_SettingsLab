@@ -28,11 +28,12 @@ class BattleClock(object):
         overlays.create(_component().config.NAME, ElementType.LABEL, {'x': 200, 'y': 1, 'alignX': Align.LEFT, 'alignY': Align.TOP, 'text': '', 'border': False, 'limit': False})
 
     def start(self):
+        settings = settings_service.getComponentDict(_component().config)
         if self.active:
             return
         self.active = True
         g_playerEvents.onAvatarReady += self.updateDecoder
-        if settings_service.getComponentDict(_component().config)[GLOBAL.ENABLED] and settings_service.getComponentDict(_component().config)[BATTLE_PREFERENCES.IN_BATTLE]:
+        if settings[GLOBAL.ENABLED] and settings[BATTLE_PREFERENCES.IN_BATTLE]:
             self.timerEvent.start()
 
     def stop(self):

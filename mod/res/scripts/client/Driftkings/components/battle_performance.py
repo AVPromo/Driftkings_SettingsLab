@@ -173,9 +173,10 @@ class BattleEfficiency(object):
         self.updateFormatString()
 
     def updateFormatString(self):
+        settings = settings_service.getComponentDict(config)
         player = getPlayer()
         arena = getattr(player, 'arena', None)
-        if not settings_service.getComponentDict(config)[GLOBAL.ENABLED] or arena is None or arena.bonusType not in SUPPORTED_BONUS_TYPES:
+        if not settings[GLOBAL.ENABLED] or arena is None or arena.bonusType not in SUPPORTED_BONUS_TYPES:
             if g_flash is not None:
                 g_flash.setVisible(False)
             return
@@ -186,7 +187,7 @@ class BattleEfficiency(object):
                 color_key = 'x' if key.startswith('x') else key
                 color_value = self.read_colors(color_key, value)
                 macro_data['{c:%s}' % key] = str(color_value) if color_value is not None else ''
-        format_text = replaceMacros(settings_service.getComponentDict(config)[BATTLE_PERFORMANCE.FORMAT], macro_data)
+        format_text = replaceMacros(settings[BATTLE_PERFORMANCE.FORMAT], macro_data)
         if g_flash:
             g_flash.addText(format_text)
             g_flash.setVisible(True)

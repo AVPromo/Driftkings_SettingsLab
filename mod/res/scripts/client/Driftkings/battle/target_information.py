@@ -388,14 +388,15 @@ class CompareMacros(object):
         return self._getCompareAttribute('color')
 
     def _getCompareAttribute(self, attribute):
+        settings = settings_service.getComponentDict(config)
         if self.value1 is None or self.value2 is None:
             raise ValueError('Values must be defined before comparison.')
         if self.value1 > self.value2:
-            return settings_service.getComponentDict(config)[TARGET_INFORMATION.COMPARE_VALUES]['moreThan'][attribute]
+            return settings[TARGET_INFORMATION.COMPARE_VALUES]['moreThan'][attribute]
         elif self.value1 == self.value2:
-            return settings_service.getComponentDict(config)[TARGET_INFORMATION.COMPARE_VALUES]['equal'][attribute]
+            return settings[TARGET_INFORMATION.COMPARE_VALUES]['equal'][attribute]
         else:
-            return settings_service.getComponentDict(config)[TARGET_INFORMATION.COMPARE_VALUES]['lessThan'][attribute]
+            return settings[TARGET_INFORMATION.COMPARE_VALUES]['lessThan'][attribute]
 
 
 class InfoPanel(DataConstants):
@@ -496,31 +497,33 @@ class InfoPanel(DataConstants):
 
     @staticmethod
     def getText():
-        template_index = settings_service.getComponentDict(config)[TARGET_INFORMATION.TEMPLATE_PRESET]
+        settings = settings_service.getComponentDict(config)
+        template_index = settings[TARGET_INFORMATION.TEMPLATE_PRESET]
         # The full preset is editable in JSON; retain the existing preset IDs.
-        if template_index == 3 and settings_service.getComponentDict(config).get(TARGET_INFORMATION.FORMATS):
+        if template_index == 3 and settings.get(TARGET_INFORMATION.FORMATS):
             return u'\n'.join(value if isinstance(value,type(u'')) else value.decode('utf-8')
-                              for value in settings_service.getComponentDict(config)[TARGET_INFORMATION.FORMATS])
+                              for value in settings[TARGET_INFORMATION.FORMATS])
         template_key = TEMPLATE_INDEX_TO_KEY.get(template_index, 'default')
         return PRESET_TEMPLATES.get(template_key, PRESET_TEMPLATES['default'])
 
     @staticmethod
     def isConditions(entity):
+        settings = settings_service.getComponentDict(config)
         player = getPlayer()
         if player is None or entity is None or not hasattr(entity, 'publicInfo'):
             return False
         playerTeam = player.team
         team = getattr(entity.publicInfo, 'team', 0)
         isAlly = team > 0 and team == playerTeam
-        if settings_service.getComponentDict(config)[TARGET_INFORMATION.SHOW_FOR] == 0:
+        if settings[TARGET_INFORMATION.SHOW_FOR] == 0:
             showFor = True
-        elif settings_service.getComponentDict(config)[TARGET_INFORMATION.SHOW_FOR] == 1:
+        elif settings[TARGET_INFORMATION.SHOW_FOR] == 1:
             showFor = isAlly
-        elif settings_service.getComponentDict(config)[TARGET_INFORMATION.SHOW_FOR] == 2:
+        elif settings[TARGET_INFORMATION.SHOW_FOR] == 2:
             showFor = not isAlly
         else:
             showFor = False
-        isAlive = entity.isAlive() if settings_service.getComponentDict(config)[TARGET_INFORMATION.ALIVE_ONLY] else True
+        isAlive = entity.isAlive() if settings[TARGET_INFORMATION.ALIVE_ONLY] else True
         return showFor and isAlive
 
     def getFuncResponse(self, funcName):
@@ -567,15 +570,16 @@ class InfoPanel(DataConstants):
         return re.sub(pattern, replace, textFormat)
 
     def keyPressed(self, event):
-        if not settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
+        settings = settings_service.getComponentDict(config)
+        if not settings[GLOBAL.ENABLED]:
             return
         player = getPlayer()
         if not hasattr(player, 'getVehicleAttached'):
             return
-        if checkKeys(settings_service.getComponentDict(config)[TARGET_INFORMATION.ALT_KEY]) and event.isKeyDown():
+        if checkKeys(settings[TARGET_INFORMATION.ALT_KEY]) and event.isKeyDown():
             self.hotKeyDown = True
             self.onUpdateVehicle(player.getVehicleAttached(), ignoreHotKey=True)
-        elif self.hotKeyDown and event.isKeyUp() and not checkKeys(settings_service.getComponentDict(config)[TARGET_INFORMATION.ALT_KEY]):
+        elif self.hotKeyDown and event.isKeyUp() and not checkKeys(settings[TARGET_INFORMATION.ALT_KEY]):
             self.hotKeyDown = False
             target = getTarget()
             if self.isConditions(target):

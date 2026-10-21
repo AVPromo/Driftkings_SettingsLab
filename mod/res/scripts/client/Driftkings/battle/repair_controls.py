@@ -203,6 +203,7 @@ class Repair(object):
                     self.useItemManual(equipment_tag, result[0])
 
     def repairAll(self):
+        settings = settings_service.getComponentDict(config)
         if self.ctrl is None:
             return
         self_vehicle = self.player.getVehicleAttached()
@@ -210,15 +211,15 @@ class Repair(object):
             return
         if self.ctrl.vehicleState.getControllingVehicleID() != self_vehicle.id:
             return
-        if settings_service.getComponentDict(config)[REPAIR_CONTROLS.EXTINGUISH_FIRE]:
+        if settings[REPAIR_CONTROLS.EXTINGUISH_FIRE]:
             self.extinguishFire()
-        if settings_service.getComponentDict(config)[REPAIR_CONTROLS.REPAIR_DEVICES]:
+        if settings[REPAIR_CONTROLS.REPAIR_DEVICES]:
             self.repair('repairkit')
-        if settings_service.getComponentDict(config)[REPAIR_CONTROLS.HEAL_CREW]:
+        if settings[REPAIR_CONTROLS.HEAL_CREW]:
             self.repair('medkit')
-        if settings_service.getComponentDict(config)[REPAIR_CONTROLS.REMOVE_STUN]:
+        if settings[REPAIR_CONTROLS.REMOVE_STUN]:
             self.removeStun()
-        if settings_service.getComponentDict(config)[REPAIR_CONTROLS.RESTORE_CHASSIS]:
+        if settings[REPAIR_CONTROLS.RESTORE_CHASSIS]:
             self.repairChassis()
 
     def onEquipmentUpdated(self, *_):
@@ -242,10 +243,11 @@ class Repair(object):
                         return
 
     def onHotkeyPressed(self, event):
+        settings = settings_service.getComponentDict(config)
         if ServicesLocator.appLoader.getDefBattleApp():
-            if checkKeys(settings_service.getComponentDict(config)[REPAIR_CONTROLS.BUTTON_CHASSIS]) and event.isKeyDown():
+            if checkKeys(settings[REPAIR_CONTROLS.BUTTON_CHASSIS]) and event.isKeyDown():
                 self.repairChassis()
-            if checkKeys(settings_service.getComponentDict(config)[REPAIR_CONTROLS.BUTTON_REPAIR]) and event.isKeyDown():
+            if checkKeys(settings[REPAIR_CONTROLS.BUTTON_REPAIR]) and event.isKeyDown():
                 self.repairAll()
 
 

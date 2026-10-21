@@ -23,7 +23,8 @@ class WGLogs(object):
             override(DamageLogPanel, bottom, partial(self.routeLog, originalTop))
 
     def routeLog(self, opposite, func, panel, *args, **kwargs):
-        target = opposite if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[GAME_LOG_MANAGER.LOG_SWAPPER] else func
+        settings = settings_service.getComponentDict(config)
+        target = opposite if settings[GLOBAL.ENABLED] and settings[GAME_LOG_MANAGER.LOG_SWAPPER] else func
         return target(panel, *args, **kwargs)
 
     def new__addToLog(self, func, component, event):
@@ -35,11 +36,12 @@ class WGLogs(object):
 
     @staticmethod
     def getFilters():
+        settings = settings_service.getComponentDict(config)
         return {
-            PERSONAL_EFFICIENCY_TYPE.RECEIVED_CRITICAL_HITS: settings_service.getComponentDict(config)[GAME_LOG_MANAGER.WG_LOG_HIDE_CRITICS],
-            PERSONAL_EFFICIENCY_TYPE.BLOCKED_DAMAGE: settings_service.getComponentDict(config)[GAME_LOG_MANAGER.WG_LOG_HIDE_BLOCK],
-            PERSONAL_EFFICIENCY_TYPE.ASSIST_DAMAGE: settings_service.getComponentDict(config)[GAME_LOG_MANAGER.WG_LOG_HIDE_ASSIST],
-            PERSONAL_EFFICIENCY_TYPE.STUN: settings_service.getComponentDict(config)[GAME_LOG_MANAGER.WG_LOG_HIDE_ASSIST]
+            PERSONAL_EFFICIENCY_TYPE.RECEIVED_CRITICAL_HITS: settings[GAME_LOG_MANAGER.WG_LOG_HIDE_CRITICS],
+            PERSONAL_EFFICIENCY_TYPE.BLOCKED_DAMAGE: settings[GAME_LOG_MANAGER.WG_LOG_HIDE_BLOCK],
+            PERSONAL_EFFICIENCY_TYPE.ASSIST_DAMAGE: settings[GAME_LOG_MANAGER.WG_LOG_HIDE_ASSIST],
+            PERSONAL_EFFICIENCY_TYPE.STUN: settings[GAME_LOG_MANAGER.WG_LOG_HIDE_ASSIST]
         }
 
 

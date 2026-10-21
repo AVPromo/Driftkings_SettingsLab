@@ -158,7 +158,8 @@ def new_makeString(func, key, *args, **kwargs):
 # hide shared chat button
 @override(LobbyEntry, '_LobbyEntry__handleLazyChannelCtlInited')
 def new__handleLazyChannelCtlInited(func, self, event):
-    if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.SHOW_GENERAL_CHAT_BUTTON, True):
+    settings = settings_service.getComponentDict(config)
+    if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.SHOW_GENERAL_CHAT_BUTTON, True):
         ctx = event.ctx
         controller = ctx.get('controller')
         if controller is None:
@@ -172,7 +173,8 @@ def new__handleLazyChannelCtlInited(func, self, event):
 
 @_overrideIfAvailable(LobbyEntry, '_LobbyEntry__updateCommonChatVisibility')
 def new__updateCommonChatVisibility(func, self, *args, **kwargs):
-    if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.SHOW_GENERAL_CHAT_BUTTON, True):
+    settings = settings_service.getComponentDict(config)
+    if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.SHOW_GENERAL_CHAT_BUTTON, True):
         return
     return func(self, *args, **kwargs)
 
@@ -180,7 +182,8 @@ def new__updateCommonChatVisibility(func, self, *args, **kwargs):
 # hide premium vehicle on the background in the hangar
 @override(HeroTank, 'recreateVehicle')
 def new__recreateVehicle(func, self, typeDescriptor=None, state=ModelStates.UNDAMAGED, _callback=None, outfit=None):
-    if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.SHOW_PROMO_PREM_VEHICLE, True):
+    settings = settings_service.getComponentDict(config)
+    if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.SHOW_PROMO_PREM_VEHICLE, True):
         return
     func(self, typeDescriptor, state, _callback, outfit)
 
@@ -188,7 +191,8 @@ def new__recreateVehicle(func, self, typeDescriptor=None, state=ModelStates.UNDA
 # hide display pop-up messages in the hangar
 @override(TeaserViewer, 'show')
 def new__show(func, self, teaserData, promoCount):
-    if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.SHOW_POP_UP_MESSAGES, True):
+    settings = settings_service.getComponentDict(config)
+    if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.SHOW_POP_UP_MESSAGES, True):
         return
     func(self, teaserData, promoCount)
 
@@ -196,7 +200,8 @@ def new__show(func, self, teaserData, promoCount):
 # hide display unread notifications counter in the menu
 @override(PromoController, 'getPromoCount')
 def new__getPromoCount(func, self):
-    if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.SHOW_UNREAD_COUNTER, True):
+    settings = settings_service.getComponentDict(config)
+    if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.SHOW_UNREAD_COUNTER, True):
         return 0
     return func(self)
 
@@ -204,18 +209,21 @@ def new__getPromoCount(func, self):
 # disable field mail tips
 @override(PromoController, '__tryToShowTeaser')
 def new__tryToShowTeaser(func, *args):
-    return None if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.FIELD_MAIL, True) else func(*args)
+    settings = settings_service.getComponentDict(config)
+    return None if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.FIELD_MAIL, True) else func(*args)
 
 
 @override(PromoController, '__needToGetTeasersInfo')
 def new__needToGetTeasersInfo(func, *args):
-    return False if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and not settings_service.getComponentDict(config)[HANGAR_PREFERENCES.FIELD_MAIL] else func(*args)
+    settings = settings_service.getComponentDict(config)
+    return False if settings[GLOBAL.ENABLED] and not settings[HANGAR_PREFERENCES.FIELD_MAIL] else func(*args)
 
 
 # hide ranked battle results window
 @override(RankedBattlesResults, '_populate')
 def new__populate(func, self):
-    if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.SHOW_RANKED_BATTLE_RESULTS, True):
+    settings = settings_service.getComponentDict(config)
+    if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.SHOW_RANKED_BATTLE_RESULTS, True):
         return
     func(self)
 
@@ -223,14 +231,16 @@ def new__populate(func, self):
 # hide display session statistics button
 @_overrideIfAvailable(SessionStatsPresenter, '_SessionStatsPresenter__updateSessionStats')
 def new__updateSessionStats(func, self):
-    if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.SHOW_BUTTON, True):
+    settings = settings_service.getComponentDict(config)
+    if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.SHOW_BUTTON, True):
         return
     return func(self)
 
 
 @_overrideIfAvailable(SessionStatsPresenter, '_SessionStatsPresenter__updateBattleCount')
 def new__updateBattleCountPresenter(func, self, model):
-    if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.SHOW_BATTLE_COUNT, True):
+    settings = settings_service.getComponentDict(config)
+    if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.SHOW_BATTLE_COUNT, True):
         model.setBattleCount(0)
         return
     return func(self, model)
@@ -238,7 +248,8 @@ def new__updateBattleCountPresenter(func, self, model):
 
 @_overrideIfAvailable(UserMissionsPresenter, '_updateMissions')
 def new__updateMissions(func, self, vm):
-    if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.SHOW_DAILY_QUEST_WIDGET, True):
+    settings = settings_service.getComponentDict(config)
+    if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.SHOW_DAILY_QUEST_WIDGET, True):
         self._addChild(self._WIDGET_ALIAS.Quests(), False)
         vm.setAreMissionsActive(False)
         return
@@ -248,14 +259,16 @@ def new__updateMissions(func, self, vm):
 # hide display pop-up window when receiving progressive decals
 @override(ProgressiveItemsRewardHandler, '_showAward')
 def new__showAward(func, self, ctx):
-    if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.SHOW_PROGRESSIVE_DECALS_WINDOW, True):
+    settings = settings_service.getComponentDict(config)
+    if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.SHOW_PROGRESSIVE_DECALS_WINDOW, True):
         return
     func(self, ctx)
 
 
 @_overrideIfAvailable(UserMissionsPresenter, '_updateEntryPoints')
 def new__updateEntryPoints(func, self, vm):
-    if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.SHOW_EVENT_BANNER, True):
+    settings = settings_service.getComponentDict(config)
+    if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.SHOW_EVENT_BANNER, True):
         self._addChild(self._WIDGET_ALIAS.Events(), False)
         vm.setIsAnyEntryPointAvailable(False)
         return
@@ -265,7 +278,8 @@ def new__updateEntryPoints(func, self, vm):
 # hide counters in service channel
 @override(NotificationListView, '_NotificationListView__updateCounters')
 def new__updateCounters(func, self):
-    if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.SHOW_BUTTON_COUNTERS, True):
+    settings = settings_service.getComponentDict(config)
+    if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.SHOW_BUTTON_COUNTERS, True):
         return
     return func(self)
 
@@ -273,7 +287,8 @@ def new__updateCounters(func, self):
 # hide achievement popups
 @override(EarningAnimationCommand, 'execute')
 def new__execute(base, self):
-    if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.SHOW_ACHIEVEMENT_POPUPS, True):
+    settings = settings_service.getComponentDict(config)
+    if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.SHOW_ACHIEVEMENT_POPUPS, True):
         self.release()
         return
     base(self)
@@ -281,7 +296,8 @@ def new__execute(base, self):
 
 @override(RewardScreenCommand, 'execute')
 def new__rewardScreenExecute(base, self):
-    if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.SHOW_ACHIEVEMENT_REWARD_WINDOW, True):
+    settings = settings_service.getComponentDict(config)
+    if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.SHOW_ACHIEVEMENT_REWARD_WINDOW, True):
         self.release()
         return
     return base(self)
@@ -289,7 +305,8 @@ def new__rewardScreenExecute(base, self):
 
 @_overrideIfAvailable(UserMissionsPresenter, '_updateBattlePass')
 def new__updateBattlePass(func, self, vm):
-    if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.SHOW_BATTLE_PASS_WIDGET, True):
+    settings = settings_service.getComponentDict(config)
+    if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.SHOW_BATTLE_PASS_WIDGET, True):
         self._addChild(self._WIDGET_ALIAS.BattlePass(), False)
         vm.setIsBattlePassActive(False)
         return
@@ -302,9 +319,10 @@ class AutoLoginHandler:
         self.firstTime = False
 
     def auto_login(self, login):
+        settings = settings_service.getComponentDict(config)
         if not self.firstTime:
             self.firstTime = True
-            if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[HANGAR_PREFERENCES.AUTO_LOGIN]:
+            if settings[GLOBAL.ENABLED] and settings[HANGAR_PREFERENCES.AUTO_LOGIN]:
                 callback(0, login.as_doAutoLoginS)
 
 
@@ -320,8 +338,9 @@ def new__LoginViewPopulate(self):
 # Show Xp To Unlock Veh.
 @override(tooltips.StatusBlockConstructor, 'construct')
 def new__construct(func, self):
+    settings = settings_service.getComponentDict(config)
     result = func(self)
-    if result and settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[HANGAR_PREFERENCES.SHOW_XP_TO_UNLOCK_VEH]:
+    if result and settings[GLOBAL.ENABLED] and settings[HANGAR_PREFERENCES.SHOW_XP_TO_UNLOCK_VEH]:
         techTreeNode = self.configuration.node
         vehicle = self.vehicle
         isUnlocked = vehicle.isUnlocked
@@ -339,8 +358,9 @@ def new__construct(func, self):
 
 @override(_TechTreeDataProvider, 'getAllVehiclePossibleXP')
 def new__getAllVehiclePossibleXP(func, self, nodeCD, unlockStats):
+    settings = settings_service.getComponentDict(config)
     try:
-        if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.ALLOW_EXCHANGE_XPIN_TECH_TREE, True):
+        if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.ALLOW_EXCHANGE_XPIN_TECH_TREE, True):
             return unlockStats.getVehTotalXP(nodeCD)
     except Exception as err:
         LOG.error(('_TechTreeDataProvider_getAllVehiclePossibleXP').format(str(err)))
@@ -350,14 +370,16 @@ def new__getAllVehiclePossibleXP(func, self, nodeCD, unlockStats):
 # The current hangar renders Battle Pass through the user missions presenter.
 @override(BattlePassPresenter, 'isVisible')
 def new__battlePassIsVisible(func, self):
-    if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.SHOW_BATTLE_PASS_WIDGET, True):
+    settings = settings_service.getComponentDict(config)
+    if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.SHOW_BATTLE_PASS_WIDGET, True):
         return False
     return func(self)
 
 
 @override(UserMissionsPresenter, '_onGroupVisibilityChanged')
 def new__missionGroupVisibility(func, self, groupName, isVisible):
-    if groupName == BattlePassPresenter.GROUP and settings_service.getComponentDict(config)[GLOBAL.ENABLED] and not settings_service.getComponentDict(config)[HANGAR_PREFERENCES.SHOW_BATTLE_PASS_WIDGET]:
+    settings = settings_service.getComponentDict(config)
+    if groupName == BattlePassPresenter.GROUP and settings[GLOBAL.ENABLED] and not settings[HANGAR_PREFERENCES.SHOW_BATTLE_PASS_WIDGET]:
         isVisible = False
     return func(self, groupName, isVisible)
 
@@ -365,14 +387,16 @@ def new__missionGroupVisibility(func, self, groupName, isVisible):
 # Handlers
 @override(ChannelsCarouselHandler, 'addChannel')
 def new__addChannel(func, self, channel, lazy=False, isNotified=False):
-    if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.ALLOW_CHANNEL_BUTTON_BLINKING, True):
+    settings = settings_service.getComponentDict(config)
+    if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.ALLOW_CHANNEL_BUTTON_BLINKING, True):
         isNotified = False
     return func(self, channel, lazy, isNotified)
 
 
 @override(ChannelsCarouselHandler, '_ChannelsCarouselHandler__setItemField')
 def new__setItemField(func, self, clientID, key, value):
-    if settings_service.getComponentDict(config).get(GLOBAL.ENABLED, True) and not settings_service.getComponentDict(config).get(HANGAR_PREFERENCES.ALLOW_CHANNEL_BUTTON_BLINKING, True) and key == 'isNotified':
+    settings = settings_service.getComponentDict(config)
+    if settings.get(GLOBAL.ENABLED, True) and not settings.get(HANGAR_PREFERENCES.ALLOW_CHANNEL_BUTTON_BLINKING, True) and key == 'isNotified':
         value = False
     return func(self, clientID, key, value)
 

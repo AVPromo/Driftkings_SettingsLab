@@ -50,17 +50,18 @@ class ArtySplashController(object):
             return None
 
     def startBattle(self):
+        settings = settings_service.getComponentDict(self.config)
         if self._started:
             return
         self._started = True
-        if settings_service.getComponentDict(self.config)[GLOBAL.ENABLED]:
+        if settings[GLOBAL.ENABLED]:
             keyboard.subscribe(self.injectButton)
             self.player = getPlayer()
-            self.modelSplashVisible = settings_service.getComponentDict(self.config)[ARTILLERY_BLAST_RADIUS.SHOW_SPLASH_ON_DEFAULT]
-            self.modelDotVisible = settings_service.getComponentDict(self.config)[ARTILLERY_BLAST_RADIUS.SHOW_DOT_ON_DEFAULT]
+            self.modelSplashVisible = settings[ARTILLERY_BLAST_RADIUS.SHOW_SPLASH_ON_DEFAULT]
+            self.modelDotVisible = settings[ARTILLERY_BLAST_RADIUS.SHOW_DOT_ON_DEFAULT]
             self.scaleSplash = None
-            self.modelSplash = StaticWorldObjectMarker3D({'path': settings_service.getComponentDict(self.config)[ARTILLERY_BLAST_RADIUS.MODEL_PATH_SPLASH]}, (0, 0, 0))
-            self.modelDot = StaticWorldObjectMarker3D({'path': settings_service.getComponentDict(self.config)[ARTILLERY_BLAST_RADIUS.MODEL_PATH_DOT]}, (0, 0, 0))
+            self.modelSplash = StaticWorldObjectMarker3D({'path': settings[ARTILLERY_BLAST_RADIUS.MODEL_PATH_SPLASH]}, (0, 0, 0))
+            self.modelDot = StaticWorldObjectMarker3D({'path': settings[ARTILLERY_BLAST_RADIUS.MODEL_PATH_DOT]}, (0, 0, 0))
             self.modelDot.model.scale = (0.1, 0.1, 0.1)
             vehicleTypeDescriptor = getattr(self.player, 'vehicleTypeDescriptor', None)
             if vehicleTypeDescriptor is not None and Vehicle.getVehicleClassTag(vehicleTypeDescriptor.type.tags) == VEHICLE_CLASS_NAME.SPG:
@@ -94,7 +95,8 @@ class ArtySplashController(object):
         self.player = None
 
     def working(self):
-        if not settings_service.getComponentDict(self.config)[GLOBAL.ENABLED] or self.player is None:
+        settings = settings_service.getComponentDict(self.config)
+        if not settings[GLOBAL.ENABLED] or self.player is None:
             self.hideVisible()
             return
         if not hasattr(self.player, 'vehicleTypeDescriptor') or not hasattr(self.player, 'gunRotator'):
@@ -119,17 +121,17 @@ class ArtySplashController(object):
         if ctrlModeName is None:
             self.hideVisible()
             return
-        if not settings_service.getComponentDict(self.config)[ARTILLERY_BLAST_RADIUS.SHOW_MODE_ARCADE] and ctrlModeName == CTRL_MODE_NAME.ARCADE:
+        if not settings[ARTILLERY_BLAST_RADIUS.SHOW_MODE_ARCADE] and ctrlModeName == CTRL_MODE_NAME.ARCADE:
             self.hideVisible()
             return
-        if not settings_service.getComponentDict(self.config)[ARTILLERY_BLAST_RADIUS.SHOW_MODE_SNIPER] and ctrlModeName == CTRL_MODE_NAME.SNIPER:
+        if not settings[ARTILLERY_BLAST_RADIUS.SHOW_MODE_SNIPER] and ctrlModeName == CTRL_MODE_NAME.SNIPER:
             self.hideVisible()
             return
         artyModes = [CTRL_MODE_NAME.STRATEGIC]
         artyMode = getattr(CTRL_MODE_NAME, 'ARTY', None)
         if artyMode is not None:
             artyModes.append(artyMode)
-        if not settings_service.getComponentDict(self.config)[ARTILLERY_BLAST_RADIUS.SHOW_MODE_ARTY] and ctrlModeName in artyModes:
+        if not settings[ARTILLERY_BLAST_RADIUS.SHOW_MODE_ARTY] and ctrlModeName in artyModes:
             self.hideVisible()
             return
         markerPosition = self._getMarkerPosition()
@@ -141,13 +143,13 @@ class ArtySplashController(object):
                 self.scaleSplash = shell.type.explosionRadius
                 self.modelSplash.model.scale = (self.scaleSplash, self.scaleSplash, self.scaleSplash)
             if not self.modelSplashKeyPressed:
-                self.modelSplashVisible = settings_service.getComponentDict(self.config)[ARTILLERY_BLAST_RADIUS.SHOW_SPLASH_ON_DEFAULT]
+                self.modelSplashVisible = settings[ARTILLERY_BLAST_RADIUS.SHOW_SPLASH_ON_DEFAULT]
             self.modelSplash.model.position = markerPosition
             if self.modelSplashCircle is not None:
                 self.modelSplashCircle.updateHeights()
         if self.modelDot is not None and self.modelDot.model:
             if not self.modelDotKeyPressed:
-                self.modelDotVisible = settings_service.getComponentDict(self.config)[ARTILLERY_BLAST_RADIUS.SHOW_DOT_ON_DEFAULT]
+                self.modelDotVisible = settings[ARTILLERY_BLAST_RADIUS.SHOW_DOT_ON_DEFAULT]
             self.modelDot.model.position = markerPosition
         self.setVisible()
 
@@ -167,14 +169,15 @@ class ArtySplashController(object):
 
     @log_exceptions
     def injectButton(self, event):
-        if not self._started or not settings_service.getComponentDict(self.config)[GLOBAL.ENABLED]:
+        settings = settings_service.getComponentDict(self.config)
+        if not self._started or not settings[GLOBAL.ENABLED]:
             return
-        if checkKeys(settings_service.getComponentDict(self.config)[ARTILLERY_BLAST_RADIUS.BUTTON_SHOW_SPLASH]) and event.isKeyDown():
+        if checkKeys(settings[ARTILLERY_BLAST_RADIUS.BUTTON_SHOW_SPLASH]) and event.isKeyDown():
             self.modelSplashKeyPressed = True
             self.modelSplashVisible = not self.modelSplashVisible
             sendPanelMessage(self.config.i18n['UI_artySplash_messageSplashOn'] if self.modelSplashVisible else self.config.i18n['UI_artySplash_messageSplashOff'], 'Green' if self.modelSplashVisible else 'Red')
             self.setVisible()
-        if checkKeys(settings_service.getComponentDict(self.config)[ARTILLERY_BLAST_RADIUS.BUTTON_SHOW_DOT]) and event.isKeyDown():
+        if checkKeys(settings[ARTILLERY_BLAST_RADIUS.BUTTON_SHOW_DOT]) and event.isKeyDown():
             self.modelDotKeyPressed = True
             self.modelDotVisible = not self.modelDotVisible
             sendPanelMessage(self.config.i18n['UI_artySplash_messageDotOn'] if self.modelDotVisible else self.config.i18n['UI_artySplash_messageDotOff'], 'Green' if self.modelDotVisible else 'Red')

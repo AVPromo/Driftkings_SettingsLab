@@ -95,9 +95,10 @@ class MinimapController(object):
         return not self.sessionProvider.arenaVisitor.gui.isInEpicRange()
 
     def onHotkeyPressed(self, event):
-        if not settings_service.getComponentDict(self.config)[GLOBAL.ENABLED] or not self._active:
+        settings = settings_service.getComponentDict(self.config)
+        if not settings[GLOBAL.ENABLED] or not self._active:
             return
-        self.setAlternative(bool(settings_service.getComponentDict(self.config)[MINIMAP_ENHANCEMENTS.PRESENTATION]['alternativeEnabled'] and checkKeys(settings_service.getComponentDict(self.config)[MINIMAP_ENHANCEMENTS.BUTTON])))
+        self.setAlternative(bool(settings[MINIMAP_ENHANCEMENTS.PRESENTATION]['alternativeEnabled'] and checkKeys(settings[MINIMAP_ENHANCEMENTS.BUTTON])))
 
 
 config = Settings()
@@ -206,28 +207,32 @@ class PersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
         self.refreshPresentation()
 
     def setSettings(self):
+        settings = settings_service.getComponentDict(config)
         super(PersonalEntriesPlugin, self).setSettings()
         if self.__isAlive and not self.__isObserver:
             direction = self.settingsCore.getSetting(settings_constants.GAME.SHOW_VECTOR_ON_MAP)
             sector = self.settingsCore.getSetting(settings_constants.GAME.SHOW_SECTOR_ON_MAP)
-            if settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
-                direction = policy.visible(settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LINES]['direction'], direction)
-                sector = policy.visible(settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LINES]['sector'], sector)
+            if settings[GLOBAL.ENABLED]:
+                direction = policy.visible(settings[MINIMAP_ENHANCEMENTS.LINES]['direction'], direction)
+                sector = policy.visible(settings[MINIMAP_ENHANCEMENTS.LINES]['sector'], sector)
             self._updateDirectionLine(direction)
             self._updateYawLimits(sector)
 
     def __showDirectionLine(self):
-        if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LINES]['direction'] == 'off':
+        settings = settings_service.getComponentDict(config)
+        if settings[GLOBAL.ENABLED] and settings[MINIMAP_ENHANCEMENTS.LINES]['direction'] == 'off':
             return super(PersonalEntriesPlugin, self).__hideDirectionLine()
         return super(PersonalEntriesPlugin, self).__showDirectionLine()
 
     def __setupYawLimit(self):
-        if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LINES]['sector'] == 'off':
+        settings = settings_service.getComponentDict(config)
+        if settings[GLOBAL.ENABLED] and settings[MINIMAP_ENHANCEMENTS.LINES]['sector'] == 'off':
             return super(PersonalEntriesPlugin, self).__clearYawLimit()
         return super(PersonalEntriesPlugin, self).__setupYawLimit()
 
     def _circleVisible(self, key, native):
-        return policy.visible(settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.CIRCLES][key]['mode'], native) if settings_service.getComponentDict(config)[GLOBAL.ENABLED] else native
+        settings = settings_service.getComponentDict(config)
+        return policy.visible(settings[MINIMAP_ENHANCEMENTS.CIRCLES][key]['mode'], native) if settings[GLOBAL.ENABLED] else native
 
     def _canShowDrawRangeCircle(self):
         return self._circleVisible('draw', super(PersonalEntriesPlugin, self)._canShowDrawRangeCircle())
@@ -242,57 +247,63 @@ class PersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
         return self._circleVisible('view', super(PersonalEntriesPlugin, self)._canShowViewRangeCircle())
 
     def _calcCircularVisionRadius(self):
-        if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.VIEW_RADIUS]:
+        settings = settings_service.getComponentDict(config)
+        if settings[GLOBAL.ENABLED] and settings[MINIMAP_ENHANCEMENTS.VIEW_RADIUS]:
             vehAttrs = self.sessionProvider.shared.feedback.getVehicleAttrs()
             return vehAttrs.get('circularVisionRadius', self._arenaVisitor.getVisibilityMinRadius())
         # noinspection PyProtectedMember
         return super(PersonalEntriesPlugin, self)._calcCircularVisionRadius()
 
     def __addDrawRangeCircle(self):
-        if settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
+        settings = settings_service.getComponentDict(config)
+        if settings[GLOBAL.ENABLED]:
             if self.__circlesVisibilityState & CIRCLE_TYPE.DRAW_RANGE:
                 return
             self.__circlesVisibilityState |= CIRCLE_TYPE.DRAW_RANGE
-            self._invoke(self.__circlesID, VIEW_RANGE_CIRCLES_AS3_DESCR.AS_ADD_MAX_DRAW_CIRCLE,(hexToDecimal(settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.COLOR_DRAW_CIRCLE]) if settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.CHANGE_COLOR_CIRCLES] else CIRCLE_STYLE.COLOR.DRAW_RANGE), settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.CIRCLES]['draw']['alpha'], self._arenaVisitor.getVehicleCircularAoiRadius())
+            self._invoke(self.__circlesID, VIEW_RANGE_CIRCLES_AS3_DESCR.AS_ADD_MAX_DRAW_CIRCLE,(hexToDecimal(settings[MINIMAP_ENHANCEMENTS.COLOR_DRAW_CIRCLE]) if settings[MINIMAP_ENHANCEMENTS.CHANGE_COLOR_CIRCLES] else CIRCLE_STYLE.COLOR.DRAW_RANGE), settings[MINIMAP_ENHANCEMENTS.CIRCLES]['draw']['alpha'], self._arenaVisitor.getVehicleCircularAoiRadius())
         else:
             return super(PersonalEntriesPlugin, self).__addDrawRangeCircle()
 
     def __addMaxViewRangeCircle(self):
-        if settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
+        settings = settings_service.getComponentDict(config)
+        if settings[GLOBAL.ENABLED]:
             if self.__circlesVisibilityState & CIRCLE_TYPE.MAX_VIEW_RANGE:
                 return
             self.__circlesVisibilityState |= CIRCLE_TYPE.MAX_VIEW_RANGE
-            self._invoke(self.__circlesID, VIEW_RANGE_CIRCLES_AS3_DESCR.AS_ADD_MAX_VIEW_CIRCLE,(hexToDecimal(settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.COLOR_MAX_VIEW_CIRCLE]) if settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.CHANGE_COLOR_CIRCLES] else CIRCLE_STYLE.COLOR.MAX_VIEW_RANGE), settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.CIRCLES]['maxView']['alpha'], self._arenaVisitor.getVisibilityMaxRadius())
+            self._invoke(self.__circlesID, VIEW_RANGE_CIRCLES_AS3_DESCR.AS_ADD_MAX_VIEW_CIRCLE,(hexToDecimal(settings[MINIMAP_ENHANCEMENTS.COLOR_MAX_VIEW_CIRCLE]) if settings[MINIMAP_ENHANCEMENTS.CHANGE_COLOR_CIRCLES] else CIRCLE_STYLE.COLOR.MAX_VIEW_RANGE), settings[MINIMAP_ENHANCEMENTS.CIRCLES]['maxView']['alpha'], self._arenaVisitor.getVisibilityMaxRadius())
         else:
             return super(PersonalEntriesPlugin, self).__addMaxViewRangeCircle()
 
     def __addMinSpottingRangeCircle(self):
-        if settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
+        settings = settings_service.getComponentDict(config)
+        if settings[GLOBAL.ENABLED]:
             if self.__circlesVisibilityState & CIRCLE_TYPE.MIN_SPOTTING_RANGE:
                 return
             self.__circlesVisibilityState |= CIRCLE_TYPE.MIN_SPOTTING_RANGE
-            self._invoke(self.__circlesID, VIEW_RANGE_CIRCLES_AS3_DESCR.AS_ADD_MIN_SPOTTING_CIRCLE,(hexToDecimal(settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.COLOR_MIN_SPOTTING_CIRCLE]) if settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.CHANGE_COLOR_CIRCLES] else CIRCLE_STYLE.COLOR.MIN_SPOTTING_RANGE), settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.CIRCLES]['proximity']['alpha'], self._arenaVisitor.getVisibilityMinRadius())
+            self._invoke(self.__circlesID, VIEW_RANGE_CIRCLES_AS3_DESCR.AS_ADD_MIN_SPOTTING_CIRCLE,(hexToDecimal(settings[MINIMAP_ENHANCEMENTS.COLOR_MIN_SPOTTING_CIRCLE]) if settings[MINIMAP_ENHANCEMENTS.CHANGE_COLOR_CIRCLES] else CIRCLE_STYLE.COLOR.MIN_SPOTTING_RANGE), settings[MINIMAP_ENHANCEMENTS.CIRCLES]['proximity']['alpha'], self._arenaVisitor.getVisibilityMinRadius())
         else:
             return super(PersonalEntriesPlugin, self).__addMinSpottingRangeCircle()
 
     def __addViewRangeCircle(self):
-        if settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
+        settings = settings_service.getComponentDict(config)
+        if settings[GLOBAL.ENABLED]:
             if self.__circlesVisibilityState & CIRCLE_TYPE.VIEW_RANGE:
                 return
             self.__circlesVisibilityState |= CIRCLE_TYPE.VIEW_RANGE
-            self._invoke(self.__circlesID, VIEW_RANGE_CIRCLES_AS3_DESCR.AS_ADD_DYN_CIRCLE,(hexToDecimal(settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.COLOR_VIEW_CIRCLE]) if settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.CHANGE_COLOR_CIRCLES] else CIRCLE_STYLE.COLOR.VIEW_RANGE), settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.CIRCLES]['view']['alpha'], self._getViewRangeRadius())
+            self._invoke(self.__circlesID, VIEW_RANGE_CIRCLES_AS3_DESCR.AS_ADD_DYN_CIRCLE,(hexToDecimal(settings[MINIMAP_ENHANCEMENTS.COLOR_VIEW_CIRCLE]) if settings[MINIMAP_ENHANCEMENTS.CHANGE_COLOR_CIRCLES] else CIRCLE_STYLE.COLOR.VIEW_RANGE), settings[MINIMAP_ENHANCEMENTS.CIRCLES]['view']['alpha'], self._getViewRangeRadius())
         else:
             return super(PersonalEntriesPlugin, self).__addViewRangeCircle()
 
 
 class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
     def __init__(self, *args, **kwargs):
+        settings = settings_service.getComponentDict(config)
         self._health = {}
         self._presentations = {}
         self._identities = {}
         super(ArenaVehiclesPlugin, self).__init__(*args, **kwargs)
         self._nativeDestroyed = (self.__showDestroyEntries, self.__isDestroyImmediately)
-        if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.PERMANENT_MINIMAP_DEATH]:
+        if settings[GLOBAL.ENABLED] and settings[MINIMAP_ENHANCEMENTS.PERMANENT_MINIMAP_DEATH]:
             self.__showDestroyEntries = True
             self.__isDestroyImmediately = True
         self._lastPositions = {}
@@ -359,16 +370,17 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
         return result
 
     def _hideVehicle(self, entry):
+        settings = settings_service.getComponentDict(config)
         self._expiredPositions.discard(entry.getID())
         result = super(ArenaVehiclesPlugin, self)._hideVehicle(entry)
-        if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.SHOW_LAST_POSITIONS] and entry.isAlive() and entry.isEnemy() and entry.getMatrix() is not None:
+        if settings[GLOBAL.ENABLED] and settings[MINIMAP_ENHANCEMENTS.SHOW_LAST_POSITIONS] and entry.isAlive() and entry.isEnemy() and entry.getMatrix() is not None:
             # The base plugin freezes the matrix at the last observed position.
             # Use its existing Flash entry, rather than a nonexistent setLastPosition API.
             wasActive = entry.isActive()
             if entry.setActive(True):
                 self._setActive(entry.getID(), True)
             # A duration of 0 keeps the last position until the vehicle is seen again or dies.
-            duration = max(0.0, float(settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LAST_POSITION_DURATION]))
+            duration = max(0.0, float(settings[MINIMAP_ENHANCEMENTS.LAST_POSITION_DURATION]))
             now = BigWorld.time()
             self._lastPositions[entry.getID()] = (entry, now + duration if duration > 0 else None, wasActive, now)
             self._lostIcon(entry, True)
@@ -381,28 +393,31 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
         return result
 
     def __setDestroyed(self, vehicleID, entry):
+        settings = settings_service.getComponentDict(config)
         self._lastPositions.pop(entry.getID(), None)
         self._expiredPositions.discard(entry.getID())
-        if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.PERMANENT_MINIMAP_DEATH] and self.__isDestroyImmediately:
+        if settings[GLOBAL.ENABLED] and settings[MINIMAP_ENHANCEMENTS.PERMANENT_MINIMAP_DEATH] and self.__isDestroyImmediately:
             self._setInAoI(entry, True)
         super(ArenaVehiclesPlugin, self).__setDestroyed(vehicleID, entry)
         self.refreshLabel(vehicleID, entry)
 
     def __setActive(self, entry, active):
-        if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.SHOW_LAST_POSITIONS] and entry.getID() in self._expiredPositions and not entry.isInAoI():
+        settings = settings_service.getComponentDict(config)
+        if settings[GLOBAL.ENABLED] and settings[MINIMAP_ENHANCEMENTS.SHOW_LAST_POSITIONS] and entry.getID() in self._expiredPositions and not entry.isInAoI():
             active = False
         return super(ArenaVehiclesPlugin, self).__setActive(entry, active)
 
     def _getDisplayedName(self, vInfo):
-        if not settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
+        settings = settings_service.getComponentDict(config)
+        if not settings[GLOBAL.ENABLED]:
             return super(ArenaVehiclesPlugin, self)._getDisplayedName(vInfo)
-        if not vInfo.isAlive() and not settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.SHOW_NAMES]:
+        if not vInfo.isAlive() and not settings[MINIMAP_ENHANCEMENTS.SHOW_NAMES]:
             return ''
         entry = self._entries.get(vInfo.vehicleID)
         state = 'dead' if not vInfo.isAlive() else 'lost' if entry and entry.getID() in self._lastPositions else 'alive'
         values = {'vehicle': vInfo.getDisplayedName(), 'name': vInfo.player.name,
                   'level': vInfo.vehicleType.level, 'type': vInfo.vehicleType.classTag, 'state': state}
-        return policy.label(settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LABELS], values, controller.minimapZoom)
+        return policy.label(settings[MINIMAP_ENHANCEMENTS.LABELS], values, controller.minimapZoom)
 
     def _setVehicleInfo(self, vehicleID, entry, vInfo, guiProps, isSpotted=False):
         self._trackVehicle(vehicleID, vInfo)
@@ -475,10 +490,11 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
             self._setVehicleInfo(vehicleID, entry, info, props)
 
     def refreshLabels(self):
+        settings = settings_service.getComponentDict(config)
         self.__showDestroyEntries, self.__isDestroyImmediately = self._nativeDestroyed
-        if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.PERMANENT_MINIMAP_DEATH]:
+        if settings[GLOBAL.ENABLED] and settings[MINIMAP_ENHANCEMENTS.PERMANENT_MINIMAP_DEATH]:
             self.__showDestroyEntries = self.__isDestroyImmediately = True
-        keep = settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.SHOW_LAST_POSITIONS]
+        keep = settings[GLOBAL.ENABLED] and settings[MINIMAP_ENHANCEMENTS.SHOW_LAST_POSITIONS]
         for entry, expires, wasActive, since in self._lastPositions.values():
             self._lostIcon(entry, keep)
         if not keep:
@@ -491,13 +507,14 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
             self.refreshLabel(vehicleID, entry)
 
     def updateLastPositions(self):
+        settings = settings_service.getComponentDict(config)
         self._lastPositionCallback = None
         if not self._running:
             return
         now = BigWorld.time()
         updateLabels = self._lastLostSecond != int(now)
         self._lastLostSecond = int(now)
-        enabled = settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.SHOW_LAST_POSITIONS]
+        enabled = settings[GLOBAL.ENABLED] and settings[MINIMAP_ENHANCEMENTS.SHOW_LAST_POSITIONS]
         for entryID, (entry, expires, wasActive, since) in list(self._lastPositions.items()):
             if not entry.isAlive() or entry.isInAoI() or not entry.getID():
                 # Seen again or destroyed: drop the 'lost' label and colours too.
@@ -510,7 +527,7 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
                 if entry.setActive(active):
                     self._setActive(entryID, active)
                 self._lastPositions.pop(entryID, None)
-            elif updateLabels and (settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LOST_MARKER]['showSeconds'] or settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LOST_MARKER]['fade'] or '{{lostSeconds' in settings_service.getComponentDict(config)[MINIMAP_ENHANCEMENTS.LABELS]['lost']):
+            elif updateLabels and (settings[MINIMAP_ENHANCEMENTS.LOST_MARKER]['showSeconds'] or settings[MINIMAP_ENHANCEMENTS.LOST_MARKER]['fade'] or '{{lostSeconds' in settings[MINIMAP_ENHANCEMENTS.LABELS]['lost']):
                 for vehicleID, model in self._entries.items():
                     if model is entry:
                         self._publishVehicle(vehicleID, entry)

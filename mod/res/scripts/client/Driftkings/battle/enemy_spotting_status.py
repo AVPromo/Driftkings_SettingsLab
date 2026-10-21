@@ -60,14 +60,16 @@ class SpottedLightController(object):
         getPlayer().soundNotifications.play(soundID)
 
     def textGenerator(self, event):
+        settings = settings_service.getComponentDict(self.config)
         textKey, colorKey, macrosKey = GENERATOR[event]
-        formatted_text = settings_service.getComponentDict(self.config)[macrosKey].format(**self.format_str)
+        formatted_text = settings[macrosKey].format(**self.format_str)
         message = '%s %s' % (self.config.i18n[textKey], formatted_text) if formatted_text else self.config.i18n[textKey]
-        color = settings_service.getComponentDict(self.config)[colorKey]
+        color = settings[colorKey]
         return message, color
 
     def postMessage(self, events):
-        if not settings_service.getComponentDict(self.config)[GLOBAL.ENABLED]:
+        settings = settings_service.getComponentDict(self.config)
+        if not settings[GLOBAL.ENABLED]:
             return
         player = getPlayer()
         guiSessionProvider = player.guiSessionProvider
@@ -84,7 +86,7 @@ class SpottedLightController(object):
             vehicleInfo = guiSessionProvider.getArenaDP().getVehicleInfo(vehicleID)
             if not vehicleInfo:
                 continue
-            icon = '<img src=\'img://%s\' width=\'%s\' height=\'%s\' />' % (vehicleInfo.vehicleType.iconPath.replace('..', 'gui'), settings_service.getComponentDict(self.config)[ENEMY_SPOTTING_STATUS.ICON_SIZE_X], settings_service.getComponentDict(self.config)[ENEMY_SPOTTING_STATUS.ICON_SIZE_Y])
+            icon = '<img src=\'img://%s\' width=\'%s\' height=\'%s\' />' % (vehicleInfo.vehicleType.iconPath.replace('..', 'gui'), settings[ENEMY_SPOTTING_STATUS.ICON_SIZE_X], settings[ENEMY_SPOTTING_STATUS.ICON_SIZE_Y])
             targetInfo = guiSessionProvider.getCtx().getPlayerFullNameParts(vID=vehicleID)
             if self.check_macros('{icons}'):
                 self.format_str['icons'] += icon
@@ -105,7 +107,7 @@ class SpottedLightController(object):
                     damage = extra.getDamage()
                     if damage:
                         self.format_str['damage'] += '<b> +%s</b>' % damage
-            if settings_service.getComponentDict(self.config)[ENEMY_SPOTTING_STATUS.SOUND]:
+            if settings[ENEMY_SPOTTING_STATUS.SOUND]:
                 self.sound(0 if eventID == BATTLE_EVENT_TYPE.SPOTTED else 1)
             message, color = self.textGenerator(eventID)
             sendPanelMessage("<font color='#%s'>%s</font>" % (color, message))

@@ -87,12 +87,13 @@ class Flash(object):
             settings_service.apply(_component().config, {TARGET_INFORMATION.TEXT_POSITION: position})
 
     def setup(self):
+        settings = settings_service.getComponentDict(_component().config)
         self.name = {ElementType.LABEL: '%s' % _component().config.NAME}
         self.data = {
             ElementType.LABEL: {
                 'x': 0,
                 'y': 0,
-                'drag': not settings_service.getComponentDict(_component().config)[TARGET_INFORMATION.TEXT_LOCK],
+                'drag': not settings[TARGET_INFORMATION.TEXT_LOCK],
                 'border': False,
                 'alignX': 'center',
                 'alignY': 'center',
@@ -100,18 +101,18 @@ class Flash(object):
                 'text': '',
                 'multiline': True,
                 'shadow': {
-                    'distance': settings_service.getComponentDict(_component().config)[TARGET_INFORMATION.TEXT_SHADOW]['distance'],
-                    'angle': settings_service.getComponentDict(_component().config)[TARGET_INFORMATION.TEXT_SHADOW]['angle'],
-                    'color': settings_service.getComponentDict(_component().config)[TARGET_INFORMATION.TEXT_SHADOW]['color'],
-                    'alpha': settings_service.getComponentDict(_component().config)[TARGET_INFORMATION.TEXT_SHADOW]['alpha'],
-                    'blurX': settings_service.getComponentDict(_component().config)[TARGET_INFORMATION.TEXT_SHADOW]['blurX'],
-                    'blurY': settings_service.getComponentDict(_component().config)[TARGET_INFORMATION.TEXT_SHADOW]['blurY'],
-                    'strength': settings_service.getComponentDict(_component().config)[TARGET_INFORMATION.TEXT_SHADOW]['strength'],
-                    'quality': settings_service.getComponentDict(_component().config)[TARGET_INFORMATION.TEXT_SHADOW]['quality']
+                    'distance': settings[TARGET_INFORMATION.TEXT_SHADOW]['distance'],
+                    'angle': settings[TARGET_INFORMATION.TEXT_SHADOW]['angle'],
+                    'color': settings[TARGET_INFORMATION.TEXT_SHADOW]['color'],
+                    'alpha': settings[TARGET_INFORMATION.TEXT_SHADOW]['alpha'],
+                    'blurX': settings[TARGET_INFORMATION.TEXT_SHADOW]['blurX'],
+                    'blurY': settings[TARGET_INFORMATION.TEXT_SHADOW]['blurY'],
+                    'strength': settings[TARGET_INFORMATION.TEXT_SHADOW]['strength'],
+                    'quality': settings[TARGET_INFORMATION.TEXT_SHADOW]['quality']
                 }
             }
         }
-        for key, value in settings_service.getComponentDict(_component().config)[TARGET_INFORMATION.TEXT_POSITION].items():
+        for key, value in settings[TARGET_INFORMATION.TEXT_POSITION].items():
             if key in self.data[ElementType.LABEL]:
                 self.data[ElementType.LABEL][key] = value
         return self.data

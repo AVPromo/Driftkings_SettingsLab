@@ -405,8 +405,9 @@ from Driftkings.views.hangar.hangar_marks_of_excellence import MarksOnGunHangarC
 @override(MarkOnGunAchievement, 'getUserCondition')
 @log_exceptions
 def new__getUserCondition(func, *args):
+    settings = settings_service.getComponentDict(config)
     dossier = getAchievementDossier(args[0])
-    if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[HANGAR_MARKS_OF_EXCELLENCE.SHOW_IN_STATISTIC] and dossier is not None:
+    if settings[GLOBAL.ENABLED] and settings[HANGAR_MARKS_OF_EXCELLENCE.SHOW_IN_STATISTIC] and dossier is not None:
         tooltip = g_data.build_tooltip(dossier)
         if tooltip:
             return tooltip

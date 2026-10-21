@@ -26,11 +26,12 @@ class MessagesSpotted(object):
         self.last_position = None
 
     def sendMessage(self):
+        settings = settings_service.getComponentDict(config)
         self.macro['pos'] = square_position.getSquarePosition()
         if self.macro['pos'] != self.last_position:
-            message = settings_service.getComponentDict(config)[SIXTH_SENSE_ALERT.SPOTTED_TEXT] % self.macro
+            message = settings[SIXTH_SENSE_ALERT.SPOTTED_TEXT] % self.macro
             if message:
-                sendChatMessage(message, 1, settings_service.getComponentDict(config)[SIXTH_SENSE_ALERT.DELAY])
+                sendChatMessage(message, 1, settings[SIXTH_SENSE_ALERT.DELAY])
                 self.last_position = self.macro['pos']
 
     def helpMessage(self):
@@ -46,19 +47,20 @@ g_view = None
 
 @override(SixthSenseIndicator, '_sixthSenseToggle')
 def new__sixthSenseToggle(func, self, isVisible, force):
+    settings = settings_service.getComponentDict(config)
     func(self, isVisible, force)
     # Never suppress the game's alert unless our replacement has loaded its icon.
     replacement = (g_view is not None and getattr(g_view, 'iconReady', False)
-                   and settings_service.getComponentDict(config)[GLOBAL.ENABLED])
+                   and settings[GLOBAL.ENABLED])
     self.flashObject.visible = not replacement
     if not isVisible:
         return
     player = getPlayer()
     if player and player.isVehicleAlive:
-        if settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
-            if settings_service.getComponentDict(config)[SIXTH_SENSE_ALERT.SPOTTED_MESSAGE]:
+        if settings[GLOBAL.ENABLED]:
+            if settings[SIXTH_SENSE_ALERT.SPOTTED_MESSAGE]:
                 g_messages.sendMessage()
-            if settings_service.getComponentDict(config)[SIXTH_SENSE_ALERT.HELP_MESSAGE]:
+            if settings[SIXTH_SENSE_ALERT.HELP_MESSAGE]:
                 g_messages.helpMessage()
 
 

@@ -23,7 +23,8 @@ def _component():
 
 
 def serializeConfigParams():
-    textColor = settings_service.getComponentDict(_component().config)[TARGET_DISTANCE.TEXT_COLOR]
+    settings = settings_service.getComponentDict(_component().config)
+    textColor = settings[TARGET_DISTANCE.TEXT_COLOR]
     if isinstance(textColor, basestring):
         if textColor.startswith('#'):
             textColor = textColor[1:]
@@ -32,11 +33,11 @@ def serializeConfigParams():
         r, g, b = textColor
         hex_color = '0x{:02X}{:02X}{:02X}'.format(r, g, b)
     return {
-        'decimalPrecision': settings_service.getComponentDict(_component().config)[TARGET_DISTANCE.DECIMAL_PRECISION],
-        'textSize': settings_service.getComponentDict(_component().config)[TARGET_DISTANCE.TEXT_SIZE],
+        'decimalPrecision': settings[TARGET_DISTANCE.DECIMAL_PRECISION],
+        'textSize': settings[TARGET_DISTANCE.TEXT_SIZE],
         'textColor': hex_color,  # Send properly formatted hex color
-        'textAlpha': settings_service.getComponentDict(_component().config)[TARGET_DISTANCE.TEXT_ALPHA],
-        'drawTextShadow': settings_service.getComponentDict(_component().config)[TARGET_DISTANCE.DRAW_TEXT_SHADOW]
+        'textAlpha': settings[TARGET_DISTANCE.TEXT_ALPHA],
+        'drawTextShadow': settings[TARGET_DISTANCE.DRAW_TEXT_SHADOW]
     }
 
 
@@ -86,13 +87,14 @@ class DistanceMarkerController(object):
     onMouseEvent = Event(_eventManager)
 
     def __init__(self, vehicleMarkerClass):
+        settings = settings_service.getComponentDict(_component().config)
         self._vehicleMarkerClass = vehicleMarkerClass
-        self._currentHorizontalAnchorOffset = settings_service.getComponentDict(_component().config)[TARGET_DISTANCE.ANCHOR_HORIZONTAL_OFFSET]
-        self._currentVerticalAnchorOffset = -1 * settings_service.getComponentDict(_component().config)[TARGET_DISTANCE.ANCHOR_VERTICAL_OFFSET]
+        self._currentHorizontalAnchorOffset = settings[TARGET_DISTANCE.ANCHOR_HORIZONTAL_OFFSET]
+        self._currentVerticalAnchorOffset = -1 * settings[TARGET_DISTANCE.ANCHOR_VERTICAL_OFFSET]
         self._wereOffsetsEdited = False
-        self._isDisplayingMarkers = settings_service.getComponentDict(_component().config)[TARGET_DISTANCE.DISPLAY_MODE] == 0
+        self._isDisplayingMarkers = settings[TARGET_DISTANCE.DISPLAY_MODE] == 0
         self._isMarkerDragging = False
-        anchorPosition = settings_service.getComponentDict(_component().config)[TARGET_DISTANCE.ANCHOR_POSITION]
+        anchorPosition = settings[TARGET_DISTANCE.ANCHOR_POSITION]
         if anchorPosition == 0:
             self._markerPositionProvider = self._vehicleMarkerPositionProvider
         elif anchorPosition == 1:
@@ -140,10 +142,11 @@ class DistanceMarkerController(object):
             self.onMouseEvent -= self._onMarkerDragging
 
     def _onKeyDown(self, event):
-        if settings_service.getComponentDict(_component().config)[TARGET_DISTANCE.DISPLAY_MODE] == 1:
+        settings = settings_service.getComponentDict(_component().config)
+        if settings[TARGET_DISTANCE.DISPLAY_MODE] == 1:
             self._isDisplayingMarkers = event.isAltDown()
         cursor = GUI.mcursor()
-        isOffsetChangeAllowed = not settings_service.getComponentDict(_component().config)[TARGET_DISTANCE.LOCK_POSITION_OFFSETS]
+        isOffsetChangeAllowed = not settings[TARGET_DISTANCE.LOCK_POSITION_OFFSETS]
         if self._isDisplayingMarkers and isOffsetChangeAllowed and event.isCtrlDown() and self._isLeftMouseButton(
                 event) and cursor.inWindow and cursor.inFocus:
             mouseX, mouseY = cursor.position

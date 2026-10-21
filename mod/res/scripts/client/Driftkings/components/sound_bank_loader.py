@@ -384,14 +384,16 @@ class BanksLoaderController(object):
         return audio_mods_new
 
     def manageMemorySettings(self, soundMgr):
+        settings = settings_service.getComponentDict(self.config)
         for mgrKey in ('memoryLimit',):
             value = soundMgr[mgrKey]
-            if value is not None and value.asInt != int(settings_service.getComponentDict(self.config)[mgrKey]):
+            if value is not None and value.asInt != int(settings[mgrKey]):
                 self.editedBanks['memory'].append(mgrKey)
-                soundMgr.writeInt(mgrKey, settings_service.getComponentDict(self.config)[mgrKey])
+                soundMgr.writeInt(mgrKey, settings[mgrKey])
                 LOG.info('changing value for memory setting: %s', mgrKey)
 
     def manageProfileMemorySettings(self, profile_type, profile):
+        settings = settings_service.getComponentDict(self.config)
         poolKeys = {
             'memoryManager': ('defaultPool', 'lowEnginePool', 'streamingPool', 'IOPoolSize'),
             'memoryManager_64bit': ('defaultPool', 'lowEnginePool', 'streamingPool', 'IOPoolSize'),
@@ -400,9 +402,9 @@ class BanksLoaderController(object):
         for poolKey, poolValuesList in poolKeys.iteritems():
             for poolValue in poolValuesList:
                 value = profile[poolKey][poolValue]
-                if value is not None and value.asInt != int(settings_service.getComponentDict(self.config)[poolValue]):
+                if value is not None and value.asInt != int(settings[poolValue]):
                     self.editedBanks['memory'].append(poolValue)
-                    profile[poolKey].writeInt(poolValue, settings_service.getComponentDict(self.config)[poolValue])
+                    profile[poolKey].writeInt(poolValue, settings[poolValue])
                     LOG.info('changing value for %s memory setting: %s', profile_type, poolValue)
         return
 

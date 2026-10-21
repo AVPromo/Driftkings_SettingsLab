@@ -58,9 +58,10 @@ def new_startGUI(*args):
 # disable battle hints
 @override(BattleHintPanel, '_initPlugins')
 def _initPlugins(func, self, *args, **kwargs):
-    if not settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
+    settings = settings_service.getComponentDict(config)
+    if not settings[GLOBAL.ENABLED]:
         return func(self, *args, **kwargs)
-    if settings_service.getComponentDict(config).get(BATTLE_PREFERENCES.HIDE_HINT, False):
+    if settings.get(BATTLE_PREFERENCES.HIDE_HINT, False):
         if self._plugins is not None:
             self._plugins.stop()
             self._plugins.fini()
@@ -73,7 +74,8 @@ def _initPlugins(func, self, *args, **kwargs):
 @override(SpecialSoundCtrl, '__setSpecialVoiceByTankmen')
 @override(SpecialSoundCtrl, '__setSpecialVoiceByCommanderSkinID')
 def new_setSoundMode(func, *args, **kwargs):
-    if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[BATTLE_PREFERENCES.DISABLE_SOUND_COMMANDER]:
+    settings = settings_service.getComponentDict(config)
+    if settings[GLOBAL.ENABLED] and settings[BATTLE_PREFERENCES.DISABLE_SOUND_COMMANDER]:
         return False
     return func(*args, **kwargs)
 
@@ -81,7 +83,8 @@ def new_setSoundMode(func, *args, **kwargs):
 # disable dogTag
 @override(_ClientArenaVisitor, 'hasDogTag')
 def new_hasDogTag(func, *args, **kwargs):
-    if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and not settings_service.getComponentDict(config).get(BATTLE_PREFERENCES.SHOW_POSTMORTEM_DOG_TAG, True):
+    settings = settings_service.getComponentDict(config)
+    if settings[GLOBAL.ENABLED] and not settings.get(BATTLE_PREFERENCES.SHOW_POSTMORTEM_DOG_TAG, True):
         return False
     return func(*args, **kwargs)
 
@@ -89,8 +92,9 @@ def new_hasDogTag(func, *args, **kwargs):
 # disable battle hints
 @override(hint_plugins, 'createPlugins')
 def new_createPlugins(func, *args, **kwargs):
+    settings = settings_service.getComponentDict(config)
     result = func(*args, **kwargs)
-    if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[BATTLE_PREFERENCES.SHOW_BATTLE_HINT]:
+    if settings[GLOBAL.ENABLED] and settings[BATTLE_PREFERENCES.SHOW_BATTLE_HINT]:
         result.clear()
     return result
 
@@ -98,15 +102,17 @@ def new_createPlugins(func, *args, **kwargs):
 # postmortemTips
 @override(SharedPage, 'as_onPostmortemActiveS')
 def new_setPostmortemTipsVisibleS(func, self, value):
-    if settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
-        if not settings_service.getComponentDict(config)[BATTLE_PREFERENCES.POSTMORTEM_TIPS]:
+    settings = settings_service.getComponentDict(config)
+    if settings[GLOBAL.ENABLED]:
+        if not settings[BATTLE_PREFERENCES.POSTMORTEM_TIPS]:
             value = False
     func(self, value)
 
 
 @override(SharedPage, '_switchToPostmortem')
 def new_switchToPostmortem(func, *args):
-    if not settings_service.getComponentDict(config)[GLOBAL.ENABLED] or settings_service.getComponentDict(config)[BATTLE_PREFERENCES.POSTMORTEM_TIPS]:
+    settings = settings_service.getComponentDict(config)
+    if not settings[GLOBAL.ENABLED] or settings[BATTLE_PREFERENCES.POSTMORTEM_TIPS]:
         func(*args)
 
 
@@ -119,7 +125,8 @@ def new_setQuestsInfoS(func, self, data, _):
 # disable battle artillery_stun_effect sound
 @override(TimersPanel, '__playStunSoundIfNeed')
 def new_playStunSoundIfNeed(func, *args, **kwargs):
-    if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config).get(BATTLE_PREFERENCES.STUN_SOUND, False):
+    settings = settings_service.getComponentDict(config)
+    if settings[GLOBAL.ENABLED] and settings.get(BATTLE_PREFERENCES.STUN_SOUND, False):
         return None
     return func(*args, **kwargs)
 
@@ -134,21 +141,23 @@ def new_onVehicleStateUpdated(func, self, state, value):
 # mute battle bases
 @override(BattleTeamsBasesController, '__playCaptureSound')
 def new_muteCaptureSound(func, *args):
-    if not settings_service.getComponentDict(config)[GLOBAL.ENABLED] or not settings_service.getComponentDict(config)[BATTLE_PREFERENCES.MUTE_TEAM_BASE_SOUND]:
+    settings = settings_service.getComponentDict(config)
+    if not settings[GLOBAL.ENABLED] or not settings[BATTLE_PREFERENCES.MUTE_TEAM_BASE_SOUND]:
         return func(*args)
 
 
 # border color
 @override(ArenaBorderController, '_ArenaBorderController__getCurrentColor')
 def new_getBorderColor(func, self, colorBlind):
+    settings = settings_service.getComponentDict(config)
     result = func(self, colorBlind)
-    if not settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
+    if not settings[GLOBAL.ENABLED]:
         colors = GuiColorsLoader.load()
         scheme = colors.getSubScheme('areaBorder', 'color_blind' if colorBlind else 'default')
         color = scheme['rgba'] / 255
         return color
-    elif settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
-        color = int(settings_service.getComponentDict(config)[GLOBAL.COLOR], 16)
+    elif settings[GLOBAL.ENABLED]:
+        color = int(settings[GLOBAL.COLOR], 16)
         alpha = int(100)
         red = ((color & 0xff0000) >> 16) / 255.0
         green = ((color & 0x00ff00) >> 8) / 255.0
@@ -166,7 +175,8 @@ def new_destroyGUI(*args):
 
 # Friends
 def showFriends():
-    return settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[BATTLE_PREFERENCES.SHOW_FRIENDS] and not isReplay()
+    settings = settings_service.getComponentDict(config)
+    return settings[GLOBAL.ENABLED] and settings[BATTLE_PREFERENCES.SHOW_FRIENDS] and not isReplay()
 
 
 @override(VehicleTypeInfoVO, '__init__')
@@ -215,8 +225,9 @@ def onReload(avatar):
 
 @override(PlayerAvatar, 'handleKey')
 def new__handleKey(func, self, isDown, key, mods):
+    settings = settings_service.getComponentDict(config)
     result = func(self, isDown, key, mods)
-    if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and settings_service.getComponentDict(config)[BATTLE_PREFERENCES.CLIP_LOAD]:
+    if settings[GLOBAL.ENABLED] and settings[BATTLE_PREFERENCES.CLIP_LOAD]:
         cmdMap = CommandMapping.g_instance
         if cmdMap.isFired(CommandMapping.CMD_RELOAD_PARTIAL_CLIP, key) and isDown and self.isVehicleAlive:
             callback(0.5, partial(onReload, self))
@@ -226,27 +237,29 @@ def new__handleKey(func, self, isDown, key, mods):
 # hide badges
 @override(VehicleArenaInfoVO, '__init__')
 def new__VehicleArenaInfoVO(func, self, *args, **kwargs):
+    settings = settings_service.getComponentDict(config)
     if kwargs:
-        if settings_service.getComponentDict(config)[BATTLE_PREFERENCES.HIDE_BADGES] and 'badges' in kwargs:
+        if settings[BATTLE_PREFERENCES.HIDE_BADGES] and 'badges' in kwargs:
             kwargs['badges'] = None
             kwargs['overriddenBadge'] = None
-        if settings_service.getComponentDict(config)[BATTLE_PREFERENCES.SHOW_ANONYMOUS] and 'accountDBID' in kwargs:
+        if settings[BATTLE_PREFERENCES.SHOW_ANONYMOUS] and 'accountDBID' in kwargs:
             if kwargs['accountDBID'] == GLOBAL.ZERO:
                 kwargs['name'] = kwargs['fakeName'] = 'Anonymous'
-        if settings_service.getComponentDict(config)[BATTLE_PREFERENCES.HIDE_CLAN_NAME] and 'clanAbbrev' in kwargs:
+        if settings[BATTLE_PREFERENCES.HIDE_CLAN_NAME] and 'clanAbbrev' in kwargs:
             kwargs['clanAbbrev'] = ''
-        if settings_service.getComponentDict(config)[BATTLE_PREFERENCES.HIDE_BATTLE_PRESTIGE]:
+        if settings[BATTLE_PREFERENCES.HIDE_BATTLE_PRESTIGE]:
             kwargs['prestigeLevel'] = kwargs['prestigeGradeMarkID'] = None
     return func(self, *args, **kwargs)
 
 
 @override(PlayerInfoVO, 'update')
 def new__PlayerInfoVO_update(func, self, **kwargs):
+    settings = settings_service.getComponentDict(config)
     if kwargs:
-        if settings_service.getComponentDict(config)[BATTLE_PREFERENCES.SHOW_ANONYMOUS] and 'accountDBID' in kwargs:
+        if settings[BATTLE_PREFERENCES.SHOW_ANONYMOUS] and 'accountDBID' in kwargs:
             if kwargs['accountDBID'] == GLOBAL.ZERO:
                 kwargs['name'] = kwargs['fakeName'] = 'Anonymous'
-        if settings_service.getComponentDict(config)[BATTLE_PREFERENCES.HIDE_CLAN_NAME] and 'clanAbbrev' in kwargs:
+        if settings[BATTLE_PREFERENCES.HIDE_CLAN_NAME] and 'clanAbbrev' in kwargs:
             kwargs['clanAbbrev'] = ''
     return func(self, **kwargs)
 
@@ -262,7 +275,8 @@ def new__makeSettingsVO(func, self):
 # PlayerSatisfactionWidget/ShowRateSatisfactionCmp
 @override(ShowRateSatisfactionCmp, '_convert')
 def new_showRateSatisfactionCmp(func, self, value, reusable):
-    if settings_service.getComponentDict(config)[GLOBAL.ENABLED] and not settings_service.getComponentDict(config).get(BATTLE_PREFERENCES.SHOW_PLAYER_SATISFACTION_WIDGET, True):
+    settings = settings_service.getComponentDict(config)
+    if settings[GLOBAL.ENABLED] and not settings.get(BATTLE_PREFERENCES.SHOW_PLAYER_SATISFACTION_WIDGET, True):
         return False
     return func(self, value, reusable)
 
@@ -292,7 +306,8 @@ def _getAttackerName(vehicleName):
 # add enemy name to damage log
 @override(DamageLogPanel, '_addToTopLog')
 def new__addToTopLog(func, self, value, actionTypeImg, vehicleTypeImg, vehicleName, shellTypeStr, shellTypeBG, shellModeImg=None):
-    if not settings_service.getComponentDict(config)[GLOBAL.ENABLED] or not settings_service.getComponentDict(config)[BATTLE_PREFERENCES.ADD_ENEMY_NAME]:
+    settings = settings_service.getComponentDict(config)
+    if not settings[GLOBAL.ENABLED] or not settings[BATTLE_PREFERENCES.ADD_ENEMY_NAME]:
         return func(self, value, actionTypeImg, vehicleTypeImg, vehicleName, shellTypeStr, shellTypeBG, shellModeImg)
     attackerName = _getAttackerName(vehicleName)
     return func(self, value, actionTypeImg, vehicleTypeImg, vehicleName + ' | ' + attackerName, shellTypeStr, shellTypeBG, shellModeImg)
@@ -300,7 +315,8 @@ def new__addToTopLog(func, self, value, actionTypeImg, vehicleTypeImg, vehicleNa
 
 @override(DamageLogPanel, '_addToBottomLog')
 def new__addToBottomLog(func, self, value, actionTypeImg, vehicleTypeImg, vehicleName, shellTypeStr, shellTypeBG, shellModeImg=None):
-    if not settings_service.getComponentDict(config)[GLOBAL.ENABLED] or not settings_service.getComponentDict(config)[BATTLE_PREFERENCES.ADD_ENEMY_NAME]:
+    settings = settings_service.getComponentDict(config)
+    if not settings[GLOBAL.ENABLED] or not settings[BATTLE_PREFERENCES.ADD_ENEMY_NAME]:
         return func(self, value, actionTypeImg, vehicleTypeImg, vehicleName, shellTypeStr, shellTypeBG, shellModeImg)
     attackerName = _getAttackerName(vehicleName)
     return func(self, value, actionTypeImg, vehicleTypeImg, vehicleName + ' | ' + attackerName, shellTypeStr, shellTypeBG, shellModeImg)
@@ -318,7 +334,8 @@ def isSpecialVehicle(vehicle):
 
 
 def onVehicleChanged(vehicle):
-    if not settings_service.getComponentDict(config)[GLOBAL.ENABLED] or not settings_service.getComponentDict(config)[BATTLE_PREFERENCES.DIRECTIVES_ONLY_FROM_STORAGE]:
+    settings = settings_service.getComponentDict(config)
+    if not settings[GLOBAL.ENABLED] or not settings[BATTLE_PREFERENCES.DIRECTIVES_ONLY_FROM_STORAGE]:
         return
     if vehicle is None or vehicle.isLocked or isSpecialVehicle(vehicle):
         return

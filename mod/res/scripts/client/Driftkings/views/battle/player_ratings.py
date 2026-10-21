@@ -45,6 +45,11 @@ class RatingViews(object):
         self.trackedKeys=None
         self.cacheConfig=None
         self.cacheArena=None
+        # Settings only change through apply/reload, which always signal: a version
+        # counter replaces a deep comparison of the whole configuration every tick.
+        self.configVersion=0
+        self.cacheVersion=-1
+        self.panelSnapshot=None
         self.lastPayload=None
         self.failures={}
         owner=self
@@ -109,6 +114,8 @@ class RatingViews(object):
         # Native page owns component destruction; end() clears its presentation.
 
     def onSettingsChanged(self, component, settings):
+        self.configVersion+=1
+        self.panelSnapshot=None
         if affects(settings, TEAM_PANELS.COLOR_SCALE):
             self.stats._appliedCache.clear()
         if affects(settings, GLOBAL.ENABLED, TEAM_PANELS.STATS_ENABLED, TEAM_PANELS.COLOR_SCALE):
@@ -127,6 +134,7 @@ class RatingViews(object):
         self.contextCache.clear()
         self.visibleScreens=set(('panel','loading','tab'))
         self.cacheConfig=self.cacheArena=self.lastPayload=None
+        self.cacheVersion=-1
         if hasattr(self,'gameface'): self.gameface.clear()
         self.lastRequest=0
         self.hovered=self.alt=False
@@ -204,7 +212,8 @@ class RatingViews(object):
         return result
 
     def nativeHover(self,original,panel,mode):
-        if not self.active or not settings_service.getComponentDict(self.config)[GLOBAL.ENABLED] or not settings_service.getComponentDict(self.config)[TEAM_PANELS.PLAYERS_PANEL][GLOBAL.ENABLED]:
+        settings = settings_service.getComponentDict(self.config)
+        if not self.active or not settings[GLOBAL.ENABLED] or not settings[TEAM_PANELS.PLAYERS_PANEL][GLOBAL.ENABLED]:
             return original(panel,mode)
         # Our Flash hit region owns expansion; native rollover would race it.
 
@@ -282,7 +291,7 @@ class RatingViews(object):
             self.rowCache.clear()
             self.screenCache.clear()
         if not data[TEAM_PANELS.PERFORMANCE].get('diagnostics',False): self.invalidationCauses.clear()
-        if arena is not self.cacheArena or data!=self.cacheConfig:
+        if arena is not self.cacheArena or self.cacheVersion!=self.configVersion:
             changes = SettingsChanges(data, changed_paths(self.cacheConfig or {}, data))
             new_arena = arena is not self.cacheArena
             context_changed = new_arena or affects(changes, TEAM_PANELS.STATS_ENABLED,
@@ -306,6 +315,7 @@ class RatingViews(object):
                 self.rowCache.clear()
             self.cacheArena=arena
             self.cacheConfig=deepcopy(data)
+            self.cacheVersion=self.configVersion
             tracked=set((56,184)) if data[TEAM_PANELS.PLAYERS_PANEL].get('altMode') else set()
             if data.get(TEAM_PANELS.HP_VISIBILITY)=='hold':
                 tracked.update(code for group in data[TEAM_PANELS.HP_KEY] for code in group)
@@ -406,7 +416,8 @@ class RatingViews(object):
         except Exception:
             self.logFailure('Statistics')
         try:
-            enabled=settings_service.getComponentDict(self.config)[GLOBAL.ENABLED]
+            data=settings_service.getComponentDict(self.config)
+            enabled=data[GLOBAL.ENABLED]
             screens=set(self.visibleScreens)
             if hasattr(self,'gameface'): screens.update(self.gameface.active_screens())
             rows=self.rows(self.model.mode,screens) if enabled else []
@@ -419,13 +430,16 @@ class RatingViews(object):
                 self.logFailure('Gameface roster')
         try:
             if rows is not None and self.view and self.view._isDAAPIInited():
+                # The Flash panel settings are copied once per configuration version.
+                if self.panelSnapshot is None:
+                    self.panelSnapshot=deepcopy(data[TEAM_PANELS.PLAYERS_PANEL])
                 payload={'enabled':enabled,
-                    'rows':rows,'panel':deepcopy(settings_service.getComponentDict(self.config)[TEAM_PANELS.PLAYERS_PANEL]), 'mode':self.model.mode,
-                    'loadingClock':{'enabled':settings_service.getComponentDict(self.config)[TEAM_PANELS.LOADING][GLOBAL.ENABLED],
-                                    'format':settings_service.getComponentDict(self.config)[TEAM_PANELS.LOADING].get('clockFormat','')},
-                    'diagnostics':settings_service.getComponentDict(self.config)[TEAM_PANELS.PERFORMANCE].get('diagnostics',False),
+                    'rows':rows,'panel':self.panelSnapshot, 'mode':self.model.mode,
+                    'loadingClock':{'enabled':data[TEAM_PANELS.LOADING][GLOBAL.ENABLED],
+                                    'format':data[TEAM_PANELS.LOADING].get('clockFormat','')},
+                    'diagnostics':data[TEAM_PANELS.PERFORMANCE].get('diagnostics',False),
                     'hoverMode':profile_for_mode(self.baseMode),'hovered':self.hovered,
-                    'hoverAreaWidth':settings_service.getComponentDict(self.config)[TEAM_PANELS.PROFILES][profile_for_mode(self.baseMode)].get('expandAreaWidth',230),
+                    'hoverAreaWidth':data[TEAM_PANELS.PROFILES][profile_for_mode(self.baseMode)].get('expandAreaWidth',230),
                     'time':{'H':time.strftime('%H'),'i':time.strftime('%M'),'s':time.strftime('%S')}}
                 if payload!=self.lastPayload:
                     wire=dict(payload)

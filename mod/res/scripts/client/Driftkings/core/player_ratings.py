@@ -390,8 +390,9 @@ class Statistics(object):
         self._listening = False
 
     def captureOwnStats(self, *args, **kwargs):
+        settings = settings_service.getComponentDict(config)
         # Called on the main thread after hangar synchronization. No server requests.
-        if not settings_service.getComponentDict(config)[GLOBAL.ENABLED] or not settings_service.getComponentDict(config).get(TEAM_PANELS.STATS_ENABLED, True):
+        if not settings[GLOBAL.ENABLED] or not settings.get(TEAM_PANELS.STATS_ENABLED, True):
             return
         player = getPlayer()
         dbID = getattr(player, 'databaseID', None)
@@ -413,7 +414,7 @@ class Statistics(object):
                       'mark_of_mastery': stats.getMarkOfMasteryForVehicle(tankID)}
                      for tankID, cut in stats.getVehicles().items()]
             # Vehicle dossiers already cached by the client; never fetch them here.
-            if 'tdv' in json.dumps(settings_service.getComponentDict(config)):
+            if 'tdv' in json.dumps(settings):
                 damage = {}
                 for tankID, dossier in items.getVehicleDossiersIterator():
                     block = dossier['a15x15']
@@ -497,6 +498,7 @@ class Statistics(object):
                 LOG.warning(('Could not apply statistics for {}: {}').format(dbID, error))
 
     def applyPlayer(self, vehicleID, value, dbID, dataInfo, dataTanks, hasStats, pColorScheme):
+        settings = settings_service.getComponentDict(config)
         playerInfo = self.playersInfo[dbID] = {}
         team = self.sessionProvider.getCtx().getPlayerGuiProps(vehicleID, value['team']).name().replace('ally', 'teammate')
         playerInfo['name'] = value['name']
@@ -530,16 +532,16 @@ class Statistics(object):
         playerInfo['c_battles'] = self.getColor('battles', playerInfo['battles'])
         playerInfo['c_winrate'] = self.getColor('winrate', playerInfo['winrate'])
         playerInfo['c_tBattles'] = self.getColor('t_battles', playerInfo['t_battles'])
-        cachedData = self.statsCache.get(dbID, None) if settings_service.getComponentDict(config)[TEAM_PANELS.PERFORMANCE]['cacheEnabled'] else None
+        cachedData = self.statsCache.get(dbID, None) if settings[TEAM_PANELS.PERFORMANCE]['cacheEnabled'] else None
         if cachedData and dbID not in dataInfo:
             cacheAge = time.time() - self.cacheTimestamp.get(dbID, 0)
-            if cacheAge < settings_service.getComponentDict(config)[TEAM_PANELS.PERFORMANCE]['cacheExpiry']:
+            if cacheAge < settings[TEAM_PANELS.PERFORMANCE]['cacheExpiry']:
                 dataInfo[dbID] = cachedData['info']
                 if dbID not in dataTanks and cachedData['tanks'] is not None:
                     dataTanks[dbID] = cachedData['tanks']
         if hasStats and dbID in dataInfo and dbID in dataTanks and dataInfo[dbID] is not None and dataTanks[dbID] is not None:
             battles = dataInfo[dbID]['statistics']['all']['battles']
-            if battles > 0 and battles >= settings_service.getComponentDict(config)[TEAM_PANELS.PERFORMANCE]['minBattlesToShow']:
+            if battles > 0 and battles >= settings[TEAM_PANELS.PERFORMANCE]['minBattlesToShow']:
                 wins = dataInfo[dbID]['statistics']['all']['wins']
                 avgDmg = dataInfo[dbID]['statistics']['all']['damage_dealt'] / float(battles)
                 avgFrags = dataInfo[dbID]['statistics']['all']['frags'] / float(battles)
