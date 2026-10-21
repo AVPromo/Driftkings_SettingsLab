@@ -113,6 +113,29 @@ package driftkings.battle.components.ratings
                 else if (child is DisplayObjectContainer) collect(child as DisplayObjectContainer,items);
             }
         }
+        // Native row backgrounds are sized for the stock columns. Keep their
+        // outer edge where the client drew it and their inner edge at the same
+        // distance from the vehicle icon, so any column width stays covered.
+        private function fitBackground(state:NativeState,item:Object,background:Object,left:Boolean):void
+        {
+            if (!background) return;
+            var x:Number=Number(state.base(background,"x")), current:Number=Number(background.scaleX);
+            var scale:Number=Number(state.base(background,"scaleX"));
+            if (!scale || !current) return;
+            // Only scaleX is overridden; derive the native width from the current one.
+            var w:Number=Number(background.width)*Math.abs(scale/current);
+            if (!(w>0)) return;
+            // A mirrored background (negative scaleX) extends left of its x.
+            var start:Number=scale<0 ? x-w : x, finish:Number=scale<0 ? x : x+w;
+            var shift:Number=Number(state.base(item,"x"))-Number(item.x);
+            var icon:Number=Number(item.vehicleIcon.x)-Number(state.base(item.vehicleIcon,"x"));
+            if (left) { start+=shift; finish+=icon; }
+            else { finish+=shift; start+=icon; }
+            if (!(finish>start)) return;
+            // Scale rather than width: setting width would drop the mirroring sign.
+            state.setValue(background,"scaleX",scale*(finish-start)/w);
+            state.setValue(background,"x",scale<0 ? finish : start);
+        }
         public function draw(panel:Object, payload:Object):void
         {
             if (!payload.panel.enabled) return;
@@ -225,6 +248,8 @@ package driftkings.battle.components.ratings
                     for each (name in ["bg","deadBg","normAltBg","deadAltBg"])
                         if (name in item) state.setValue(item[name],"alpha",NativeState.number(globals.alpha,80)/100);
                     if (globals.removeSelectedBackground) state.setValue(item.selfBg,"alpha",0);
+                    for each (name in ["bg","deadBg","normAltBg","deadAltBg","selfBg"])
+                        if (name in item) fitBackground(state,item,item[name],left);
                     if (globals.removeHealthPoints && "hpBarPlayersPanelListItem" in item) state.setValue(item.hpBarPlayersPanelListItem,"visible",false);
                     if (cfg.fixedPosition && row.fixedIndex>=0 && row.index>=0)
                         state.setValue(item,"y",state.base(item,"y")+(int(row.fixedIndex)-int(row.index))*25);
