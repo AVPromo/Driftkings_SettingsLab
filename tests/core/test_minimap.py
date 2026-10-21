@@ -71,9 +71,11 @@ class MinimapPolicyTests(RuntimeTest):
         # Lost vehicles keep the alive colour; the icon is desaturated instead.
         self.assertEqual(color('ally', 'lost'), system['ally_alive'])
 
-    def test_palettes_share_one_system_table(self):
+    def test_palettes_share_the_tables_that_do_not_depend_on_the_rating(self):
         data = self.load('common.utils.color_rating_data')
-        self.assertTrue(data.noob_meter_colors['system'] is data.xvm_colors['system'] is data.wot_labs_colors['system'])
+        for key, table in (('system', data.system_colors), ('vtype', data.vehicle_type_colors),
+                           ('totalHP', data.total_hp_colors), ('damage', data.damage_colors)):
+            self.assertTrue(data.noob_meter_colors[key] is data.xvm_colors[key] is data.wot_labs_colors[key] is table, key)
 
     def test_dead_and_lost_options_are_validated(self):
         for section, key, value in (('icons', 'deadAlpha', 150), ('lostMarker', 'desaturate', -1),

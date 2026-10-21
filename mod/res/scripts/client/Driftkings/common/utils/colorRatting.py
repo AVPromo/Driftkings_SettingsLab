@@ -5,7 +5,7 @@ __all__ = ('color_tables', 'getRatingColors', 'getColor', 'getStatisticColor',
            'getRatingPaletteColor', 'getComparisonColor', 'getMoeDamageColor')
 
 
-# The tables are re-exported on purpose for legacy imports (checked by tests/core/test_colors.py).
+# color_tables stays importable from here for the settings definitions (checked by tests/core/test_colors.py).
 from Driftkings.common.utils.color_rating_data import (
     MOE_LEVELS, color_tables,
 )

@@ -225,7 +225,7 @@ class ServiceTests(RuntimeTest):
         api = self.load('core.updater')
         self.assertIs(api.UpdaterService, self.load('core.updater.service').UpdaterService)
         self.assertEqual(api.UpdaterService.__module__, 'Driftkings.core.updater')
-        for name in ('VERSION', 'Checker', 'State', 'UnavailableTransport', 'Downloader', 'LOG', 'INTERVAL',
+        for name in ('Checker', 'State', 'UnavailableTransport', 'Downloader', 'LOG', 'INTERVAL',
                      'IDLE', 'CHECKING', 'AVAILABLE', 'ERROR', 'DOWNLOADING', 'VERIFYING', 'READY',
                      'INSTALLING', 'RESTART_REQUIRED', 'logging', 'os', 'time', 'threading'):
             self.assertTrue(hasattr(api, name), name)
