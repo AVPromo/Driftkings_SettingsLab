@@ -12,7 +12,9 @@ import urllib2
 from Queue import Queue, Empty
 from xml.sax.saxutils import escape
 
-from gui.battle_control.arena_info.arena_dp import ArenaDataProvider
+from gui.battle_control.arena_info.interfaces import IArenaVehiclesController
+from gui.battle_control.arena_info.settings import ARENA_LISTENER_SCOPE
+from gui.battle_control.battle_constants import BATTLE_CTRL_ID
 from gui.shared.gui_items.Vehicle import getVehicleClassTag
 from gui.shared.personality import ServicesLocator
 from helpers import dependency
@@ -22,7 +24,6 @@ from skeletons.gui.battle_session import IBattleSessionProvider
 from Driftkings._constants import GLOBAL, TEAM_PANELS
 from Driftkings.common.utils.wgUtils import getPlayer
 from Driftkings.common.utils.colorRatting import getStatisticColor
-from Driftkings.core.hooks import override
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.settings.service import settings_service
 from Driftkings.stats.vehinfo import calculateXvmScale, getVehicleInfoData, scaleValuesInstance
@@ -336,6 +337,35 @@ class CalculatorRating(object):
         return None
 
 
+class ArenaStatsListener(IArenaVehiclesController):
+    """Native arena listener: the vehicle list and late joiners trigger statistics requests."""
+
+    def __init__(self, stats):
+        super(ArenaStatsListener, self).__init__()
+        self.stats = stats
+
+    def getControllerID(self):
+        return BATTLE_CTRL_ID.MOD
+
+    def getCtrlScope(self):
+        return ARENA_LISTENER_SCOPE.VEHICLES
+
+    def startControl(self, *args):
+        pass
+
+    def stopControl(self):
+        pass
+
+    def invalidateArenaInfo(self):
+        self.stats.loadStats()
+
+    def invalidateVehiclesInfo(self, arenaDP):
+        self.stats.loadStats()
+
+    def addVehicleInfo(self, vo, arenaDP):
+        self.stats.loadStats()
+
+
 class Statistics(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
@@ -355,8 +385,9 @@ class Statistics(object):
         self._localAccount = None
         self._localStats = None
         self._appliedCache = {}
-        override(ArenaDataProvider, 'buildVehiclesData', self.new__buildVehiclesData)
-        override(ArenaDataProvider, 'addVehicleInfo', self.new__addVehicleInfo)
+        self._listener = ArenaStatsListener(self)
+        self._attached = False
+        self._listening = False
 
     def captureOwnStats(self, *args, **kwargs):
         # Called on the main thread after hangar synchronization. No server requests.
@@ -686,16 +717,33 @@ class Statistics(object):
         except Exception as error:
             LOG.warning(('Could not prune statistics cache: {}').format(error))
 
-    def new__buildVehiclesData(self, func, orig, vehicles):
-        result = func(orig, vehicles)
-        self.loadStats()
-        return result
+    def attachArena(self):
+        # The session's arena listeners call back with the vehicle list and with
+        # late joiners during loading, which would otherwise wait for the 15 s refresh.
+        self.detachArena()
+        self._attached = bool(self.sessionProvider.addArenaCtrl(self._listener))
 
-    def new__addVehicleInfo(self, func, orig, vehicleID, vInfo):
-        result = func(orig, vehicleID, vInfo)
-        # Late joiners during loading would otherwise wait for the 15 s refresh.
-        self.loadStats()
-        return result
+    def detachArena(self):
+        if self._attached:
+            self._attached = False
+            self.sessionProvider.removeArenaCtrl(self._listener)
+
+    def start(self):
+        if self._listening:
+            return
+        provider = self.sessionProvider
+        provider.onBattleSessionStart += self.attachArena
+        provider.onBattleSessionStop += self.detachArena
+        self._listening = True
+
+    def stop(self):
+        if not self._listening:
+            return
+        self.detachArena()
+        provider = self.sessionProvider
+        provider.onBattleSessionStart -= self.attachArena
+        provider.onBattleSessionStop -= self.detachArena
+        self._listening = False
 
 config = None
 g_stats = None

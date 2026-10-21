@@ -7,7 +7,6 @@ import weakref
 from collections import namedtuple
 
 from constants import ARENA_BONUS_TYPE
-from gui.Scaleform.daapi.view.battle.shared.damage_log_panel import DamageLogPanel
 from gui.Scaleform.daapi.view.battle.shared.ribbons_aggregator import RibbonsAggregator
 from gui.Scaleform.daapi.view.battle.shared.ribbons_panel import BattleRibbonsPanel
 from gui.Scaleform.genConsts.BATTLE_EFFICIENCY_TYPES import BATTLE_EFFICIENCY_TYPES
@@ -205,8 +204,40 @@ def new_onAppearanceReady(self, vehicle):
         g_calculator.registerVInfoData(vehicle.typeDescriptor.type.compactDescr)
 
 
+class _EfficiencyListener(object):
+    """Subscribes to the native personal efficiency controller for one battle."""
+
+    def __init__(self):
+        self.ctrl = None
+
+    def attach(self):
+        self.detach()
+        player = getPlayer()
+        ctrl = getattr(getattr(getattr(player, 'guiSessionProvider', None), 'shared', None), 'personalEfficiencyCtrl', None)
+        if ctrl is not None:
+            ctrl.onTotalEfficiencyUpdated += self.onTotalEfficiencyUpdated
+            self.ctrl = ctrl
+
+    def detach(self):
+        if self.ctrl is not None:
+            self.ctrl.onTotalEfficiencyUpdated -= self.onTotalEfficiencyUpdated
+            self.ctrl = None
+
+    @staticmethod
+    def onTotalEfficiencyUpdated(diff):
+        if not settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
+            return
+        if PERSONAL_EFFICIENCY_TYPE.DAMAGE in diff:
+            g_battleEfficiency.stats['damage'] = diff[PERSONAL_EFFICIENCY_TYPE.DAMAGE]
+            g_battleEfficiency.startBattle()
+
+
+g_efficiencyListener = _EfficiencyListener()
+
+
 @on_event(events.PlayerAvatar.startGUI.after)
 def new_startGUI(*args):
+    g_efficiencyListener.attach()
     g_battleEfficiency.startBattle()
 
 
@@ -236,18 +267,9 @@ def new_addRibbon(func, self, ribbonID, ribbonType='', leftFieldStr='', **kwargs
     g_battleEfficiency.startBattle()
 
 
-@override(DamageLogPanel, '_onTotalEfficiencyUpdated')
-def new_onTotalEfficiencyUpdated(func, self, diff):
-    func(self, diff)
-    if not settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
-        return
-    if PERSONAL_EFFICIENCY_TYPE.DAMAGE in diff:
-        g_battleEfficiency.stats['damage'] = diff[PERSONAL_EFFICIENCY_TYPE.DAMAGE]
-        g_battleEfficiency.startBattle()
-
-
 @on_event(events.PlayerAvatar.destroyGUI.after)
 def new_destroyGUI(*args):
+    g_efficiencyListener.detach()
     g_battleEfficiency.stopBattle()
     g_calculator.stopBattle()
 

@@ -18,6 +18,7 @@ def init():
     _started=True
     ServicesLocator.itemsCache.onSyncCompleted += g_stats.captureOwnStats
     g_stats.captureOwnStats()
+    g_stats.start()
     g_panels.start()
 
 
@@ -26,6 +27,7 @@ def fini():
     if not _started: return
     _started=False
     ServicesLocator.itemsCache.onSyncCompleted -= g_stats.captureOwnStats
+    g_stats.stop()
     g_panels.stop()
 
 

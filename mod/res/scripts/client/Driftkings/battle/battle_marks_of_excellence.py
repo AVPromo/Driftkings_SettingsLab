@@ -11,7 +11,6 @@ from Vehicle import Vehicle
 from Driftkings.core.battle_policy import battle_policy
 from dossiers2.ui.achievements import ACHIEVEMENT_BLOCK
 from gui.Scaleform.daapi.view.lobby.profile.ProfileUtils import ProfileUtils
-from gui.battle_control.controllers import feedback_events
 from gui.shared.gui_items.dossier.achievements.mark_on_gun import MarkOnGunAchievement
 from gui.impl.lobby.hangar.presenters.crew_presenter import CrewPresenter
 
@@ -122,8 +121,7 @@ class Worker(object):
             return
         guiSessionProvider = getPlayer().guiSessionProvider
         if guiSessionProvider.shared.vehicleState.getControllingVehicleID() == getPlayer().playerVehicleID:
-            for data in events:
-                feedbackEvent = feedback_events.PlayerFeedbackEvent.fromDict(data)
+            for feedbackEvent in events:
                 eventType = feedbackEvent.getBattleEventType()
                 if eventType in DAMAGE_EVENTS:
                     extra = feedbackEvent.getExtra()

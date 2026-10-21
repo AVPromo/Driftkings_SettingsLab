@@ -44,7 +44,9 @@ class StatisticsRequestTests(RuntimeTest):
         self.scheduled = []
         api = source('core/player_ratings.py', {
             'urllib2': module(), 'Queue': queue,
-            'gui.battle_control.arena_info.arena_dp': module(ArenaDataProvider=object),
+            'gui.battle_control.arena_info.interfaces': module(IArenaVehiclesController=object),
+            'gui.battle_control.arena_info.settings': module(ARENA_LISTENER_SCOPE=module(VEHICLES=2)),
+            'gui.battle_control.battle_constants': module(BATTLE_CTRL_ID=module(MOD=19)),
             'gui.shared.gui_items.Vehicle': module(getVehicleClassTag=lambda value: None),
             'gui.shared.personality': module(ServicesLocator=object()),
             'helpers': module(dependency=module(descriptor=lambda value: None)),
@@ -130,6 +132,28 @@ class StatisticsRequestTests(RuntimeTest):
         self.stats.pruneCache()
         self.assertEqual((self.stats.statsCache, self.stats.cacheTimestamp), ({}, {}))
 
+
+    def test_arena_listener_requests_statistics_on_vehicle_updates(self):
+        listener = self.api['ArenaStatsListener'](self.stats)
+        self.assertEqual((listener.getControllerID(), listener.getCtrlScope()), (19, 2))
+        listener.invalidateArenaInfo()
+        self.assertEqual(self.requests, [['1001']])
+        self.stats._pending.clear(); self.stats._attempts.clear()
+        listener.addVehicleInfo(None, None)
+        self.assertEqual(len(self.requests), 2)
+
+    def test_arena_listener_follows_the_battle_session(self):
+        events = []
+        session = module(onBattleSessionStart=Hook(), onBattleSessionStop=Hook(),
+                         addArenaCtrl=lambda ctrl: events.append(('add', ctrl)) or True,
+                         removeArenaCtrl=lambda ctrl: events.append(('remove', ctrl)))
+        self.api['Statistics'].sessionProvider = session
+        self.stats.start()
+        session.onBattleSessionStart.fire()
+        session.onBattleSessionStop.fire()
+        self.stats.stop()
+        self.assertEqual([kind for kind, ctrl in events], ['add', 'remove'])
+        self.assertEqual((session.onBattleSessionStart.handlers, session.onBattleSessionStop.handlers), ([], []))
 
 class KeyStateTests(RuntimeTest):
     def setUp(self):
@@ -265,3 +289,57 @@ class MacroValidationTests(RuntimeTest):
             data = json.loads(stream.read().decode('utf-8'))
         for key in ('nickFormatLeft', 'nickFormatRight', 'vehicleFormatLeft', 'vehicleFormatRight'):
             self.assertEqual(issues(data[key], {}), [], key)
+
+
+class Hook(object):
+    def __init__(self):
+        self.handlers = []
+
+    def __iadd__(self, handler):
+        self.handlers.append(handler)
+        return self
+
+    def __isub__(self, handler):
+        self.handlers.remove(handler)
+        return self
+
+    def fire(self):
+        for handler in list(self.handlers):
+            handler()
+
+
+class BattleFeedbackTests(RuntimeTest):
+    """Battle events come from the session's native feedback controller, not a PlayerAvatar hook."""
+
+    def setUp(self):
+        super(BattleFeedbackTests, self).setUp()
+        self.hooks = []
+        self.feedback = module(onPlayerFeedbackReceived=Hook())
+        self.session = module(onBattleSessionStart=Hook(), onBattleSessionStop=Hook(), shared=module(feedback=None))
+        api = source('core/battle_events.py', {
+            'Avatar': module(PlayerAvatar=object), 'Vehicle': module(Vehicle=object),
+            'VehicleGunRotator': module(VehicleGunRotator=object),
+            'gui.Scaleform.daapi.view.battle.shared.minimap.plugins': module(ArenaVehiclesPlugin=object),
+            'Driftkings.core.hooks': module(override=lambda cls, name, handler: self.hooks.append(name)),
+            'Driftkings.core.keyboard': module(keyboard=module(subscribe=lambda fn: None, unsubscribe=lambda fn: None)),
+            'Driftkings.ui': module(g_events=module(onBattleLoaded=Hook())),
+            'helpers': module(dependency=module(instance=lambda iface: self.session)),
+            'skeletons.gui.battle_session': module(IBattleSessionProvider=object),
+            'BigWorld': module(player=lambda: 'avatar'),
+        })
+        self.events = api['BattleEvents']()
+
+    def test_feedback_follows_the_battle_session(self):
+        received = []
+        self.events.feedback.connect(lambda avatar, events: received.append((avatar, events)))
+        self.events.acquire('owner')
+        self.assertNotIn('onBattleEvents', self.hooks)
+        self.session.shared.feedback = self.feedback
+        self.session.onBattleSessionStart.fire()
+        for handler in self.feedback.onPlayerFeedbackReceived.handlers:
+            handler(['event'])
+        self.assertEqual(received, [('avatar', ['event'])])
+        self.session.onBattleSessionStop.fire()
+        self.assertEqual(self.feedback.onPlayerFeedbackReceived.handlers, [])
+        self.events.release('owner')
+        self.assertEqual(self.session.onBattleSessionStart.handlers, [])

@@ -13,7 +13,9 @@ class PlayerRatingsTests(RuntimeTest):
         colors = self.load('common.utils.colorRatting')
         self.api = source('core/player_ratings.py', {
             'urllib2': module(), 'Queue': queue,
-            'gui.battle_control.arena_info.arena_dp': module(ArenaDataProvider=object),
+            'gui.battle_control.arena_info.interfaces': module(IArenaVehiclesController=object),
+            'gui.battle_control.arena_info.settings': module(ARENA_LISTENER_SCOPE=module(VEHICLES=2)),
+            'gui.battle_control.battle_constants': module(BATTLE_CTRL_ID=module(MOD=19)),
             'gui.shared.gui_items.Vehicle': module(getVehicleClassTag=lambda value: None),
             'gui.shared.personality': module(ServicesLocator=object()),
             'helpers': module(dependency=module(descriptor=lambda value: None)),

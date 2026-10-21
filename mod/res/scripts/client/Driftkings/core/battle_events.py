@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
-"""Shared battle notifications. Wrappers preserve the original game calls."""
+"""Shared battle notifications. Wrappers preserve the original game calls.
+
+Player feedback comes from the session's native feedback controller. The GUI start/stop
+wrappers stay: no client event fires at the same moment (onBattleSessionStart is before
+the space and input handler exist, onAvatarReady only when loading ends).
+"""
 import logging
 
 from Avatar import PlayerAvatar
@@ -34,6 +39,8 @@ class BattleEvents(object):
         self.arena = None
         self.hooked = False
         self.bound = False
+        self.session = None
+        self.feedbackCtrl = None
 
     def acquire(self, owner):
         if owner in self.owners:
@@ -47,7 +54,6 @@ class BattleEvents(object):
                 override(PlayerAvatar, '_PlayerAvatar__startGUI', self.startGUI)
                 override(PlayerAvatar, '_PlayerAvatar__destroyGUI', self.destroyGUI)
                 override(PlayerAvatar, 'vehicle_onAppearanceReady', self.appearanceReady)
-                override(PlayerAvatar, 'onBattleEvents', self.battleFeedback)
                 override(Vehicle, 'onHealthChanged', self.healthChanged)
                 override(ArenaVehiclesPlugin, '_setInAoI', self.visibilityChanged)
                 override(VehicleGunRotator, 'updateRotationAndGunMarker', self.dispersionChanged)
@@ -55,6 +61,7 @@ class BattleEvents(object):
             g_events.onBattleLoaded += self.onLoaded
             self.bound = True
             keyboard.subscribe(self.onKey)
+            self.bindSession()
         except Exception:
             self.release(owner)
             raise
@@ -65,6 +72,7 @@ class BattleEvents(object):
         self.owners.remove(owner)
         if not self.owners:
             self.detachArena()
+            self.unbindSession()
             if self.bound:
                 g_events.onBattleLoaded -= self.onLoaded
                 self.bound = False
@@ -74,6 +82,43 @@ class BattleEvents(object):
         if self.arena is not None:
             self.arena.onVehicleKilled -= self.onKilled
             self.arena = None
+
+    def bindSession(self):
+        from helpers import dependency
+        from skeletons.gui.battle_session import IBattleSessionProvider
+        session = dependency.instance(IBattleSessionProvider)
+        session.onBattleSessionStart += self.attachFeedback
+        session.onBattleSessionStop += self.detachFeedback
+        self.session = session
+        # Acquired during a battle: the session already started.
+        self.attachFeedback()
+
+    def unbindSession(self):
+        self.detachFeedback()
+        if self.session is not None:
+            self.session.onBattleSessionStart -= self.attachFeedback
+            self.session.onBattleSessionStop -= self.detachFeedback
+            self.session = None
+
+    def attachFeedback(self):
+        self.detachFeedback()
+        shared = getattr(self.session, 'shared', None)
+        ctrl = getattr(shared, 'feedback', None) if shared is not None else None
+        if ctrl is not None:
+            ctrl.onPlayerFeedbackReceived += self.onPlayerFeedback
+            self.feedbackCtrl = ctrl
+
+    def detachFeedback(self):
+        if self.feedbackCtrl is not None:
+            self.feedbackCtrl.onPlayerFeedbackReceived -= self.onPlayerFeedback
+            self.feedbackCtrl = None
+
+    def onPlayerFeedback(self, events):
+        # Same (avatar, events) shape as before; events are PlayerFeedbackEvent objects
+        # already filtered by the client for the controlled vehicle.
+        if self.owners:
+            import BigWorld
+            self.feedback.emit(BigWorld.player(), events)
 
     def start(self):
         self.acquire(self)
@@ -129,12 +174,6 @@ class BattleEvents(object):
         if self.owners:
             self.health.emit(vehicle.id, health)
             self.healthDetailed.emit(vehicle, health, *args, **kwargs)
-        return result
-
-    def battleFeedback(self, original, avatar, *args, **kwargs):
-        result = original(avatar, *args, **kwargs)
-        if self.owners:
-            self.feedback.emit(avatar, *args, **kwargs)
         return result
 
     def visibilityChanged(self, original, plugin, entry, visible, *args, **kwargs):

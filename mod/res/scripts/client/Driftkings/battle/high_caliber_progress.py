@@ -3,14 +3,13 @@ import math
 
 from Driftkings.core.battle_policy import battle_policy
 from constants import ARENA_GUI_TYPE
-from gui.Scaleform.daapi.view.battle.shared.ribbons_aggregator import RibbonsAggregator
 from gui.battle_control.arena_info import vos_collections
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 
 from Driftkings._constants import GLOBAL, HIGH_CALIBER_PROGRESS
 from Driftkings.common.utils.wgUtils import getPlayer
 from Driftkings.core.battle_events import battleEvents
-from Driftkings.core.hooks import override, on_event
+from Driftkings.core.hooks import on_event
 from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.battle.high_caliber_progress import HighCaliberProgressSettings as Settings
 from Driftkings.views.battle.high_caliber_gameface import MainGunAdapter
@@ -96,6 +95,7 @@ class SysClass(object):
         self.inBattle = False
         self.player = None
         self.arena = None
+        self.feedback = None
         self.reset()
 
     def reset(self):
@@ -155,7 +155,16 @@ class SysClass(object):
         player.onVehicleEnterWorld += self._onEnterWorld
         player.arena.onVehicleAdded += self._onVehicleUpdate
         player.arena.onVehicleUpdated += self._onVehicleUpdate
+        # Native player feedback: damage dealt arrives here whatever the ribbons settings are.
+        feedback = player.guiSessionProvider.shared.feedback
+        if feedback is not None:
+            feedback.onPlayerFeedbackReceived += self._onPlayerFeedbackReceived
+            self.feedback = feedback
         self.onRosterReady()
+
+    def _onPlayerFeedbackReceived(self, events):
+        if self.inBattle:
+            mainGuns.onPlayerFeedbackReceived(events)
 
     def onRosterReady(self, *args):
         if not self.inBattle:
@@ -172,6 +181,9 @@ class SysClass(object):
             self.arena.onVehicleAdded -= self._onVehicleUpdate
             self.arena.onVehicleUpdated -= self._onVehicleUpdate
             self.arena = None
+        if self.feedback is not None:
+            self.feedback.onPlayerFeedbackReceived -= self._onPlayerFeedbackReceived
+            self.feedback = None
         self.reset()
         mainGuns.__init__()
         mainGuns.updateMainGun()
@@ -278,14 +290,6 @@ class SysClass(object):
             self.updateHealthPoints(max(target[0] - newHealth, 0), target[2])
             target[0] = newHealth
             mainGuns.updateMainGun()
-
-
-@override(RibbonsAggregator, '_onPlayerFeedbackReceived')
-def new__onPlayerFeedbackReceived(func, self, events):
-    result = func(self, events)
-    if scl.inBattle:
-        mainGuns.onPlayerFeedbackReceived(events)
-    return result
 
 
 @on_event(battleEvents.healthDetailed)

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from Driftkings.core.battle_events import battleEvents
 from BattleFeedbackCommon import BATTLE_EVENT_TYPE
-from gui.battle_control.controllers import feedback_events
 from gui.battle_control.controllers.personal_efficiency_ctrl import _AGGREGATED_DAMAGE_EFFICIENCY_TYPES, _createEfficiencyInfoFromFeedbackEvent
 
 from Driftkings._constants import GLOBAL, ENEMY_SPOTTING_STATUS
@@ -74,8 +73,7 @@ class SpottedLightController(object):
         guiSessionProvider = player.guiSessionProvider
         if guiSessionProvider.shared.vehicleState.getControllingVehicleID() != player.playerVehicleID:
             return
-        for data in events:
-            feedbackEvent = feedback_events.PlayerFeedbackEvent.fromDict(data)
+        for feedbackEvent in events:
             if feedbackEvent is None:
                 continue
             eventID = feedbackEvent.getBattleEventType()
