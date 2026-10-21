@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """Shared battle notifications. Wrappers preserve the original game calls.
 
-Player feedback comes from the session's native feedback controller. The GUI start/stop
+Player feedback and enemy spotted status come from the session's native feedback and
+battle field controllers. The GUI start/stop
 wrappers stay: no client event fires at the same moment (onBattleSessionStart is before
 the space and input handler exist, onAvatarReady only when loading ends).
 """
@@ -10,7 +11,6 @@ import logging
 from Avatar import PlayerAvatar
 from Vehicle import Vehicle
 from VehicleGunRotator import VehicleGunRotator
-from gui.Scaleform.daapi.view.battle.shared.minimap.plugins import ArenaVehiclesPlugin
 
 from Driftkings.core.hooks import override
 from Driftkings.core.signals import Signal
@@ -41,6 +41,7 @@ class BattleEvents(object):
         self.bound = False
         self.session = None
         self.feedbackCtrl = None
+        self.battleFieldCtrl = None
 
     def acquire(self, owner):
         if owner in self.owners:
@@ -55,7 +56,6 @@ class BattleEvents(object):
                 override(PlayerAvatar, '_PlayerAvatar__destroyGUI', self.destroyGUI)
                 override(PlayerAvatar, 'vehicle_onAppearanceReady', self.appearanceReady)
                 override(Vehicle, 'onHealthChanged', self.healthChanged)
-                override(ArenaVehiclesPlugin, '_setInAoI', self.visibilityChanged)
                 override(VehicleGunRotator, 'updateRotationAndGunMarker', self.dispersionChanged)
                 self.hooked = True
             g_events.onBattleLoaded += self.onLoaded
@@ -107,11 +107,28 @@ class BattleEvents(object):
         if ctrl is not None:
             ctrl.onPlayerFeedbackReceived += self.onPlayerFeedback
             self.feedbackCtrl = ctrl
+        dynamic = getattr(self.session, 'dynamic', None)
+        field = getattr(dynamic, 'battleField', None) if dynamic is not None else None
+        if field is not None:
+            field.onSpottedStatusChanged += self.onSpottedStatus
+            self.battleFieldCtrl = field
 
     def detachFeedback(self):
         if self.feedbackCtrl is not None:
             self.feedbackCtrl.onPlayerFeedbackReceived -= self.onPlayerFeedback
             self.feedbackCtrl = None
+        if self.battleFieldCtrl is not None:
+            self.battleFieldCtrl.onSpottedStatusChanged -= self.onSpottedStatus
+            self.battleFieldCtrl = None
+
+    def onSpottedStatus(self, updated, arenaDP=None):
+        # VehicleSpottedStatus: 1 spotted, 2 lost; 0 (default/dead) is left to 'killed'.
+        if not self.owners:
+            return
+        for flags, vo in updated:
+            status = getattr(vo, 'spottedStatus', 0)
+            if status in (1, 2):
+                self.visibility.emit(vo.vehicleID, status == 1)
 
     def onPlayerFeedback(self, events):
         # Same (avatar, events) shape as before; events are PlayerFeedbackEvent objects
@@ -174,15 +191,6 @@ class BattleEvents(object):
         if self.owners:
             self.health.emit(vehicle.id, health)
             self.healthDetailed.emit(vehicle, health, *args, **kwargs)
-        return result
-
-    def visibilityChanged(self, original, plugin, entry, visible, *args, **kwargs):
-        result = original(plugin, entry, visible, *args, **kwargs)
-        if self.owners:
-            for vehicleID, candidate in plugin._entries.items():
-                if candidate == entry:
-                    self.visibility.emit(vehicleID, visible)
-                    break
         return result
 
     def dispersionChanged(self, original, rotator, *args, **kwargs):

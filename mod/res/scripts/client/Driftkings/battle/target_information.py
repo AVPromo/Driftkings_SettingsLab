@@ -4,7 +4,6 @@ import re
 from math import degrees
 from xml.sax.saxutils import escape
 
-from Avatar import PlayerAvatar
 from nations import NAMES
 
 from Driftkings._constants import GLOBAL, TARGET_INFORMATION
@@ -12,7 +11,6 @@ from Driftkings.common.utils.wgUtils import getPlayer, getTarget
 from Driftkings.common.utils.game import checkKeys
 from Driftkings.core.battle_events import battleEvents
 from Driftkings.core.gun_stats import damage_per_minute, reload_with_equipment
-from Driftkings.core.hooks import override
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.settings.service import settings_service, affects
 from Driftkings.settings.definitions.battle.target_information import TargetInformationSettings as Settings
@@ -408,6 +406,7 @@ class InfoPanel(DataConstants):
         self.hotKeyDown = False
         self.visible = False
         self.timer = None
+        self._feedback = None
         DataConstants.__init__(self)
 
     def reset(self):
@@ -457,14 +456,39 @@ class InfoPanel(DataConstants):
         if self._inBattle:
             return
         self._inBattle = True
+        feedback = getPlayer().guiSessionProvider.shared.feedback
+        if feedback is not None:
+            feedback.onVehicleFeedbackReceived += self.onVehicleFeedback
+            self._feedback = feedback
         g_flash.startBattle()
 
     def onBattleEnded(self):
         self._inBattle = False
+        if self._feedback is not None:
+            self._feedback.onVehicleFeedbackReceived -= self.onVehicleFeedback
+            self._feedback = None
         try:
             self.reset()
         finally:
             g_flash.stopBattle()
+
+    def onVehicleFeedback(self, eventID, vehicleID, value):
+        # PlayerAvatar.targetFocus/targetBlur report the aimed entity as ENTITY_IN_FOCUS.
+        from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
+        if eventID != FEEDBACK_EVENT_ID.ENTITY_IN_FOCUS or not self._inBattle:
+            return
+        if not getattr(value, 'isInFocus', False):
+            # A dead/removed/filtered target must still release an already shown panel.
+            self.onUpdateBlur()
+            return
+        if not settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
+            return
+        import BigWorld
+        entity = BigWorld.entity(vehicleID)
+        if entity is not None and self.isConditions(entity):
+            self.onUpdateVehicle(entity)
+        else:
+            self.onUpdateBlur()
 
     def onBattleKey(self, event):
         if self._inBattle:
@@ -603,26 +627,6 @@ class InfoPanel(DataConstants):
 
 g_comparator = CompareMacros()
 g_mod = InfoPanel()
-
-
-@override(PlayerAvatar, 'targetBlur')
-def new__targetBlur(func, self, prevEntity):
-    result = func(self, prevEntity)
-    # A dead/removed/filtered target must still release an already shown panel.
-    if g_mod._inBattle:
-        g_mod.onUpdateBlur()
-    return result
-
-
-@override(PlayerAvatar, 'targetFocus')
-def new__targetFocus(func, self, entity):
-    result = func(self, entity)
-    if g_mod._inBattle and settings_service.getComponentDict(config)[GLOBAL.ENABLED]:
-        if g_mod.isConditions(entity):
-            g_mod.onUpdateVehicle(entity)
-        else:
-            g_mod.onUpdateBlur()
-    return result
 
 
 def init():

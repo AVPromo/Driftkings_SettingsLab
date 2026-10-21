@@ -315,11 +315,12 @@ class BattleFeedbackTests(RuntimeTest):
         super(BattleFeedbackTests, self).setUp()
         self.hooks = []
         self.feedback = module(onPlayerFeedbackReceived=Hook())
-        self.session = module(onBattleSessionStart=Hook(), onBattleSessionStop=Hook(), shared=module(feedback=None))
+        self.field = module(onSpottedStatusChanged=Hook())
+        self.session = module(onBattleSessionStart=Hook(), onBattleSessionStop=Hook(), shared=module(feedback=None),
+                              dynamic=module(battleField=self.field))
         api = source('core/battle_events.py', {
             'Avatar': module(PlayerAvatar=object), 'Vehicle': module(Vehicle=object),
             'VehicleGunRotator': module(VehicleGunRotator=object),
-            'gui.Scaleform.daapi.view.battle.shared.minimap.plugins': module(ArenaVehiclesPlugin=object),
             'Driftkings.core.hooks': module(override=lambda cls, name, handler: self.hooks.append(name)),
             'Driftkings.core.keyboard': module(keyboard=module(subscribe=lambda fn: None, unsubscribe=lambda fn: None)),
             'Driftkings.ui': module(g_events=module(onBattleLoaded=Hook())),
@@ -343,3 +344,16 @@ class BattleFeedbackTests(RuntimeTest):
         self.assertEqual(self.feedback.onPlayerFeedbackReceived.handlers, [])
         self.events.release('owner')
         self.assertEqual(self.session.onBattleSessionStart.handlers, [])
+
+    def test_spotted_status_comes_from_the_battle_field_controller(self):
+        seen = []
+        self.events.visibility.connect(lambda vehicleID, visible: seen.append((vehicleID, visible)))
+        self.events.acquire('owner')
+        self.assertNotIn('_setInAoI', self.hooks)
+        self.session.onBattleSessionStart.fire()
+        vo = lambda vehicleID, status: (0, module(vehicleID=vehicleID, spottedStatus=status))
+        for handler in self.field.onSpottedStatusChanged.handlers:
+            handler([vo(5, 1), vo(6, 2), vo(7, 0)], None)
+        self.assertEqual(seen, [(5, True), (6, False)])
+        self.events.release('owner')
+        self.assertEqual(self.field.onSpottedStatusChanged.handlers, [])
