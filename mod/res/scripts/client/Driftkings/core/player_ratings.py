@@ -30,6 +30,8 @@ from Driftkings.stats.vehinfo import calculateXvmScale, getVehicleInfoData, scal
 MISSING = u'\u2014'
 # Accounts with no usable answer (closed profiles, API errors) are retried at this pace.
 RETRY_SECONDS = 60
+# Requests that failed (timeout, API error) are retried soon: the loading screen is short.
+FAILED_RETRY_SECONDS = 5
 # Upper bound on cached accounts; each one holds the full vehicle list.
 CACHE_LIMIT = 300
 NUMERIC = ('wn8', 'winrate', 'battles', 'kb', 'wgr', 'eff', 'xwn8', 'xeff',
@@ -345,6 +347,7 @@ class Statistics(object):
         self._attempts = {}
         self._received = set()
         self._workers = 0
+        self._retry = None
         self._responses = Queue()
         self._generation = 0
         self._detailRequested = set()
@@ -353,6 +356,7 @@ class Statistics(object):
         self._localStats = None
         self._appliedCache = {}
         override(ArenaDataProvider, 'buildVehiclesData', self.new__buildVehiclesData)
+        override(ArenaDataProvider, 'addVehicleInfo', self.new__addVehicleInfo)
 
     def captureOwnStats(self, *args, **kwargs):
         # Called on the main thread after hangar synchronization. No server requests.
@@ -455,79 +459,86 @@ class Statistics(object):
             dbID = str(value['accountDBID'])
             if dbID not in dataInfo and dbID in self.playersInfo:
                 continue
-            playerInfo = self.playersInfo[dbID] = {}
-            team = self.sessionProvider.getCtx().getPlayerGuiProps(vehicleID, value['team']).name().replace('ally', 'teammate')
-            playerInfo['name'] = value['name']
-            playerInfo['team'] = value['team']
-            playerInfo['isAlive'] = value['isAlive']
-            playerInfo['level'] = value['vehicleType'].level if hasattr(value['vehicleType'], 'level') else 0
-            playerInfo['tank_id'] = value['vehicleType'].type.compactDescr if hasattr(value['vehicleType'], 'type') else 0
-            playerInfo['type'] = getVehicleClassTag(value['vehicleType'].type.tags) if hasattr(value['vehicleType'], 'type') else ''
-            playerInfo['vehicle'] = value['vehicleType'].type.shortUserString if hasattr(value['vehicleType'], 'type') else ''
-            playerInfo['clan'] = '[%s]' % value['clanAbbrev'] if value['clanAbbrev'] else ''
-            playerInfo['deadPlayerName'] = ''
-            playerInfo['deadPlayerVehicle'] = ''
-            playerInfo['c_team'] = '#' + pColorScheme.getHexStr(team)
-            playerInfo['t_battles'] = 0
-            playerInfo['t_winrate'] = 0
-            playerInfo['wn8'] = 0
-            playerInfo['eff'] = 0
-            playerInfo['xwn8'] = 0
-            playerInfo['xeff'] = 0
-            playerInfo['spg_battles'] = 0
-            playerInfo['mark_of_mastery'] = 0
-            playerInfo['wgr'] = 0
-            playerInfo['battles'] = 0
-            playerInfo['winrate'] = 0
-            playerInfo['kb'] = 0
-            playerInfo['spg_percent'] = 0
-            playerInfo['lang'] = 'en'
-            playerInfo['nick'] = playerInfo['name'] + playerInfo['clan']
-            playerInfo['short_nick'] = playerInfo['name']
-            playerInfo['c_wn8'] = self.getColor('wn8', playerInfo['wn8'])
-            playerInfo['c_battles'] = self.getColor('battles', playerInfo['battles'])
-            playerInfo['c_winrate'] = self.getColor('winrate', playerInfo['winrate'])
-            playerInfo['c_tBattles'] = self.getColor('t_battles', playerInfo['t_battles'])
-            cachedData = self.statsCache.get(dbID, None) if settings_service.getComponentDict(config)[TEAM_PANELS.PERFORMANCE]['cacheEnabled'] else None
-            if cachedData and dbID not in dataInfo:
-                cacheAge = time.time() - self.cacheTimestamp.get(dbID, 0)
-                if cacheAge < settings_service.getComponentDict(config)[TEAM_PANELS.PERFORMANCE]['cacheExpiry']:
-                    dataInfo[dbID] = cachedData['info']
-                    if dbID not in dataTanks and cachedData['tanks'] is not None:
-                        dataTanks[dbID] = cachedData['tanks']
-            if hasStats and dbID in dataInfo and dbID in dataTanks and dataInfo[dbID] is not None and dataTanks[dbID] is not None:
-                battles = dataInfo[dbID]['statistics']['all']['battles']
-                if battles > 0 and battles >= settings_service.getComponentDict(config)[TEAM_PANELS.PERFORMANCE]['minBattlesToShow']:
-                    wins = dataInfo[dbID]['statistics']['all']['wins']
-                    avgDmg = dataInfo[dbID]['statistics']['all']['damage_dealt'] / float(battles)
-                    avgFrags = dataInfo[dbID]['statistics']['all']['frags'] / float(battles)
-                    avgSpot = dataInfo[dbID]['statistics']['all']['spotted'] / float(battles)
-                    avgCap = dataInfo[dbID]['statistics']['all']['capture_points'] / float(battles)
-                    avgDef = dataInfo[dbID]['statistics']['all']['dropped_capture_points'] / float(battles)
-                    winrate = wins * 100.0 / float(battles)
-                    playerInfo['wgr'] = dataInfo[dbID]['global_rating']
-                    playerInfo['battles'] = battles
-                    playerInfo['winrate'] = int(round(winrate, 0))
-                    playerInfo['kb'] = "{0}k".format(int(round(battles / 1000.0))) if battles >= 1000 else str(battles)
-                    playerInfo['lang'] = dataInfo[dbID]['client_language']
-                    for tank in dataTanks[dbID]:
-                        if tank['tank_id'] == playerInfo['tank_id'] and tank['statistics']['battles'] != 0:
-                            playerInfo['t_battles'] = tank['statistics']['battles']
-                            damageStats = tank.get('damageStats', {})
-                            maxHP = getattr(value.get('vehicleType'), 'maxHealth', 0)
-                            playerInfo['tdv'] = tank_damage_ratio(damageStats, maxHP)
-                            playerInfo['mark_of_mastery'] = tank['mark_of_mastery']
-                            if playerInfo['type'] == 'SPG':
-                                playerInfo['spg_battles'] += tank['statistics']['battles']
-                            playerInfo['t_winrate'] = int(round(tank['statistics']['wins'] * 100.0 / tank['statistics']['battles'], 0))
-                    playerInfo['wn8'] = self.wn8(dataTanks[dbID], winrate, avgDmg, avgFrags, avgSpot, avgDef)
-                    playerInfo['xwn8'] = g_calRating.xwn8(playerInfo['wn8'])
-                    playerInfo['eff'] = g_calRating.eff(avgDmg, avgDef, avgCap, avgSpot, playerInfo['level'], avgFrags)
-                    playerInfo['xeff'] = g_calRating.xeff(playerInfo['eff'])
-                    playerInfo['c_wn8'] = self.getColor('wn8', playerInfo['wn8'])
-                    playerInfo['c_winrate'] = self.getColor('winrate',  playerInfo['winrate'])
-                    playerInfo['c_battles'] = self.getColor('battles', playerInfo['battles'])
-                    playerInfo['c_tBattles'] = self.getColor('t_battles', playerInfo['t_battles'])
+            try:
+                self.applyPlayer(vehicleID, value, dbID, dataInfo, dataTanks, hasStats, pColorScheme)
+            except Exception as error:
+                self.playersInfo.pop(dbID, None)
+                LOG.warning(('Could not apply statistics for {}: {}').format(dbID, error))
+
+    def applyPlayer(self, vehicleID, value, dbID, dataInfo, dataTanks, hasStats, pColorScheme):
+        playerInfo = self.playersInfo[dbID] = {}
+        team = self.sessionProvider.getCtx().getPlayerGuiProps(vehicleID, value['team']).name().replace('ally', 'teammate')
+        playerInfo['name'] = value['name']
+        playerInfo['team'] = value['team']
+        playerInfo['isAlive'] = value['isAlive']
+        playerInfo['level'] = value['vehicleType'].level if hasattr(value['vehicleType'], 'level') else 0
+        playerInfo['tank_id'] = value['vehicleType'].type.compactDescr if hasattr(value['vehicleType'], 'type') else 0
+        playerInfo['type'] = getVehicleClassTag(value['vehicleType'].type.tags) if hasattr(value['vehicleType'], 'type') else ''
+        playerInfo['vehicle'] = value['vehicleType'].type.shortUserString if hasattr(value['vehicleType'], 'type') else ''
+        playerInfo['clan'] = '[%s]' % value['clanAbbrev'] if value['clanAbbrev'] else ''
+        playerInfo['deadPlayerName'] = ''
+        playerInfo['deadPlayerVehicle'] = ''
+        playerInfo['c_team'] = '#' + pColorScheme.getHexStr(team)
+        playerInfo['t_battles'] = 0
+        playerInfo['t_winrate'] = 0
+        playerInfo['wn8'] = 0
+        playerInfo['eff'] = 0
+        playerInfo['xwn8'] = 0
+        playerInfo['xeff'] = 0
+        playerInfo['spg_battles'] = 0
+        playerInfo['mark_of_mastery'] = 0
+        playerInfo['wgr'] = 0
+        playerInfo['battles'] = 0
+        playerInfo['winrate'] = 0
+        playerInfo['kb'] = 0
+        playerInfo['spg_percent'] = 0
+        playerInfo['lang'] = 'en'
+        playerInfo['nick'] = playerInfo['name'] + playerInfo['clan']
+        playerInfo['short_nick'] = playerInfo['name']
+        playerInfo['c_wn8'] = self.getColor('wn8', playerInfo['wn8'])
+        playerInfo['c_battles'] = self.getColor('battles', playerInfo['battles'])
+        playerInfo['c_winrate'] = self.getColor('winrate', playerInfo['winrate'])
+        playerInfo['c_tBattles'] = self.getColor('t_battles', playerInfo['t_battles'])
+        cachedData = self.statsCache.get(dbID, None) if settings_service.getComponentDict(config)[TEAM_PANELS.PERFORMANCE]['cacheEnabled'] else None
+        if cachedData and dbID not in dataInfo:
+            cacheAge = time.time() - self.cacheTimestamp.get(dbID, 0)
+            if cacheAge < settings_service.getComponentDict(config)[TEAM_PANELS.PERFORMANCE]['cacheExpiry']:
+                dataInfo[dbID] = cachedData['info']
+                if dbID not in dataTanks and cachedData['tanks'] is not None:
+                    dataTanks[dbID] = cachedData['tanks']
+        if hasStats and dbID in dataInfo and dbID in dataTanks and dataInfo[dbID] is not None and dataTanks[dbID] is not None:
+            battles = dataInfo[dbID]['statistics']['all']['battles']
+            if battles > 0 and battles >= settings_service.getComponentDict(config)[TEAM_PANELS.PERFORMANCE]['minBattlesToShow']:
+                wins = dataInfo[dbID]['statistics']['all']['wins']
+                avgDmg = dataInfo[dbID]['statistics']['all']['damage_dealt'] / float(battles)
+                avgFrags = dataInfo[dbID]['statistics']['all']['frags'] / float(battles)
+                avgSpot = dataInfo[dbID]['statistics']['all']['spotted'] / float(battles)
+                avgCap = dataInfo[dbID]['statistics']['all']['capture_points'] / float(battles)
+                avgDef = dataInfo[dbID]['statistics']['all']['dropped_capture_points'] / float(battles)
+                winrate = wins * 100.0 / float(battles)
+                playerInfo['wgr'] = dataInfo[dbID]['global_rating']
+                playerInfo['battles'] = battles
+                playerInfo['winrate'] = int(round(winrate, 0))
+                playerInfo['kb'] = "{0}k".format(int(round(battles / 1000.0))) if battles >= 1000 else str(battles)
+                playerInfo['lang'] = dataInfo[dbID]['client_language']
+                for tank in dataTanks[dbID]:
+                    if tank['tank_id'] == playerInfo['tank_id'] and tank['statistics']['battles'] != 0:
+                        playerInfo['t_battles'] = tank['statistics']['battles']
+                        damageStats = tank.get('damageStats', {})
+                        maxHP = getattr(value.get('vehicleType'), 'maxHealth', 0)
+                        playerInfo['tdv'] = tank_damage_ratio(damageStats, maxHP)
+                        playerInfo['mark_of_mastery'] = tank['mark_of_mastery']
+                        if playerInfo['type'] == 'SPG':
+                            playerInfo['spg_battles'] += tank['statistics']['battles']
+                        playerInfo['t_winrate'] = int(round(tank['statistics']['wins'] * 100.0 / tank['statistics']['battles'], 0))
+                playerInfo['wn8'] = self.wn8(dataTanks[dbID], winrate, avgDmg, avgFrags, avgSpot, avgDef)
+                playerInfo['xwn8'] = g_calRating.xwn8(playerInfo['wn8'])
+                playerInfo['eff'] = g_calRating.eff(avgDmg, avgDef, avgCap, avgSpot, playerInfo['level'], avgFrags)
+                playerInfo['xeff'] = g_calRating.xeff(playerInfo['eff'])
+                playerInfo['c_wn8'] = self.getColor('wn8', playerInfo['wn8'])
+                playerInfo['c_winrate'] = self.getColor('winrate',  playerInfo['winrate'])
+                playerInfo['c_battles'] = self.getColor('battles', playerInfo['battles'])
+                playerInfo['c_tBattles'] = self.getColor('t_battles', playerInfo['t_battles'])
 
     def getPlayersInfo(self, accountDBID):
         return self.playersInfo.get(str(accountDBID), None)
@@ -574,6 +585,13 @@ class Statistics(object):
                 continue
             self._pending.difference_update(ids)
             self._received.update(dbID for dbID in info if info[dbID] is not None and tanks.get(dbID) is not None)
+            failed = [dbID for dbID in ids if dbID not in self._received and info.get(dbID, MISSING) is not None]
+            if failed:
+                # No answer at all (or info without tanks): not a closed profile.
+                retry = time.time() - RETRY_SECONDS + FAILED_RETRY_SECONDS
+                self._attempts.update((dbID, retry) for dbID in failed)
+                if self._retry is None:
+                    self._retry = callback(FAILED_RETRY_SECONDS, self.retryStats)
             try:
                 self.applyPlayerStats(info, tanks)
             except Exception as error:
@@ -631,6 +649,10 @@ class Statistics(object):
         if self._workers and self._poll is None:
             self._poll = callback(0.2, self.pollStats)
 
+    def retryStats(self):
+        self._retry = None
+        self.loadStats()
+
     def pruneCache(self):
         performance = settings_service.getComponentDict(config)[TEAM_PANELS.PERFORMANCE]
         if not performance['cacheEnabled']:
@@ -654,6 +676,9 @@ class Statistics(object):
         self._attempts.clear()
         self._received.clear()
         self._workers = 0
+        if self._retry is not None:
+            cancelCallback(self._retry)
+            self._retry = None
         self.playersInfo = {}
         self._appliedCache.clear()
         try:
@@ -663,6 +688,12 @@ class Statistics(object):
 
     def new__buildVehiclesData(self, func, orig, vehicles):
         result = func(orig, vehicles)
+        self.loadStats()
+        return result
+
+    def new__addVehicleInfo(self, func, orig, vehicleID, vInfo):
+        result = func(orig, vehicleID, vInfo)
+        # Late joiners during loading would otherwise wait for the 15 s refresh.
         self.loadStats()
         return result
 

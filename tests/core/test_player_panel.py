@@ -76,7 +76,7 @@ class StatisticsRequestTests(RuntimeTest):
     def test_accounts_without_data_wait_before_a_retry(self):
         self.stats.loadStats()
         self.assertEqual(self.requests, [['1001']])
-        self.answer({})
+        self.answer({'1001': None})
         self.assertEqual(self.stats._workers, 0)
         self.stats.loadStats()
         self.assertEqual(len(self.requests), 1)
@@ -97,8 +97,19 @@ class StatisticsRequestTests(RuntimeTest):
     def test_polling_stops_once_workers_finish(self):
         self.stats.loadStats()
         polls = len(self.scheduled)
-        self.answer({})
+        self.answer({'1001': None})
         self.assertEqual(len(self.scheduled), polls)
+
+    def test_failed_requests_retry_soon_during_loading(self):
+        self.stats.loadStats()
+        self.answer({})
+        # A timeout or API error is not a closed profile: retry within seconds.
+        retry = self.scheduled[-1]
+        self.assertEqual(retry, self.stats.retryStats)
+        self.stats._attempts['1001'] -= self.api['FAILED_RETRY_SECONDS']
+        retry()
+        self.assertEqual(self.requests, [['1001'], ['1001']])
+        self.assertIsNone(self.stats._retry)
 
     def test_cache_drops_expired_entries_and_keeps_the_newest(self):
         self.settings['performance']['cacheEnabled'] = True
