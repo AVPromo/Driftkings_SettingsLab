@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """Owned UI lifecycle connected to the Gameface dependency required by ModList."""
-from Driftkings.interface_catalog import GAMEFACE, gameface_spec
-
 from frameworks.wulf import ViewModel
 from gui.impl.gen import R
 from openwg_gameface import gf_mod_inject
+
+from Driftkings.interface_catalog import GAMEFACE, gameface_spec
 
 # WG's native invalid resource sentinel; gui.impl.gen_utils was removed.
 INVALID_RES_ID = -1

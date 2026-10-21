@@ -3,10 +3,10 @@ import json
 import re
 
 from Driftkings._constants import TEAM_PANELS
-from Driftkings.settings.team_panel_store import PlayerPanelStore, FILES
-from Driftkings.settings.service import settings_service
 from Driftkings.settings.controls_schema import field as nested_field
 from Driftkings.settings.definitions.base import SectionDefinition
+from Driftkings.settings.service import settings_service
+from Driftkings.settings.team_panel_store import PlayerPanelStore, FILES
 
 
 class TeamPanelsSettings(SectionDefinition):

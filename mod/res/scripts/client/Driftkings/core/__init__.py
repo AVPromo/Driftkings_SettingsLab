@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """Explicit composition, dependency gating and reverse-order cleanup."""
-from collections import namedtuple
 import importlib
 import logging
+from collections import namedtuple
+
 LOG = logging.getLogger('Driftkings.Loader')
 
 

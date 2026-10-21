@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """Presentation adapter for MarksOnGunTechTree; gameplay state stays in its component."""
-from importlib import import_module
-
 from frameworks.wulf import ViewModel, ViewSettings
 from gui.impl.pub import ViewImpl
+from importlib import import_module
 
 from Driftkings.core.hooks import override
 

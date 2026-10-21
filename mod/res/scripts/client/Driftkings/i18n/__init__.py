@@ -6,10 +6,10 @@ import json
 import logging
 import os
 
+from Driftkings.locale_support import language_code
+from Driftkings.settings.sections import previous_name, section_name, section_aliases
 from Driftkings.settings.store import SettingsStore, merge, recover_file
-from Driftkings.settings.sections import LEGACY_NAMES, previous_name, section_name, section_aliases
 
-from Driftkings.locale_support import CODES as LANGUAGES, language_code
 LOG = logging.getLogger('Driftkings.i18n')
 
 

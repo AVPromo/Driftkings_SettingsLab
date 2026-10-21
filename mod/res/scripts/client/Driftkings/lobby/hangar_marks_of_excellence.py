@@ -1,28 +1,27 @@
 # -*- coding: utf-8 -*-
-from Driftkings.common.utils.numbers import finite_number
-from Driftkings.interface_catalog import gameface_spec
 import logging
 import math
-
 from CurrentVehicle import g_currentVehicle
 from dossiers2.ui.achievements import ACHIEVEMENT_BLOCK, MARK_OF_MASTERY_RECORD
 from gui.Scaleform.daapi.view.lobby.profile.ProfileUtils import ProfileUtils
 from gui.shared.gui_items.dossier.achievements.mark_on_gun import MarkOnGunAchievement
 from gui.shared.personality import ServicesLocator
 
-from Driftkings.core.marks_calculator import ceil_damage, combined_damage, statistics, hangar_goal
-from Driftkings.views.marks_model import delta_model, milestone_model, number_locale
-from Driftkings.core.marks_state import marks_state
 from Driftkings._constants import GLOBAL, HANGAR_MARKS_OF_EXCELLENCE
-from Driftkings.common.utils.exceptions import log_exceptions
-from Driftkings.common.utils.colorRatting import getStatisticColor, getMoeDamageColor
 from Driftkings.common.config.json_reader import loadJson
 from Driftkings.common.utils.achievement_dossiers import getAchievementDossier
+from Driftkings.common.utils.colorRatting import getStatisticColor, getMoeDamageColor
+from Driftkings.common.utils.exceptions import log_exceptions
+from Driftkings.common.utils.numbers import finite_number
+from Driftkings.common.utils.wgUtils import getPlayer
 from Driftkings.core.cache import cache_directory
 from Driftkings.core.hooks import override
-from Driftkings.common.utils.wgUtils import getPlayer
+from Driftkings.core.marks_calculator import ceil_damage, combined_damage, statistics, hangar_goal
+from Driftkings.core.marks_state import marks_state
+from Driftkings.interface_catalog import gameface_spec
 from Driftkings.settings.service import settings_service
 from Driftkings.stats.vehinfo import getVehicleInfoData
+from Driftkings.views.marks_model import delta_model, milestone_model, number_locale
 
 LOG = logging.getLogger('Driftkings.MarksOnGunHangar')
 FEATURE = 'DriftkingsMarksOnGunHangar'

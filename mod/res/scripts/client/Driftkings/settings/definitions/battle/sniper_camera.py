@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from Driftkings._constants import SNIPER_CAMERA
 import math
 
+from Driftkings._constants import SNIPER_CAMERA
 from Driftkings.settings.controls_schema import control, slider, field
 from Driftkings.settings.definitions.base import SectionDefinition
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Publish our battle package; the client owns view registration and lifecycle."""
 import weakref
+
 from Driftkings.interface_catalog import FLASH_LIBRARY, FLASH_COMPONENTS
 
 BATTLE_COMPONENTS = {}

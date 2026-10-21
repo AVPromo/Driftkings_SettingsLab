@@ -4,8 +4,8 @@ Public facade used by mods: `from Driftkings.settings.panel import settings`.
 Mods may register before or after the framework starts; configuration files are
 read at registration, the interface language is resolved when the game starts it.
 """
-from Driftkings.settings.panel import logger
 from Driftkings.i18n import panel as locales
+from Driftkings.settings.panel import logger
 from Driftkings.settings.panel.registry import ModRegistry
 from Driftkings.settings.panel.storage import ConfigStore, ConfigReadError
 

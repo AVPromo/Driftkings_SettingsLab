@@ -5,11 +5,12 @@ from AvatarInputHandler.DynamicCameras.ArcadeCamera import ArcadeCamera
 from AvatarInputHandler.DynamicCameras.ArtyCamera import ArtyCamera
 from AvatarInputHandler.DynamicCameras.StrategicCamera import StrategicCamera
 from AvatarInputHandler.control_modes import PostMortemControlMode
+
 from Driftkings._constants import MinMax
 from Driftkings.core.camera_settings import options
 from Driftkings.core.hooks import override
-from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.battle.third_person_zoom import ThirdPersonZoomSettings as Settings
+from Driftkings.settings.service import settings_service
 
 LOG = logging.getLogger('Driftkings.Camera')
 config = Settings()
@@ -24,8 +25,7 @@ def _arcadeMode(camera):
 
 
 @override(ArcadeCamera, 'create')
-def new_create_arcade(original, self, onChangeControlMode=None, postmortemMode=False,
-                      smartPointCalculator=True):
+def new_create_arcade(original, self, onChangeControlMode=None, postmortemMode=False, smartPointCalculator=True):
     # Native create sets this flag after construction/config reading. Select the
     # correct profile before it consumes startDist or updates camera properties.
     self._ArcadeCamera__postmortemMode = postmortemMode

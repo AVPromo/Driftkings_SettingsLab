@@ -2,18 +2,17 @@
 import logging
 import re
 from math import degrees
+from nations import NAMES
 from xml.sax.saxutils import escape
 
-from nations import NAMES
-
 from Driftkings._constants import GLOBAL, TARGET_INFORMATION
-from Driftkings.common.utils.wgUtils import getPlayer, getTarget
 from Driftkings.common.utils.game import checkKeys
+from Driftkings.common.utils.wgUtils import getPlayer, getTarget
 from Driftkings.core.battle_events import battleEvents
-from Driftkings.core.gun_stats import damage_per_minute, reload_with_equipment
 from Driftkings.core.callbacks import callback, cancelCallback
-from Driftkings.settings.service import settings_service, affects
+from Driftkings.core.gun_stats import damage_per_minute, reload_with_equipment
 from Driftkings.settings.definitions.battle.target_information import TargetInformationSettings as Settings
+from Driftkings.settings.service import settings_service, affects
 from Driftkings.views.battle.target_information import Flash
 
 COMPARE_MACROS = ['compareDelim', 'compareColor']
@@ -501,8 +500,7 @@ class InfoPanel(DataConstants):
         template_index = settings[TARGET_INFORMATION.TEMPLATE_PRESET]
         # The full preset is editable in JSON; retain the existing preset IDs.
         if template_index == 3 and settings.get(TARGET_INFORMATION.FORMATS):
-            return u'\n'.join(value if isinstance(value,type(u'')) else value.decode('utf-8')
-                              for value in settings[TARGET_INFORMATION.FORMATS])
+            return u'\n'.join(value if isinstance(value,type(u'')) else value.decode('utf-8') for value in settings[TARGET_INFORMATION.FORMATS])
         template_key = TEMPLATE_INDEX_TO_KEY.get(template_index, 'default')
         return PRESET_TEMPLATES.get(template_key, PRESET_TEMPLATES['default'])
 

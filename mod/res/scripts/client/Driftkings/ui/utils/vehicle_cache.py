@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from collections import namedtuple
-
 from CurrentVehicle import g_currentVehicle
+from collections import namedtuple
 from dossiers2.ui.achievements import MARK_ON_GUN_RECORD
 from helpers import dependency
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader

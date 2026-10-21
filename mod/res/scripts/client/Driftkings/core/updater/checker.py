@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """GitHub metadata checks only. Never request the WOTMOD download URL."""
 import logging
+
 from Driftkings.core.updater import endpoints, signature
 from Driftkings.core.updater.manifest import Manifest, bounded_json, MAX_MANIFEST
 from Driftkings.core.updater.versioning import Version

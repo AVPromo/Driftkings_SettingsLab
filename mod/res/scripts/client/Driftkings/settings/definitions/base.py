@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Section declarations: presentation and feature-specific normalization only."""
-from Driftkings.settings.settings_data import defaults, default_keys
 from Driftkings.settings.hotkeys import processHotKeys
+from Driftkings.settings.settings_data import defaults, default_keys
 
 
 class SectionDefinition(object):

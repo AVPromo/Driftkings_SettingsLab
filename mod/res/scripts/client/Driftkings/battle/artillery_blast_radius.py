@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from Driftkings.common.utils import events
 import BigWorld
 import Math
 from AvatarInputHandler.aih_global_binding import CTRL_MODE_NAME
@@ -8,13 +7,14 @@ from gui.shared.gui_items import Vehicle
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
 from Driftkings._constants import ARTILLERY_BLAST_RADIUS, GLOBAL
+from Driftkings.common.utils import events
+from Driftkings.common.utils.exceptions import log_exceptions
 from Driftkings.common.utils.game import checkKeys, sendPanelMessage
 from Driftkings.common.utils.wgUtils import getPlayer
-from Driftkings.common.utils.exceptions import log_exceptions
 from Driftkings.core.hooks import override, on_event
 from Driftkings.core.keyboard import keyboard
-from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.battle.artillery_blast_radius import ArtilleryBlastRadiusSettings as Settings
+from Driftkings.settings.service import settings_service
 from Driftkings.ui.common.markers import StaticWorldObjectMarker3D
 
 

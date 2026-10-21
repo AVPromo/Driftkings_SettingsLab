@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """Presentation adapter for FlightTimer; gameplay state stays in its component."""
-from collections import defaultdict
-
 from aih_constants import CTRL_MODE_NAME
+from collections import defaultdict
 from gui.battle_control import avatar_getter
 from math_utils import VectorConstant
 

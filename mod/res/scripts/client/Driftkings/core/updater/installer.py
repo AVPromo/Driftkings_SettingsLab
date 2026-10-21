@@ -5,8 +5,8 @@ import json
 import os
 import re
 import subprocess
-import zipfile
 import xml.etree.ElementTree as ET
+import zipfile
 
 from Driftkings import VERSION
 from Driftkings.common.utils.filesystem import file_sha256 as digest

@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 """Server gun-angle synchronization; no vehicle movement or firing control."""
-import math
 import VehicleGunRotator
 import gun_rotation_shared
+import math
+
 from Driftkings._constants import GLOBAL, SERVER_TURRET_SYNC
-from Driftkings.common.utils.game import sendPanelMessage
 from Driftkings.common.utils import events
+from Driftkings.common.utils.game import sendPanelMessage
 from Driftkings.core.callbacks import callback
 from Driftkings.core.hooks import override, on_event
-from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.battle.server_turret_sync import ServerTurretSyncSettings as Settings
+from Driftkings.settings.service import settings_service
 
 config = Settings()
 

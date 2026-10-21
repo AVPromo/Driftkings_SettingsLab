@@ -8,8 +8,8 @@ from Driftkings.settings.dependencies import option_dependencies
 from Driftkings.settings.panel import logger
 from Driftkings.settings.panel.controls import Control, text_type
 from Driftkings.settings.panel.registry import ModDefinition
-from Driftkings.settings.settings_data import BATTLE_EDITABLE, application_timing, LIVE, RESTART
 from Driftkings.settings.sections import previous_name
+from Driftkings.settings.settings_data import BATTLE_EDITABLE, application_timing, LIVE, RESTART
 
 
 def plain(value):

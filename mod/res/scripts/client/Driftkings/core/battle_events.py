@@ -7,14 +7,13 @@ wrappers stay: no client event fires at the same moment (onBattleSessionStart is
 the space and input handler exist, onAvatarReady only when loading ends).
 """
 import logging
-
 from Avatar import PlayerAvatar
 from Vehicle import Vehicle
 from VehicleGunRotator import VehicleGunRotator
 
 from Driftkings.core.hooks import override
-from Driftkings.core.signals import Signal
 from Driftkings.core.keyboard import keyboard
+from Driftkings.core.signals import Signal
 from Driftkings.ui import g_events
 
 LOG = logging.getLogger('Driftkings.BattleEvents')

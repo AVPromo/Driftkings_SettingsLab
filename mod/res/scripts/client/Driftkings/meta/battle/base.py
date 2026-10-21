@@ -6,10 +6,10 @@ from helpers import dependency
 from skeletons.account_helpers.settings_core import ISettingsCore
 from skeletons.gui.battle_session import IBattleSessionProvider
 
-from Driftkings.core.hud_visibility import hudVisibility
 from Driftkings.core.battle_capabilities import battle_capabilities
-from Driftkings.settings.service import settings_service
 from Driftkings.core.diagnostics import diagnostics
+from Driftkings.core.hud_visibility import hudVisibility
+from Driftkings.settings.service import settings_service
 
 
 class ComponentMeta(BaseDAAPIComponent):

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """Updater service installation behavior; state is owned by UpdaterService."""
-from Driftkings.core.updater.shared import LOG
-from Driftkings.core.updater.state import ERROR, READY, INSTALLING
 import os
 import threading
+
+from Driftkings.core.updater.shared import LOG
+from Driftkings.core.updater.state import ERROR, READY, INSTALLING
 
 
 class InstallMixin(object):

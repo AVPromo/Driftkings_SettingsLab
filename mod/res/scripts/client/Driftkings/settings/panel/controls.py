@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """Control definitions: declaration checks, value validation and UI descriptions."""
+import copy
 import math
 import re
-import copy
 
 from Driftkings.core.keycodes import valid_key_code
 

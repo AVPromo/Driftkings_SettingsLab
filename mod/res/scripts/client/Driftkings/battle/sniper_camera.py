@@ -10,8 +10,8 @@ from Driftkings._constants import GLOBAL, SNIPER_CAMERA
 from Driftkings.common.utils.wgUtils import isReplay, getPlayer
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.core.hooks import override
-from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.battle.sniper_camera import SniperCameraSettings as Settings
+from Driftkings.settings.service import settings_service
 
 MIN_ZOOM = 2.0
 SMALL_CALIBER_THRESHOLD = 60

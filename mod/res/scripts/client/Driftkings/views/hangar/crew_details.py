@@ -2,8 +2,8 @@
 """Progression summaries owned by native crew personal views and tooltips."""
 import logging
 import weakref
-
 from gui.shared.personality import ServicesLocator
+
 from Driftkings._constants import GLOBAL
 from Driftkings.core.crew_progression import nonnegative
 from Driftkings.core.hooks import override
@@ -11,8 +11,8 @@ from Driftkings.interface_catalog import gameface_spec
 from Driftkings.lobby.crew_progression import collect_tankman
 from Driftkings.settings.service import settings_service
 from Driftkings.views.crew_progression_model import integer, progression_kinds, progression_lines, translated
-from Driftkings.views.hangar.common import publish_card
 from Driftkings.views.hangar import crew_progression as hangar_bridge
+from Driftkings.views.hangar.common import publish_card
 
 FEATURE = 'DriftkingsCrewDetails'
 RESOURCE = gameface_spec(FEATURE)['resource']

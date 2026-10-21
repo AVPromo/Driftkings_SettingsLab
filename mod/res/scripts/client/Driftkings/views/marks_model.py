@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Presentation only: receives calculated MoE values, never acquires game data."""
-from Driftkings.common.utils.numbers import finite_number as finite
 from Driftkings._constants import MARK_THRESHOLDS
+from Driftkings.common.utils.numbers import finite_number as finite
 from Driftkings.locale_support import language_code
 
 

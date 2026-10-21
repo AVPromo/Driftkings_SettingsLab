@@ -2,6 +2,7 @@
 """Declare hooks during import; Core installs them and owns their lifetime."""
 from functools import partial, wraps
 from inspect import isclass
+
 from Driftkings.core.diagnostics import diagnostics
 
 

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """Only arithmetic proven identical in the existing Battle/Hangar paths."""
-from Driftkings.common.utils.numbers import finite_number
 import math
 
 from Driftkings._constants import MARK_LEVELS, MarksStatistics, BattleCurve
 from Driftkings._constants import MARK_THRESHOLDS as THRESHOLDS
+from Driftkings.common.utils.numbers import finite_number
 
 
 def valid_calibration(values):

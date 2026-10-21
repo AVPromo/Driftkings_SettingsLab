@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Context-separated snapshots; game adapters own acquisition and lifecycle."""
 import copy
+
 from Driftkings.core.signals import Signal
 
 

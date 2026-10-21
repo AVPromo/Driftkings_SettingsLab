@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Associate slotted achievement objects with their own dossier, with bounded storage."""
 from collections import OrderedDict
-
 from gui.shared.gui_items.dossier.achievements.mark_on_gun import MarkOnGunAchievement
 
 from Driftkings.core.hooks import override

@@ -8,9 +8,9 @@ import re
 import shutil
 import tempfile
 
-from Driftkings.settings.settings_data import SettingsData, user_settings, part_name
 from Driftkings.settings.default_values import SELECTOR
 from Driftkings.settings.sections import previous_name, previous_sections, section_aliases
+from Driftkings.settings.settings_data import SettingsData, user_settings, part_name
 from Driftkings.settings.store import SettingsStore, merge, recover_file, read_object
 
 try:

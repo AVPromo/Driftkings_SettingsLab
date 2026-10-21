@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Delayed work owned by components, with battle and application cleanup."""
 from functools import partial
+
 from Driftkings.core.diagnostics import diagnostics
 
 

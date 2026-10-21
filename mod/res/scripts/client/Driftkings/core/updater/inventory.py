@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Portable modpack contract and read-only planning. No game imports or writes."""
-import hashlib
 import copy
+import hashlib
 import io
 import os
 import re

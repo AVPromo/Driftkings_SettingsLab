@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from Driftkings.interface_catalog import gameface_spec
 from Driftkings._constants import BATTLE_PERFORMANCE, GLOBAL
+from Driftkings.interface_catalog import gameface_spec
 from Driftkings.settings.service import settings_service
+
 """Presentation adapter for BattleEfficiency; gameplay state stays in its component."""
 import json
 import weakref

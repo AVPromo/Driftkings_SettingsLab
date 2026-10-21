@@ -4,10 +4,9 @@
 The window logic lives in Driftkings.settings.panel.presenter; this module only moves JSON
 between the Wulf view models and the presenter.
 """
-import json
-
 import BigWorld
 import Keys
+import json
 from frameworks.wulf import ViewModel, ViewSettings, ViewFlags, WindowFlags, WindowLayer
 from gui.impl.pub import ViewImpl
 from gui.impl.pub.window_impl import WindowImpl
@@ -15,10 +14,10 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 from Driftkings.core.keyboard import keyboard
 from Driftkings.core.keycodes import MAX_KEY_CODE, valid_key_code
+from Driftkings.interface_catalog import gameface_spec
 from Driftkings.settings.panel import core_page, logger
 from Driftkings.settings.panel.controls import is_text
 from Driftkings.settings.panel.presenter import CORE_ID, MAX_REQUEST, Presenter
-from Driftkings.interface_catalog import gameface_spec
 from Driftkings.ui.gameface import resource_id
 
 WINDOW_RESOURCE = gameface_spec('DriftkingsDKModSettings')['resource']

@@ -1,27 +1,26 @@
 # -*- coding: utf-8 -*-
+import BigWorld
 import json
 import os
-from io import open
-
-import BigWorld
 from CurrentVehicle import g_currentVehicle
 from external_strings_utils import unicode_from_utf8
-from gui import SystemMessages
 from gui.Scaleform.daapi.view.lobby.cyberSport.VehicleSelectorPopup import VehicleSelectorPopup
 from gui.shared.gui_items.processors.tankman import TankmanReturn, TankmanUnload
 from gui.shared.utils import decorators
 from gui.shared.utils.requesters import REQ_CRITERIA
 from helpers import dependency
+from io import open
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 from skeletons.gui.shared import IItemsCache
 
 from Driftkings._constants import CREW_MANAGEMENT, GLOBAL
 from Driftkings.common.utils.exceptions import log_exceptions
-from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.common.utils.filesystem import atomicWrite, recoverFile
+from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.core.hooks import override
-from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.lobby.crew_management import CrewManagementSettings as Settings
+from Driftkings.settings.service import settings_service
+from gui import SystemMessages
 
 
 def getCachePath():

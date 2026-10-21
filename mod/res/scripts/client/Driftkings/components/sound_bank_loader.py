@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import glob
 import logging
 import os
@@ -17,10 +16,10 @@ from helpers import getClientVersion
 from wg_async import wg_await, wg_async
 
 from Driftkings._constants import SOUND_BANK_LOADER
-from Driftkings.common.utils.iter import remDups
 from Driftkings.common.utils import events
-from Driftkings.settings.service import settings_service
+from Driftkings.common.utils.iter import remDups
 from Driftkings.settings.definitions.components.sound_bank_loader import SoundBankLoaderSettings as Settings
+from Driftkings.settings.service import settings_service
 
 LOG = logging.getLogger('Driftkings.SoundBankLoader')
 curCV = ResMgr.openSection('../paths.xml')['Paths'].values()[0].asString

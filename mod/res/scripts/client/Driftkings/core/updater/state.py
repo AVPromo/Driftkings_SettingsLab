@@ -2,6 +2,7 @@
 """Observable runtime snapshot. Never stored in configuration or profiles."""
 import copy
 import logging
+
 from Driftkings import VERSION
 
 IDLE = 'IDLE'

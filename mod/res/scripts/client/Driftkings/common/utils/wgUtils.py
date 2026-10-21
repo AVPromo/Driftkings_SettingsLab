@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """Small client helpers. Resource and replay dependencies are loaded on demand."""
+import BigWorld
 import math
 import os
-
-import BigWorld
 
 _xvm_installed = None
 _battle_types = None

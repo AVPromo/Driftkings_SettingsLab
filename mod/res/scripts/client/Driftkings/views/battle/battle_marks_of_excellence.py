@@ -4,8 +4,8 @@ import logging
 from importlib import import_module
 
 from Driftkings._constants import GLOBAL, BATTLE_MARKS_OF_EXCELLENCE
-from Driftkings.core.marks_state import marks_state
 from Driftkings.core.hud_visibility import hudVisibility
+from Driftkings.core.marks_state import marks_state
 from Driftkings.settings.service import settings_service
 from Driftkings.views.battle.common import BattleCardAdapter
 from Driftkings.views.marks_model import moved_panel, number_locale

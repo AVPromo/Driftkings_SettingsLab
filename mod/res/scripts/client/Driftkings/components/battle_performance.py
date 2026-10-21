@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-from Driftkings.core.battle_events import battleEvents
-from Driftkings.common.utils import events
 import logging
 import math
 import weakref
 from collections import namedtuple
-
 from constants import ARENA_BONUS_TYPE
 from gui.Scaleform.daapi.view.battle.shared.ribbons_aggregator import RibbonsAggregator
 from gui.Scaleform.daapi.view.battle.shared.ribbons_panel import BattleRibbonsPanel
@@ -13,12 +10,14 @@ from gui.Scaleform.genConsts.BATTLE_EFFICIENCY_TYPES import BATTLE_EFFICIENCY_TY
 from gui.battle_control.battle_constants import PERSONAL_EFFICIENCY_TYPE
 
 from Driftkings._constants import BATTLE_PERFORMANCE, GLOBAL
-from Driftkings.common.utils.wgUtils import getPlayer
+from Driftkings.common.utils import events
 from Driftkings.common.utils.colorRatting import getStatisticColor
 from Driftkings.common.utils.formatting import replaceMacros
+from Driftkings.common.utils.wgUtils import getPlayer
+from Driftkings.core.battle_events import battleEvents
 from Driftkings.core.hooks import override, on_event
-from Driftkings.settings.service import settings_service, affects
 from Driftkings.settings.definitions.components.battle_performance import BattlePerformanceSettings as Settings
+from Driftkings.settings.service import settings_service, affects
 from Driftkings.stats.vehinfo import getVehicleInfoData, calculateXvmScale, calculateXTE
 from Driftkings.views.battle.battle_performance import _startFlash
 from Driftkings.views.hangar.battle_performance import install_results_gameface
@@ -318,4 +317,3 @@ def fini():
     if g_flash is not None:
         g_flash.destroy()
         g_flash = None
-from Driftkings.views.hangar import battle_performance_hooks

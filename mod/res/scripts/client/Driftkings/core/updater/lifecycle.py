@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """Updater service lifecycle behavior; state is owned by UpdaterService."""
+import os
+
 from Driftkings import VERSION
 from Driftkings.core.updater.shared import LOG
 from Driftkings.core.updater.state import IDLE, RESTART_REQUIRED
-import os
 
 
 class LifecycleMixin(object):

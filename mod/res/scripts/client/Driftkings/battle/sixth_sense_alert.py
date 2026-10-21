@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
+from chat_commands_consts import BATTLE_CHAT_COMMAND_NAMES
 from collections import defaultdict
 from functools import partial
-
-from chat_commands_consts import BATTLE_CHAT_COMMAND_NAMES
 from gui.Scaleform.daapi.view.battle.shared.indicators import SixthSenseIndicator
 
 from Driftkings._constants import BATTLE_ALIASES
 from Driftkings._constants import GLOBAL, SIXTH_SENSE_ALERT
-from Driftkings.common.utils.wgUtils import getPlayer, square_position
 from Driftkings.common.utils.chat import sendChatMessage
+from Driftkings.common.utils.wgUtils import getPlayer, square_position
 from Driftkings.core.callbacks import callback
 from Driftkings.core.hooks import override
-from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.battle.sixth_sense_alert import SixthSenseAlertSettings as Settings
+from Driftkings.settings.service import settings_service
 from Driftkings.views.battle.sixth_sense_alert import SixthSense
 
 AS_BATTLE = BATTLE_ALIASES.SIXTH_SENSE_ALERT
@@ -50,8 +49,7 @@ def new__sixthSenseToggle(func, self, isVisible, force):
     settings = settings_service.getComponentDict(config)
     func(self, isVisible, force)
     # Never suppress the game's alert unless our replacement has loaded its icon.
-    replacement = (g_view is not None and getattr(g_view, 'iconReady', False)
-                   and settings[GLOBAL.ENABLED])
+    replacement = (g_view is not None and getattr(g_view, 'iconReady', False) and settings[GLOBAL.ENABLED])
     self.flashObject.visible = not replacement
     if not isVisible:
         return
@@ -62,8 +60,6 @@ def new__sixthSenseToggle(func, self, isVisible, force):
                 g_messages.sendMessage()
             if settings[SIXTH_SENSE_ALERT.HELP_MESSAGE]:
                 g_messages.helpMessage()
-
-
 
 
 def getBattleViews():

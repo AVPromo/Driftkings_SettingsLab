@@ -2,8 +2,8 @@
 """Section metadata and validation shared by the owned settings panel."""
 import copy
 import json
-import math
 import logging
+import math
 import re
 
 from Driftkings.core.keycodes import valid_key_code

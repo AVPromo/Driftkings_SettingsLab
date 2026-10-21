@@ -7,8 +7,8 @@ import os
 import stat
 import tempfile
 import threading
-import zipfile
 import xml.etree.ElementTree as ET
+import zipfile
 
 from Driftkings.core.updater.https_transport import TransferError, CHUNK
 from Driftkings.core.updater.manifest import Manifest

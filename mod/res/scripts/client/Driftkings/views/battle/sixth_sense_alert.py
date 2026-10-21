@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 """Presentation adapter for SixthSense; gameplay state stays in its component."""
-from importlib import import_module
-from random import choice
-
 from PlayerEvents import g_playerEvents
 from SoundGroups import g_instance
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
+from importlib import import_module
+from random import choice
 
 from Driftkings._constants import SIXTH_SENSE_ALERT
 from Driftkings.meta.battle.sixth_sense import SixthSenseMeta

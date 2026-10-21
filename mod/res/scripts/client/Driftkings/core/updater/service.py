@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 """Compose updater responsibilities around one service-owned state."""
-from Driftkings.core.updater.checker import Checker
-from Driftkings.core.updater.downloader import Downloader
-from Driftkings.core.updater.state import State
-from Driftkings.core.updater.transport import UnavailableTransport
 import os
 import time
-from Driftkings.core.updater.lifecycle import LifecycleMixin
+
+from Driftkings.core.updater.checker import Checker
 from Driftkings.core.updater.checking import CheckMixin
-from Driftkings.core.updater.staging import StagingMixin
+from Driftkings.core.updater.downloader import Downloader
 from Driftkings.core.updater.installation import InstallMixin
+from Driftkings.core.updater.lifecycle import LifecycleMixin
 from Driftkings.core.updater.receipts import ReceiptMixin
+from Driftkings.core.updater.staging import StagingMixin
+from Driftkings.core.updater.state import State
+from Driftkings.core.updater.transport import UnavailableTransport
 
 
 class UpdaterService(LifecycleMixin, CheckMixin, StagingMixin, InstallMixin, ReceiptMixin):

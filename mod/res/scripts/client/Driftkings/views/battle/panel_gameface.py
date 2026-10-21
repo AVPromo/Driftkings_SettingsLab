@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from Driftkings.interface_catalog import gameface_spec
 from Driftkings._constants import GLOBAL, TEAM_PANELS
+from Driftkings.interface_catalog import gameface_spec
 from Driftkings.settings.service import settings_service
+
 """Gameface roster bridge for the current random TAB."""
 import json
 import logging

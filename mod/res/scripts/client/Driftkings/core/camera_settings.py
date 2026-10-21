@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Mode-specific camera options and migration, independent of the client."""
 import math
+
 from Driftkings._constants import THIRD_PERSON_ZOOM
 
 

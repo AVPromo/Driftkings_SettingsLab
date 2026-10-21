@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-import math
-from functools import partial
-
 import BigWorld
+import math
 from Avatar import PlayerAvatar
 from AvatarInputHandler import AvatarInputHandler, MapCaseMode
 from AvatarInputHandler.DynamicCameras.ArcadeCamera import ArcadeCamera
@@ -13,12 +11,13 @@ from AvatarInputHandler.cameras import FovExtended
 from Vehicle import Vehicle
 from account_helpers.settings_core.options import InterfaceScaleSetting
 from aih_constants import CTRL_MODE_NAME
+from functools import partial
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 
+from Driftkings.common.utils import events
 from Driftkings.common.utils.wgUtils import getPlayer
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.core.hooks import override, on_event
-from Driftkings.common.utils import events
 from Driftkings.settings.definitions.battle.gun_traverse_limits import GunTraverseLimitsSettings as Settings
 from Driftkings.views.battle.gun_traverse_limits import AimingAnglesView
 

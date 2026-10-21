@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """Display a box for the native locked target; never acquire or steer aim."""
-import logging
-import math
-
 import BigWorld
 import Math
+import logging
+import math
 from AvatarInputHandler import cameras
 from Vehicle import Vehicle
 
@@ -12,8 +11,8 @@ from Driftkings._constants import GLOBAL, ScreenBounds, AUTOAIM_TARGET_INDICATOR
 from Driftkings.core.battle_events import battleEvents
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.core.overlay import Align, ElementType, overlays
-from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.battle.autoaim_target_indicator import AutoaimTargetIndicatorSettings as Settings
+from Driftkings.settings.service import settings_service
 
 LOG = logging.getLogger('Driftkings.AutoAimOptimize')
 BOX_COLOR = '#F98600'

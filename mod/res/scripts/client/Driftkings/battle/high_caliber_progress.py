@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import math
-
-from Driftkings.core.battle_policy import battle_policy
 from constants import ARENA_GUI_TYPE
 from gui.battle_control.arena_info import vos_collections
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
@@ -9,15 +7,15 @@ from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from Driftkings._constants import GLOBAL, HIGH_CALIBER_PROGRESS
 from Driftkings.common.utils.wgUtils import getPlayer
 from Driftkings.core.battle_events import battleEvents
-from Driftkings.core.hooks import on_event
-from Driftkings.settings.service import settings_service
-from Driftkings.settings.definitions.battle.high_caliber_progress import HighCaliberProgressSettings as Settings
-from Driftkings.views.battle.high_caliber_gameface import MainGunAdapter
+from Driftkings.core.battle_policy import battle_policy
 from Driftkings.core.high_caliber import project
+from Driftkings.core.hooks import on_event
+from Driftkings.settings.definitions.battle.high_caliber_progress import HighCaliberProgressSettings as Settings
+from Driftkings.settings.service import settings_service
+from Driftkings.views.battle.high_caliber_gameface import MainGunAdapter
 
 # RANDOM_NP2 battles use the RANDOM GUI; WINBACK has its own.
-RANDOM_GUI_TYPES = tuple(getattr(ARENA_GUI_TYPE, name) for name in ('RANDOM', 'EPIC_RANDOM', 'WINBACK')
-                         if hasattr(ARENA_GUI_TYPE, name))
+RANDOM_GUI_TYPES = tuple(getattr(ARENA_GUI_TYPE, name) for name in ('RANDOM', 'EPIC_RANDOM', 'WINBACK') if hasattr(ARENA_GUI_TYPE, name))
 
 g_gameface = None
 config = Settings()

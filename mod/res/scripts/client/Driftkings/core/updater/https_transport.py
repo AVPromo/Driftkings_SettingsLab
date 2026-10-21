@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """Certificate-verified streaming workers; delivery uses existing Core callbacks."""
-import math
 import logging
+import math
 import socket
 import threading
 import time
+
 try:
     from Queue import Queue, Empty
     import urllib2 as http

@@ -2,9 +2,10 @@
 """Bounded release metadata: legacy package or complete modpack. No IO."""
 import json
 import re
-from Driftkings.core.updater.versioning import Version, TEXT, normalize_game_version, game_key
+
 from Driftkings.core.updater.endpoints import official_release_url
 from Driftkings.core.updater.inventory import Inventory
+from Driftkings.core.updater.versioning import Version, TEXT, normalize_game_version, game_key
 
 MAX_MANIFEST = 64 * 1024
 MAX_PACKAGE = 64 * 1024 * 1024

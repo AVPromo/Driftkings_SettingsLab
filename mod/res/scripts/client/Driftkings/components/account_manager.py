@@ -15,6 +15,7 @@ from external_strings_utils import unicode_from_utf8
 from gui.Scaleform.daapi.view.login.LoginView import LoginView
 from gui.Scaleform.daapi.view.login.login_modes.wgc_mode import WgcMode
 from predefined_hosts import g_preDefinedHosts
+from helpers import getClientLanguage
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 from Driftkings.common.utils.filesystem import atomicWrite, recoverFile
@@ -23,7 +24,6 @@ from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.core.hooks import override, on_event
 from Driftkings.common.utils import events
 from Driftkings.i18n import catalog
-from helpers import getClientLanguage
 from Driftkings.settings.settings_data import defaults
 
 LOG = logging.getLogger('Driftkings.AccountManager')

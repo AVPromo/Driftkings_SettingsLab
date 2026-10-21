@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from Driftkings._constants import MARK_THRESHOLDS
 from Driftkings._constants import GLOBAL, HANGAR_MARKS_OF_EXCELLENCE
+from Driftkings._constants import MARK_THRESHOLDS
+
 """Presentation adapter for MarksOnGunHangar; gameplay state stays in its component."""
 from Driftkings.views.marks_model import moved_panel, number_locale
 from Driftkings.settings.service import settings_service, affects

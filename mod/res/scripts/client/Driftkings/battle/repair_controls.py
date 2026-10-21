@@ -13,9 +13,8 @@ from Driftkings.common.utils.game import checkKeys
 from Driftkings.common.utils.wgUtils import getPlayer
 from Driftkings.core.callbacks import callback, cancelCallback
 from Driftkings.core.keyboard import keyboard
-from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.battle.repair_controls import RepairControlsSettings as Settings
-
+from Driftkings.settings.service import settings_service
 
 config = Settings()
 

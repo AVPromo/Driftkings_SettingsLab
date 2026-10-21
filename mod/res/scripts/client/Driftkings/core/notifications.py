@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-import re
-
 import BigWorld
+import re
 from notification.NotificationsCollection import NotificationsCollection
 from notification.actions_handlers import NotificationsActionsHandlers
 
