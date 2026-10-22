@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
-from driftkings._constants import GLOBAL, HANGAR_PREFERENCES
-from driftkings.settings.service import settings_service
 """Account persistence and native login lifecycle; presentation is Gameface."""
 import base64
 import json
-from driftkings.logger import get_logger
 import os
 import weakref
 import zlib
@@ -19,12 +16,15 @@ from realm import CURRENT_REALM
 from helpers import getClientLanguage
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
+from driftkings._constants import GLOBAL, HANGAR_PREFERENCES
 from driftkings.common.utils.filesystem import atomicWrite, recoverFile
 from driftkings.core.accounts import AccountService, AccountError
 from driftkings.core.callbacks import callback, cancelCallback
 from driftkings.core.hooks import override, on_event
 from driftkings.common.utils import events
 from driftkings.i18n import catalog
+from driftkings.logger import get_logger
+from driftkings.settings.service import settings_service
 from driftkings.settings.settings_data import defaults
 
 LOG = get_logger('Driftkings.AccountManager')
@@ -180,10 +180,12 @@ class AccountsManagerController(object):
         if login.loginManager.isWgcSteam:
             raise AccountError('This client uses Steam. Select the account through Steam.')
         email, password, server, index = service.credentials(account_id)
-        # Explicitly leave the WGC stored-account mode before choosing credentials.
+        # Explicitly leave the WGC stored-account mode before choosing credentials;
+        # changeAccount only stops WGC, so update() redraws the credentials form.
         # Authentication, queueing and errors still belong to the native login API.
         if isinstance(login._loginMode, WgcMode):
             login.changeAccount()
+            login.update()
         login.resetToken()
         login.as_setSelectedServerIndexS(index)
         if auto_enter:

@@ -41,7 +41,7 @@ class NativeProfileTests(RuntimeTest):
         fields.ProfileUtils = module(packLditItemData=lambda text, desc, tip, icon: dict(text=text, description=desc, iconPath=icon))
         api, hooks = game_source('views/hangar/profile_statistics.py', {
             'driftkings.settings.service': Settings(settings).service(),
-            'gui.Scaleform.genConsts.PROFILE_DROPDOWN_KEYS': module(PROFILE_DROPDOWN_KEYS=module(ALL='all')),
+            'gui.Scaleform.genConsts.PROFILE_DROPDOWN_KEYS': module(PROFILE_DROPDOWN_KEYS=module(ALL='all', FALLOUT='fallout')),
             'gui.Scaleform.daapi.view.lobby.profile': module(ProfileUtils=fields),
             'gui.Scaleform.daapi.view.lobby.profile.profile_statistics_vos': module(ProfileAllStatisticsVO=type('ProfileAllStatisticsVO', (object,), {})),
             'gui.Scaleform.daapi.view.lobby.profile.ProfileTechnique': module(ProfileTechnique=type('ProfileTechnique', (object,), {})),
@@ -61,13 +61,16 @@ class NativeProfileTests(RuntimeTest):
         self.assertEqual(native, [{'text': str(i)} for i in range(6)])
         rows = [{'id': 1, 'shortUserName': 'Tank', 'winsEfficiency': 78.95, 'battlesCount': 19, 'avgExperience': 1022}]
         vehicles = hooks.get('ProfileTechnique', '_getTechniqueListVehicles')
-        colored = vehicles(lambda *args: rows, None)
-        self.assertIn('<font', colored[0]['shortUserName'])
-        self.assertEqual(colored[0]['battlesCount'], 19)
-        self.assertEqual(colored[0]['winsEfficiency'], 78.95)
+        technique = module(_battlesType='all', _userID=None, itemsCache=module(items=module(
+            getVehicleDossier=lambda *args: module(getRandomStats=lambda: stats))))
+        # Native rows stay unchanged; the list renderer paints the stored colors.
+        self.assertIs(vehicles(lambda *args: rows, technique, None), rows)
+        self.assertEqual(rows[0]['shortUserName'], 'Tank')
+        self.assertEqual(set(technique._dkVehicleColors[1]), set(('battlesTF', 'winsTF', 'vehicleTF')))
         settings['vehicleColors'] = False
         settings['statisticsColors'] = False
-        self.assertEqual(vehicles(lambda *args: rows, None), rows)
+        self.assertEqual(vehicles(lambda *args: rows, technique, None), rows)
+        self.assertEqual(technique._dkVehicleColors, {})
         settings['showVehicleWN8'] = False
         settings['showPlayerWN8'] = False
         self.assertEqual(header(lambda *args: native, None, data), tuple(native))
@@ -82,8 +85,9 @@ class NativeProfileTests(RuntimeTest):
         receive = hooks.get('ProfileTechnique', '_receiveVehicleDossier')
         detailed = hooks.get('DetailedStatisticsUtils', 'getStatistics')
         received = hooks.get('_AvgReceivedDmgField', '_buildData')
-        view = module(_battlesType='all', itemsCache=module(items=module(
-            getItemByCD=lambda key: module(descriptor=module(maxHealth=1000)))))
+        view = module(_battlesType='all', _dkVehicleColors={}, itemsCache=module(items=module(
+            getItemByCD=lambda key: module(descriptor=module(maxHealth=1000)),
+            getVehicleDossier=lambda *args: module(getRandomStats=lambda: stats))))
         stats.getAvgDamageReceived = lambda: 455
         def native_render(*args):
             return (detailed(lambda *args: native_details, stats, True, None),
@@ -92,6 +96,7 @@ class NativeProfileTests(RuntimeTest):
         self.assertEqual(rendered[0]['data'][-1]['label'], 'WN8')
         self.assertIn('2300', rendered[0]['data'][-1]['data'])
         self.assertIn('<font', received_text)
+        self.assertIn('vehicleTF', view._dkVehicleColors[1])
         self.assertEqual(len(native_details[0]['data']), 1)
         self.assertEqual(received(lambda *args: '455', None, stats, True), '455')
         view._battlesType = 'epic'

@@ -10,8 +10,10 @@ from importlib import import_module
 
 from driftkings.core.accounts import AccountError
 from driftkings.interface_catalog import gameface_spec
+from driftkings.logger import get_logger
 from driftkings.ui.gameface import resource_id
 
+LOG = get_logger('Driftkings.AccountManager')
 RESOURCE = gameface_spec('DriftkingsAccountManager')['resource']
 
 
@@ -131,6 +133,8 @@ class AccountsView(ViewImpl):
         except AccountError as error:
             self.message = str(error)
         except Exception:
+            # Credentials are never part of the message; the traceback names the failing step.
+            LOG.exception('Account action failed')
             self.message = labels()['error']
         self.refresh()
 

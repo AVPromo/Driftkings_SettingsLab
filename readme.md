@@ -76,7 +76,7 @@ For guided setup, download `Driftkings-0.1.2-beta.5-WoT-2.4.1.0-Setup.exe` from 
 
 The defaults are the author's selected mod configurations. Existing personal JSON files take precedence. The in-game updater preserves those configurations; missing settings use packaged defaults.
 
-An optional Windows installer is built from the same compiler output; see [installer/setup/readme.md](installer/setup/readme.md). Its 29 component choices change JSON configuration only, never the installed WOTMOD/dependency set. Existing profiles are preserved on reinstall. Explicit `/RESETCONFIG=1` backs up configurations before resetting them. Branding and component previews are optional and can be added later.
+An optional Windows installer is built from the same compiler output. Its 29 component choices change JSON configuration only, never the installed WOTMOD/dependency set. Existing profiles are preserved on reinstall. Explicit `/RESETCONFIG=1` backs up configurations before resetting them. Branding and component previews are optional and can be added later.
 
 The installer creates user-media folders `mods/configs/driftkings/sixthsense/` (default custom icon: `SixthSenseIcon.png`) and `mods/configs/driftkings/images/`, with short READMEs. Uninstall preserves these folders and their contents. Images accept packaged `gui/maps/driftkings/...` resources or custom files in `mods/configs/driftkings/...`; select the paths in the mod settings. These user files are not optional installer payloads.
 
