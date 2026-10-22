@@ -11,8 +11,10 @@ class VehicleListColorsTests(RuntimeTest):
         self.row = module(name='renderer0', data=module(id=123),
                           vehicleTF=module(textColor=1), battlesTF=module(textColor=2),
                           winsTF=module(textColor=3))
-        listing = module(numChildren=1, getChildAt=lambda index: self.row)
-        self.view = module(isActive=lambda: True,
+        content = module(numChildren=1, getChildAt=lambda index: self.row)
+        decoration = module()
+        listing = module(numChildren=2, getChildAt=lambda index: (content, decoration)[index])
+        self.view = module(isActive=True,
                            flashObject=module(listComponent=module(techniqueList=listing)),
                            _dkVehicleOriginalColors={},
                            _dkVehicleColors={123: {'vehicleTF': 100, 'battlesTF': 200, 'winsTF': 300}})
@@ -33,3 +35,9 @@ class VehicleListColorsTests(RuntimeTest):
         self.api['paint_vehicle_list'](self.view)
         self.assertEqual((self.row.vehicleTF.textColor, self.row.battlesTF.textColor,
                           self.row.winsTF.textColor), (1, 400, 500))
+
+    def test_inactive_view_is_not_painted(self):
+        self.view.isActive = False
+        self.api['paint_vehicle_list'](self.view)
+        self.assertEqual(self.row.vehicleTF.textColor, 1)
+        self.assertEqual(self.view._dkVehicleOriginalColors, {})

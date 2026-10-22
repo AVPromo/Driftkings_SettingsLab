@@ -4,6 +4,9 @@ from driftkings.common.utils.colorratting import getStatisticColor, getRatingCol
 from driftkings.core.hooks import override
 from driftkings.core.profile_ratings import account_wn8, vehicle_wn8, parse_thresholds
 from driftkings.settings.service import settings_service
+from driftkings.logger import get_logger
+
+LOG = get_logger("ProfileStatistics")
 
 
 def enabled(surface='statistics'):
@@ -33,16 +36,31 @@ def colored(text, metric, value, surface='statistics'):
     return u'<font color="{}">{}</font>'.format(color, text)
 
 
+def vehicle_renderers(container, depth=0):
+    """CLIK keeps visible renderers inside its nested content sprite."""
+    if depth > 8:
+        return
+    for index in range(int(container.numChildren)):
+        child = container.getChildAt(index)
+        if hasattr(child, 'battlesTF') and hasattr(child, 'vehicleTF'):
+            yield child
+        elif hasattr(child, 'numChildren'):
+            for renderer in vehicle_renderers(child, depth + 1):
+                yield renderer
+
+
 def paint_vehicle_list(view):
     """Color native text fields without changing the sortable row values."""
-    if not view.isActive():
+    if not view.isActive:
         return
     try:
         listing = view.flashObject.listComponent.techniqueList
-        for index in range(int(listing.numChildren)):
-            renderer = listing.getChildAt(index)
-            if not hasattr(renderer, 'battlesTF') or not renderer.data:
+        count = int(listing.numChildren)
+        painted = 0
+        for renderer in vehicle_renderers(listing):
+            if not renderer.data:
                 continue
+            painted += 1
             row_id = int(renderer.data.id)
             colors = view._dkVehicleColors.get(row_id, {}) if enabled('vehicle') else {}
             for field_name in ('vehicleTF', 'battlesTF', 'winsTF'):
@@ -53,9 +71,14 @@ def paint_vehicle_list(view):
                 value = colors.get(field_name, view._dkVehicleOriginalColors[key])
                 if int(field.textColor) != value:
                     field.textColor = value
+        if not getattr(view, '_dkVehiclePaintReported', False):
+            LOG.info('Vehicle list: children=%s renderers=%s colorRows=%s active=%s',
+                     count, painted, len(view._dkVehicleColors), view.isActive)
+            view._dkVehiclePaintReported = True
     except (AttributeError, TypeError, ValueError, ReferenceError):
-        # Population/layout may not have created the native list yet.
-        return
+        if not getattr(view, '_dkVehiclePaintReported', False):
+            LOG.exception('Cannot access native vehicle-list text fields')
+            view._dkVehiclePaintReported = True
 
 
 def install():
@@ -186,7 +209,7 @@ def install():
         return rows
 
     def refresh_view(view):
-        if view.isActive():
+        if view.isActive:
             view.invokeUpdate()
             if isinstance(view, ProfileTechnique) and view._selectedVehicleIntCD is not None:
                 view.requestData(view._selectedVehicleIntCD)
@@ -199,6 +222,7 @@ def install():
     def populated(original, view):
         if isinstance(view, ProfileTechnique):
             from driftkings.ui import CyclicTimerEvent
+            view._dkVehiclePaintReported = False
             view._dkVehicleColors = {}
             view._dkVehicleOriginalColors = {}
             view._dkVehicleColorTimer = CyclicTimerEvent(0.2, lambda: paint_vehicle_list(view))
