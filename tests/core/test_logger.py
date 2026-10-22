@@ -6,6 +6,22 @@ from support import RuntimeTest
 
 
 class LoggerTests(RuntimeTest):
+    def test_retained_filter_survives_cleared_module_globals(self):
+        module = self.load('logger')
+        retained = module.LocationFilter()
+        try:
+            raise ValueError('failure')
+        except ValueError:
+            record = logging.LogRecord('Driftkings.Reload', logging.ERROR,
+                                       'example.py', 1, 'Failed', (), sys.exc_info())
+        saved = (module.NAMESPACE, module.logging, module.os)
+        try:
+            module.NAMESPACE = module.logging = module.os = None
+            self.assertTrue(retained.filter(record))
+            self.assertIn('[ERROR][Driftkings][Reload] test_logger.py line ', record.getMessage())
+        finally:
+            module.NAMESPACE, module.logging, module.os = saved
+
     def test_names_share_the_existing_client_logger(self):
         factory = self.load('logger').get_logger
         expected = logging.getLogger('Driftkings.Settings')
