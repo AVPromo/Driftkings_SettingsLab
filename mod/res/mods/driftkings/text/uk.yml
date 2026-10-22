@@ -3,10 +3,10 @@
 
 # account_manager
 account_manager.UI_description: "Менеджер акаунтів"
-account_manager.UI_setting_acceptDeleteAccount: "Прийняти видалення облікового запису"
+account_manager.UI_setting_acceptDeleteAccount: "Підтвердити видалення акаунта"
 account_manager.UI_setting_accountDelete: "Видалити акаунт"
-account_manager.UI_setting_accountManager: "Менеджер по роботі з клієнтами"
-account_manager.UI_setting_add: "додати"
+account_manager.UI_setting_accountManager: "Менеджер акаунтів"
+account_manager.UI_setting_add: "Додати"
 account_manager.UI_setting_autoEnter: "Автоматичний вхід"
 account_manager.UI_setting_cancel: "Скасувати"
 account_manager.UI_setting_delete: "Видалити"
@@ -14,7 +14,7 @@ account_manager.UI_setting_deleteAccount: "<font color='#FF4500' size='18'>Ви�
 account_manager.UI_setting_edit: "<font color='#9ACD32' size='18'>Редагувати</font>"
 account_manager.UI_setting_email: "Електронна пошта"
 account_manager.UI_setting_empty: "Немає збережених акаунтів."
-account_manager.UI_setting_enter: "<font color='#FFFF33' size='18'>Введіть</font>"
+account_manager.UI_setting_enter: "<font color='#FFFF33' size='18'>Увійти</font>"
 account_manager.UI_setting_error: "Не вдалося виконати дію."
 account_manager.UI_setting_errorEditServer: "Відредагуйте цей акаунт і виберіть доступний сервер."
 account_manager.UI_setting_errorMissing: "Акаунт більше не існує."
@@ -26,11 +26,11 @@ account_manager.UI_setting_errorServer: "Виберіть доступний с�
 account_manager.UI_setting_errorSteam: "Цей клієнт використовує Steam. Виберіть акаунт через Steam."
 account_manager.UI_setting_keepPassword: "Залиште порожнім, щоб зберегти попередній пароль."
 account_manager.UI_setting_loginOnly: "Виберіть акаунт на екрані входу."
-account_manager.UI_setting_manageYourAccount: "Керуйте своїм обліковим записом"
+account_manager.UI_setting_manageYourAccount: "Керування акаунтом"
 account_manager.UI_setting_nick: "Нік:"
 account_manager.UI_setting_password: "Пароль"
-account_manager.UI_setting_save: "зберегти"
-account_manager.UI_setting_server: "сервер:"
+account_manager.UI_setting_save: "Зберегти"
+account_manager.UI_setting_server: "Сервер:"
 account_manager.UI_setting_showPassword: "Показати пароль"
 
 # aiming_countdown

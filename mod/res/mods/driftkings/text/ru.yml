@@ -3,11 +3,11 @@
 
 # account_manager
 account_manager.UI_description: "Менеджер аккаунтов"
-account_manager.UI_setting_acceptDeleteAccount: "Принять удаление аккаунта"
+account_manager.UI_setting_acceptDeleteAccount: "Подтвердить удаление аккаунта"
 account_manager.UI_setting_accountDelete: "Удалить аккаунт"
-account_manager.UI_setting_accountManager: "Менеджер по работе с клиентами"
+account_manager.UI_setting_accountManager: "Менеджер аккаунтов"
 account_manager.UI_setting_add: "Добавить"
-account_manager.UI_setting_autoEnter: "Автоматический ввод"
+account_manager.UI_setting_autoEnter: "Автовход"
 account_manager.UI_setting_cancel: "Отмена"
 account_manager.UI_setting_delete: "Удалить"
 account_manager.UI_setting_deleteAccount: "<font color='#FF4500' size='18'>Удалить</font>"
@@ -26,7 +26,7 @@ account_manager.UI_setting_errorServer: "Выберите доступный с�
 account_manager.UI_setting_errorSteam: "Этот клиент использует Steam. Выберите аккаунт через Steam."
 account_manager.UI_setting_keepPassword: "Оставьте пустым, чтобы сохранить прежний пароль."
 account_manager.UI_setting_loginOnly: "Выберите аккаунт на экране входа."
-account_manager.UI_setting_manageYourAccount: "Управляйте своей учетной записью"
+account_manager.UI_setting_manageYourAccount: "Управление аккаунтом"
 account_manager.UI_setting_nick: "Ник:"
 account_manager.UI_setting_password: "Пароль"
 account_manager.UI_setting_save: "Сохранить"

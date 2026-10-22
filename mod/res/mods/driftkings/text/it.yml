@@ -3,11 +3,11 @@
 
 # account_manager
 account_manager.UI_description: "Gestione account"
-account_manager.UI_setting_acceptDeleteAccount: "Accetta elimina account"
+account_manager.UI_setting_acceptDeleteAccount: "Conferma eliminazione account"
 account_manager.UI_setting_accountDelete: "Elimina account"
-account_manager.UI_setting_accountManager: "Gestore del conto"
+account_manager.UI_setting_accountManager: "Gestore account"
 account_manager.UI_setting_add: "Aggiungi"
-account_manager.UI_setting_autoEnter: "Inserimento automatico"
+account_manager.UI_setting_autoEnter: "Accesso automatico"
 account_manager.UI_setting_cancel: "Annulla"
 account_manager.UI_setting_delete: "Elimina"
 account_manager.UI_setting_deleteAccount: "<font color='#FF4500' size='18'>Elimina</font>"
