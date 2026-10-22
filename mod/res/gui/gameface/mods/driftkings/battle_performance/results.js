@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    var FEATURE = 'DriftkingsBattleEfficiency';
+    var FEATURE = 'driftkingsbattleEfficiency';
     if (window.__dkBattleEfficiency) { window.__dkBattleEfficiency.dispose(); }
     var disposed = false, node = null, resourceId = null, callbackId = null;
     var lastPayload = null, timer = null;

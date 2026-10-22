@@ -5,7 +5,7 @@ from gui.battle_control.arena_info import vos_collections
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 
 from driftkings._constants import GLOBAL, HIGH_CALIBER_PROGRESS
-from driftkings.common.utils.wgUtils import getPlayer
+from driftkings.common.utils.wgutils import getPlayer
 from driftkings.core.battle_events import battleEvents
 from driftkings.core.battle_policy import battle_policy
 from driftkings.core.high_caliber import project

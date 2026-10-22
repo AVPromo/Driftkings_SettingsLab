@@ -22,8 +22,8 @@ from messenger import g_settings
 from skeletons.gui.battle_session import IBattleSessionProvider
 
 from driftkings._constants import GLOBAL, TEAM_PANELS
-from driftkings.common.utils.wgUtils import getPlayer
-from driftkings.common.utils.colorRatting import getStatisticColor
+from driftkings.common.utils.wgutils import getPlayer
+from driftkings.common.utils.colorratting import getStatisticColor
 from driftkings.core.callbacks import callback, cancelCallback
 from driftkings.settings.service import settings_service
 from driftkings.stats.vehinfo import calculateXvmScale, getVehicleInfoData, scaleValuesInstance

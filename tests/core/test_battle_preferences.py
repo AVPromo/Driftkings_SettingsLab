@@ -34,7 +34,7 @@ class BattlePreferencesTests(RuntimeTest):
                     square_position=module(getSquarePosition=lambda: self.square))
         self.api, self.hooks = game_source('battle/battle_preferences.py', {
             'driftkings.settings.service': Settings(self.data).service(),
-            'driftkings.common.utils.wgUtils': wg,
+            'driftkings.common.utils.wgutils': wg,
             'driftkings.core.callbacks': module(callback=lambda delay, function: self.scheduled.append(function)),
         }, real=('driftkings._constants',))
 

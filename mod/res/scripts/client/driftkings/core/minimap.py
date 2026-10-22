@@ -9,13 +9,13 @@ except NameError:
 CIRCLES = ('draw', 'maxView', 'proximity', 'view')
 # Distance that marks an enemy as nearby: own view range, shell range or a fixed value.
 NEARBY_RANGES = ('view', 'shell', 'distance')
-ARTILLERY_AIMS = tuple('gui/maps/driftkings/Minimap/MinimapAim_%d.png' % i for i in range(7))
+ARTILLERY_AIMS = tuple('gui/maps/driftkings/minimap/minimapaim_%d.png' % i for i in range(7))
 
 
 def migrate_artillery_aim(data):
     """The original PNG was renamed to _0; leave custom resource paths intact."""
     aim = data['artilleryAim']
-    if aim.get('src') == 'gui/maps/driftkings/Minimap/MinimapAim.png':
+    if aim.get('src') == 'gui/maps/driftkings/minimap/minimapaim.png':
         aim['src'] = ARTILLERY_AIMS[0]
 
 

@@ -18,7 +18,7 @@ class GunTraverseLimitsTests(RuntimeTest):
         self.api, self.hooks = game_source('battle/gun_traverse_limits.py', {
             'BigWorld': world,
             'aih_constants': module(CTRL_MODE_NAME=MODES),
-            'driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player),
+            'driftkings.common.utils.wgutils': module(getPlayer=lambda: self.player),
             'driftkings.core.callbacks': module(callback=lambda delay, function: self.callbacks.append(function) or len(self.callbacks),
                                                 cancelCallback=lambda handle: None),
         })

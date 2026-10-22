@@ -3,7 +3,7 @@ from driftkings.meta.battle.base import HudMeta
 
 
 class DebugPanelMeta(HudMeta):
-    FLASH_CLASS = 'driftkings.battle.components.debug_panel.DebugPanelUI'
+    FLASH_CLASS = 'driftkings.battle.components.debug_panel.debugpanelui'
 
     def setClock(self, text, visible):
         if self._isDAAPIInited():

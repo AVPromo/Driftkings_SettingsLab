@@ -2,7 +2,7 @@
 from driftkings._constants import GLOBAL, MINIMAP_ENHANCEMENTS
 from driftkings.settings.service import settings_service
 """Presentation adapter for MinimapPlugins; gameplay state stays in its component."""
-from driftkings.common.utils.wgUtils import isXvmInstalled
+from driftkings.common.utils.wgutils import isXvmInstalled
 from driftkings.common.utils.game import checkKeys
 from driftkings.core.callbacks import callback, cancelCallback
 from driftkings.meta.battle.minimap import MinimapMeta

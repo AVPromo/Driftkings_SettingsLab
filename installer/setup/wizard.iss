@@ -227,7 +227,7 @@ var
   I: Integer;
   Key, Name, Location: String;
 begin
-  Key := 'Software\Microsoft\Windows\CurrentVersion\Uninstall';
+  Key := 'Software\Microsoft\windows\CurrentVersion\Uninstall';
   if not RegGetSubkeyNames(Hive, Key, Names) then Exit;
   for I := 0 to GetArrayLength(Names) - 1 do begin
     if RegQueryStringValue(Hive, Key + '\' + Names[I], 'DisplayName', Name) then

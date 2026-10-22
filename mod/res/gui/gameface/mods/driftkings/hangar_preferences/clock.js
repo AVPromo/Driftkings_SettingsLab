@@ -70,7 +70,7 @@
     }
 
     function clockImage(src) {
-        if (src === 'xvm://res/icons/clock/clockBg.png') return 'coui://gui/maps/driftkings/clock/clockBg.png';
+        if (src === 'xvm://res/icons/clock/clockbg.png') return 'coui://gui/maps/driftkings/clock/clockbg.png';
         return /^(?:coui:\/\/)?gui\/[a-zA-Z0-9_./-]+\.(png|dds|webp)$/i.test(src) && src.indexOf('..') < 0 ? src.replace(/^(?!coui:\/\/)/, 'coui://') : '';
     }
 

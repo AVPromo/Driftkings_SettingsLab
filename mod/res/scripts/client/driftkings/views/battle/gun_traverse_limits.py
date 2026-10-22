@@ -41,8 +41,8 @@ class AimingAnglesView(object):
         y = self.aim_y()
         L = self.anglesAiming_left()
         R = self.anglesAiming_right()
-        overlays.update(self.config.NAME + '.L', {'x': L, 'y': y, 'image': '../AimingAngles/%s/Left%s.png' % (marker, ('_limit' if L > -5 else ''))}, {'duration': 0.05})
-        overlays.update(self.config.NAME + '.R', {'x': R, 'y': y, 'image': '../AimingAngles/%s/Right%s.png' % (marker, ('_limit' if R < 5 else ''))}, {'duration': 0.05})
+        overlays.update(self.config.NAME + '.L', {'x': L, 'y': y, 'image': '../aimingangles/%s/left%s.png' % (marker, ('_limit' if L > -5 else ''))}, {'duration': 0.05})
+        overlays.update(self.config.NAME + '.R', {'x': R, 'y': y, 'image': '../aimingangles/%s/right%s.png' % (marker, ('_limit' if R < 5 else ''))}, {'duration': 0.05})
 
     def ON_ANGLES_AIMING(self):
         if not self._uiCreated:
@@ -57,10 +57,10 @@ class AimingAnglesView(object):
         lo = self.anglesAiming_bottom(12)
         hi = self.anglesAiming_top(-12)
         overlays.update(self.config.NAME + '.lo', {
-            'y': lo, 'alpha': max(350 - lo, 0) / 100.0, 'image': '../AimingAngles/%s/Bottom%s.png' % (
+            'y': lo, 'alpha': max(350 - lo, 0) / 100.0, 'image': '../aimingangles/%s/bottom%s.png' % (
                 marker, ('_limit' if not int(lo - self.yVert - 12) else ''))}, {'duration': 0.05})
         overlays.update(self.config.NAME + '.hi', {
-            'y': hi, 'alpha': max(350 + hi, 0) / 100.0, 'image': '../AimingAngles/%s/Top%s.png' % (
+            'y': hi, 'alpha': max(350 + hi, 0) / 100.0, 'image': '../aimingangles/%s/top%s.png' % (
                 marker, ('_limit' if not int(hi - self.yVert + 12) else ''))}, {'duration': 0.05})
 
     def destroyUI(self):

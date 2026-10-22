@@ -10,7 +10,7 @@ from support import RuntimeTest, module, source
 class PlayerRatingsTests(RuntimeTest):
     def setUp(self):
         super(PlayerRatingsTests, self).setUp()
-        colors = self.load('common.utils.colorRatting')
+        colors = self.load('common.utils.colorratting')
         self.api = source('core/player_ratings.py', {
             'urllib2': module(), 'Queue': queue,
             'gui.battle_control.arena_info.interfaces': module(IArenaVehiclesController=object),
@@ -22,10 +22,10 @@ class PlayerRatingsTests(RuntimeTest):
             'messenger': module(g_settings=object()),
             'skeletons.gui.battle_session': module(IBattleSessionProvider=object),
             'driftkings._constants': module(GLOBAL=object(), TEAM_PANELS=object()),
-            'driftkings.common.utils.wgUtils': module(getPlayer=lambda: None, logWarning=lambda *args: None,
+            'driftkings.common.utils.wgutils': module(getPlayer=lambda: None, logWarning=lambda *args: None,
                                        getStatisticColor=colors.getStatisticColor,
                                        callback=lambda *args: None, cancelCallback=lambda *args: None),
-            'driftkings.common.utils.colorRatting': module(getPlayer=lambda: None, logWarning=lambda *args: None,
+            'driftkings.common.utils.colorratting': module(getPlayer=lambda: None, logWarning=lambda *args: None,
                                        getStatisticColor=colors.getStatisticColor,
                                        callback=lambda *args: None, cancelCallback=lambda *args: None),
             'driftkings.core.callbacks': module(getPlayer=lambda: None, logWarning=lambda *args: None,
@@ -41,7 +41,7 @@ class PlayerRatingsTests(RuntimeTest):
         self.assertEqual(result, u'\u2014 #AAAAAA \u2014')
 
     def test_available_ratings_use_the_configured_palette(self):
-        colors = self.load('common.utils.colorRatting')
+        colors = self.load('common.utils.colorratting')
         for index in range(3):
             result = self.api['format_rating']('{{wn8}} {{c:wn8}}', {'wn8': 2000}, {}, True, index)
             self.assertEqual(result, '2000 ' + colors.getStatisticColor('wn8', 2000, index))

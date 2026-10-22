@@ -153,7 +153,7 @@ class MinimapPolicyTests(RuntimeTest):
         visible = self.policy.visible
         self.assertEqual([visible('client', True), visible('client', False), visible('on', False), visible('off', True)],
                          [True, False, True, False])
-        data = {'artilleryAim': {'src': 'gui/maps/driftkings/Minimap/MinimapAim.png'}}
+        data = {'artilleryAim': {'src': 'gui/maps/driftkings/minimap/minimapaim.png'}}
         self.policy.migrate_artillery_aim(data)
         self.assertEqual(data['artilleryAim']['src'], self.policy.ARTILLERY_AIMS[0])
         custom = {'artilleryAim': {'src': 'gui/maps/custom.png'}}
@@ -203,7 +203,7 @@ class MinimapStoreTests(RuntimeTest):
         labels = self.read('minimap_labels.json')
         labels['labels']['normal'] = u'{{name}}'
         main = self.read('minimap.json')
-        main['artilleryAim']['src'] = 'gui/maps/driftkings/Minimap/MinimapAim.png'
+        main['artilleryAim']['src'] = 'gui/maps/driftkings/minimap/minimapaim.png'
         for name, document in (('minimap_labels.json', labels), ('minimap.json', main)):
             with open(os.path.join(self.root, name), 'wb') as stream:
                 stream.write(json.dumps(document).encode('utf-8'))
@@ -211,7 +211,7 @@ class MinimapStoreTests(RuntimeTest):
         self.assertEqual(data['lastPositionDuration'], 30)
         self.assertEqual(data['lostMarker']['style'], 'grey')
         self.assertEqual(data['labels']['normal'], u'{{name}}')
-        self.assertTrue(data['artilleryAim']['src'].endswith('MinimapAim_0.png'))
+        self.assertTrue(data['artilleryAim']['src'].endswith('minimapaim_0.png'))
 
     def test_invalid_values_are_never_published(self):
         self.store.load(defaults())

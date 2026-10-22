@@ -109,7 +109,7 @@ def validate(root=ROOT, assets=()):
         require(bank.name in names, 'Bank missing from loadBanks: ' + str(xml))
     for xml in audio.glob('*.xml'):
         require(xml.with_suffix('.bnk').is_file(), 'Orphan bank XML: ' + str(xml))
-    icons = sorted((root / 'mod/res/gui/maps/icons/SixthSense').glob('*.png'))
+    icons = sorted((root / 'mod/res/gui/maps/icons/sixthsense').glob('*.png'))
     for path in icons:
         require(path.relative_to(root).as_posix() in sources, 'Sixth Sense icon not packaged: ' + str(path))
         validate_png(path, maximum)

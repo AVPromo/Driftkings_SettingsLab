@@ -59,7 +59,7 @@ def expand_asset(root, asset, exclusions):
     require(set(asset) == {'source', 'target', 'generator'}, 'Invalid asset fields: %r' % asset)
     source, target = asset['source'], asset['target']
     relative_path(target)
-    require(target == 'LICENCE' or target.startswith('res/'), 'Invalid WOTMOD target: %s' % target)
+    require(target == 'licence' or target.startswith('res/'), 'Invalid WOTMOD target: %s' % target)
     source_path = input_path(root, source)
     recursive = source.endswith('/**')
     require(recursive == target.endswith('/**'), 'Source/target glob mismatch: %s' % source)

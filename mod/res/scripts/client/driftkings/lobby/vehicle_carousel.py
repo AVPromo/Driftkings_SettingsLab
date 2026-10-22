@@ -11,13 +11,13 @@ from dossiers2.ui.achievements import ACHIEVEMENT_BLOCK, MARK_OF_MASTERY_RECORD
 from gui.shared.personality import ServicesLocator
 from gui.shared.utils.requesters import REQ_CRITERIA
 
-from driftkings.common.utils.colorRatting import getStatisticColor
+from driftkings.common.utils.colorratting import getStatisticColor
 from driftkings.core.hooks import override
 from driftkings.core import carousel as layout
-from driftkings.core.carousel_assets import CarouselImages
+from driftkings.core.carousel_assets import CarouselImages, normalize_icon_paths
 from driftkings.core.carousel_tiers import battle_tiers
 from driftkings.core.carousel_options import STAT_SORT_KEYS
-from driftkings.common.utils.wgUtils import getPlayer
+from driftkings.common.utils.wgutils import getPlayer
 from driftkings.stats.vehinfo import getVehicleInfoData, calculateXvmScale
 from driftkings._constants import VEHICLE_CAROUSEL, GLOBAL
 from driftkings.settings.service import settings_service
@@ -141,7 +141,7 @@ def render_macro(template, values):
             rank = int(rank) if rank in (1, 2, 3, 4) else 0
             return 'coui://gui/maps/icons/library/proficiency/class_icons_%d.png' % rank if rank else '--'
         return 'coui://gui/maps/icons/' + ICONS[key] if key in ICONS else ''
-    return layout.render(template, values, color, icon)
+    return normalize_icon_paths(layout.render(template, values, color, icon))
 
 
 config = Settings()

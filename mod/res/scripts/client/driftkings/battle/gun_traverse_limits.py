@@ -15,7 +15,7 @@ from functools import partial
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 
 from driftkings.common.utils import events
-from driftkings.common.utils.wgUtils import getPlayer
+from driftkings.common.utils.wgutils import getPlayer
 from driftkings.core.callbacks import callback, cancelCallback
 from driftkings.core.hooks import override, on_event
 from driftkings.settings.definitions.battle.gun_traverse_limits import GunTraverseLimitsSettings as Settings

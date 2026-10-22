@@ -4,7 +4,7 @@ from driftkings.meta.battle.base import ComponentMeta
 
 
 class PlayersPanelMeta(ComponentMeta):
-    FLASH_CLASS = 'driftkings.battle.components.ratings.RatingScreens'
+    FLASH_CLASS = 'driftkings.battle.components.ratings.ratingscreens'
 
     def as_setRosterS(self, payload):
         if self._isDAAPIInited():

@@ -10,7 +10,7 @@ from gui.shared.personality import ServicesLocator
 
 from driftkings._constants import GLOBAL, REPAIR_CONTROLS
 from driftkings.common.utils.game import checkKeys
-from driftkings.common.utils.wgUtils import getPlayer
+from driftkings.common.utils.wgutils import getPlayer
 from driftkings.core.callbacks import callback, cancelCallback
 from driftkings.core.keyboard import keyboard
 from driftkings.settings.definitions.battle.repair_controls import RepairControlsSettings as Settings

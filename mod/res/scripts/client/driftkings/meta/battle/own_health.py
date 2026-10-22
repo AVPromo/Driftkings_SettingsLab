@@ -3,7 +3,7 @@ from driftkings.meta.battle.base import BattleMeta
 
 
 class OwnHealthMeta(BattleMeta):
-    FLASH_CLASS = 'driftkings.battle.components.health.OwnHealthUI'
+    FLASH_CLASS = 'driftkings.battle.components.health.ownhealthui'
 
     def as_setOwnHealthS(self, scale, text, color):
         if self._isDAAPIInited():

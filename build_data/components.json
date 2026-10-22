@@ -166,8 +166,8 @@
       "config_files": [],
       "assets": [
         {
-          "source": "LICENCE",
-          "target": "LICENCE",
+          "source": "licence",
+          "target": "licence",
           "generator": null
         },
         {
@@ -244,8 +244,8 @@
       ],
       "assets": [
         {
-          "source": "mod/res/gui/AimingAngles/**",
-          "target": "res/gui/AimingAngles/**",
+          "source": "mod/res/gui/aimingangles/**",
+          "target": "res/gui/aimingangles/**",
           "generator": null
         }
       ]
@@ -289,16 +289,6 @@
       ],
       "assets": [
         {
-          "source": "mod/res/gui/gameface/mods/driftkings/profile_ratings/**",
-          "target": "res/gui/gameface/mods/driftkings/profile_ratings/**",
-          "generator": null
-        },
-        {
-          "source": "mod/res/gui/gen_resources/driftkings.profile_ratings.json",
-          "target": "res/gui/gen_resources/driftkings.profile_ratings.json",
-          "generator": null
-        },
-        {
           "source": "mod/res/gui/gameface/mods/driftkings/hangar_preferences/clock.css",
           "target": "res/gui/gameface/mods/driftkings/hangar_preferences/clock.css",
           "generator": null
@@ -324,8 +314,8 @@
           "generator": null
         },
         {
-          "source": "mod/res/gui/maps/driftkings/clock/clockBg.png",
-          "target": "res/gui/maps/driftkings/clock/clockBg.png",
+          "source": "mod/res/gui/maps/driftkings/clock/clockbg.png",
+          "target": "res/gui/maps/driftkings/clock/clockbg.png",
           "generator": null
         },
         {
@@ -368,8 +358,8 @@
       ],
       "assets": [
         {
-          "source": "mod/res/gui/maps/driftkings/Minimap/**",
-          "target": "res/gui/maps/driftkings/Minimap/**",
+          "source": "mod/res/gui/maps/driftkings/minimap/**",
+          "target": "res/gui/maps/driftkings/minimap/**",
           "generator": null
         }
       ]
@@ -447,8 +437,8 @@
           "generator": null
         },
         {
-          "source": "mod/res/gui/maps/icons/SixthSense/**",
-          "target": "res/gui/maps/icons/SixthSense/**",
+          "source": "mod/res/gui/maps/icons/sixthsense/**",
+          "target": "res/gui/maps/icons/sixthsense/**",
           "generator": null
         }
       ]
@@ -501,15 +491,15 @@
       "enabled": true,
       "entrypoint": "battle.team_panels",
       "config_files": [
-        "default/team_panels/battleLoading.json",
+        "default/team_panels/battleloading.json",
         "default/team_panels/general.json",
-        "default/team_panels/panelLarge.json",
-        "default/team_panels/panelMedium.json",
-        "default/team_panels/panelMedium2.json",
-        "default/team_panels/panelNone.json",
-        "default/team_panels/panelShort.json",
-        "default/team_panels/playersPanel.json",
-        "default/team_panels/statisticForm.json"
+        "default/team_panels/panellarge.json",
+        "default/team_panels/panelmedium.json",
+        "default/team_panels/panelmedium2.json",
+        "default/team_panels/panelnone.json",
+        "default/team_panels/panelshort.json",
+        "default/team_panels/playerspanel.json",
+        "default/team_panels/statisticform.json"
       ],
       "assets": [
         {
@@ -523,13 +513,13 @@
           "generator": null
         },
         {
-          "source": "mod/res/gui/maps/driftkings/PlayerPanelPro/hp/**",
-          "target": "res/gui/maps/driftkings/PlayerPanelPro/hp/**",
+          "source": "mod/res/gui/maps/driftkings/playerpanelpro/hp/**",
+          "target": "res/gui/maps/driftkings/playerpanelpro/hp/**",
           "generator": null
         },
         {
-          "source": "mod/res/gui/maps/driftkings/PlayerPanelPro/spotted/**",
-          "target": "res/gui/maps/driftkings/PlayerPanelPro/spotted/**",
+          "source": "mod/res/gui/maps/driftkings/playerpanelpro/spotted/**",
+          "target": "res/gui/maps/driftkings/playerpanelpro/spotted/**",
           "generator": null
         }
       ]
@@ -600,8 +590,8 @@
           "generator": "windows_files_helper"
         },
         {
-          "source": "build/flash/DriftkingsBattle.swf",
-          "target": "res/gui/flash/DriftkingsBattle.swf",
+          "source": "build/flash/driftkingsbattle.swf",
+          "target": "res/gui/flash/driftkingsbattle.swf",
           "generator": "battle_flash"
         },
         {
@@ -642,8 +632,8 @@
       "entrypoint": "lobby.vehicle_carousel",
       "config_files": [
         "default/vehicle_carousel/carousel.json",
-        "default/vehicle_carousel/carouselNormal.json",
-        "default/vehicle_carousel/carouselSmall.json"
+        "default/vehicle_carousel/carouselnormal.json",
+        "default/vehicle_carousel/carouselsmall.json"
       ],
       "assets": [
         {
@@ -682,8 +672,8 @@
           "generator": null
         },
         {
-          "source": "mod/res/gui/maps/driftkings/Carroucel/**",
-          "target": "res/gui/maps/driftkings/Carroucel/**",
+          "source": "mod/res/gui/maps/driftkings/carroucel/**",
+          "target": "res/gui/maps/driftkings/carroucel/**",
           "generator": null
         }
       ]
@@ -696,6 +686,26 @@
         "default/vehicle_health.json"
       ],
       "assets": []
+    },
+    "profile_ratings": {
+      "kind": "feature",
+      "enabled": true,
+      "entrypoint": "lobby.profile_ratings",
+      "config_files": [
+        "default/profile_ratings.json"
+      ],
+      "assets": [
+        {
+          "source": "mod/res/gui/gameface/mods/driftkings/profile_ratings/**",
+          "target": "res/gui/gameface/mods/driftkings/profile_ratings/**",
+          "generator": null
+        },
+        {
+          "source": "mod/res/gui/gen_resources/driftkings.profile_ratings.json",
+          "target": "res/gui/gen_resources/driftkings.profile_ratings.json",
+          "generator": null
+        }
+      ]
     }
   }
 }

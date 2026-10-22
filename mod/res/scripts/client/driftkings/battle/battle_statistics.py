@@ -8,9 +8,9 @@ from vehicle_systems.CompoundAppearance import CompoundAppearance
 
 from driftkings._constants import BATTLE_STATISTICS, GLOBAL
 from driftkings.game_constants import SHELL_TYPES
-from driftkings.common.utils.wgUtils import getPlayer, getEntity
+from driftkings.common.utils.wgutils import getPlayer, getEntity
 from driftkings.common.utils.formatting import replaceMacros
-from driftkings.common.utils.colorRatting import getComparisonColor
+from driftkings.common.utils.colorratting import getComparisonColor
 from driftkings.core.battle_events import battleEvents
 from driftkings.core.hooks import override
 from driftkings.settings.service import settings_service, affects

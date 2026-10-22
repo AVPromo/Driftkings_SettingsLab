@@ -2,7 +2,7 @@
 import re
 
 from driftkings._constants import VEHICLE_CAROUSEL, GLOBAL
-from driftkings.common.utils.colorRatting import color_tables
+from driftkings.common.utils.colorratting import color_tables
 from driftkings.core import carousel as layout
 from driftkings.settings.controls_schema import control, options, caption
 from driftkings.settings.controls_schema import field as nested_field

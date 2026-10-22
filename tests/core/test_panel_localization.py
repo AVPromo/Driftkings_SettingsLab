@@ -69,7 +69,7 @@ class PanelLocalizationTests(RuntimeTest):
             'driftkings.core.battle_events': module(battleEvents=None),
             'driftkings.core.panel_model': module(Roster=self.roster),
             'driftkings.settings.settings_data': settings_data,
-            'driftkings.common.utils.colorRatting': module(getStatisticColor=lambda *args: '#FFFFFF'),
+            'driftkings.common.utils.colorratting': module(getStatisticColor=lambda *args: '#FFFFFF'),
         })
         self.view = self.api['RatingViews'](self.config, module(getPlayersInfo=lambda ident: {}))
 

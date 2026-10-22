@@ -3,7 +3,7 @@ from driftkings.meta.battle.base import HudMeta
 
 
 class DistanceMarkerMeta(HudMeta):
-    FLASH_CLASS = 'driftkings.battle.components.distance_marker.DistanceMarkerUI'
+    FLASH_CLASS = 'driftkings.battle.components.distance_marker.distancemarkerui'
 
     def as_applyConfigS(self, config):
         if self._isDAAPIInited():

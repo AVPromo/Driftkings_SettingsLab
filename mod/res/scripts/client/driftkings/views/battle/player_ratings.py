@@ -17,7 +17,7 @@ from driftkings.core.hooks import override
 from driftkings.core.battle_events import battleEvents
 from driftkings.core.panel_model import Roster
 from driftkings.settings.settings_data import PROFILES, profile_for_mode
-from driftkings.common.utils.colorRatting import getStatisticColor
+from driftkings.common.utils.colorratting import getStatisticColor
 from driftkings.core.battle_capabilities import battle_capabilities
 
 LOG=get_logger('Driftkings.PlayerPanelPro')

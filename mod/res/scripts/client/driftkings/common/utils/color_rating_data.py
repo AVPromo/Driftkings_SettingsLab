@@ -772,6 +772,12 @@ wot_labs_colors = {
 # Project statistics absent from XVM: keep all limits and palette decisions here.
 for _table in (noob_meter_colors, xvm_colors, wot_labs_colors):
     _palette = _table['colorRating']
+    # Driftkings profile scales, not XVM rating thresholds.
+    _table['survival'] = [{'value': limit, 'color': _palette[name]} for limit, name in zip(
+        (20, 30, 40, 50, 60, 1e30), ('very_bad', 'bad', 'normal', 'good', 'very_good', 'unique'))]
+    # Lower received damage / vehicle HP is better; raw HP is tier-dependent.
+    _table['damageReceivedHP'] = [{'value': limit, 'color': _palette[name]} for limit, name in zip(
+        (.25, .5, .75, 1.0, 1.25, 1e30), ('unique', 'very_good', 'good', 'normal', 'bad', 'very_bad'))]
     _table['mog'] = [{'value': limit, 'color': _palette.get(name, _palette['unique']) if name != 'neutral' else '#FFFFFF'} for limit, name in zip(MOE_LEVELS, ('neutral', 'very_bad', 'bad', 'normal', 'good', 'very_good', 'unique', 's_unique'))]
     for _metric in ('damageRatio', 'damageHP', 'relativePerformance'):
         _table[_metric] = [{'value': limit, 'color': _palette[name]} for limit, name in zip((0.5, 0.75, 1.0, 1.5, 2.0, 1e30), ('very_bad', 'bad', 'normal', 'good', 'very_good', 'unique'))]

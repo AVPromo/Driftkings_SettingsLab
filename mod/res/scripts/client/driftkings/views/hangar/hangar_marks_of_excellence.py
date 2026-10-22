@@ -5,7 +5,7 @@ from driftkings._constants import MARK_THRESHOLDS
 """Presentation adapter for MarksOnGunHangar; gameplay state stays in its component."""
 from driftkings.views.marks_model import moved_panel, number_locale
 from driftkings.settings.service import settings_service, affects
-from driftkings.common.utils.colorRatting import getStatisticColor
+from driftkings.common.utils.colorratting import getStatisticColor
 import weakref
 from CurrentVehicle import g_currentVehicle
 from gui.shared.personality import ServicesLocator

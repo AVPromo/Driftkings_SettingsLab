@@ -59,7 +59,7 @@ class HighCaliberTests(RuntimeTest):
                 VehiclesInfoCollection=lambda: module(iterator=lambda dp: []))),
             'gui.battle_control.battle_constants': module(FEEDBACK_EVENT_ID=module(PLAYER_DAMAGED_HP_ENEMY=10)),
             'driftkings._constants': self.constants,
-            'driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player),
+            'driftkings.common.utils.wgutils': module(getPlayer=lambda: self.player),
             'driftkings.core.battle_events': module(battleEvents=self.events),
             'driftkings.core.hooks': module(override=identity, on_event=identity),
             'driftkings.settings.service': module(settings_service=self.service),

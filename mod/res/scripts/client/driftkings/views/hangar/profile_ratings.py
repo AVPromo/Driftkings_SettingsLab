@@ -2,7 +2,7 @@
 """Rating colors for the native achievements summary, without replacing values."""
 import json
 
-from driftkings.common.utils.colorRatting import getStatisticColor
+from driftkings.common.utils.colorratting import getStatisticColor
 from driftkings.core.hooks import override
 from driftkings.interface_catalog import gameface_spec
 from driftkings.logger import get_logger
@@ -13,21 +13,22 @@ LOG = get_logger('Driftkings.ProfileRatings')
 
 
 def colors(presenter):
-    settings = settings_service.getComponentDict('hangar_preferences')
+    settings = settings_service.getComponentDict('profile_ratings')
     dossier = getattr(presenter, '_SummaryView__dossier', None)
-    if not settings.get('enabled', True) or not settings.get('profileRatingColors', True) or dossier is None:
+    if not settings.get('enabled', True) or not settings.get('summaryColors', True) or dossier is None:
         return {}
     stats = dossier.getRandomStats()
     model = presenter.viewModel
     wins = stats.getWinsEfficiency()
-    result = {'battles': getStatisticColor('battles', stats.getBattlesCount()),
-              'damage': getStatisticColor('avgDamage', stats.getAvgDamage())}
+    scale = settings.get('colorScale', 0)
+    result = {'battles': getStatisticColor('battles', stats.getBattlesCount(), scale),
+              'damage': getStatisticColor('avgDamage', stats.getAvgDamage(), scale)}
     if wins is not None:
-        result['wins'] = getStatisticColor('winrate', wins * 100)
+        result['wins'] = getStatisticColor('winrate', wins * 100, scale)
     if model.getBattlesLeftCount() == 0:
         metric = 'wtr' if model.getIsWTREnabled() else 'wgr'
-        result['rating'] = getStatisticColor(metric, model.getPersonalScore())
-        result['previousRating'] = getStatisticColor(metric, model.getPrevPersonalScore())
+        result['rating'] = getStatisticColor(metric, model.getPersonalScore(), scale)
+        result['previousRating'] = getStatisticColor(metric, model.getPrevPersonalScore(), scale)
     return result
 
 
@@ -56,7 +57,7 @@ def install():
 
         def _onLoading(self, *args, **kwargs):
             super(RatingsView, self)._onLoading(*args, **kwargs)
-            settings_service.onModSettingsChanged.connect(self.refresh)
+            settings_service.onModSettingsChanged.connect(self.refresh, 'profile_ratings')
 
         def refresh(self, *args):
             # SummaryView uses slots without weak-reference support. The child

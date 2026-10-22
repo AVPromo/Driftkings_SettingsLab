@@ -39,7 +39,7 @@
   },
   "assets": {
     "exclude": [
-      "**/README.md",
+      "**/readme.md",
       "**/__pycache__/**",
       "**/*.pyc",
       "**/*.bak"
@@ -71,13 +71,13 @@
   "generators": {
     "battle_flash": {
       "kind": "flash",
-      "entrypoint": "flash_source/battle/src/DriftkingsBattle.as",
+      "entrypoint": "flash_source/battle/src/driftkingsbattle.as",
       "source_paths": [
         "flash_source/battle/src",
         "flash_source/shared/as3"
       ],
       "library_manifest": "flash_source/shared/swc/manifest.json",
-      "output": "build/flash/DriftkingsBattle.swf",
+      "output": "build/flash/driftkingsbattle.swf",
       "target_player": "11.1",
       "swf_version": 14,
       "width": 1024,
@@ -100,10 +100,10 @@
     },
     "updater_helper": {
       "kind": "csharp",
-      "source": "installer/source/Installer.cs",
+      "source": "installer/source/installer.cs",
       "additional_sources": [
-        "installer/source/ModpackInstaller.cs",
-        "installer/source/ExitWork.cs"
+        "installer/source/modpackinstaller.cs",
+        "installer/source/exitwork.cs"
       ],
       "output": "build/native/updater/Driftkings.UpdateInstaller.exe",
       "metadata": "build/native/updater/helper.json",
@@ -114,21 +114,21 @@
     },
     "windows_files_helper": {
       "kind": "csharp",
-      "source": "installer/source/WindowsFiles.cs",
+      "source": "installer/source/windowsfiles.cs",
       "output": "build/native/windows-files/Driftkings.WindowsFiles.exe",
       "metadata": "build/native/windows-files/helper.json",
       "references": []
     },
     "fog_package_helper": {
       "kind": "csharp",
-      "source": "installer/source/FogPackage.cs",
+      "source": "installer/source/fogpackage.cs",
       "output": "build/native/fog/Driftkings.FogPackage.exe",
       "metadata": "build/native/fog/helper.json",
       "references": [
         "System.IO.Compression.dll"
       ],
       "additional_sources": [
-        "installer/source/ExitWork.cs"
+        "installer/source/exitwork.cs"
       ]
     },
     "crew_barracks_bridge": {

@@ -6,6 +6,16 @@ import tempfile
 
 
 def recover_file(target):
+    # Preserve pre-rename JSON settings on case-sensitive filesystems. Windows
+    # already opens the old spelling; never replace a user's existing document.
+    directory, name = os.path.split(target)
+    if (not os.path.exists(target) and name == name.lower() and name.endswith('.json')
+            and os.path.isdir(directory)):
+        candidates = [item for item in os.listdir(directory) if item.lower() == name]
+        if len(candidates) > 1:
+            raise ValueError('Ambiguous settings filename: ' + target)
+        if candidates and os.path.isfile(os.path.join(directory, candidates[0])):
+            os.rename(os.path.join(directory, candidates[0]), target)
     previous = target + '.previous'
     if not os.path.exists(target) and os.path.isfile(previous):
         os.rename(previous, target)

@@ -69,7 +69,7 @@ def player_panel_columns(config):
     for key in (TEAM_PANELS.STATS_ENABLED,TEAM_PANELS.HP_VISIBILITY,TEAM_PANELS.HP_KEY,TEAM_PANELS.SPOTTED_ENABLED,TEAM_PANELS.RATING,TEAM_PANELS.COLOR_SCALE):
         add([key],settings_service.getComponentDict(config)[key],general)
     add([TEAM_PANELS.PERFORMANCE,'diagnostics'],settings_service.getComponentDict(config)[TEAM_PANELS.PERFORMANCE].get('diagnostics',False),general)
-    from driftkings.common.utils.colorRatting import color_tables
+    from driftkings.common.utils.colorratting import color_tables
     for item in columns[0]:
         if item['varName']==TEAM_PANELS.COLOR_SCALE:
             item.update(type='Dropdown',options=[{'label':entry['ScaleColor']} for entry in color_tables])

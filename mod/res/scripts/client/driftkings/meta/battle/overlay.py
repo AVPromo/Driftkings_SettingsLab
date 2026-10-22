@@ -3,7 +3,7 @@ from driftkings.meta.battle.base import HudMeta
 
 
 class OverlayMeta(HudMeta):
-    FLASH_CLASS = 'driftkings.battle.components.overlay.OverlayUI'
+    FLASH_CLASS = 'driftkings.battle.components.overlay.overlayui'
 
     def reset(self, elements):
         if self._isDAAPIInited():

@@ -24,8 +24,8 @@ def install_results_gameface():
     from skeletons.gui.battle_results import IBattleResultsService
     from driftkings.ui.gameface import INVALID_RES_ID, attach_assets, resource_id as resolve_resource
 
-    feature = 'DriftkingsBattleEfficiency'
-    resource = gameface_spec('DriftkingsBattleEfficiency')['resource']
+    feature = 'driftkingsbattleEfficiency'
+    resource = gameface_spec('driftkingsbattleEfficiency')['resource']
 
     class ResultsModel(ViewModel):
         def __init__(self):

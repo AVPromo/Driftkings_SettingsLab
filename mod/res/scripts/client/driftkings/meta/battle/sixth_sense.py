@@ -3,7 +3,7 @@ from driftkings.meta.battle.base import BattleMeta
 
 
 class SixthSenseMeta(BattleMeta):
-    FLASH_CLASS = 'driftkings.battle.components.sixth_sense.SixthSenseUI'
+    FLASH_CLASS = 'driftkings.battle.components.sixth_sense.sixthsenseui'
 
     def as_showS(self, seconds):
         if self._isDAAPIInited():

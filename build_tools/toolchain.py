@@ -44,7 +44,7 @@ def discover(root, overrides):
     result['playerglobal'] = choose('playerglobal', sorted(adobe.glob('Adobe Animate */Common/Configuration/ActionScript 3.0/FP32.0/playerglobal.swc'), reverse=True))
     java = Path(os.environ.get('ProgramFiles', 'C:/Program Files')) / 'Java'
     result['java'] = choose('java', sorted(java.glob('jre1.8*/bin/java.exe'), reverse=True) + [shutil.which('java')])
-    result['csc'] = choose('csc', [Path(os.environ.get('WINDIR', 'C:/Windows')) / 'Microsoft.NET/Framework/v4.0.30319/csc.exe'])
+    result['csc'] = choose('csc', [Path(os.environ.get('WINDIR', 'C:/windows')) / 'Microsoft.NET/Framework/v4.0.30319/csc.exe'])
     return result
 
 

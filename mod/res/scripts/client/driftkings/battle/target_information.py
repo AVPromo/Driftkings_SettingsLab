@@ -8,7 +8,7 @@ from gui.shared.gui_items.Vehicle import getIconPath, getContourIconPath
 
 from driftkings._constants import GLOBAL, TARGET_INFORMATION
 from driftkings.common.utils.game import checkKeys
-from driftkings.common.utils.wgUtils import getPlayer, getTarget
+from driftkings.common.utils.wgutils import getPlayer, getTarget
 from driftkings.core.battle_events import battleEvents
 from driftkings.core.callbacks import callback, cancelCallback
 from driftkings.core.gun_stats import damage_per_minute, reload_with_equipment

@@ -22,7 +22,7 @@ from helpers import dependency
 from skeletons.account_helpers.settings_core import ISettingsCache, ISettingsCore
 
 from driftkings._constants import AIMING_RETICLES, GLOBAL
-from driftkings.common.utils.wgUtils import getPlayer
+from driftkings.common.utils.wgutils import getPlayer
 from driftkings.core.hooks import override
 from driftkings.settings.service import settings_service, affects
 from driftkings.settings.definitions.battle.aiming_reticles import AimingReticlesSettings as Settings

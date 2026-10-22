@@ -7,7 +7,7 @@ from driftkings.core.carousel import config_defaults, profile_shadow
 from driftkings.core.carousel_options import from_carousel, SORT_KEYS
 from driftkings.settings.store import merge, recover_file, read_object, JsonDocuments
 
-FILES = ('carousel.json', 'carouselNormal.json', 'carouselSmall.json')
+FILES = ('carousel.json', 'carouselnormal.json', 'carouselsmall.json')
 
 
 def documents(data):
@@ -73,6 +73,7 @@ class CarouselStore(JsonDocuments):
         super(CarouselStore, self).__init__(directory, FILES)
 
     def load(self):
+        from driftkings.core.carousel_assets import normalize_icon_config
         self.recover()
         parts = []
         missing = []
@@ -81,7 +82,7 @@ class CarouselStore(JsonDocuments):
             recover_file(path)
             if os.path.isfile(path):
                 value = read_object(path)
-                parts.append(merge(default, value))
+                parts.append(normalize_icon_config(merge(default, value)))
             else:
                 missing.append((path, default))
                 parts.append(copy.deepcopy(default))
@@ -94,6 +95,8 @@ class CarouselStore(JsonDocuments):
         return {'enabled': general['enabled'], 'showIcons': general['showIcons'], 'colorRating': general['colorRating'], 'carousel': carousel}
 
     def save(self, data):
+        from driftkings.core.carousel_assets import normalize_icon_config
+        data = normalize_icon_config(data)
         parts = documents(data)
         validate(parts)
         self.recover()

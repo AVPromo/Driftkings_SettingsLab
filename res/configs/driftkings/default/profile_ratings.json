@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "summaryColors": true,
+  "statisticsColors": true,
+  "vehicleColors": true,
+  "showPlayerWN8": true,
+  "showVehicleWN8": true,
+  "showUnavailableWN8": true,
+  "colorScale": 0,
+  "colorSurvival": true,
+  "colorReceivedDamage": true,
+  "survivalThresholds": "20, 30, 40, 50, 60",
+  "receivedDamageThresholds": "25, 50, 75, 100, 125"
+}

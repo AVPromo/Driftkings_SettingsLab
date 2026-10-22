@@ -1,20 +1,61 @@
 # -*- coding: utf-8 -*-
 """Format the native Flash statistics and vehicle dossier fields."""
-from driftkings.common.utils.colorRatting import getStatisticColor
+from driftkings.common.utils.colorratting import getStatisticColor, getRatingColors, getColor
 from driftkings.core.hooks import override
-from driftkings.core.profile_ratings import account_wn8
+from driftkings.core.profile_ratings import account_wn8, vehicle_wn8, parse_thresholds
 from driftkings.settings.service import settings_service
 
 
-def enabled():
-    settings = settings_service.getComponentDict('hangar_preferences')
-    return settings.get('enabled', True) and settings.get('profileRatingColors', True)
+def enabled(surface='statistics'):
+    settings = settings_service.getComponentDict('profile_ratings')
+    return settings.get('enabled', True) and settings.get(surface + 'Colors', True)
 
 
-def colored(text, metric, value):
-    if not enabled() or value is None or value < 0:
+def colored(text, metric, value, surface='statistics'):
+    settings = settings_service.getComponentDict('profile_ratings')
+    if not enabled(surface) or value is None or value < 0:
         return text
-    return u'<font color="{}">{}</font>'.format(getStatisticColor(metric, value), text)
+    scale = settings.get('colorScale', 0)
+    if metric in ('survival', 'damageReceivedHP'):
+        survival = metric == 'survival'
+        if not settings.get('colorSurvival' if survival else 'colorReceivedDamage', True):
+            return text
+        key = 'survivalThresholds' if survival else 'receivedDamageThresholds'
+        limits = parse_thresholds(settings.get(key, '20,30,40,50,60' if survival else '25,50,75,100,125'), 100 if survival else 500)
+        if not survival:
+            limits = [limit / 100.0 for limit in limits]
+        palette = getRatingColors(scale)['colorRating']
+        names = ('very_bad', 'bad', 'normal', 'good', 'very_good', 'unique')
+        bands = [{'value': limit, 'color': palette[name]} for limit, name in zip(limits + [1e30], names if survival else reversed(names))]
+        color = getColor({metric: bands}, metric, value)
+    else:
+        color = getStatisticColor(metric, value, scale)
+    return u'<font color="{}">{}</font>'.format(color, text)
+
+
+def paint_vehicle_list(view):
+    """Color native text fields without changing the sortable row values."""
+    if not view.isActive():
+        return
+    try:
+        listing = view.flashObject.listComponent.techniqueList
+        for index in range(int(listing.numChildren)):
+            renderer = listing.getChildAt(index)
+            if not hasattr(renderer, 'battlesTF') or not renderer.data:
+                continue
+            row_id = int(renderer.data.id)
+            colors = view._dkVehicleColors.get(row_id, {}) if enabled('vehicle') else {}
+            for field_name in ('vehicleTF', 'battlesTF', 'winsTF'):
+                field = getattr(renderer, field_name)
+                key = (str(renderer.name), field_name)
+                if key not in view._dkVehicleOriginalColors:
+                    view._dkVehicleOriginalColors[key] = int(field.textColor)
+                value = colors.get(field_name, view._dkVehicleOriginalColors[key])
+                if int(field.textColor) != value:
+                    field.textColor = value
+    except (AttributeError, TypeError, ValueError, ReferenceError):
+        # Population/layout may not have created the native list yet.
+        return
 
 
 def install():
@@ -22,12 +63,37 @@ def install():
     from gui.Scaleform.daapi.view.lobby.profile.profile_statistics_vos import ProfileAllStatisticsVO
     from gui.Scaleform.daapi.view.lobby.profile.ProfileTechnique import ProfileTechnique
     from gui.Scaleform.daapi.view.lobby.profile.ProfileStatistics import ProfileStatistics
+    from gui.Scaleform.genConsts.PROFILE_DROPDOWN_KEYS import PROFILE_DROPDOWN_KEYS
     from driftkings.stats.vehinfo import getVehicleInfoData
+
+    # Native dossier rendering is synchronous. A stack keeps nested requests
+    # isolated and never reuses the previously selected tank or player.
+    vehicle_context = []
+
+    @override(ProfileTechnique, '_receiveVehicleDossier')
+    def vehicle_dossier(original, view, vehicle_id, database_id):
+        vehicle = view.itemsCache.items.getItemByCD(vehicle_id)
+        hp = vehicle.descriptor.maxHealth if vehicle is not None else None
+        vehicle_context.append((vehicle_id, hp, view._battlesType))
+        try:
+            result = original(view, vehicle_id, database_id)
+            if enabled('vehicle') and view._battlesType == PROFILE_DROPDOWN_KEYS.ALL:
+                dossier = view.itemsCache.items.getVehicleDossier(vehicle_id, database_id)
+                if dossier is not None:
+                    value = vehicle_wn8(dossier.getRandomStats(), vehicle_id, getVehicleInfoData)
+                    if value is not None:
+                        scale = settings_service.getComponentDict('profile_ratings').get('colorScale', 0)
+                        view._dkVehicleColors.setdefault(vehicle_id, {})['vehicleTF'] = int(
+                            getStatisticColor('wn8', value, scale).lstrip('#'), 16)
+            return result
+        finally:
+            vehicle_context.pop()
 
     # These native fields use HTML text. Keep all other modes/fields unchanged.
     specifications = (
         ('_BattlesCountField', 'battles', 'getBattlesCount', 1),
         ('_WinsEfficiencyField', 'winrate', 'getWinsEfficiency', 100),
+        ('_SurvivalField', 'survival', 'getSurvivalEfficiency', 100),
         ('_DamageCoefficientField', 'tdv', 'getDamageEfficiency', 1),
         ('_HitsField', 'hitsRatio', 'getHitsEfficiency', 100),
         ('_AvgDmgField', 'avgDamage', 'getAvgDamage', 1),
@@ -39,11 +105,40 @@ def install():
         def build(original, field, stats, current):
             text = original(field, stats, current)
             value = getattr(stats, method)()
-            return colored(text, metric, value * scale if value is not None else None)
+            return colored(text, metric, value * scale if value is not None else None,
+                           'vehicle' if vehicle_context else 'statistics')
         return build
 
     for name, metric, method, scale in specifications:
         override(getattr(fields, name), '_buildData')(handler(metric, method, scale))
+
+    @override(fields._AvgReceivedDmgField, '_buildData')
+    def received(original, field, stats, current):
+        text = original(field, stats, current)
+        hp = vehicle_context[-1][1] if vehicle_context else None
+        value = stats.getAvgDamageReceived()
+        if not hp or hp <= 0 or value is None:
+            return text
+        return colored(text, 'damageReceivedHP', float(value) / hp, 'vehicle')
+
+    @override(fields.DetailedStatisticsUtils, 'getStatistics')
+    def detailed(original, stats, current, layout):
+        result = original(stats, current, layout)
+        settings = settings_service.getComponentDict('profile_ratings')
+        if (not vehicle_context or not settings.get('enabled', True)
+                or not settings.get('showVehicleWN8', True)
+                or vehicle_context[-1][2] != PROFILE_DROPDOWN_KEYS.ALL or not result):
+            return result
+        value = vehicle_wn8(stats, vehicle_context[-1][0], getVehicleInfoData)
+        if value is None and not settings.get('showUnavailableWN8', True):
+            return result
+        text = colored(str(value), 'wn8', value, 'vehicle') if value is not None else '--'
+        # Copy the native containers so no shared layout/dossier is mutated.
+        result = list(result)
+        result[0] = dict(result[0])
+        result[0]['data'] = list(result[0]['data']) + [
+            {'label': 'WN8', 'data': text, 'tooltip': '', 'tooltipData': None}]
+        return result
 
     @override(ProfileAllStatisticsVO, '_getHeaderData')
     def header(original, vo, data):
@@ -53,9 +148,11 @@ def install():
                                       (1, 'winrate', stats.getWinsEfficiency() * 100 if stats.getWinsEfficiency() is not None else None),
                                       (2, 'avgDamage', stats.getAvgDamage())):
             result[index]['text'] = colored(result[index]['text'], metric, value)
-        settings = settings_service.getComponentDict('hangar_preferences')
-        if settings.get('enabled', True) and settings.get('showProfileWN8', True):
+        settings = settings_service.getComponentDict('profile_ratings')
+        if settings.get('enabled', True) and settings.get('showPlayerWN8', True):
             value = account_wn8(dossier.getRandomStats(), getVehicleInfoData)
+            if value is None and not settings.get('showUnavailableWN8', True):
+                return tuple(result)
             text = colored(str(value), 'wn8', value) if value is not None else '--'
             item = fields.ProfileUtils.packLditItemData(text, 'WN8', '', 'avgPersonalRating40x32.png')
             # Appended after the native mastery badge; no native item is replaced.
@@ -63,17 +160,30 @@ def install():
         return tuple(result)
 
     @override(ProfileTechnique, '_getTechniqueListVehicles')
-    def vehicles(original, view, *args, **kwargs):
-        rows = original(view, *args, **kwargs)
-        if not enabled():
+    def vehicles(original, view, target_data, *args, **kwargs):
+        rows = original(view, target_data, *args, **kwargs)
+        view._dkVehicleColors = {}
+        if not enabled('vehicle'):
             return rows
-        # vehicleTF is HTML; the numeric columns remain numeric for sorting.
-        result = []
+        scale = settings_service.getComponentDict('profile_ratings').get('colorScale', 0)
+
+        def color(metric, value):
+            return int(getStatisticColor(metric, value, scale).lstrip('#'), 16)
+
         for row in rows:
-            item = dict(row)
-            item['shortUserName'] = colored(item['shortUserName'], 'winrate', item.get('winsEfficiency'))
-            result.append(item)
-        return result
+            # WN8 is defined for random battles only. Never use win rate as a
+            # substitute when the vehicle dossier/expected values are missing.
+            values = {'battlesTF': color('battles', row['battlesCount'])}
+            if 'winsEfficiency' in row and view._battlesType != PROFILE_DROPDOWN_KEYS.FALLOUT:
+                values['winsTF'] = color('winrate', row['winsEfficiency'])
+            if view._battlesType == PROFILE_DROPDOWN_KEYS.ALL:
+                dossier = view.itemsCache.items.getVehicleDossier(row['id'], view._userID)
+                if dossier is not None:
+                    value = vehicle_wn8(dossier.getRandomStats(), row['id'], getVehicleInfoData)
+                    if value is not None:
+                        values['vehicleTF'] = color('wn8', value)
+            view._dkVehicleColors[row['id']] = values
+        return rows
 
     def refresh_view(view):
         if view.isActive():
@@ -87,12 +197,25 @@ def install():
         return refresh
 
     def populated(original, view):
+        if isinstance(view, ProfileTechnique):
+            from driftkings.ui import CyclicTimerEvent
+            view._dkVehicleColors = {}
+            view._dkVehicleOriginalColors = {}
+            view._dkVehicleColorTimer = CyclicTimerEvent(0.2, lambda: paint_vehicle_list(view))
         result = original(view)
+        if isinstance(view, ProfileTechnique):
+            view._dkVehicleColorTimer.start()
         view._dkProfileColorsChanged = changed(view)
-        settings_service.onModSettingsChanged.connect(view._dkProfileColorsChanged, 'hangar_preferences')
+        settings_service.onModSettingsChanged.connect(view._dkProfileColorsChanged, 'profile_ratings')
         return result
 
     def disposed(original, view):
+        timer = getattr(view, '_dkVehicleColorTimer', None)
+        if timer is not None:
+            timer.stop()
+            del view._dkVehicleColorTimer
+            del view._dkVehicleColors
+            del view._dkVehicleOriginalColors
         callback = getattr(view, '_dkProfileColorsChanged', None)
         if callback is not None:
             settings_service.onModSettingsChanged.disconnect(callback)

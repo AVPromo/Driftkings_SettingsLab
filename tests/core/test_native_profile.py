@@ -15,6 +15,14 @@ class AccountWN8Tests(RuntimeTest):
     def test_weights_expected_values_by_each_vehicles_battles(self):
         self.assertEqual(self.calculate(self.stats, self.expected), 1565)
 
+    def test_vehicle_wn8_does_not_use_account_vehicle_list(self):
+        del self.stats.getVehicles
+        expected = lambda key: dict(wn8expDamage=1750, wn8expFrag=1.75, wn8expSpot=1.75,
+                                     wn8expDef=1.75, wn8expWinRate=50)
+        calculate = self.load('core.profile_ratings').vehicle_wn8
+        self.assertEqual(calculate(self.stats, 99, expected), 1565)
+        self.assertIsNone(calculate(self.stats, 99, lambda key: None))
+
     def test_incomplete_data_does_not_invent_a_rating(self):
         self.assertIsNone(self.calculate(self.stats, lambda key: None))
         self.stats.getVehicles = lambda: {1: (25, 12, 100)}
@@ -25,18 +33,21 @@ class AccountWN8Tests(RuntimeTest):
 
 class NativeProfileTests(RuntimeTest):
     def test_native_header_fields_vehicle_sorting_and_switches(self):
-        settings = {'enabled': True, 'profileRatingColors': True, 'showProfileWN8': True}
+        settings = {'enabled': True, 'vehicleColors': True, 'statisticsColors': True, 'showPlayerWN8': True, 'showVehicleWN8': True}
         names = ['_BattlesCountField', '_DamageCoefficientField', '_HitsField', '_AvgDmgField',
-                 '_WinsEfficiencyField', '_AvgEnemiesSpottedField', '_AvgDestroyedField']
+                 '_WinsEfficiencyField', '_AvgEnemiesSpottedField', '_AvgDestroyedField', '_SurvivalField', '_AvgReceivedDmgField']
         fields = module(**dict((name, type(name, (object,), {})) for name in names))
+        fields.DetailedStatisticsUtils = type('DetailedStatisticsUtils', (object,), {})
         fields.ProfileUtils = module(packLditItemData=lambda text, desc, tip, icon: dict(text=text, description=desc, iconPath=icon))
         api, hooks = game_source('views/hangar/profile_statistics.py', {
             'driftkings.settings.service': Settings(settings).service(),
+            'gui.Scaleform.genConsts.PROFILE_DROPDOWN_KEYS': module(PROFILE_DROPDOWN_KEYS=module(ALL='all')),
             'gui.Scaleform.daapi.view.lobby.profile': module(ProfileUtils=fields),
             'gui.Scaleform.daapi.view.lobby.profile.profile_statistics_vos': module(ProfileAllStatisticsVO=type('ProfileAllStatisticsVO', (object,), {})),
             'gui.Scaleform.daapi.view.lobby.profile.ProfileTechnique': module(ProfileTechnique=type('ProfileTechnique', (object,), {})),
             'gui.Scaleform.daapi.view.lobby.profile.ProfileStatistics': module(ProfileStatistics=type('ProfileStatistics', (object,), {})),
-        }, real=('driftkings.common.utils.colorRatting',))
+        }, real=('driftkings.common.utils.colorratting', 'driftkings.core.profile_ratings'))
+        api['vehicle_wn8'] = lambda *args: 2300
         api['account_wn8'] = lambda *args: 2200
         api['install']()
         native = [{'text': str(i)} for i in range(6)]
@@ -54,10 +65,38 @@ class NativeProfileTests(RuntimeTest):
         self.assertIn('<font', colored[0]['shortUserName'])
         self.assertEqual(colored[0]['battlesCount'], 19)
         self.assertEqual(colored[0]['winsEfficiency'], 78.95)
-        settings['profileRatingColors'] = False
+        settings['vehicleColors'] = False
+        settings['statisticsColors'] = False
         self.assertEqual(vehicles(lambda *args: rows, None), rows)
-        settings['showProfileWN8'] = False
+        settings['showVehicleWN8'] = False
+        settings['showPlayerWN8'] = False
         self.assertEqual(header(lambda *args: native, None, data), tuple(native))
-        settings['profileRatingColors'] = True
+        settings['vehicleColors'] = True
+        settings['statisticsColors'] = True
         field = hooks.get('_WinsEfficiencyField', '_buildData')
         self.assertIn('<font', field(lambda *args: '78.95%', None, stats, True))
+
+        settings['showVehicleWN8'] = True
+        settings['showPlayerWN8'] = True
+        native_details = [{'label': 'General', 'data': [{'label': 'Battles', 'data': '19'}]}]
+        receive = hooks.get('ProfileTechnique', '_receiveVehicleDossier')
+        detailed = hooks.get('DetailedStatisticsUtils', 'getStatistics')
+        received = hooks.get('_AvgReceivedDmgField', '_buildData')
+        view = module(_battlesType='all', itemsCache=module(items=module(
+            getItemByCD=lambda key: module(descriptor=module(maxHealth=1000)))))
+        stats.getAvgDamageReceived = lambda: 455
+        def native_render(*args):
+            return (detailed(lambda *args: native_details, stats, True, None),
+                    received(lambda *args: '455', None, stats, True))
+        rendered, received_text = receive(native_render, view, 1, None)
+        self.assertEqual(rendered[0]['data'][-1]['label'], 'WN8')
+        self.assertIn('2300', rendered[0]['data'][-1]['data'])
+        self.assertIn('<font', received_text)
+        self.assertEqual(len(native_details[0]['data']), 1)
+        self.assertEqual(received(lambda *args: '455', None, stats, True), '455')
+        view._battlesType = 'epic'
+        self.assertEqual(receive(native_render, view, 1, None)[0], native_details)
+        view._battlesType = 'all'
+        settings['showVehicleWN8'] = False
+        settings['showPlayerWN8'] = False
+        self.assertEqual(receive(native_render, view, 1, None)[0], native_details)

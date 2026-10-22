@@ -66,10 +66,10 @@ Thumbs.db
 
 
 *.bnk
-res/sound_bank_wwise/SixthSense/Driftkings_SixthSense.Ruben.validationcache
-res/sound_bank_wwise/SixthSense/Driftkings_SixthSense.Ruben.wsettings
-res/sound_bank_wwise/SixthSense/.cache/SoundBankInfoCache.dat
-res/sound_bank_wwise/SixthSense/.cache/LMDB/data.mdb
+res/sound_bank_wwise/sixthsense/Driftkings_SixthSense.Ruben.validationcache
+res/sound_bank_wwise/sixthsense/Driftkings_SixthSense.Ruben.wsettings
+res/sound_bank_wwise/sixthsense/.cache/SoundBankInfoCache.dat
+res/sound_bank_wwise/sixthsense/.cache/lmdb/data.mdb
 
 # Generated local audit snapshots and visual previews
 audit_mods/*.json

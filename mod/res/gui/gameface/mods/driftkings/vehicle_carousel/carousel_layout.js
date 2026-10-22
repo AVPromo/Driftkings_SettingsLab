@@ -19,7 +19,7 @@
         if (typeof value !== 'string' || value.indexOf('..') !== -1) return '';
         // Owned PNGs arrive through ResMgr, including names containing '#'.
         // Never interpret the legacy mods/ path as an external file override.
-        if (/^(?:(?:(?:coui|img):\/\/)?gui\/maps\/driftkings\/Carroucel\/|mods\/driftkings\/Carroucel\/)[#a-zA-Z0-9_-]+\.png$/.test(value)) {
+        if (/^gui\/maps\/driftkings\/carroucel\/[#a-z0-9_-]+\.png$/.test(value)) {
             var image = images && images[value];
             return typeof image === 'string' && /^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(image) ? image : '';
         }

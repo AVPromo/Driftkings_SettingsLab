@@ -9,8 +9,8 @@ body, input { font-family: Warhelios; font-size: 14rem; font-weight: 400; color:
 .button:hover { color: #fff2cd; background: linear-gradient(#625c44, #343127); }
 .primary { border-color: #90816a; }
 .disabled { opacity: .35; cursor: default; }
-.launcher { min-width: 0; width: 41rem; height: 41rem; padding: 0; border: none; background: url('assets/AM_Icon_MouseOut.png') center no-repeat; background-size: 39rem 39rem; }
-.launcher:hover { background: url('assets/AM_Icon_MouseOver.png') center no-repeat; background-size: 39rem 39rem; }
+.launcher { min-width: 0; width: 41rem; height: 41rem; padding: 0; border: none; background: url('assets/am_icon_mouseout.png') center no-repeat; background-size: 39rem 39rem; }
+.launcher:hover { background: url('assets/am_icon_mouseover.png') center no-repeat; background-size: 39rem 39rem; }
 .window { display: flex; flex-direction: column; position: relative; width: 100%; height: 100%; padding: 14rem; border: 1rem solid #59564a; background: linear-gradient(#30332e, #171a19 74rem); }
 .header { display: flex; align-items: center; justify-content: space-between; height: 30rem; flex-shrink: 0; margin-bottom: 12rem; }
 .title { font-size: 19rem; color: #e9e2bf; }

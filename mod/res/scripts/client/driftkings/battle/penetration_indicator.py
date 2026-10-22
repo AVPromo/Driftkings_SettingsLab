@@ -9,7 +9,7 @@ from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
 
 from driftkings._constants import PENETRATION_INDICATOR, GLOBAL, BATTLE_ALIASES
 from driftkings.game_constants import SHELL_TYPES, SHELL_MECHANICS_TYPE
-from driftkings.common.utils.wgUtils import getPlayer
+from driftkings.common.utils.wgutils import getPlayer
 from driftkings.core.hooks import override
 from driftkings.settings.service import settings_service
 from driftkings.ui import g_events

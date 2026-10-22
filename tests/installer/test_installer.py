@@ -376,7 +376,7 @@ class AssetTests(unittest.TestCase):
                     validate_png(path, inventory_limit(ROOT))
 
     def test_documentation_is_excluded_and_no_loose_media_are_installed(self):
-        self.assertFalse(any(entry['source'].endswith('/README.md') for entry in self.assets))
+        self.assertFalse(any(entry['source'].endswith('/readme.md') for entry in self.assets))
         script = (ROOT / 'installer/setup/driftkings.iss').read_text(encoding='utf-8')
         code = (ROOT / 'installer/setup/wizard.iss').read_text(encoding='utf-8')
         self.assertIn('components.generated.iss', script)

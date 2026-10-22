@@ -520,3 +520,7 @@ class BATTLE_ALIASES(object):
     MINIMAP = 'MinimapEnhancementsView'
     PLAYERS_PANEL = 'DriftkingsRatingScreens'
     OVERLAY = 'DriftkingsOverlay'
+
+
+class PROFILE_RATINGS(object):
+    NAME = 'profile_ratings'

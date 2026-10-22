@@ -77,17 +77,17 @@ def assemble(root=ROOT):
         if identifier == 'team_panels':
             prefix = 'default/team_panels/'
             data = dict(get(prefix + 'general.json'))
-            data.update(get(prefix + 'playersPanel.json'))
-            data['loading'] = dict(get(prefix + 'battleLoading.json'))
+            data.update(get(prefix + 'playerspanel.json'))
+            data['loading'] = dict(get(prefix + 'battleloading.json'))
             data['loading'].pop('tips', None)  # Retired native loading option.
-            data['tab'] = get(prefix + 'statisticForm.json')
-            data['profiles'] = {name: get(prefix + 'panel' + name.title() + '.json') for name in PROFILES}
+            data['tab'] = get(prefix + 'statisticform.json')
+            data['profiles'] = {name: get(prefix + 'panel' + name.lower() + '.json') for name in PROFILES}
         elif identifier == 'vehicle_carousel':
             prefix = 'default/vehicle_carousel/'
             general = get(prefix + 'carousel.json')
             data = {key: general[key] for key in ('enabled', 'showIcons', 'colorRating')}
             data['carousel'] = {key: value for key, value in general.items() if key not in data}
-            data['carousel'].update(normal=get(prefix + 'carouselNormal.json'), small=get(prefix + 'carouselSmall.json'))
+            data['carousel'].update(normal=get(prefix + 'carouselnormal.json'), small=get(prefix + 'carouselsmall.json'))
         elif identifier == 'minimap_enhancements':
             data = {}
             for name in ('minimap.json', 'minimap_labels.json', 'minimap_circles.json', 'minimap_lines.json'):

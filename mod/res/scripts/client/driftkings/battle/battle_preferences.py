@@ -32,7 +32,7 @@ from messenger.gui.Scaleform.data.contacts_data_provider import _ContactsCategor
 from messenger.storage import MessengerStorageDescriptor, UsersStorage
 
 from driftkings._constants import BATTLE_PREFERENCES, GLOBAL
-from driftkings.common.utils.wgUtils import getPlayer, square_position, isReplay
+from driftkings.common.utils.wgutils import getPlayer, square_position, isReplay
 from driftkings.core.callbacks import callback
 from driftkings.core.fog_package import FogPackageController
 from driftkings.core.hooks import override, on_event

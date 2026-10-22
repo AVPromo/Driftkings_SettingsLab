@@ -5,10 +5,29 @@ from driftkings.logger import get_logger
 import os
 import re
 
-LEGACY_ROOT = 'mods/driftkings/Carroucel/'
-RESOURCE_ROOT = 'gui/maps/driftkings/Carroucel/'
-ICON_PATH = re.compile(r'(?:(?:coui|img)://)?gui/maps/driftkings/Carroucel/[#A-Za-z0-9_-]+\.png|mods/driftkings/Carroucel/[#A-Za-z0-9_-]+\.png')
+RESOURCE_ROOT = 'gui/maps/driftkings/carroucel/'
+ICON_PATH = re.compile(r'gui/maps/driftkings/carroucel/[#a-z0-9_-]+\.png')
+SAVED_ICON_PATH = re.compile(r'(?:(?:coui|img)://)?(?:gui/maps|mods)/driftkings/carroucel/([^\s\'"<>/]+\.png)', re.IGNORECASE)
 MAX_IMAGE_SIZE = 2 * 1024 * 1024
+
+
+def normalize_icon_paths(text):
+    """Normalize owned paths once on load/render, preserving macro names."""
+    def replace(match):
+        filename = ''.join(part if part.startswith('{{') else part.lower()
+                           for part in re.split(r'(\{\{.*?\}\})', match.group(1)))
+        return RESOURCE_ROOT + filename
+    return SAVED_ICON_PATH.sub(replace, text)
+
+
+def normalize_icon_config(value):
+    if isinstance(value, dict):
+        return dict((key, normalize_icon_config(item)) for key, item in value.items())
+    if isinstance(value, list):
+        return [normalize_icon_config(item) for item in value]
+    if isinstance(value, (str, type(u''))):
+        return normalize_icon_paths(value)
+    return value
 
 
 class CarouselImages(object):
@@ -21,9 +40,7 @@ class CarouselImages(object):
     def resolve(self, path):
         if not ICON_PATH.match(path) or ICON_PATH.match(path).group(0) != path:
             return ''
-        resource = path.split('://', 1)[-1]
-        if resource.startswith(LEGACY_ROOT):
-            resource = RESOURCE_ROOT + resource[len(LEGACY_ROOT):]
+        resource = path
         if resource in self.cache:
             return self.cache[resource]
         try:

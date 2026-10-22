@@ -52,8 +52,6 @@ class HangarPreferencesSettings(SectionDefinition):
                 control(HANGAR_PREFERENCES.SHOW_RANKED_BATTLE_RESULTS),
                 control(HANGAR_PREFERENCES.SHOW_HANGAR_PRESTIGE_WIDGET),
                 control(HANGAR_PREFERENCES.SHOW_PROFILE_PRESTIGE_WIDGET),
-                control('profileRatingColors'),
-                control('showProfileWN8'),
                 control(HANGAR_PREFERENCES.SHOW_ACHIEVEMENT_POPUPS),
                 control(HANGAR_PREFERENCES.SHOW_ACHIEVEMENT_REWARD_WINDOW),
                 control(HANGAR_PREFERENCES.FIELD_MAIL),

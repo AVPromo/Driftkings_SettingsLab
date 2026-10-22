@@ -39,7 +39,7 @@ class ArtilleryBlastRadiusTests(RuntimeTest):
             'driftkings.common.utils.exceptions': module(log_exceptions=lambda function: function),
             'driftkings.common.utils.game': module(checkKeys=lambda keys: str(keys) in self.keys,
                                                    sendPanelMessage=lambda text, color: self.messages.append(color)),
-            'driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player()),
+            'driftkings.common.utils.wgutils': module(getPlayer=lambda: self.player()),
             'driftkings.ui.common.markers': module(StaticWorldObjectMarker3D=Marker),
             'driftkings.settings.definitions.battle.artillery_blast_radius': module(
                 ArtilleryBlastRadiusSettings=lambda: module(i18n={'UI_artySplash_messageSplashOn': 'on', 'UI_artySplash_messageSplashOff': 'off',

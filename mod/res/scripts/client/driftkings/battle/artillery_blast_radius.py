@@ -10,7 +10,7 @@ from driftkings._constants import ARTILLERY_BLAST_RADIUS, GLOBAL
 from driftkings.common.utils import events
 from driftkings.common.utils.exceptions import log_exceptions
 from driftkings.common.utils.game import checkKeys, sendPanelMessage
-from driftkings.common.utils.wgUtils import getPlayer
+from driftkings.common.utils.wgutils import getPlayer
 from driftkings.core.hooks import override, on_event
 from driftkings.core.keyboard import keyboard
 from driftkings.settings.definitions.battle.artillery_blast_radius import ArtilleryBlastRadiusSettings as Settings

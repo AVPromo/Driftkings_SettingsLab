@@ -7,7 +7,7 @@ from dossiers2.ui.achievements import ACHIEVEMENT_BLOCK, MARK_OF_MASTERY_RECORD
 from gui.shared.personality import ServicesLocator
 
 from driftkings._constants import GLOBAL, TECH_TREE_MARKS_OF_EXCELLENCE
-from driftkings.common.utils.colorRatting import getStatisticColor
+from driftkings.common.utils.colorratting import getStatisticColor
 from driftkings.core.settings_controller import SettingsController
 from driftkings.interface_catalog import gameface_spec
 from driftkings.settings.definitions.lobby.tech_tree_marks_of_excellence import \

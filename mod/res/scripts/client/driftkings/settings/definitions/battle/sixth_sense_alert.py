@@ -52,7 +52,7 @@ class SixthSenseAlertSettings(SectionDefinition):
 
     @staticmethod
     def sixthSenseIconsNamesList():
-        directory = 'gui/maps/icons/SixthSense/'
+        directory = 'gui/maps/icons/sixthsense/'
         folder = ResMgr.openSection(directory)
         # The battle Flash uses the stored numeric filename, not the list index.
         names = set('%d.png' % index for index in range(10))

@@ -10,10 +10,10 @@ from gui.shared.personality import ServicesLocator
 from driftkings._constants import GLOBAL, HANGAR_MARKS_OF_EXCELLENCE, MARKS_MIN_TIER
 from driftkings.common.config.json_reader import loadJson
 from driftkings.common.utils.achievement_dossiers import getAchievementDossier
-from driftkings.common.utils.colorRatting import getStatisticColor, getMoeDamageColor
+from driftkings.common.utils.colorratting import getStatisticColor, getMoeDamageColor
 from driftkings.common.utils.exceptions import log_exceptions
 from driftkings.common.utils.numbers import finite_number
-from driftkings.common.utils.wgUtils import getPlayer
+from driftkings.common.utils.wgutils import getPlayer
 from driftkings.core.cache import cache_directory
 from driftkings.core.hooks import override
 from driftkings.core.marks_calculator import ceil_damage, combined_damage, statistics, hangar_goal

@@ -28,14 +28,14 @@ class BattleStatisticsTests(RuntimeTest):
         record = lambda name: (lambda *args: self.events.append((name,) + args))
         self.api, self.hooks = game_source('battle/battle_statistics.py', {
             'driftkings.settings.service': Settings(self.data).service(),
-            'driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player, getEntity=lambda vehicleID: None),
+            'driftkings.common.utils.wgutils': module(getPlayer=lambda: self.player, getEntity=lambda vehicleID: None),
             'driftkings.game_constants': module(SHELL_TYPES=module(ARMOR_PIERCING=AP, ARMOR_PIERCING_CR=APCR,
                                                                     HOLLOW_CHARGE=HEAT, HIGH_EXPLOSIVE=HE)),
             'items': module(vehicles=module(VEHICLE_CLASS_TAGS=CLASSES)),
             'driftkings.core.battle_policy': module(battle_policy=module(decision=lambda name: (True, ''))),
             'driftkings.ui': module(g_events=module(onVehiclesChanged=record('vehicles'), onCountChanged=record('count'),
                                                    onHealthChanged=record('health'), onChanceChanged=record('chance'))),
-        }, real=('driftkings._constants', 'driftkings.common.utils.formatting', 'driftkings.common.utils.colorRatting'))
+        }, real=('driftkings._constants', 'driftkings.common.utils.formatting', 'driftkings.common.utils.colorratting'))
         self.stats = self.api['g_tanksStatistic']
         self.display = self.api['g_mod']
 

@@ -3,6 +3,35 @@
 import math
 
 
+def parse_thresholds(text, maximum):
+    values = [float(item.strip()) for item in text.split(',')]
+    if (len(values) != 5 or any(math.isnan(value) or math.isinf(value) or value <= 0 or value > maximum for value in values)
+            or any(a >= b for a, b in zip(values, values[1:]))):
+        raise ValueError('Use five increasing comma-separated limits between 0 and %s.' % maximum)
+    return values
+
+
+def migrate_profile_options(legacy):
+    result = {'enabled': legacy.get('enabled', True)}
+    if 'profileRatingColors' in legacy:
+        result.update((key, legacy['profileRatingColors']) for key in ('summaryColors', 'statisticsColors', 'vehicleColors'))
+    if 'showProfileWN8' in legacy:
+        result.update((key, legacy['showProfileWN8']) for key in ('showPlayerWN8', 'showVehicleWN8'))
+    return result
+
+
+def vehicle_wn8(stats, vehicle_id, expected):
+    """Use the same WN8 formula and validation for a single vehicle dossier."""
+    class VehicleStats(object):
+        def getVehicles(self):
+            return {vehicle_id: (stats.getBattlesCount(),)}
+
+        def __getattr__(self, name):
+            return getattr(stats, name)
+
+    return account_wn8(VehicleStats(), expected)
+
+
 def account_wn8(stats, expected):
     battles = stats.getBattlesCount()
     if not battles:

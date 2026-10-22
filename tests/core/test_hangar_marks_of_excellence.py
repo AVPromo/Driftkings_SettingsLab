@@ -3,7 +3,7 @@
 from support import RuntimeTest, Settings, game_source, module
 
 REAL = ('driftkings._constants', 'driftkings.common.utils.numbers', 'driftkings.core.marks_calculator',
-        'driftkings.common.utils.colorRatting')
+        'driftkings.common.utils.colorratting')
 
 
 class Stats(object):
@@ -45,7 +45,7 @@ class HangarMarksTests(RuntimeTest):
         self.api, self.hooks = game_source('lobby/hangar_marks_of_excellence.py', {
             'driftkings.settings.service': Settings(self.data).service(),
             'driftkings.common.config.json_reader': module(loadJson=load_json),
-            'driftkings.common.utils.wgUtils': module(getPlayer=lambda: module(databaseID=self.account)),
+            'driftkings.common.utils.wgutils': module(getPlayer=lambda: module(databaseID=self.account)),
             'driftkings.common.utils.exceptions': module(log_exceptions=lambda function: function),
             'driftkings.stats.vehinfo': module(getVehicleInfoData=lambda cd: self.expected if cd == 1 else None),
             'gui.Scaleform.daapi.view.lobby.profile.ProfileUtils': module(ProfileUtils=module(getValueOrUnavailable=lambda value: value)),

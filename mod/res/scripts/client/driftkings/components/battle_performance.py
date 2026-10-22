@@ -12,9 +12,9 @@ from gui.battle_control.battle_constants import PERSONAL_EFFICIENCY_TYPE
 
 from driftkings._constants import BATTLE_PERFORMANCE, GLOBAL
 from driftkings.common.utils import events
-from driftkings.common.utils.colorRatting import getStatisticColor
+from driftkings.common.utils.colorratting import getStatisticColor
 from driftkings.common.utils.formatting import replaceMacros
-from driftkings.common.utils.wgUtils import getPlayer
+from driftkings.common.utils.wgutils import getPlayer
 from driftkings.core.battle_events import battleEvents
 from driftkings.core.hooks import override, on_event
 from driftkings.settings.definitions.components.battle_performance import BattlePerformanceSettings as Settings

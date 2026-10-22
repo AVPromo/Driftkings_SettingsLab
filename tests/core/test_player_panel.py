@@ -36,7 +36,7 @@ class HotkeyFieldTests(RuntimeTest):
 class StatisticsRequestTests(RuntimeTest):
     def setUp(self):
         super(StatisticsRequestTests, self).setUp()
-        colors = self.load('common.utils.colorRatting')
+        colors = self.load('common.utils.colorratting')
         self.settings = {'enabled': True, 'statsEnabled': True, 'colorScale': 0,
                          'performance': {'cacheEnabled': False, 'cacheExpiry': 3600,
                                          'minBattlesToShow': 0, 'requestTimeout': 1}}
@@ -54,8 +54,8 @@ class StatisticsRequestTests(RuntimeTest):
             'skeletons.gui.battle_session': module(IBattleSessionProvider=object),
             'driftkings._constants': module(GLOBAL=module(ENABLED='enabled'), TEAM_PANELS=module(
                 PERFORMANCE='performance', STATS_ENABLED='statsEnabled', COLOR_SCALE='colorScale')),
-            'driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player),
-            'driftkings.common.utils.colorRatting': module(getStatisticColor=colors.getStatisticColor),
+            'driftkings.common.utils.wgutils': module(getPlayer=lambda: self.player),
+            'driftkings.common.utils.colorratting': module(getStatisticColor=colors.getStatisticColor),
             'driftkings.core.callbacks': module(callback=lambda delay, fn: self.scheduled.append(fn) or len(self.scheduled),
                                                 cancelCallback=lambda handle: None),
             'driftkings.core.hooks': module(override=lambda *args: None),
@@ -176,7 +176,7 @@ class KeyStateTests(RuntimeTest):
             'driftkings.core.hooks': module(override=None),
             'driftkings.core.battle_events': module(battleEvents=None),
             'driftkings.settings.settings_data': settings_data,
-            'driftkings.common.utils.colorRatting': module(getStatisticColor=None),
+            'driftkings.common.utils.colorratting': module(getStatisticColor=None),
         })
         self.view = api['RatingViews'](module(), None)
         self.view.active = True
@@ -284,7 +284,7 @@ class MacroValidationTests(RuntimeTest):
         import json, os
         issues = self.load('settings.panel_validation').macro_issues
         path = os.path.join(os.path.dirname(__file__), '..', '..', 'res', 'configs', 'driftkings', 'default',
-                            'team_panels', 'panelLarge.json')
+                            'team_panels', 'panellarge.json')
         with open(path, 'rb') as stream:
             data = json.loads(stream.read().decode('utf-8'))
         for key in ('nickFormatLeft', 'nickFormatRight', 'vehicleFormatLeft', 'vehicleFormatRight'):

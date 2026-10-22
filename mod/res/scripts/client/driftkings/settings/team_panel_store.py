@@ -9,7 +9,7 @@ from driftkings.settings.panel_validation import macro_issues
 from driftkings.settings.settings_data import PROFILES, defaults as component_defaults
 from driftkings.settings.store import merge, JsonDocuments, read_object as read_json
 
-FILES = ('general.json', 'playersPanel.json', 'battleLoading.json', 'statisticForm.json') + tuple('panel%s.json' % name.title() for name in PROFILES)
+FILES = ('general.json', 'playerspanel.json', 'battleloading.json', 'statisticform.json') + tuple('panel%s.json' % name.lower() for name in PROFILES)
 LEGACY_FILES = ('panelLong.json', 'panelFull.json')
 GENERAL = ('schemaVersion', 'enabled', 'statsEnabled', 'colorScale', 'rating', 'performance', 'hpEnabled', 'hpVisibility', 'hpKey', 'spottedEnabled')
 try:
@@ -162,11 +162,11 @@ class PlayerPanelStore(JsonDocuments):
             saved=read_json(path) if not old and os.path.isfile(path) else {}
             if name=='general.json' and 'hpVisibility' not in saved and saved.get('hpEnabled') is False:
                 saved['hpVisibility']='never'
-            if name=='battleLoading.json': obsolete_loading='tips' in saved
+            if name=='battleloading.json': obsolete_loading='tips' in saved
             parts.append(merge(default,saved))
         data=join(parts)
         for message in validate(data): get_logger('Driftkings.PlayerPanelPro').warning('Configuration: %s',message)
-        missing=[(os.path.join(self.directory,name),value) for name,value in zip(FILES,split(data)) if old or not os.path.isfile(os.path.join(self.directory,name)) or name=='battleLoading.json' and obsolete_loading]
+        missing=[(os.path.join(self.directory,name),value) for name,value in zip(FILES,split(data)) if old or not os.path.isfile(os.path.join(self.directory,name)) or name=='battleloading.json' and obsolete_loading]
         self.publish(missing)
         return data
 

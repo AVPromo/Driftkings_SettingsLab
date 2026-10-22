@@ -42,7 +42,7 @@ class EnemySpottingStatusTests(RuntimeTest):
                 'UI_setting_AssistTrack_text': 'Track:', 'UI_setting_AssistStun_text': 'Stun:'}
         self.api, self.hooks = game_source('battle/enemy_spotting_status.py', {
             'driftkings.settings.service': Settings(self.data).service(),
-            'driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player),
+            'driftkings.common.utils.wgutils': module(getPlayer=lambda: self.player),
             'driftkings.common.utils.game': module(sendPanelMessage=self.messages.append),
             'gui.shared.gui_items.Vehicle': module(
                 getIconPath=lambda name: 'gui/maps/icons/vehicle/' + name.replace(':', '-', 1) + '.png',

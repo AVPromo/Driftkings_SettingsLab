@@ -32,7 +32,7 @@ from notification.NotificationListView import NotificationListView
 from vehicle_systems.tankStructure import ModelStates
 
 from driftkings._constants import GLOBAL, HANGAR_PREFERENCES
-from driftkings.common.utils.wgUtils import isReplay
+from driftkings.common.utils.wgutils import isReplay
 from driftkings.core.introspection import find_attr_name
 from driftkings.core.callbacks import callback
 from driftkings.core.hooks import override, overrideMethod, overrideClassMethod
@@ -410,10 +410,6 @@ RESOURCE = gameface_spec(FEATURE)['resource']
 g_clockController = ClockController()
 def init():
     controller.start()
-    from driftkings.views.hangar.profile_ratings import install
-    install()
-    from driftkings.views.hangar.profile_statistics import install as install_profile_statistics
-    install_profile_statistics()
     try:
         install_clock_gameface()
         install_header_options()

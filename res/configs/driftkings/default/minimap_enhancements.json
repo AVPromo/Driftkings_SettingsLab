@@ -4,7 +4,7 @@
     "alpha": 100,
     "enabled": true,
     "scale": 50,
-    "src": "gui/maps/driftkings/Minimap/MinimapAim_0.png"
+    "src": "gui/maps/driftkings/minimap/minimapaim_0.png"
   },
   "button": [
     [

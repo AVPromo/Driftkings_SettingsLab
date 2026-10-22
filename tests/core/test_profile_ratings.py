@@ -7,7 +7,7 @@ class ProfileRatingTests(RuntimeTest):
         self.settings = {'enabled': True}
         self.api, _ = game_source('views/hangar/profile_ratings.py', {
             'driftkings.settings.service': Settings(self.settings).service(),
-        }, real=('driftkings.common.utils.colorRatting',))
+        }, real=('driftkings.common.utils.colorratting',))
         self.stats = module(getBattlesCount=lambda: 51000, getAvgDamage=lambda: 1800,
                             getWinsEfficiency=lambda: 0.5686)
         self.model = module(getBattlesLeftCount=lambda: 0, getIsWTREnabled=lambda: True,
@@ -30,9 +30,9 @@ class ProfileRatingTests(RuntimeTest):
         self.settings['enabled'] = False
         self.assertEqual(self.api['colors'](self.presenter), {})
         self.settings['enabled'] = True
-        self.settings['profileRatingColors'] = False
+        self.settings['summaryColors'] = False
         self.assertEqual(self.api['colors'](self.presenter), {})
-        self.settings['profileRatingColors'] = True
+        self.settings['summaryColors'] = True
         self.assertIn('rating', self.api['colors'](self.presenter))
         self.model.getBattlesLeftCount = lambda: 5
         self.assertNotIn('rating', self.api['colors'](self.presenter))

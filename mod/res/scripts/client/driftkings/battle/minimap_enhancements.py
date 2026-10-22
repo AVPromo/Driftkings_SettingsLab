@@ -15,7 +15,7 @@ from skeletons.gui.battle_session import IBattleSessionProvider
 from driftkings._constants import BATTLE_ALIASES
 from driftkings._constants import GLOBAL, MINIMAP_ENHANCEMENTS
 from driftkings.common.utils.formatting import hexToDecimal
-from driftkings.common.utils.wgUtils import isXvmInstalled, getBattleTypes
+from driftkings.common.utils.wgutils import isXvmInstalled, getBattleTypes
 from driftkings.common.utils.game import checkKeys
 from driftkings.core import minimap as policy
 from driftkings.core.callbacks import callback, cancelCallback

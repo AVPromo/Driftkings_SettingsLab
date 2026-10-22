@@ -3,7 +3,7 @@ from driftkings.meta.battle.base import CrosshairMeta
 
 
 class ArmorCalculatorMeta(CrosshairMeta):
-    FLASH_CLASS = 'driftkings.battle.components.armor_calculator.ArmorCalculatorUI'
+    FLASH_CLASS = 'driftkings.battle.components.armor_calculator.armorcalculatorui'
 
     def as_armorCalculatorS(self, text):
         if self._isDAAPIInited():

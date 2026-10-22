@@ -261,6 +261,11 @@ class SettingsLoader(object):
                     values = next((central[name] for name in section_aliases(component) if name in central), None)
                 if values is None:
                     values = legacy() if legacy else {}
+            if component == 'profile_ratings' and not values:
+                from driftkings.core.profile_ratings import migrate_profile_options
+                previous = self.path('hangar_preferences')
+                if os.path.isfile(previous):
+                    values = migrate_profile_options(read_object(previous))
             values = migrate_values(component, {} if values is None else values)
             validate_types(defaults, values, component)
             values = merge(defaults, values)

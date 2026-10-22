@@ -5,7 +5,7 @@ from support import RuntimeTest
 class ColorTests(RuntimeTest):
     def setUp(self):
         super(ColorTests, self).setUp()
-        self.colors = self.load('common.utils.colorRatting')
+        self.colors = self.load('common.utils.colorratting')
 
     def test_extracted_tables_preserve_legacy_exports_and_shared_identity(self):
         data = self.load('common.utils.color_rating_data')

@@ -5,16 +5,6 @@
     var active = {}, retiring = {}, disposed = false;
     /* GENERATED CATALOG START */
     var features = {
-        "DriftkingsBattleEfficiency": {
-            "owner": "__dkBattleEfficiency",
-            "scripts": [
-                "coui://gui/gameface/mods/driftkings/shared/flash_text.js",
-                "coui://gui/gameface/mods/driftkings/battle_performance/results.js"
-            ],
-            "styles": [
-                "coui://gui/gameface/mods/driftkings/battle_performance/results.css"
-            ]
-        },
         "DriftkingsCarouselStats": {
             "owner": "__dkCarouselStats",
             "scripts": [
@@ -115,6 +105,16 @@
                 "coui://gui/gameface/mods/driftkings/panel_gameface/ratings.js"
             ],
             "styles": []
+        },
+        "driftkingsbattleEfficiency": {
+            "owner": "__dkBattleEfficiency",
+            "scripts": [
+                "coui://gui/gameface/mods/driftkings/shared/flash_text.js",
+                "coui://gui/gameface/mods/driftkings/battle_performance/results.js"
+            ],
+            "styles": [
+                "coui://gui/gameface/mods/driftkings/battle_performance/results.css"
+            ]
         }
     };
     /* GENERATED CATALOG END */

@@ -4,4 +4,4 @@
 .dk-clock-custom__field { line-height:1.15; }
 
 .dk-clock-custom__content { display:flex; flex-shrink:0; }
-.dk-clock-custom__content--background { padding:8px 12px; background-image:url('coui://gui/maps/driftkings/clock/clockBg.png'); background-repeat:no-repeat; background-size:100% 100%; }
+.dk-clock-custom__content--background { padding:8px 12px; background-image:url('coui://gui/maps/driftkings/clock/clockbg.png'); background-repeat:no-repeat; background-size:100% 100%; }
