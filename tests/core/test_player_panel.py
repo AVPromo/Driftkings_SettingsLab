@@ -52,15 +52,15 @@ class StatisticsRequestTests(RuntimeTest):
             'helpers': module(dependency=module(descriptor=lambda value: None)),
             'messenger': module(g_settings=object()),
             'skeletons.gui.battle_session': module(IBattleSessionProvider=object),
-            'Driftkings._constants': module(GLOBAL=module(ENABLED='enabled'), TEAM_PANELS=module(
+            'driftkings._constants': module(GLOBAL=module(ENABLED='enabled'), TEAM_PANELS=module(
                 PERFORMANCE='performance', STATS_ENABLED='statsEnabled', COLOR_SCALE='colorScale')),
-            'Driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player),
-            'Driftkings.common.utils.colorRatting': module(getStatisticColor=colors.getStatisticColor),
-            'Driftkings.core.callbacks': module(callback=lambda delay, fn: self.scheduled.append(fn) or len(self.scheduled),
+            'driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player),
+            'driftkings.common.utils.colorRatting': module(getStatisticColor=colors.getStatisticColor),
+            'driftkings.core.callbacks': module(callback=lambda delay, fn: self.scheduled.append(fn) or len(self.scheduled),
                                                 cancelCallback=lambda handle: None),
-            'Driftkings.core.hooks': module(override=lambda *args: None),
-            'Driftkings.settings.service': module(settings_service=module(getComponentDict=lambda config: self.settings)),
-            'Driftkings.stats.vehinfo': module(calculateXvmScale=lambda metric, value: value,
+            'driftkings.core.hooks': module(override=lambda *args: None),
+            'driftkings.settings.service': module(settings_service=module(getComponentDict=lambda config: self.settings)),
+            'driftkings.stats.vehinfo': module(calculateXvmScale=lambda metric, value: value,
                                                getVehicleInfoData=lambda value: None, scaleValuesInstance=object())})
         self.api = api
         self.stats = api['Statistics']()
@@ -165,18 +165,18 @@ class KeyStateTests(RuntimeTest):
         settings_data = module(PROFILES=('none', 'short', 'medium', 'medium2', 'large'),
                                profile_for_mode=lambda mode: 'large')
         api = source('views/battle/player_ratings.py', {
-            'Driftkings.settings.service': module(settings_service=module(getComponentDict=lambda config: self.data),
+            'driftkings.settings.service': module(settings_service=module(getComponentDict=lambda config: self.data),
                                                  SettingsChanges=None, changed_paths=None, affects=None),
             'BigWorld': module(isKeyDown=lambda code: code in self.down),
             'realm': module(CURRENT_REALM='EU'),
-            'Driftkings.meta.battle.players_panel': module(PlayersPanelMeta=object),
+            'driftkings.meta.battle.players_panel': module(PlayersPanelMeta=object),
             'gui.Scaleform.daapi.view.battle.classic.players_panel': module(PlayersPanel=object),
             'gui.Scaleform.daapi.view.meta.BattleStatisticDataControllerMeta': module(BattleStatisticDataControllerMeta=object),
             'gui.shared': module(g_eventBus=None, events=None, EVENT_BUS_SCOPE=None),
-            'Driftkings.core.hooks': module(override=None),
-            'Driftkings.core.battle_events': module(battleEvents=None),
-            'Driftkings.settings.settings_data': settings_data,
-            'Driftkings.common.utils.colorRatting': module(getStatisticColor=None),
+            'driftkings.core.hooks': module(override=None),
+            'driftkings.core.battle_events': module(battleEvents=None),
+            'driftkings.settings.settings_data': settings_data,
+            'driftkings.common.utils.colorRatting': module(getStatisticColor=None),
         })
         self.view = api['RatingViews'](module(), None)
         self.view.active = True
@@ -283,7 +283,7 @@ class MacroValidationTests(RuntimeTest):
     def test_default_large_panel_formats_use_only_known_macros(self):
         import json, os
         issues = self.load('settings.panel_validation').macro_issues
-        path = os.path.join(os.path.dirname(__file__), '..', '..', 'res', 'configs', 'Driftkings', 'default',
+        path = os.path.join(os.path.dirname(__file__), '..', '..', 'res', 'configs', 'driftkings', 'default',
                             'team_panels', 'panelLarge.json')
         with open(path, 'rb') as stream:
             data = json.loads(stream.read().decode('utf-8'))
@@ -321,9 +321,9 @@ class BattleFeedbackTests(RuntimeTest):
         api = source('core/battle_events.py', {
             'Avatar': module(PlayerAvatar=object), 'Vehicle': module(Vehicle=object),
             'VehicleGunRotator': module(VehicleGunRotator=object),
-            'Driftkings.core.hooks': module(override=lambda cls, name, handler: self.hooks.append(name)),
-            'Driftkings.core.keyboard': module(keyboard=module(subscribe=lambda fn: None, unsubscribe=lambda fn: None)),
-            'Driftkings.ui': module(g_events=module(onBattleLoaded=Hook())),
+            'driftkings.core.hooks': module(override=lambda cls, name, handler: self.hooks.append(name)),
+            'driftkings.core.keyboard': module(keyboard=module(subscribe=lambda fn: None, unsubscribe=lambda fn: None)),
+            'driftkings.ui': module(g_events=module(onBattleLoaded=Hook())),
             'helpers': module(dependency=module(instance=lambda iface: self.session)),
             'skeletons.gui.battle_session': module(IBattleSessionProvider=object),
             'BigWorld': module(player=lambda: 'avatar'),

@@ -8,13 +8,13 @@
       "config_files": [],
       "assets": [
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/AccountManager/**",
-          "target": "res/gui/gameface/mods/Driftkings/AccountManager/**",
+          "source": "mod/res/gui/gameface/mods/driftkings/account_manager/**",
+          "target": "res/gui/gameface/mods/driftkings/account_manager/**",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gen_resources/driftkings.DriftkingsAccountManager.json",
-          "target": "res/gui/gen_resources/driftkings.DriftkingsAccountManager.json",
+          "source": "mod/res/gui/gen_resources/driftkings.account_manager.json",
+          "target": "res/gui/gen_resources/driftkings.account_manager.json",
           "generator": null
         }
       ]
@@ -70,23 +70,23 @@
       ],
       "assets": [
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunBattle/marks.js",
-          "target": "res/gui/gameface/mods/Driftkings/MarksOnGunBattle/marks.js",
+          "source": "mod/res/gui/gameface/mods/driftkings/battle_marks_of_excellence/marks.js",
+          "target": "res/gui/gameface/mods/driftkings/battle_marks_of_excellence/marks.js",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunBattle/marks.css",
-          "target": "res/gui/gameface/mods/Driftkings/MarksOnGunBattle/marks.css",
+          "source": "mod/res/gui/gameface/mods/driftkings/battle_marks_of_excellence/marks.css",
+          "target": "res/gui/gameface/mods/driftkings/battle_marks_of_excellence/marks.css",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunBattle/model.html",
-          "target": "res/gui/gameface/mods/Driftkings/MarksOnGunBattle/model.html",
+          "source": "mod/res/gui/gameface/mods/driftkings/battle_marks_of_excellence/model.html",
+          "target": "res/gui/gameface/mods/driftkings/battle_marks_of_excellence/model.html",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gen_resources/driftkings.DriftkingsMarksOnGunBattle.json",
-          "target": "res/gui/gen_resources/driftkings.DriftkingsMarksOnGunBattle.json",
+          "source": "mod/res/gui/gen_resources/driftkings.battle_marks_of_excellence.json",
+          "target": "res/gui/gen_resources/driftkings.battle_marks_of_excellence.json",
           "generator": null
         }
       ]
@@ -100,23 +100,23 @@
       ],
       "assets": [
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/BattleEfficiency/model.html",
-          "target": "res/gui/gameface/mods/Driftkings/BattleEfficiency/model.html",
+          "source": "mod/res/gui/gameface/mods/driftkings/battle_performance/model.html",
+          "target": "res/gui/gameface/mods/driftkings/battle_performance/model.html",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/BattleEfficiency/results.css",
-          "target": "res/gui/gameface/mods/Driftkings/BattleEfficiency/results.css",
+          "source": "mod/res/gui/gameface/mods/driftkings/battle_performance/results.css",
+          "target": "res/gui/gameface/mods/driftkings/battle_performance/results.css",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/BattleEfficiency/results.js",
-          "target": "res/gui/gameface/mods/Driftkings/BattleEfficiency/results.js",
+          "source": "mod/res/gui/gameface/mods/driftkings/battle_performance/results.js",
+          "target": "res/gui/gameface/mods/driftkings/battle_performance/results.js",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gen_resources/driftkings.DriftkingsBattleEfficiency.json",
-          "target": "res/gui/gen_resources/driftkings.DriftkingsBattleEfficiency.json",
+          "source": "mod/res/gui/gen_resources/driftkings.battle_performance.json",
+          "target": "res/gui/gen_resources/driftkings.battle_performance.json",
           "generator": null
         }
       ]
@@ -131,12 +131,12 @@
       "assets": [
         {
           "source": "build/native/fog/Driftkings.FogPackage.exe",
-          "target": "res/gui/Driftkings/fog/Driftkings.FogPackage.exe",
+          "target": "res/gui/driftkings/fog/Driftkings.FogPackage.exe",
           "generator": "fog_package_helper"
         },
         {
           "source": "build/native/fog/helper.json",
-          "target": "res/gui/Driftkings/fog/helper.json",
+          "target": "res/gui/driftkings/fog/helper.json",
           "generator": "fog_package_helper"
         }
       ]
@@ -171,8 +171,8 @@
           "generator": null
         },
         {
-          "source": "mod/res/gui/maps/icons/Driftkings/**",
-          "target": "res/gui/maps/icons/Driftkings/**",
+          "source": "mod/res/gui/maps/icons/driftkings/**",
+          "target": "res/gui/maps/icons/driftkings/**",
           "generator": null
         }
       ]
@@ -186,23 +186,23 @@
       ],
       "assets": [
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/CrewProgression/**",
-          "target": "res/gui/gameface/mods/Driftkings/CrewProgression/**",
+          "source": "mod/res/gui/gameface/mods/driftkings/crew_progression/**",
+          "target": "res/gui/gameface/mods/driftkings/crew_progression/**",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gen_resources/driftkings.DriftkingsCrewProgression.json",
-          "target": "res/gui/gen_resources/driftkings.DriftkingsCrewProgression.json",
+          "source": "mod/res/gui/gen_resources/driftkings.crew_progression.json",
+          "target": "res/gui/gen_resources/driftkings.crew_progression.json",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/CrewDetails/**",
-          "target": "res/gui/gameface/mods/Driftkings/CrewDetails/**",
+          "source": "mod/res/gui/gameface/mods/driftkings/crew_details/**",
+          "target": "res/gui/gameface/mods/driftkings/crew_details/**",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gen_resources/driftkings.DriftkingsCrewDetails.json",
-          "target": "res/gui/gen_resources/driftkings.DriftkingsCrewDetails.json",
+          "source": "mod/res/gui/gen_resources/driftkings.crew_details.json",
+          "target": "res/gui/gen_resources/driftkings.crew_details.json",
           "generator": null
         },
         {
@@ -259,23 +259,23 @@
       ],
       "assets": [
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunHangar/marks.css",
-          "target": "res/gui/gameface/mods/Driftkings/MarksOnGunHangar/marks.css",
+          "source": "mod/res/gui/gameface/mods/driftkings/hangar_marks_of_excellence/marks.css",
+          "target": "res/gui/gameface/mods/driftkings/hangar_marks_of_excellence/marks.css",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunHangar/marks.js",
-          "target": "res/gui/gameface/mods/Driftkings/MarksOnGunHangar/marks.js",
+          "source": "mod/res/gui/gameface/mods/driftkings/hangar_marks_of_excellence/marks.js",
+          "target": "res/gui/gameface/mods/driftkings/hangar_marks_of_excellence/marks.js",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunHangar/model.html",
-          "target": "res/gui/gameface/mods/Driftkings/MarksOnGunHangar/model.html",
+          "source": "mod/res/gui/gameface/mods/driftkings/hangar_marks_of_excellence/model.html",
+          "target": "res/gui/gameface/mods/driftkings/hangar_marks_of_excellence/model.html",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gen_resources/driftkings.DriftkingsMarksOnGunHangar.json",
-          "target": "res/gui/gen_resources/driftkings.DriftkingsMarksOnGunHangar.json",
+          "source": "mod/res/gui/gen_resources/driftkings.hangar_marks_of_excellence.json",
+          "target": "res/gui/gen_resources/driftkings.hangar_marks_of_excellence.json",
           "generator": null
         }
       ]
@@ -289,43 +289,38 @@
       ],
       "assets": [
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/HangarClock/clock.css",
-          "target": "res/gui/gameface/mods/Driftkings/HangarClock/clock.css",
+          "source": "mod/res/gui/gameface/mods/driftkings/hangar_preferences/clock.css",
+          "target": "res/gui/gameface/mods/driftkings/hangar_preferences/clock.css",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/HangarClock/clock.js",
-          "target": "res/gui/gameface/mods/Driftkings/HangarClock/clock.js",
+          "source": "mod/res/gui/gameface/mods/driftkings/hangar_preferences/clock.js",
+          "target": "res/gui/gameface/mods/driftkings/hangar_preferences/clock.js",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/HangarHeaderOptions/header_options.js",
-          "target": "res/gui/gameface/mods/Driftkings/HangarHeaderOptions/header_options.js",
+          "source": "mod/res/gui/gameface/mods/driftkings/hangar_preferences/header_options.js",
+          "target": "res/gui/gameface/mods/driftkings/hangar_preferences/header_options.js",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/HangarClock/model.html",
-          "target": "res/gui/gameface/mods/Driftkings/HangarClock/model.html",
+          "source": "mod/res/gui/gameface/mods/driftkings/hangar_preferences/clock.html",
+          "target": "res/gui/gameface/mods/driftkings/hangar_preferences/clock.html",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gen_resources/driftkings.DriftkingsHangarClock.json",
-          "target": "res/gui/gen_resources/driftkings.DriftkingsHangarClock.json",
+          "source": "mod/res/gui/gen_resources/driftkings.hangar_preferences.json",
+          "target": "res/gui/gen_resources/driftkings.hangar_preferences.json",
           "generator": null
         },
         {
-          "source": "mod/res/gui/maps/Driftkings/clock/clockBg.png",
-          "target": "res/gui/maps/Driftkings/clock/clockBg.png",
+          "source": "mod/res/gui/maps/driftkings/clock/clockBg.png",
+          "target": "res/gui/maps/driftkings/clock/clockBg.png",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/HangarHeaderOptions/model.html",
-          "target": "res/gui/gameface/mods/Driftkings/HangarHeaderOptions/model.html",
-          "generator": null
-        },
-        {
-          "source": "mod/res/gui/gen_resources/driftkings.DriftkingsHangarHeaderOptions.json",
-          "target": "res/gui/gen_resources/driftkings.DriftkingsHangarHeaderOptions.json",
+          "source": "mod/res/gui/gameface/mods/driftkings/hangar_preferences/header_options.html",
+          "target": "res/gui/gameface/mods/driftkings/hangar_preferences/header_options.html",
           "generator": null
         }
       ]
@@ -339,13 +334,13 @@
       ],
       "assets": [
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/MainGun/**",
-          "target": "res/gui/gameface/mods/Driftkings/MainGun/**",
+          "source": "mod/res/gui/gameface/mods/driftkings/high_caliber_gameface/**",
+          "target": "res/gui/gameface/mods/driftkings/high_caliber_gameface/**",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gen_resources/driftkings.DriftkingsMainGun.json",
-          "target": "res/gui/gen_resources/driftkings.DriftkingsMainGun.json",
+          "source": "mod/res/gui/gen_resources/driftkings.high_caliber_gameface.json",
+          "target": "res/gui/gen_resources/driftkings.high_caliber_gameface.json",
           "generator": null
         }
       ]
@@ -363,8 +358,8 @@
       ],
       "assets": [
         {
-          "source": "mod/res/gui/maps/Driftkings/Minimap/**",
-          "target": "res/gui/maps/Driftkings/Minimap/**",
+          "source": "mod/res/gui/maps/driftkings/Minimap/**",
+          "target": "res/gui/maps/driftkings/Minimap/**",
           "generator": null
         }
       ]
@@ -403,13 +398,13 @@
       "config_files": [],
       "assets": [
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/DKModSettings/**",
-          "target": "res/gui/gameface/mods/Driftkings/DKModSettings/**",
+          "source": "mod/res/gui/gameface/mods/driftkings/settings_window/**",
+          "target": "res/gui/gameface/mods/driftkings/settings_window/**",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gen_resources/driftkings.DriftkingsDKModSettings.json",
-          "target": "res/gui/gen_resources/driftkings.DriftkingsDKModSettings.json",
+          "source": "mod/res/gui/gen_resources/driftkings.settings_window.json",
+          "target": "res/gui/gen_resources/driftkings.settings_window.json",
           "generator": null
         }
       ]
@@ -508,23 +503,23 @@
       ],
       "assets": [
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/RatingPlayers/**",
-          "target": "res/gui/gameface/mods/Driftkings/RatingPlayers/**",
+          "source": "mod/res/gui/gameface/mods/driftkings/panel_gameface/**",
+          "target": "res/gui/gameface/mods/driftkings/panel_gameface/**",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gen_resources/driftkings.DriftkingsRatingPlayers.json",
-          "target": "res/gui/gen_resources/driftkings.DriftkingsRatingPlayers.json",
+          "source": "mod/res/gui/gen_resources/driftkings.panel_gameface.json",
+          "target": "res/gui/gen_resources/driftkings.panel_gameface.json",
           "generator": null
         },
         {
-          "source": "mod/res/gui/maps/Driftkings/PlayerPanelPro/hp/**",
-          "target": "res/gui/maps/Driftkings/PlayerPanelPro/hp/**",
+          "source": "mod/res/gui/maps/driftkings/PlayerPanelPro/hp/**",
+          "target": "res/gui/maps/driftkings/PlayerPanelPro/hp/**",
           "generator": null
         },
         {
-          "source": "mod/res/gui/maps/Driftkings/PlayerPanelPro/spotted/**",
-          "target": "res/gui/maps/Driftkings/PlayerPanelPro/spotted/**",
+          "source": "mod/res/gui/maps/driftkings/PlayerPanelPro/spotted/**",
+          "target": "res/gui/maps/driftkings/PlayerPanelPro/spotted/**",
           "generator": null
         }
       ]
@@ -538,23 +533,23 @@
       ],
       "assets": [
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunTechTree/marks.css",
-          "target": "res/gui/gameface/mods/Driftkings/MarksOnGunTechTree/marks.css",
+          "source": "mod/res/gui/gameface/mods/driftkings/tech_tree_marks_of_excellence/marks.css",
+          "target": "res/gui/gameface/mods/driftkings/tech_tree_marks_of_excellence/marks.css",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunTechTree/marks.js",
-          "target": "res/gui/gameface/mods/Driftkings/MarksOnGunTechTree/marks.js",
+          "source": "mod/res/gui/gameface/mods/driftkings/tech_tree_marks_of_excellence/marks.js",
+          "target": "res/gui/gameface/mods/driftkings/tech_tree_marks_of_excellence/marks.js",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/MarksOnGunTechTree/model.html",
-          "target": "res/gui/gameface/mods/Driftkings/MarksOnGunTechTree/model.html",
+          "source": "mod/res/gui/gameface/mods/driftkings/tech_tree_marks_of_excellence/model.html",
+          "target": "res/gui/gameface/mods/driftkings/tech_tree_marks_of_excellence/model.html",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gen_resources/driftkings.DriftkingsMarksOnGunTechTree.json",
-          "target": "res/gui/gen_resources/driftkings.DriftkingsMarksOnGunTechTree.json",
+          "source": "mod/res/gui/gen_resources/driftkings.tech_tree_marks_of_excellence.json",
+          "target": "res/gui/gen_resources/driftkings.tech_tree_marks_of_excellence.json",
           "generator": null
         }
       ]
@@ -576,22 +571,22 @@
       "assets": [
         {
           "source": "build/native/updater/Driftkings.UpdateInstaller.exe",
-          "target": "res/gui/Driftkings/updater/Driftkings.UpdateInstaller.exe",
+          "target": "res/gui/driftkings/updater/Driftkings.UpdateInstaller.exe",
           "generator": "updater_helper"
         },
         {
           "source": "build/native/updater/helper.json",
-          "target": "res/gui/Driftkings/updater/helper.json",
+          "target": "res/gui/driftkings/updater/helper.json",
           "generator": "updater_helper"
         },
         {
           "source": "build/native/windows-files/Driftkings.WindowsFiles.exe",
-          "target": "res/gui/Driftkings/windows-files/Driftkings.WindowsFiles.exe",
+          "target": "res/gui/driftkings/windows-files/Driftkings.WindowsFiles.exe",
           "generator": "windows_files_helper"
         },
         {
           "source": "build/native/windows-files/helper.json",
-          "target": "res/gui/Driftkings/windows-files/helper.json",
+          "target": "res/gui/driftkings/windows-files/helper.json",
           "generator": "windows_files_helper"
         },
         {
@@ -600,28 +595,28 @@
           "generator": "battle_flash"
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/shared/bootstrap.js",
-          "target": "res/gui/gameface/mods/Driftkings/shared/bootstrap.js",
+          "source": "mod/res/gui/gameface/mods/driftkings/shared/bootstrap.js",
+          "target": "res/gui/gameface/mods/driftkings/shared/bootstrap.js",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/shared/marks_tokens.css",
-          "target": "res/gui/gameface/mods/Driftkings/shared/marks_tokens.css",
+          "source": "mod/res/gui/gameface/mods/driftkings/shared/marks_tokens.css",
+          "target": "res/gui/gameface/mods/driftkings/shared/marks_tokens.css",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/shared/marks_panel.js",
-          "target": "res/gui/gameface/mods/Driftkings/shared/marks_panel.js",
+          "source": "mod/res/gui/gameface/mods/driftkings/shared/marks_panel.js",
+          "target": "res/gui/gameface/mods/driftkings/shared/marks_panel.js",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/shared/marks_panel.css",
-          "target": "res/gui/gameface/mods/Driftkings/shared/marks_panel.css",
+          "source": "mod/res/gui/gameface/mods/driftkings/shared/marks_panel.css",
+          "target": "res/gui/gameface/mods/driftkings/shared/marks_panel.css",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/shared/flash_text.js",
-          "target": "res/gui/gameface/mods/Driftkings/shared/flash_text.js",
+          "source": "mod/res/gui/gameface/mods/driftkings/shared/flash_text.js",
+          "target": "res/gui/gameface/mods/driftkings/shared/flash_text.js",
           "generator": null
         }
       ]
@@ -642,38 +637,38 @@
           "generator": "carousel_bridge"
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel.css",
-          "target": "res/gui/gameface/mods/Driftkings/CarouselStats/carousel.css",
+          "source": "mod/res/gui/gameface/mods/driftkings/vehicle_carousel/carousel.css",
+          "target": "res/gui/gameface/mods/driftkings/vehicle_carousel/carousel.css",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel.js",
-          "target": "res/gui/gameface/mods/Driftkings/CarouselStats/carousel.js",
+          "source": "mod/res/gui/gameface/mods/driftkings/vehicle_carousel/carousel.js",
+          "target": "res/gui/gameface/mods/driftkings/vehicle_carousel/carousel.js",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel_layout.js",
-          "target": "res/gui/gameface/mods/Driftkings/CarouselStats/carousel_layout.js",
+          "source": "mod/res/gui/gameface/mods/driftkings/vehicle_carousel/carousel_layout.js",
+          "target": "res/gui/gameface/mods/driftkings/vehicle_carousel/carousel_layout.js",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel_native.js",
-          "target": "res/gui/gameface/mods/Driftkings/CarouselStats/carousel_native.js",
+          "source": "mod/res/gui/gameface/mods/driftkings/vehicle_carousel/carousel_native.js",
+          "target": "res/gui/gameface/mods/driftkings/vehicle_carousel/carousel_native.js",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gameface/mods/Driftkings/CarouselStats/model.html",
-          "target": "res/gui/gameface/mods/Driftkings/CarouselStats/model.html",
+          "source": "mod/res/gui/gameface/mods/driftkings/vehicle_carousel/model.html",
+          "target": "res/gui/gameface/mods/driftkings/vehicle_carousel/model.html",
           "generator": null
         },
         {
-          "source": "mod/res/gui/gen_resources/driftkings.DriftkingsCarouselStats.json",
-          "target": "res/gui/gen_resources/driftkings.DriftkingsCarouselStats.json",
+          "source": "mod/res/gui/gen_resources/driftkings.vehicle_carousel.json",
+          "target": "res/gui/gen_resources/driftkings.vehicle_carousel.json",
           "generator": null
         },
         {
-          "source": "mod/res/gui/maps/Driftkings/Carroucel/**",
-          "target": "res/gui/maps/Driftkings/Carroucel/**",
+          "source": "mod/res/gui/maps/driftkings/Carroucel/**",
+          "target": "res/gui/maps/driftkings/Carroucel/**",
           "generator": null
         }
       ]

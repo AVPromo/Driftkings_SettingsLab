@@ -48,18 +48,18 @@ def process(job_path):
         # Import actual packaged bytecodes without starting game-dependent updater services.
         origin = job['package'].replace('\\', '/') + '/res/scripts/client'
         sys.path.insert(0, origin)
-        import Driftkings
-        if Driftkings.VERSION != job['version']:
+        import driftkings
+        if driftkings.VERSION != job['version']:
             raise ValueError('Packaged runtime version differs from release version')
-        from Driftkings.component_list import COMPONENTS
+        from driftkings.component_list import COMPONENTS
         if list(COMPONENTS) != job['components']:
             raise ValueError('Packaged component list differs from enabled manifests')
-        package = types.ModuleType('Driftkings.core.updater')
-        package.__path__ = [origin + '/Driftkings/core/updater']
+        package = types.ModuleType('driftkings.core.updater')
+        package.__path__ = [origin + '/driftkings/core/updater']
         sys.modules[package.__name__] = package
-        from Driftkings.core.updater.versioning import Version
-        from Driftkings.core.updater.manifest import Manifest
-        from Driftkings.core.marks_calculator import ceil_damage
+        from driftkings.core.updater.versioning import Version
+        from driftkings.core.updater.manifest import Manifest
+        from driftkings.core.marks_calculator import ceil_damage
         with open(job['manifest'], 'rb') as stream:
             manifest = Manifest.parse(stream.read())
         if (manifest.version.text != job['version'] or manifest.channel != job['channel'] or
@@ -67,19 +67,19 @@ def process(job_path):
             raise ValueError('Release metadata is incompatible with the packaged updater')
         if not Version(job['version']).allowed(job['channel']) or ceil_damage(1.1) != 2:
             raise ValueError('Packaged version/calculator contract failed')
-        result = dict(python=sys.version, verified=count, version=Driftkings.VERSION,
+        result = dict(python=sys.version, verified=count, version=driftkings.VERSION,
                       components=len(COMPONENTS), updaterManifest='valid')
         if 'modpack' in job:
-            from Driftkings.core.updater.inventory import Inventory
+            from driftkings.core.updater.inventory import Inventory
             with open(job['modpack'], 'rb') as stream:
                 document = json.loads(stream.read().decode('utf-8'))
             inventory = Inventory(document, manifest.version.text, manifest.channel, manifest.game_version)
             inventory.verify_archive(os.path.join(os.path.dirname(job['modpack']), inventory.distribution['file']))
             result['modpack'] = dict(status='passed', files=len(inventory.files), defaults=len(inventory.defaults))
-        settings_package = types.ModuleType('Driftkings.settings')
-        settings_package.__path__ = [origin + '/Driftkings/settings']
+        settings_package = types.ModuleType('driftkings.settings')
+        settings_package.__path__ = [origin + '/driftkings/settings']
         sys.modules[settings_package.__name__] = settings_package
-        from Driftkings.settings.default_values import DEFAULTS, SELECTOR
+        from driftkings.settings.default_values import DEFAULTS, SELECTOR
         if DEFAULTS != job['defaults'] or SELECTOR != job['selector']:
             raise ValueError('Packaged Python defaults differ from the canonical JSON')
         result['defaults'] = dict(status='passed', components=len(DEFAULTS), source='canonical-json')

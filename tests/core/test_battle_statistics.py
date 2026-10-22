@@ -27,15 +27,15 @@ class BattleStatisticsTests(RuntimeTest):
         self.player = module(team=1, arena=module(vehicles=self.vehicles))
         record = lambda name: (lambda *args: self.events.append((name,) + args))
         self.api, self.hooks = game_source('battle/battle_statistics.py', {
-            'Driftkings.settings.service': Settings(self.data).service(),
-            'Driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player, getEntity=lambda vehicleID: None),
-            'Driftkings.game_constants': module(SHELL_TYPES=module(ARMOR_PIERCING=AP, ARMOR_PIERCING_CR=APCR,
+            'driftkings.settings.service': Settings(self.data).service(),
+            'driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player, getEntity=lambda vehicleID: None),
+            'driftkings.game_constants': module(SHELL_TYPES=module(ARMOR_PIERCING=AP, ARMOR_PIERCING_CR=APCR,
                                                                     HOLLOW_CHARGE=HEAT, HIGH_EXPLOSIVE=HE)),
             'items': module(vehicles=module(VEHICLE_CLASS_TAGS=CLASSES)),
-            'Driftkings.core.battle_policy': module(battle_policy=module(decision=lambda name: (True, ''))),
-            'Driftkings.ui': module(g_events=module(onVehiclesChanged=record('vehicles'), onCountChanged=record('count'),
+            'driftkings.core.battle_policy': module(battle_policy=module(decision=lambda name: (True, ''))),
+            'driftkings.ui': module(g_events=module(onVehiclesChanged=record('vehicles'), onCountChanged=record('count'),
                                                    onHealthChanged=record('health'), onChanceChanged=record('chance'))),
-        }, real=('Driftkings._constants', 'Driftkings.common.utils.formatting', 'Driftkings.common.utils.colorRatting'))
+        }, real=('driftkings._constants', 'driftkings.common.utils.formatting', 'driftkings.common.utils.colorRatting'))
         self.stats = self.api['g_tanksStatistic']
         self.display = self.api['g_mod']
 

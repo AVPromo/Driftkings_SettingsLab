@@ -45,7 +45,7 @@ The defaults are the author's selected mod configurations. Existing personal JSO
 
 An optional Windows installer is built from the same compiler output; see [installer/setup/README.md](installer/setup/README.md). Its 28 component choices change JSON configuration only, never the installed WOTMOD/dependency set. Existing profiles are preserved on reinstall. Explicit `/RESETCONFIG=1` backs up configurations before resetting them. Branding and component previews are optional and can be added later.
 
-The installer creates user-media folders `mods/configs/Driftkings/SixthSense/` (default custom icon: `SixthSenseIcon.png`) and `mods/configs/Driftkings/images/`, with short READMEs. Uninstall preserves these folders and their contents. Images accept packaged `gui/maps/Driftkings/...` resources or custom files in `mods/configs/Driftkings/...`; select the paths in the mod settings. These user files are not optional installer payloads.
+The installer creates user-media folders `mods/configs/driftkings/SixthSense/` (default custom icon: `SixthSenseIcon.png`) and `mods/configs/driftkings/images/`, with short READMEs. Uninstall preserves these folders and their contents. Images accept packaged `gui/maps/driftkings/...` resources or custom files in `mods/configs/driftkings/...`; select the paths in the mod settings. These user files are not optional installer payloads.
 
 ## Compatibility and beta status
 
@@ -72,7 +72,7 @@ Set `version` and `channel` in `build_data/release.json`, for example `"version"
 
 Check portable logic with `python -m unittest discover -s tests/settings_panel -p 'test_*.py'` and `python -m unittest discover -s tests/core -p 'test_*.py'`; both suites also run on Python 2.7. Run `node tests/settings_panel/test_gameface.js` for the Gameface state tests. Install development dependencies with `npm ci --ignore-scripts`, then run `npm run lint` to enforce ES5 syntax and basic JavaScript checks. These tools run on Node 20.19+; client scripts remain ES5.
 
-Edit defaults in `res/configs/Driftkings/default/`, then run `python build_tools/generate_defaults.py --write` to regenerate the Python fallback. For intentional changes to the default values, also refresh the recorded snapshot with `python build_tools/generate_defaults.py --write --refresh-snapshot`. Use `python build_tools/generate_defaults.py --check` to check synchronization without writing files; never edit `settings/default_values.py` by hand.
+Edit defaults in `res/configs/driftkings/default/`, then run `python build_tools/generate_defaults.py --write` to regenerate the Python fallback. For intentional changes to the default values, also refresh the recorded snapshot with `python build_tools/generate_defaults.py --write --refresh-snapshot`. Use `python build_tools/generate_defaults.py --check` to check synchronization without writing files; never edit `settings/default_values.py` by hand.
 
 The current build contract uses the (EU, NA) installation as its resource source and an EU source reference. Local tool paths belong in ignored `build_data/toolchain.local.json`. Builds compile Python 2.7 to standard bytecode without obfuscation, Flash and native helpers, generate the carousel integration and verify the packages. Outputs go to `build/`; compilation does not install or publish them.
 
@@ -105,7 +105,7 @@ The next beta introduces descriptive module and configuration names, with migrat
 
 ## Image paths in the next beta
 
-Overlay images and custom Sixth Sense icons accept `gui/maps/Driftkings/...` resources or user files in `mods/configs/Driftkings/...`, including their fixed SWF-relative forms. `img://` prefixes remain supported. Move custom images from other folders into `mods/configs/Driftkings/` and update their configuration paths. External URLs, absolute paths and directory traversal are rejected; overlays use their configured alternative image, and Sixth Sense uses its embedded fallback icon when loading fails.
+Overlay images and custom Sixth Sense icons accept `gui/maps/driftkings/...` resources or user files in `mods/configs/driftkings/...`, including their fixed SWF-relative forms. `img://` prefixes remain supported. Move custom images from other folders into `mods/configs/driftkings/` and update their configuration paths. External URLs, absolute paths and directory traversal are rejected; overlays use their configured alternative image, and Sixth Sense uses its embedded fallback icon when loading fails.
 
 ## Support and credits
 

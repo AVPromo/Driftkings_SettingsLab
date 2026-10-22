@@ -20,15 +20,15 @@ class BattleMarksTierTests(RuntimeTest):
         self.panel = Panel()
         self.tier = 4
         self.api, _ = game_source('battle/battle_marks_of_excellence.py', {
-            'Driftkings.settings.service': Settings({'enabled': True}).service(),
-            'Driftkings.settings.sections': module(previous_name=lambda name: 'MarksOnGunBattle'),
-            'Driftkings.common.config.json_reader': module(loadJson=lambda *args, **kwargs: {}),
-            'Driftkings.views.battle.battle_marks_of_excellence': module(BattleMarksAdapter=lambda: self.panel),
-            'Driftkings.settings.definitions.battle.battle_marks_of_excellence': module(
+            'driftkings.settings.service': Settings({'enabled': True}).service(),
+            'driftkings.settings.sections': module(previous_name=lambda name: 'MarksOnGunBattle'),
+            'driftkings.common.config.json_reader': module(loadJson=lambda *args, **kwargs: {}),
+            'driftkings.views.battle.battle_marks_of_excellence': module(BattleMarksAdapter=lambda: self.panel),
+            'driftkings.settings.definitions.battle.battle_marks_of_excellence': module(
                 BattleMarksOfExcellenceSettings=lambda: module(NAME='battle_marks_of_excellence')),
-            'Driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player()),
-        }, real=('Driftkings._constants', 'Driftkings.common.utils.numbers', 'Driftkings.core.marks_calculator',
-                 'Driftkings.common.utils.colorRatting'))
+            'driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player()),
+        }, real=('driftkings._constants', 'driftkings.common.utils.numbers', 'driftkings.core.marks_calculator',
+                 'driftkings.common.utils.colorRatting'))
         self.worker = self.api['worker']
 
     def player(self):
@@ -57,12 +57,12 @@ class HangarMarksTierTests(RuntimeTest):
         super(HangarMarksTierTests, self).setUp()
         self.current = module(isPresent=lambda: self.current.item is not None, item=None)
         self.api, _ = game_source('lobby/hangar_marks_of_excellence.py', {
-            'Driftkings.settings.service': Settings({'enabled': True}).service(),
+            'driftkings.settings.service': Settings({'enabled': True}).service(),
             'CurrentVehicle': module(g_currentVehicle=self.current),
-            'Driftkings.common.utils.exceptions': module(log_exceptions=lambda function: function),
-            'Driftkings.interface_catalog': module(gameface_spec=lambda feature: {'resource': 'resource'}),
-        }, real=('Driftkings._constants', 'Driftkings.common.utils.numbers', 'Driftkings.core.marks_calculator',
-                 'Driftkings.common.utils.colorRatting'))
+            'driftkings.common.utils.exceptions': module(log_exceptions=lambda function: function),
+            'driftkings.interface_catalog': module(gameface_spec=lambda feature: {'resource': 'resource'}),
+        }, real=('driftkings._constants', 'driftkings.common.utils.numbers', 'driftkings.core.marks_calculator',
+                 'driftkings.common.utils.colorRatting'))
 
     def test_card_needs_a_selected_vehicle_of_tier_five_or_above(self):
         has_tier = self.api['has_marks_tier']

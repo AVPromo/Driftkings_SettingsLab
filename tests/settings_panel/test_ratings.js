@@ -1,7 +1,7 @@
 /* Player ratings TAB helpers: values, safe text runs and row matching. */
 const assert = require('assert');
 const path = require('path');
-const folder = path.resolve(__dirname, '../../mod/res/gui/gameface/mods/Driftkings/RatingPlayers');
+const folder = path.resolve(__dirname, '../../mod/res/gui/gameface/mods/driftkings/panel_gameface');
 const text = require(path.join(folder, 'rating_text.js'));
 const rows = require(path.join(folder, 'rating_rows.js'));
 

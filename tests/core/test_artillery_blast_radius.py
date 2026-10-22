@@ -6,7 +6,7 @@ import os
 from support import RuntimeTest, Settings, game_source, module
 
 ROOT = os.path.join(os.path.dirname(__file__), '..', '..')
-with open(os.path.join(ROOT, 'res', 'configs', 'Driftkings', 'default', 'artillery_blast_radius.json'), 'rb') as stream:
+with open(os.path.join(ROOT, 'res', 'configs', 'driftkings', 'default', 'artillery_blast_radius.json'), 'rb') as stream:
     DEFAULTS = json.loads(stream.read().decode('utf-8-sig'))
 MODES = module(ARCADE='arcade', SNIPER='sniper', STRATEGIC='strategic', ARTY='arty')
 
@@ -31,20 +31,20 @@ class ArtilleryBlastRadiusTests(RuntimeTest):
         area = lambda: module(setup=lambda *args: None, enableAccurateCollision=lambda value: None,
                               updateHeights=lambda: None, attached=True)
         self.api, _ = game_source('battle/artillery_blast_radius.py', {
-            'Driftkings.settings.service': Settings(self.data).service(),
+            'driftkings.settings.service': Settings(self.data).service(),
             'BigWorld': module(Model=module(), PyTerrainSelectedArea=area, player=lambda: None),
             'AvatarInputHandler.aih_global_binding': module(CTRL_MODE_NAME=MODES),
             'gui.shared.gui_items': module(Vehicle=module(getVehicleClassTag=lambda tags: self.tag)),
             'gui.shared.gui_items.Vehicle': module(VEHICLE_CLASS_NAME=module(SPG='SPG')),
-            'Driftkings.common.utils.exceptions': module(log_exceptions=lambda function: function),
-            'Driftkings.common.utils.game': module(checkKeys=lambda keys: str(keys) in self.keys,
+            'driftkings.common.utils.exceptions': module(log_exceptions=lambda function: function),
+            'driftkings.common.utils.game': module(checkKeys=lambda keys: str(keys) in self.keys,
                                                    sendPanelMessage=lambda text, color: self.messages.append(color)),
-            'Driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player()),
-            'Driftkings.ui.common.markers': module(StaticWorldObjectMarker3D=Marker),
-            'Driftkings.settings.definitions.battle.artillery_blast_radius': module(
+            'driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player()),
+            'driftkings.ui.common.markers': module(StaticWorldObjectMarker3D=Marker),
+            'driftkings.settings.definitions.battle.artillery_blast_radius': module(
                 ArtilleryBlastRadiusSettings=lambda: module(i18n={'UI_artySplash_messageSplashOn': 'on', 'UI_artySplash_messageSplashOff': 'off',
                                                                   'UI_artySplash_messageDotOn': 'on', 'UI_artySplash_messageDotOff': 'off'})),
-        }, real=('Driftkings._constants',))
+        }, real=('driftkings._constants',))
         self.controller = self.api['controller']
         self.controller.startBattle()
         self.addCleanup(self.controller.stopBattle)

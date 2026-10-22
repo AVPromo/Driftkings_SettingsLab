@@ -15,7 +15,7 @@ from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-MODULE = ROOT / 'mod/res/scripts/client/Driftkings/core/updater/signature.py'
+MODULE = ROOT / 'mod/res/scripts/client/driftkings/core/updater/signature.py'
 
 
 def load_signature():

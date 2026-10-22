@@ -45,25 +45,25 @@ package driftkings.utils
             if (!path) return null;
             if (path.indexOf("img://") == 0) path = path.substr(6);
             var root:String;
-            if (path.indexOf("gui/maps/Driftkings/") == 0)
+            if (path.indexOf("gui/maps/driftkings/") == 0)
             {
-                path = path.substr("gui/maps/Driftkings/".length);
-                root = "../maps/Driftkings/";
+                path = path.substr("gui/maps/driftkings/".length);
+                root = "../maps/driftkings/";
             }
-            else if (path.indexOf("../maps/Driftkings/") == 0)
+            else if (path.indexOf("../maps/driftkings/") == 0)
             {
-                path = path.substr("../maps/Driftkings/".length);
-                root = "../maps/Driftkings/";
+                path = path.substr("../maps/driftkings/".length);
+                root = "../maps/driftkings/";
             }
-            else if (path.indexOf("mods/configs/Driftkings/") == 0)
+            else if (path.indexOf("mods/configs/driftkings/") == 0)
             {
-                path = path.substr("mods/configs/Driftkings/".length);
-                root = "../../../mods/configs/Driftkings/";
+                path = path.substr("mods/configs/driftkings/".length);
+                root = "../../../mods/configs/driftkings/";
             }
-            else if (path.indexOf("../../../mods/configs/Driftkings/") == 0)
+            else if (path.indexOf("../../../mods/configs/driftkings/") == 0)
             {
-                path = path.substr("../../../mods/configs/Driftkings/".length);
-                root = "../../../mods/configs/Driftkings/";
+                path = path.substr("../../../mods/configs/driftkings/".length);
+                root = "../../../mods/configs/driftkings/";
             }
             else return null;
             // Reject traversal, URL syntax and encoded separators in the tail.

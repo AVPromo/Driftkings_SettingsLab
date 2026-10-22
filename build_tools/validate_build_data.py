@@ -101,7 +101,7 @@ def build_plan(root=ROOT, check_generated=False, check_game=False, check_compone
     require(config['schema_version'] == 1, 'Unsupported build schema')
     require(config['python']['version'] == '2.7', 'WoT client requires Python 2.7 bytecode')
     require(config['python']['optimize'] == 0, 'Only Python optimize=0 is supported for the runtime contract')
-    require(config['package']['name'] == 'Driftkings.wotmod', 'Package filename must match the updater contract')
+    require(config['package']['name'] == 'driftkings.wotmod', 'Package filename must match the updater contract')
     require(config['package']['compression'] == 'stored', 'WOTMOD must use ZIP_STORED')
     require(config['defaults']['install_policy'] == 'missing_only' and config['defaults']['in_wotmod'] is False,
             'Defaults must be installed separately without overwriting user settings')
@@ -146,7 +146,7 @@ def build_plan(root=ROOT, check_generated=False, check_game=False, check_compone
         if manifest['kind'] == 'feature':
             require(isinstance(entrypoint, str) and entrypoint and all(p.isidentifier() for p in entrypoint.split('.')),
                     '%s: invalid entrypoint' % path.name)
-            module = python_root / 'Driftkings' / (entrypoint.replace('.', '/') + '.py')
+            module = python_root / 'driftkings' / (entrypoint.replace('.', '/') + '.py')
             require(module.is_file(), '%s: missing entrypoint source' % path.name)
             if manifest['enabled']:
                 active_entrypoints.append(entrypoint)
@@ -211,7 +211,7 @@ def build_plan(root=ROOT, check_generated=False, check_game=False, check_compone
     locales = read_json(root / 'build_data/locales.json')
     require(locales['schema_version'] == 1 and locales['game_version'] == config['game']['version'], 'Locale target mismatch')
     require(len(set(locales['locales'])) == len(locales['locales']), 'Duplicate locales')
-    locale_source = ast.parse((python_root / 'Driftkings/locale_support.py').read_text(encoding='utf-8'))
+    locale_source = ast.parse((python_root / 'driftkings/locale_support.py').read_text(encoding='utf-8'))
     languages = next(ast.literal_eval(node.value) for node in locale_source.body
                      if isinstance(node, ast.Assign) and any(isinstance(target, ast.Name) and target.id == 'LANGUAGES'
                                                             for target in node.targets))
@@ -220,8 +220,8 @@ def build_plan(root=ROOT, check_generated=False, check_game=False, check_compone
     for region, codes in locales['regions'].items():
         require(set(codes) <= set(locales['locales']), 'Unknown locale in region: %s' % region)
     for language in locales['locales']:
-        require((python_root / 'Driftkings/i18n' / (language + '.py')).is_file(), 'Missing locale: %s' % language)
-        catalog_source = ast.parse((python_root / 'Driftkings/i18n' / (language + '.py')).read_text(encoding='utf-8'))
+        require((python_root / 'driftkings/i18n' / (language + '.py')).is_file(), 'Missing locale: %s' % language)
+        catalog_source = ast.parse((python_root / 'driftkings/i18n' / (language + '.py')).read_text(encoding='utf-8'))
         require(any(isinstance(node, ast.Assign) and any(isinstance(target, ast.Name) and target.id == 'PANEL'
                                                        for target in node.targets) for node in catalog_source.body),
                 'Missing panel translations in locale: %s' % language)

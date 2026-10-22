@@ -7,7 +7,7 @@ internal static class ExitWork
 {
     internal static void Wait(string root, Action<string> safe) {
         foreach (string name in new string[] { "fog", "update" }) {
-            string gate = Path.Combine(root, "mods", "configs", "Driftkings", "cache", name, "install.lock");
+            string gate = Path.Combine(root, "mods", "configs", "driftkings", "cache", name, "install.lock");
             DateTime deadline = DateTime.UtcNow.AddMinutes(2);
             while (true) {
                 safe(gate);

@@ -16,13 +16,13 @@ class StatsTests(RuntimeTest):
         self.failure = None
         self.network = module(urlopen=self.download)
         store = source('settings/store.py', {})
-        filesystem = source('common/utils/filesystem.py', {'Driftkings.settings.store': module(**store)})
+        filesystem = source('common/utils/filesystem.py', {'driftkings.settings.store': module(**store)})
         self.api = source('stats/vehinfo.py', {
             'urllib2': self.network, 'ResMgr': module(), 'nations': module(NAMES=[]),
             'items': module(vehicles=module()),
-            'Driftkings.core.callbacks': module(callback=lambda *args: None),
-            'Driftkings.common.utils.filesystem': module(**filesystem),
-            'Driftkings.core.cache': module(cache_directory=lambda name: self.directory),
+            'driftkings.core.callbacks': module(callback=lambda *args: None),
+            'driftkings.common.utils.filesystem': module(**filesystem),
+            'driftkings.core.cache': module(cache_directory=lambda name: self.directory),
         })
         self.api['open'] = lambda *args, **kwargs: open(*args, **kwargs)
         self.scale = self.api['scaleValuesInstance']
@@ -150,7 +150,7 @@ class StatsTests(RuntimeTest):
 
     def test_player_aliases_none_ratings_and_missing_hp(self):
         self.scale.vehicleInfoData[1] = {'level': 6}
-        api = source('stats/xvm_stats.py', {'Driftkings.stats.vehinfo': module(**self.api)})
+        api = source('stats/xvm_stats.py', {'driftkings.stats.vehinfo': module(**self.api)})
         stats = api['xvm_stat']
         value = {'_id': 5, 'b': 10, 'w': 5, 'wn8': None, 'v': None, 'ver': 1,
                  'vehicles': {'bad': {}, '1': {'b': 10, 'w': 5, 'dmg': 1000}}}

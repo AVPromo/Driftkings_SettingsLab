@@ -11,7 +11,7 @@ except ImportError:
 
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-CLIENT = os.path.join(ROOT, 'mod', 'res', 'scripts', 'client', 'Driftkings')
+CLIENT = os.path.join(ROOT, 'mod', 'res', 'scripts', 'client', 'driftkings')
 
 
 def load_source(relative, dependencies):
@@ -31,13 +31,13 @@ def load_source(relative, dependencies):
 
 keycodes = types.ModuleType('keycodes')
 keycodes.valid_key_code = load_source('core/keycodes.py', {})['valid_key_code']
-controls = load_source('settings/panel/controls.py', {'Driftkings.core.keycodes': keycodes})
+controls = load_source('settings/panel/controls.py', {'driftkings.core.keycodes': keycodes})
 Control = controls['Control']
 panel = types.ModuleType('panel')
 panel.logger = types.ModuleType('logger')
 panel.logger.warning = lambda *args: None
 panel.logger.exception = lambda *args: None
-EditSession = load_source('settings/panel/session.py', {'Driftkings.settings.panel': panel})['EditSession']
+EditSession = load_source('settings/panel/session.py', {'driftkings.settings.panel': panel})['EditSession']
 
 
 def slider(default=5, minimum=0, maximum=10, step=1):

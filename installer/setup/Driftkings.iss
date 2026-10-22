@@ -30,7 +30,7 @@ WizardStyle=modern
 LicenseFile={#RepoRoot}\LICENCE
 OutputDir={#InstallerOutput}
 OutputBaseFilename=Driftkings-{#BuildVersion}-WoT-{#GameVersion}-Setup
-UninstallFilesDir={app}\mods\configs\Driftkings\installer
+UninstallFilesDir={app}\mods\configs\driftkings\installer
 UninstallDisplayName=Driftkings {#BuildVersion}
 CloseApplications=no
 RestartApplications=no
@@ -42,8 +42,8 @@ Name: "en"; MessagesFile: "compiler:Default.isl"
 Name: "pt"; MessagesFile: "compiler:Languages\Portuguese.isl"
 
 [Dirs]
-Name: "{app}\mods\configs\Driftkings\SixthSense"; Flags: uninsneveruninstall
-Name: "{app}\mods\configs\Driftkings\images"; Flags: uninsneveruninstall
+Name: "{app}\mods\configs\driftkings\SixthSense"; Flags: uninsneveruninstall
+Name: "{app}\mods\configs\driftkings\images"; Flags: uninsneveruninstall
 
 [CustomMessages]
 en.Recommended=Recommended (author defaults)

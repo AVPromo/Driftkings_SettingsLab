@@ -7,7 +7,7 @@ import os
 from support import Event, RuntimeTest, Settings, game_source, module, stub
 
 ROOT = os.path.join(os.path.dirname(__file__), '..', '..')
-with open(os.path.join(ROOT, 'res', 'configs', 'Driftkings', 'default', 'aiming_reticles.json'), 'rb') as stream:
+with open(os.path.join(ROOT, 'res', 'configs', 'driftkings', 'default', 'aiming_reticles.json'), 'rb') as stream:
     DEFAULTS = json.loads(stream.read().decode('utf-8-sig'))
 MarkerInfo = collections.namedtuple('MarkerInfo', ('size', 'dualAccSize'))
 MODES = module(ARCADE='arcade', STRATEGIC='strategic', SNIPER='sniper', ARTY='arty')
@@ -24,11 +24,11 @@ class AimingReticlesTests(RuntimeTest):
         self.service = Settings(self.data)
         self.service.affects = lambda changes, *keys: any(key in changes for key in keys)
         self.api, self.hooks = game_source('battle/aiming_reticles.py', {
-            'Driftkings.settings.service': module(settings_service=self.service, affects=self.service.affects),
+            'driftkings.settings.service': module(settings_service=self.service, affects=self.service.affects),
             'aih_constants': self.constants,
             'gui.Scaleform.daapi.view.battle.shared.crosshair': stub('crosshair', gm_factory=self.factory),
             'helpers': module(dependency=module(instance=lambda interface: self.cache)),
-        }, real=('Driftkings._constants',))
+        }, real=('driftkings._constants',))
         self.api['enableServerAiming'] = lambda: self.server.append('enabled')
         self.reticle = self.api['reticle']
         self.reticle.start()

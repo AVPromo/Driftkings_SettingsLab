@@ -18,7 +18,7 @@ class SettingsControllerTests(RuntimeTest):
             self.listeners[:] = [entry for entry in self.listeners if entry[0] != handler]
         self.service = module(onModSettingsChanged=module(connect=connect, disconnect=disconnect))
         self.base = source('core/settings_controller.py', {
-            'Driftkings.settings.service': module(settings_service=self.service)})['SettingsController']
+            'driftkings.settings.service': module(settings_service=self.service)})['SettingsController']
         self.constants = self.load('_constants')
 
     def controller(self, relative, name, extra=None):
@@ -59,7 +59,7 @@ class SettingsControllerTests(RuntimeTest):
             self.events[:] = []
 
     def test_clock_refreshes_after_connect_and_after_disconnect(self):
-        common = source('views/hangar/common.py', {'Driftkings.core.settings_controller': module(SettingsController=self.base)})
+        common = source('views/hangar/common.py', {'driftkings.core.settings_controller': module(SettingsController=self.base)})
         current = {'text': 'first'}
         service = module(getComponentDict=lambda config: {self.constants.HANGAR_PREFERENCES.CUSTOM_CLOCK_TEXT: current['text']})
         controller = self.controller('views/hangar/hangar_preferences.py', 'ClockController', {

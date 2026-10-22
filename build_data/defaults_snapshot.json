@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "source_root": "D:/Games/World_of_Tanks_NA/mods/configs/Driftkings",
+  "source_root": "D:/Games/World_of_Tanks_NA/mods/configs/driftkings",
   "profile": "default",
   "files": [
     {
@@ -66,7 +66,7 @@
     {
       "path": "default/vehicle_carousel/carouselNormal.json",
       "source_sha256": "86d8fccfbfc61ed70d22c4426b287223f38a533e84c72da93b9bb581306c3f13",
-      "sha256": "95ee5dccfb84f5db8823d018d4e0008b5c6fedb7995050d2e661fbe0b2779068"
+      "sha256": "d3e8e54e07338be20f3980104caeb9cc485d23ee626160e87416121c9595deab"
     },
     {
       "path": "default/vehicle_carousel/carouselSmall.json",
@@ -136,7 +136,7 @@
     {
       "path": "default/minimap_enhancements/minimap.json",
       "source_sha256": "de64e128582a012f20414e5aab72e09f8462db98ad1a2c17b0aabb2448d0dd33",
-      "sha256": "3250ffad81d5840f9cea56807c6139f83f05d86a07fb1b791bb4e2acd268dbe2"
+      "sha256": "1d81870926a02ac3296e3486251568bfca4b01554d4a46a4098483dce438591f"
     },
     {
       "path": "default/minimap_enhancements/minimap_circles.json",
@@ -156,7 +156,7 @@
     {
       "path": "default/minimap_enhancements.json",
       "source_sha256": "dfaa52eb85cb1a534dec7230085819638293ffd3220ac3ed81a87ac6869acb41",
-      "sha256": "8f4d9d5870d44f628033e133d3a6e564626c530a82d88c482594cfa0e7a23ec9"
+      "sha256": "65157786972fe289912dc41315857696d0583386604157143b51de51ea30427e"
     },
     {
       "path": "default/vehicle_health.json",
@@ -201,7 +201,7 @@
     {
       "path": "default/team_panels/playersPanel.json",
       "source_sha256": "6ade42b4be21bcf9e5d385bf88e72b2d56429486a25442d9f39fa0d6040af73a",
-      "sha256": "778f08033127dcf352f2c6394bf5b1e2ea39fe2fa339a0a1c032a4697137be3a"
+      "sha256": "a77142aa5d1161901db0506c662fb1d62996f1b1ebba16d6aa7edd2a82943108"
     },
     {
       "path": "default/team_panels/statisticForm.json",
@@ -221,7 +221,7 @@
     {
       "path": "default/sixth_sense_alert.json",
       "source_sha256": "463d8bbbc411dd90fb39397db58ced158c4e83a8f2567c0853b954fa438dadf2",
-      "sha256": "05c0a50b79b0b01b67bcbb8dd60f3e2018e3814b69fd14f62950f34a5f4d4407"
+      "sha256": "709c10c77dda85a7bc6766cdcaa80f7b1ba548d4819c88a5b223f1c9c7ec96c2"
     },
     {
       "path": "default/enemy_spotting_status.json",
@@ -236,7 +236,7 @@
   ],
   "transformations": [
     "JSON formatted as UTF-8, 2-space indentation and LF",
-    "Carousel icon paths: mods/Driftkings/Carroucel/ -> gui/maps/Driftkings/Carroucel/"
+    "Carousel icon paths: mods/driftkings/Carroucel/ -> gui/maps/driftkings/Carroucel/"
   ],
   "excluded": [
     "cache/**",

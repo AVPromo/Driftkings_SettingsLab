@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 const root = path.resolve(__dirname, '../..');
-const jsRoot = path.join(root, 'mod/res/gui/gameface/mods/Driftkings/DKModSettings/js');
+const jsRoot = path.join(root, 'mod/res/gui/gameface/mods/driftkings/settings_window/js');
 
 class Node {
     constructor(tag) {
@@ -71,8 +71,8 @@ const DK = window.DK = {bridge: {
 const context = {window, document, setTimeout: () => 0, clearTimeout() {}, JSON, Math, Date, Object, Array, String, Number, isFinite, parseFloat, parseInt};
 vm.createContext(context);
 // Same order as interface_catalog.py; the bridge is replaced by the stub above.
-const catalog = fs.readFileSync(path.join(root, 'mod/res/scripts/client/Driftkings/interface_catalog.py'), 'utf8');
-const scripts = catalog.match(/DKModSettings\/js\/[a-z_]+\.js/g).map(name => name.split('/').pop());
+const catalog = fs.readFileSync(path.join(root, 'mod/res/scripts/client/driftkings/interface_catalog.py'), 'utf8');
+const scripts = catalog.match(/settings_window\/js\/[a-z_]+\.js/g).map(name => name.split('/').pop());
 assert.deepStrictEqual(scripts, ['bridge.js', 'colors.js', 'modal.js', 'dom.js', 'control_kit.js', 'color_picker.js',
     'controls.js', 'theme.js', 'updater_panel.js', 'profile_dialogs.js', 'app.js']);
 const html = fs.readFileSync(path.join(jsRoot, '..', 'window.html'), 'utf8');
@@ -107,7 +107,7 @@ const labels = {on: 'On', off: 'Off', clearSecret: 'Clear', secretSet: 'Set', se
     'updates.installed': 'Installed', 'updates.channel': 'Channel', 'updates.lastCheck': 'Last', 'updates.never': 'Never',
     'updates.IDLE': 'Idle'};
 const schema = {labels, mods: [
-    {id: 'dk.settings', name: 'Driftkings', category: 'system', icon: 'gear', controls: defs, dependencies: []},
+    {id: 'dk.settings', name: 'driftkings', category: 'system', icon: 'gear', controls: defs, dependencies: []},
     {id: 'other', name: 'Other', category: 'battle', icon: 'chart', controls: [], dependencies: [{id: 'x', installed: false}]}]};
 const values = {on: true, box: false, mode: 'b', size: 3, count: 2, pick: 2, name: 'n', note: '', secret: '', tint: '#00FF00',
     alpha: 0.5, key: [[1, 2]], tags: ['x'], go: null};

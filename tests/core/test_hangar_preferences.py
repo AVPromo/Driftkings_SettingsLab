@@ -10,10 +10,10 @@ class HangarPreferencesTests(RuntimeTest):
         super(HangarPreferencesTests, self).setUp()
         self.data = {'enabled': True}
         self.api, self.hooks = game_source('lobby/hangar_preferences.py', {
-            'Driftkings.settings.service': Settings(self.data).service(),
+            'driftkings.settings.service': Settings(self.data).service(),
             'gui.shared.gui_items.Vehicle': stub('Vehicle', Vehicle=stub('VehicleClass', VEHICLE_STATE=STATES)),
-            'Driftkings.interface_catalog': module(gameface_spec=lambda feature: {'resource': 'resource'}),
-        }, real=('Driftkings._constants',))
+            'driftkings.interface_catalog': module(gameface_spec=lambda feature: {'resource': 'resource'}),
+        }, real=('driftkings._constants',))
         self.lookup = self.hooks.get('MENU', 'tankcarousel_vehiclestates')
         self.native = lambda key: '#menu:tankCarousel/vehicleStates/' + key
 

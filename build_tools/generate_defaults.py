@@ -13,7 +13,7 @@ except ImportError:
     from components import read_components
 
 ROOT = Path(__file__).resolve().parents[1]
-TARGET = 'mod/res/scripts/client/Driftkings/settings/default_values.py'
+TARGET = 'mod/res/scripts/client/driftkings/settings/default_values.py'
 PROFILES = ('none', 'short', 'medium', 'medium2', 'large')
 
 
@@ -43,7 +43,7 @@ def read_object(path):
 def assemble(root=ROOT):
     config = read_object(root / 'build_data/build_config.json')
     source = root / config['defaults']['source_root']
-    constants = ast.parse((root / 'mod/res/scripts/client/Driftkings/_constants.py').read_text(encoding='utf-8'))
+    constants = ast.parse((root / 'mod/res/scripts/client/driftkings/_constants.py').read_text(encoding='utf-8'))
     declared_names = set()
     for node in constants.body:
         if isinstance(node, ast.ClassDef):

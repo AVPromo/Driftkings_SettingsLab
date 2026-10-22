@@ -1,8 +1,8 @@
 [
   {
-    "itemID": "mods/Driftkings/RatingPlayers/model",
+    "itemID": "mods/driftkings/panel_gameface/model",
     "type": "Layout",
-    "path": "coui://gui/gameface/mods/Driftkings/RatingPlayers/model.html",
+    "path": "coui://gui/gameface/mods/driftkings/panel_gameface/model.html",
     "parameters": {
       "extension": "",
       "entrance": "main",

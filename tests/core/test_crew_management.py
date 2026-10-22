@@ -33,19 +33,19 @@ class CrewManagementTests(RuntimeTest):
         items = module(getTankman=lambda invID: self.tankmen.get(invID), getVehicle=lambda invID: self.vehicles.get(invID),
                        getItemByCD=lambda cd: self.vehicle if cd == self.vehicle.intCD else None)
         self.api, self.hooks = game_source('lobby/crew_management.py', {
-            'Driftkings.settings.service': Settings(self.data).service(),
+            'driftkings.settings.service': Settings(self.data).service(),
             'BigWorld': module(wg_getPreferencesFilePath=lambda: os.path.join(self.folder, 'preferences.xml')),
             'external_strings_utils': module(unicode_from_utf8=lambda path: (path, path)),
             'CurrentVehicle': module(g_currentVehicle=current),
-            'Driftkings.core.callbacks': module(callback=lambda delay, function: self.scheduled.append(delay) or len(self.scheduled),
+            'driftkings.core.callbacks': module(callback=lambda delay, function: self.scheduled.append(delay) or len(self.scheduled),
                                                 cancelCallback=lambda handle: None),
-            'Driftkings.common.utils.exceptions': module(log_exceptions=lambda function: function),
+            'driftkings.common.utils.exceptions': module(log_exceptions=lambda function: function),
             'gui': module(SystemMessages=module(pushMessage=lambda text, type=None: self.messages.append(text),
                                                 pushI18nMessage=lambda text, type=None: self.messages.append(text),
                                                 SM_TYPE=module(Warning='warning', Information='info'))),
-            'Driftkings.settings.definitions.lobby.crew_management': module(
+            'driftkings.settings.definitions.lobby.crew_management': module(
                 CrewManagementSettings=lambda: module(i18n={'UI_message_crewNotAvailable': 'not available'})),
-        }, real=('Driftkings._constants', 'Driftkings.common.utils.filesystem'), extra_builtins={'unicode': str})
+        }, real=('driftkings._constants', 'driftkings.common.utils.filesystem'), extra_builtins={'unicode': str})
         self.crew = self.api['g_crew']
         self.crew.itemsCache = module(items=items)
         self.returned = []
@@ -58,7 +58,7 @@ class CrewManagementTests(RuntimeTest):
         self.crew.handleVehicleChange()
 
     def stored(self):
-        with open(os.path.join(self.folder, 'Driftkings', 'auto_prev_crew.json'), 'rb') as stream:
+        with open(os.path.join(self.folder, 'driftkings', 'auto_prev_crew.json'), 'rb') as stream:
             return json.loads(stream.read().decode('utf-8'))['vehicles']
 
     def test_ignore_list_is_created_empty(self):

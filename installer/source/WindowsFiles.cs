@@ -87,7 +87,7 @@ internal static class WindowsFiles
         Require(String.Equals(directory,Path.GetDirectoryName(source),StringComparison.OrdinalIgnoreCase),"Replacement must stay in one directory/volume");
         Require(Path.GetFileName(target)=="notified.json" && Path.GetFileName(source).StartsWith("notice-",StringComparison.Ordinal),"Only owned notification receipt replacement allowed");
         string normalized=directory.Replace('\\','/');
-        Require(normalized.IndexOf("/mods/configs/Driftkings/cache/update/download-",StringComparison.OrdinalIgnoreCase)>=0 &&
+        Require(normalized.IndexOf("/mods/configs/driftkings/cache/update/download-",StringComparison.OrdinalIgnoreCase)>=0 &&
                 Path.GetFileName(directory).StartsWith("download-",StringComparison.Ordinal),"Owned transaction directory required");
         using(Guard a=new Guard(source,true)) using(Guard b=new Guard(target,true)) {
             Require((GetFileAttributesW(target)&1)==0,"Read-only target rejected");

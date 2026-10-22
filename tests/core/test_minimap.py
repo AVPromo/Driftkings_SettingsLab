@@ -9,7 +9,7 @@ import types
 
 from support import CLIENT, RuntimeTest, module, source
 
-ROOT = os.path.join(os.path.dirname(__file__), '..', '..', 'res', 'configs', 'Driftkings', 'default', 'minimap_enhancements')
+ROOT = os.path.join(os.path.dirname(__file__), '..', '..', 'res', 'configs', 'driftkings', 'default', 'minimap_enhancements')
 
 
 def defaults():
@@ -153,7 +153,7 @@ class MinimapPolicyTests(RuntimeTest):
         visible = self.policy.visible
         self.assertEqual([visible('client', True), visible('client', False), visible('on', False), visible('off', True)],
                          [True, False, True, False])
-        data = {'artilleryAim': {'src': 'gui/maps/Driftkings/Minimap/MinimapAim.png'}}
+        data = {'artilleryAim': {'src': 'gui/maps/driftkings/Minimap/MinimapAim.png'}}
         self.policy.migrate_artillery_aim(data)
         self.assertEqual(data['artilleryAim']['src'], self.policy.ARTILLERY_AIMS[0])
         custom = {'artilleryAim': {'src': 'gui/maps/custom.png'}}
@@ -169,15 +169,15 @@ class MinimapStoreTests(RuntimeTest):
         self.root = tempfile.mkdtemp(prefix='dk-minimap-test-')
         self.addCleanup(shutil.rmtree, self.root)
         # Real imports for the stores: source() runs Python 2.7 in restricted mode, without file access.
-        package = types.ModuleType('Driftkings.settings')
+        package = types.ModuleType('driftkings.settings')
         package.__path__ = [os.path.join(CLIENT, 'settings')]
-        sys.modules['Driftkings.settings'] = package
+        sys.modules['driftkings.settings'] = package
         store = self.load('settings.store')
-        sys.modules['Driftkings.settings.loader'] = module(validate_types=source('settings/loader.py', {
-            'Driftkings.settings.settings_data': module(SettingsData=object, user_settings={}, part_name=lambda value: value),
-            'Driftkings.settings.default_values': module(SELECTOR={'loadConfig': 'default'}),
-            'Driftkings.settings.sections': module(previous_name=None, previous_sections=None, section_aliases=None),
-            'Driftkings.settings.store': store})['validate_types'])
+        sys.modules['driftkings.settings.loader'] = module(validate_types=source('settings/loader.py', {
+            'driftkings.settings.settings_data': module(SettingsData=object, user_settings={}, part_name=lambda value: value),
+            'driftkings.settings.default_values': module(SELECTOR={'loadConfig': 'default'}),
+            'driftkings.settings.sections': module(previous_name=None, previous_sections=None, section_aliases=None),
+            'driftkings.settings.store': store})['validate_types'])
         self.api = vars(self.load('settings.minimap_store'))
         self.store = self.api['MinimapStore'](self.root)
 
@@ -203,7 +203,7 @@ class MinimapStoreTests(RuntimeTest):
         labels = self.read('minimap_labels.json')
         labels['labels']['normal'] = u'{{name}}'
         main = self.read('minimap.json')
-        main['artilleryAim']['src'] = 'gui/maps/Driftkings/Minimap/MinimapAim.png'
+        main['artilleryAim']['src'] = 'gui/maps/driftkings/Minimap/MinimapAim.png'
         for name, document in (('minimap_labels.json', labels), ('minimap.json', main)):
             with open(os.path.join(self.root, name), 'wb') as stream:
                 stream.write(json.dumps(document).encode('utf-8'))

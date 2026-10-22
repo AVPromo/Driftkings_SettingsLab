@@ -30,8 +30,8 @@ module.exports = [
         }
     },
     {
-        files: ["mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel_layout.js",
-            "mod/res/gui/gameface/mods/Driftkings/CarouselStats/carousel_native.js"],
+        files: ["mod/res/gui/gameface/mods/driftkings/vehicle_carousel/carousel_layout.js",
+            "mod/res/gui/gameface/mods/driftkings/vehicle_carousel/carousel_native.js"],
         languageOptions: { globals: { module: "readonly" } }
     }
 ];

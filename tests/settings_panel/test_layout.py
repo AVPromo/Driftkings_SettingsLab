@@ -6,7 +6,7 @@ import unittest
 
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-SOURCE = os.path.join(ROOT, 'mod', 'res', 'scripts', 'client', 'Driftkings',
+SOURCE = os.path.join(ROOT, 'mod', 'res', 'scripts', 'client', 'driftkings',
                       'settings', 'panel', 'layout.py')
 namespace = runpy.run_path(SOURCE)
 balance_columns = namespace['balance_columns']

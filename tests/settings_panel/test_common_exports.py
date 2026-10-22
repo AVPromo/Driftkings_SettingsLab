@@ -25,5 +25,5 @@ class CommonExportsTests(unittest.TestCase):
                 tree = ast.parse(text.encode('utf-8'), path)
                 for node in ast.walk(tree):
                     if isinstance(node, ast.ImportFrom):
-                        self.assertNotEqual(node.module, 'Driftkings.common', path)
-                        self.assertNotEqual(node.module, 'Driftkings.common.utils.logger', path)
+                        self.assertNotEqual(node.module, 'driftkings.common', path)
+                        self.assertNotEqual(node.module, 'driftkings.common.utils.logger', path)

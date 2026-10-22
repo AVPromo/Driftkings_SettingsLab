@@ -15,7 +15,7 @@ def require(condition, message):
 
 
 def inventory_limit(root):
-    tree = ast.parse((root / 'mod/res/scripts/client/Driftkings/core/updater/inventory.py').read_text(encoding='utf-8'))
+    tree = ast.parse((root / 'mod/res/scripts/client/driftkings/core/updater/inventory.py').read_text(encoding='utf-8'))
     assignment = next(node for node in tree.body if isinstance(node, ast.Assign) and
                       any(isinstance(target, ast.Name) and target.id == 'MAX_FILE' for target in node.targets))
     # The inventory constant is an integer multiplication expression.

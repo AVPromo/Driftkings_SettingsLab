@@ -25,7 +25,7 @@ class CoreStartupTests(RuntimeTest):
 
     def test_replay_skips_lobby_and_login_components(self):
         core = self.core(True)
-        self.assertEqual(self.imported, ['Driftkings.battle.minimap_enhancements', 'Driftkings.components.sound_bank_loader'])
+        self.assertEqual(self.imported, ['driftkings.battle.minimap_enhancements', 'driftkings.components.sound_bank_loader'])
         self.assertEqual(self.started, self.imported)
         self.assertEqual(sorted(core.disabled), ['components.account_manager', 'lobby.hangar_preferences', 'lobby.vehicle_carousel'])
         self.assertEqual(set(core.disabled.values()), set(['Not used in replays']))

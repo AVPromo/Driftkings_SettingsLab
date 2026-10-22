@@ -15,7 +15,7 @@ function text(value) { return {nodeType: 3, nodeValue: value}; }
 const document = {createElement: tag => element(tag), createTextNode: text};
 const context = {window: {}, document};
 vm.createContext(context);
-vm.runInContext(fs.readFileSync(path.join(root, 'mod/res/gui/gameface/mods/Driftkings/shared/flash_text.js'), 'utf8'), context);
+vm.runInContext(fs.readFileSync(path.join(root, 'mod/res/gui/gameface/mods/driftkings/shared/flash_text.js'), 'utf8'), context);
 function output(source, options) {
     const target = element('div');
     context.window.DriftkingsFlashText.copy(source, target, options);
@@ -51,7 +51,7 @@ for (const size of ['8', '40']) {
 }
 assert.strictEqual(output(element('div', {}, [element('font', {face: 'Times New Roman'}, [])]), options).childNodes[0].style.fontFamily, 'Times New Roman');
 // A second load is safe when two injected features request the shared script.
-vm.runInContext(fs.readFileSync(path.join(root, 'mod/res/gui/gameface/mods/Driftkings/shared/flash_text.js'), 'utf8'), context);
+vm.runInContext(fs.readFileSync(path.join(root, 'mod/res/gui/gameface/mods/driftkings/shared/flash_text.js'), 'utf8'), context);
 assert.deepStrictEqual(output(rich, options).childNodes[1].style, ratings.childNodes[1].style);
 console.log('Shared Flash text: formatting, filtering, feature options and reload OK');
 module.exports = {element, rich, output, options, document};

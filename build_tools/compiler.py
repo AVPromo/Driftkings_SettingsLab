@@ -27,7 +27,7 @@ from build_tools.modpack import create as create_modpack
 
 
 def version_contract(root=ROOT):
-    path = root / 'mod/res/scripts/client/Driftkings/core/updater/versioning.py'
+    path = root / 'mod/res/scripts/client/driftkings/core/updater/versioning.py'
     spec = importlib.util.spec_from_file_location('_dk_build_versioning', path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -233,7 +233,7 @@ def publish_local(root, candidate, destination, config, generated, compiled, pla
         if previous is not None:
             replace_directory(previous, destination)
         raise
-    atomic_copy(destination / 'Driftkings.wotmod', output_path(root, config['package']['output']))
+    atomic_copy(destination / 'driftkings.wotmod', output_path(root, config['package']['output']))
     for name, source in generated.items():
         atomic_copy(source, output_path(root, name))
     for item in plan['python']:
@@ -247,7 +247,7 @@ def build(args):
     release = read_json(root / 'build_data/release.json')
     require(release['schema_version'] == 1, 'Unsupported release schema')
     require(release['package_id'] == 'driftkings.unified', 'Package identity must match the native installer contract')
-    endpoint_tree = ast.parse((root / 'mod/res/scripts/client/Driftkings/core/updater/endpoints.py').read_text(encoding='utf-8'))
+    endpoint_tree = ast.parse((root / 'mod/res/scripts/client/driftkings/core/updater/endpoints.py').read_text(encoding='utf-8'))
     repository = next(ast.literal_eval(n.value) for n in endpoint_tree.body if isinstance(n, ast.Assign)
                       and any(isinstance(t, ast.Name) and t.id == 'REPOSITORY' for t in n.targets))
     require(release['repository'] == repository, 'Release repository must match the packaged updater')
@@ -306,7 +306,7 @@ def build(args):
         entries['meta.xml'] = metadata(release, version)
         candidate = destination.parent / ('.' + version + '-' + stamp)
         candidate.mkdir(parents=True)
-        package = candidate / 'Driftkings.wotmod'
+        package = candidate / 'driftkings.wotmod'
         zip_entries(package, entries)
         verify_package(package, entries, version, release['package_id'])
         changelog = release['changelog']
@@ -314,11 +314,11 @@ def build(args):
             changelog = [line.strip() for line in Path(args.changelog).read_text(encoding='utf-8-sig').splitlines() if line.strip()]
         require(isinstance(changelog, list) and len(changelog) <= 50 and all(isinstance(s, str) and len(s) <= 500 for s in changelog), 'Invalid changelog')
         release_manifest = dict(schema=1, version=version, channel=channel, gameVersion=config['game']['version'],
-                                file='Driftkings.wotmod', size=package.stat().st_size, sha256=sha(package),
-                                download='https://github.com/%s/releases/download/v%s/Driftkings.wotmod' % (release['repository'], version), changelog=changelog)
+                                file='driftkings.wotmod', size=package.stat().st_size, sha256=sha(package),
+                                download='https://github.com/%s/releases/download/v%s/driftkings.wotmod' % (release['repository'], version), changelog=changelog)
         defaults = {item['target']: (root / item['source']).read_bytes() for item in plan['defaults']}
         zip_entries(candidate / 'Driftkings-defaults.zip', defaults, zipfile.ZIP_DEFLATED)
-        distribution = {'mods/' + config['game']['version'] + '/Driftkings.wotmod': package.read_bytes(),
+        distribution = {'mods/' + config['game']['version'] + '/driftkings.wotmod': package.read_bytes(),
                         'Driftkings-defaults.zip': (candidate / 'Driftkings-defaults.zip').read_bytes()}
         for name in plan['dependencies']:
             path = root / name
@@ -329,7 +329,7 @@ def build(args):
         instructions = ('Driftkings %s (%s), World of Tanks %s\n\n'
                         'Extract the mods directory into the game directory.\n'
                         'First installation: extract Driftkings-defaults.zip only when no Driftkings settings exist.\n'
-                        'Updates: keep your existing mods/configs/Driftkings settings.\n'
+                        'Updates: keep your existing mods/configs/driftkings settings.\n'
                         'No game files were installed by this build.\n') % (version, channel, config['game']['version'])
         distribution['INSTALL.txt'] = instructions.encode('utf-8')
         zip_entries(candidate / ('Driftkings-%s-WoT-%s.zip' % (version, config['game']['version'])), distribution, zipfile.ZIP_DEFLATED)

@@ -11,10 +11,10 @@ class RetiredDefaultsTests(RuntimeTest):
     def test_results_upgrade_only_shipped_template_and_preserve_custom_macros(self):
         defaults = self.defaults('battle_performance')
         api = source('settings/definitions/components/battle_performance.py', {
-            'Driftkings._constants': self.load('_constants'),
-            'Driftkings.settings.controls_schema': module(control=None, options=None),
-            'Driftkings.settings.definitions.base': module(SectionDefinition=object),
-            'Driftkings.settings.default_values': module(DEFAULTS={'battle_performance': defaults}),
+            'driftkings._constants': self.load('_constants'),
+            'driftkings.settings.controls_schema': module(control=None, options=None),
+            'driftkings.settings.definitions.base': module(SectionDefinition=object),
+            'driftkings.settings.default_values': module(DEFAULTS={'battle_performance': defaults}),
         })
         definition = api['BattlePerformanceSettings']()
         legacy = "<textformat leading='-2' tabstops='[0, 300]'>\t<font color='#FFFFFF' size='15'>{mapName} - {battleType}    WN8:<font color='{c:wn8}'>{wn8}</font>|=|EFF:<font color='{c:eff}'>{eff}</font>|=|Xte:<font color='{c:xte}'>{xte}</font></font></textformat>"
@@ -29,14 +29,14 @@ class RetiredDefaultsTests(RuntimeTest):
     def definition(self, relative, name, section):
         schema = source('settings/controls_schema.py', {})
         api = source(relative, {
-            'Driftkings._constants': self.load('_constants'),
-            'Driftkings.settings.controls_schema': module(control=schema['control'], slider=schema['slider']),
-            'Driftkings.settings.definitions.base': module(SectionDefinition=object),
+            'driftkings._constants': self.load('_constants'),
+            'driftkings.settings.controls_schema': module(control=schema['control'], slider=schema['slider']),
+            'driftkings.settings.definitions.base': module(SectionDefinition=object),
         })
         return api[name]()
 
     def defaults(self, name):
-        with open(os.path.join(ROOT, 'res/configs/Driftkings/default', name + '.json'), 'rb') as stream:
+        with open(os.path.join(ROOT, 'res/configs/driftkings/default', name + '.json'), 'rb') as stream:
             return json.load(stream)
 
     def test_clock_load_and_apply_preserve_custom_format_position_and_unrelated_settings(self):

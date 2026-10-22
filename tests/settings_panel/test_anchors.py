@@ -6,7 +6,7 @@ import re
 import unittest
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-PANEL = os.path.join(ROOT, 'mod', 'res', 'scripts', 'client', 'Driftkings', 'settings', 'panel')
+PANEL = os.path.join(ROOT, 'mod', 'res', 'scripts', 'client', 'driftkings', 'settings', 'panel')
 DOLLAR_ANCHOR = re.compile(r"""re\.(?:match|compile|search|fullmatch)\(\s*r?['"]\^[^'"]*\$['"]""")
 
 

@@ -37,10 +37,10 @@ engine.whenReady = {then: function (fn) { fn(); }}; engine.on = engine.addEventL
 var context = vm.createContext({window: window, document: document, engine: engine,
     viewEnv: {addDataChangedCallback: function () { registered++; return 7; }, removeDataChangedCallback: function () { registered--; }},
     setTimeout: function (fn) { queue.push(fn); return queue.length; }, clearTimeout: function () { queue = []; }});
-var base = path.join(__dirname, '../../mod/res/gui/gameface/mods/Driftkings');
+var base = path.join(__dirname, '../../mod/res/gui/gameface/mods/driftkings');
 function load(relative) { vm.runInContext(fs.readFileSync(path.join(base, relative), 'utf8'), context); }
 function flush() { while (queue.length) { queue.shift()(); } }
-load('shared/marks_panel.js'); load('MainGun/main_gun.js'); flush();
+load('shared/marks_panel.js'); load('high_caliber_gameface/main_gun.js'); flush();
 var root = document.body.firstChild;
 assert.strictEqual(root.style.display, 'none');
 var data = {visible: true, state: 'progress', progress: 25, primaryText: '3,000 HP',
@@ -94,7 +94,7 @@ var bounds = root.getBoundingClientRect(); assert(bounds.width <= 320 && bounds.
 data.config.locked = true; update(); document.fire('mousedown', event); document.fire('mouseup', event);
 assert.strictEqual(saved.length, 1);
 data.config.visible = false; update(); assert.strictEqual(root.style.display, 'none');
-load('MainGun/main_gun.js'); flush();
+load('high_caliber_gameface/main_gun.js'); flush();
 assert.strictEqual(document.body.children.length, 1); assert.strictEqual(registered, 1);
 window.__dkMainGun.dispose();
 assert.strictEqual(registered, 0); assert.strictEqual(document.body.children.length, 0);

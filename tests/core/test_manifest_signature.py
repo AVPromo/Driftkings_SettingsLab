@@ -102,9 +102,9 @@ class DownloadPinningTests(RuntimeTest):
     def test_download_must_point_to_official_repository(self):
         Manifest = self.load('core.updater.manifest').Manifest
         Manifest(manifest())
-        for url in ('https://github.com/attacker/repo/releases/download/v1.1.0/Driftkings.wotmod',
-                    'https://objects.githubusercontent.com/x/Driftkings.wotmod',
-                    'https://api.github.com/repos/x/y/Driftkings.wotmod'):
+        for url in ('https://github.com/attacker/repo/releases/download/v1.1.0/driftkings.wotmod',
+                    'https://objects.githubusercontent.com/x/driftkings.wotmod',
+                    'https://api.github.com/repos/x/y/driftkings.wotmod'):
             document = manifest()
             document['download'] = url
             self.assertRaises(ValueError, Manifest, document)

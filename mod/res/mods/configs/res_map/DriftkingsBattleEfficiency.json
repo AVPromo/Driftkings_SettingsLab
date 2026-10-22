@@ -1,8 +1,8 @@
 [
   {
-    "itemID": "mods/Driftkings/BattleEfficiency/model",
+    "itemID": "mods/driftkings/battle_performance/model",
     "type": "Layout",
-    "path": "coui://gui/gameface/mods/Driftkings/BattleEfficiency/model.html",
+    "path": "coui://gui/gameface/mods/driftkings/battle_performance/model.html",
     "parameters": {
       "extension": "",
       "entrance": "main",

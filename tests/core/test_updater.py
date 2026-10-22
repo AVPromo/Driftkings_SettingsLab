@@ -16,8 +16,8 @@ BASE = 'https://github.com/dkruben/Driftkings_SettingsLab/releases/download/'
 
 def manifest(version='1.1.0', data=b'package'):
     return dict(schema=1, version=version, channel='beta' if '-' in version else 'stable',
-                gameVersion='2.4.1.0', file='Driftkings.wotmod', size=len(data),
-                sha256=hashlib.sha256(data).hexdigest(), download=BASE + 'v' + version + '/Driftkings.wotmod')
+                gameVersion='2.4.1.0', file='driftkings.wotmod', size=len(data),
+                sha256=hashlib.sha256(data).hexdigest(), download=BASE + 'v' + version + '/driftkings.wotmod')
 
 
 class VersionsTests(RuntimeTest):
@@ -148,8 +148,8 @@ class FileTests(RuntimeTest):
     def test_install_plan_never_replaces_or_removes_existing_configs(self):
         Inventory = self.load('core.updater.inventory').Inventory
         game = '2.4.1.0'
-        code = 'mods/' + game + '/Driftkings.wotmod'
-        config = 'mods/configs/Driftkings/default/example.json'
+        code = 'mods/' + game + '/driftkings.wotmod'
+        config = 'mods/configs/driftkings/default/example.json'
 
         def entry(path, kind):
             return dict(path=path, kind=kind, size=3, sha256='a' * 64)
@@ -188,7 +188,7 @@ class FileTests(RuntimeTest):
         stream = io.BytesIO()
         with zipfile.ZipFile(stream, 'w', zipfile.ZIP_STORED) as archive:
             archive.writestr('meta.xml', b'<root><id>driftkings.unified</id><version>1.1.0</version></root>')
-            archive.writestr('res/scripts/client/gui/mods/mod_Driftkings.pyc', b'\x03\xf3\x0d\x0a' + b'bytecode')
+            archive.writestr('res/scripts/client/gui/mods/mod_driftkings.pyc', b'\x03\xf3\x0d\x0a' + b'bytecode')
         data = stream.getvalue()
         for content, expected in ((data[:-1], 'sizeMismatch'), (b'x' * len(data), 'hashMismatch')):
             sink = api.StagingSink(self.folder, Manifest(manifest(data=data)))
@@ -224,7 +224,7 @@ class ServiceTests(RuntimeTest):
     def test_public_service_and_dependency_exports_remain_available(self):
         api = self.load('core.updater')
         self.assertIs(api.UpdaterService, self.load('core.updater.service').UpdaterService)
-        self.assertEqual(api.UpdaterService.__module__, 'Driftkings.core.updater')
+        self.assertEqual(api.UpdaterService.__module__, 'driftkings.core.updater')
         for name in ('Checker', 'State', 'UnavailableTransport', 'Downloader', 'LOG', 'INTERVAL',
                      'IDLE', 'CHECKING', 'AVAILABLE', 'ERROR', 'DOWNLOADING', 'VERIFYING', 'READY',
                      'INSTALLING', 'RESTART_REQUIRED', 'logging', 'os', 'time', 'threading'):
@@ -274,7 +274,7 @@ class StageCleanupTests(RuntimeTest):
         super(StageCleanupTests, self).setUp()
         self.root = tempfile.mkdtemp(prefix='dk-stage-test-')
         self.addCleanup(shutil.rmtree, self.root)
-        self.cache = os.path.join(self.root, 'mods', 'configs', 'Driftkings', 'cache', 'update')
+        self.cache = os.path.join(self.root, 'mods', 'configs', 'driftkings', 'cache', 'update')
         os.makedirs(self.cache)
         # Python 2.7 on Windows delegates reparse checks to the native helper, absent in tests.
         self.load('core.updater.windows_files').safe_path = lambda path: None
@@ -323,10 +323,10 @@ class StageCleanupTests(RuntimeTest):
         recent = os.path.join(self.cache, 'download-recent-partial')
         for folder in (old, recent):
             os.makedirs(folder)
-            with open(os.path.join(folder, 'Driftkings.wotmod.download'), 'wb') as stream:
+            with open(os.path.join(folder, 'driftkings.wotmod.download'), 'wb') as stream:
                 stream.write(b'partial')
         stamp = time.time() - 2 * self.api.ABANDONED_SECONDS
-        os.utime(os.path.join(old, 'Driftkings.wotmod.download'), (stamp, stamp))
+        os.utime(os.path.join(old, 'driftkings.wotmod.download'), (stamp, stamp))
         os.utime(old, (stamp, stamp))
         self.assertEqual(self.results.prune(), 2)
         self.assertFalse(os.path.exists(orphan))

@@ -229,7 +229,7 @@ internal static class FogPackage
             using (var parent = Process.GetProcessById(pid)) {
                 string executable = parent.MainModule.FileName, bin = Path.GetDirectoryName(executable), root = Path.GetDirectoryName(bin);
                 Require(Path.GetFileName(executable).Equals("WorldOfTanks.exe", StringComparison.OrdinalIgnoreCase) && (Path.GetFileName(bin) == "win64" || Path.GetFileName(bin) == "win32"), "Unexpected parent client");
-                string cache = Path.Combine(root, "mods", "configs", "Driftkings", "cache", "fog");
+                string cache = Path.Combine(root, "mods", "configs", "driftkings", "cache", "fog");
                 Require(String.Equals(Path.GetDirectoryName(stage), cache, StringComparison.OrdinalIgnoreCase) && Path.GetFileName(stage) == "session-" + pid, "Stage outside owned cache");
                 Require(String.Equals(System.Reflection.Assembly.GetExecutingAssembly().Location, Path.Combine(stage, "Driftkings.FogPackage.exe"), StringComparison.OrdinalIgnoreCase), "Helper outside owned stage");
                 Safe(stage); Safe(cache);

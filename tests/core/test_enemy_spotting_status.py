@@ -6,7 +6,7 @@ import os
 from support import RuntimeTest, Settings, auto, game_source, module
 
 ROOT = os.path.join(os.path.dirname(__file__), '..', '..')
-with open(os.path.join(ROOT, 'res', 'configs', 'Driftkings', 'default', 'enemy_spotting_status.json'), 'rb') as stream:
+with open(os.path.join(ROOT, 'res', 'configs', 'driftkings', 'default', 'enemy_spotting_status.json'), 'rb') as stream:
     DEFAULTS = json.loads(stream.read().decode('utf-8-sig'))
 EVENTS = auto('BattleFeedbackCommon.BATTLE_EVENT_TYPE')
 DAMAGE = 'damage-efficiency'
@@ -41,18 +41,18 @@ class EnemySpottingStatusTests(RuntimeTest):
         i18n = {'UI_setting_Spotted_text': 'Spotted:', 'UI_setting_AssistRadio_text': 'Radio:',
                 'UI_setting_AssistTrack_text': 'Track:', 'UI_setting_AssistStun_text': 'Stun:'}
         self.api, self.hooks = game_source('battle/enemy_spotting_status.py', {
-            'Driftkings.settings.service': Settings(self.data).service(),
-            'Driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player),
-            'Driftkings.common.utils.game': module(sendPanelMessage=self.messages.append),
+            'driftkings.settings.service': Settings(self.data).service(),
+            'driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player),
+            'driftkings.common.utils.game': module(sendPanelMessage=self.messages.append),
             'gui.shared.gui_items.Vehicle': module(
                 getIconPath=lambda name: 'gui/maps/icons/vehicle/' + name.replace(':', '-', 1) + '.png',
                 getContourIconPath=lambda name: 'gui/maps/icons/vehicle/contour/' + name.replace(':', '-', 1) + '.png'),
             'gui.battle_control.controllers.personal_efficiency_ctrl': module(
                 _AGGREGATED_DAMAGE_EFFICIENCY_TYPES=(DAMAGE,), _createEfficiencyInfoFromFeedbackEvent=efficiency),
-            'Driftkings.settings.definitions.battle.enemy_spotting_status': module(
+            'driftkings.settings.definitions.battle.enemy_spotting_status': module(
                 EnemySpottingStatusSettings=lambda: module(i18n=i18n)),
-        }, real=('Driftkings._constants', 'Driftkings.core.vehicle_images'))
-        handlers = self.hooks.events['Driftkings.core.battle_events.battleEvents.feedback']
+        }, real=('driftkings._constants', 'driftkings.core.vehicle_images'))
+        handlers = self.hooks.events['driftkings.core.battle_events.battleEvents.feedback']
         self.feedback = lambda *events: handlers[0](self.player, list(events))
 
     def test_spotting_message_uses_the_vehicle_icon_name_and_colour(self):

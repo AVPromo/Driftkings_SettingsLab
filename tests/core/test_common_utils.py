@@ -57,7 +57,7 @@ class CommonUtilsTests(RuntimeTest):
         service = api.CallbackService(module(callback=schedule, cancelCallback=lambda token: cancelled.append(token)))
         def task():
             return None
-        task.__module__ = 'Driftkings.battle.target_information'
+        task.__module__ = 'driftkings.battle.target_information'
         service.schedule(0.5, task)
         self.assertEqual(service.snapshot()['pending'], 1)
         service.endBattle()

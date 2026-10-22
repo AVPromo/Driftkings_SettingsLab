@@ -1,4 +1,4 @@
-// Generated from Driftkings/interface_catalog.py; regenerate with generate_ui_catalog.py --write.
+// Generated from driftkings/interface_catalog.py; regenerate with generate_ui_catalog.py --write.
 package driftkings.battle.factory
 {
     import driftkings.battle.components.armor_calculator.ArmorCalculatorUI;

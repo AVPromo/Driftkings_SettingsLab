@@ -6,11 +6,11 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = 'mod/res/scripts/client/Driftkings/interface_catalog.py'
+SOURCE = 'mod/res/scripts/client/driftkings/interface_catalog.py'
 AS3 = 'flash_source/battle/src/driftkings/battle/factory/ComponentCatalog.as'
-BOOTSTRAP = 'mod/res/gui/gameface/mods/Driftkings/shared/bootstrap.js'
+BOOTSTRAP = 'mod/res/gui/gameface/mods/driftkings/shared/bootstrap.js'
 START, END = '    /* GENERATED CATALOG START */', '    /* GENERATED CATALOG END */'
-PREFIX = 'coui://gui/gameface/mods/Driftkings/'
+PREFIX = 'coui://gui/gameface/mods/driftkings/'
 
 
 def require(condition, message):
@@ -35,7 +35,7 @@ def installer_catalog(root=ROOT):
     root = Path(root)
     config = json.loads((root / 'build_data/build_config.json').read_text(encoding='utf-8'))
     manifests = {item['id']: item for item in read_components(root, config['components']['source'])}
-    catalogs = {lang: catalog(root / ('mod/res/scripts/client/Driftkings/i18n/' + lang + '.py'))
+    catalogs = {lang: catalog(root / ('mod/res/scripts/client/driftkings/i18n/' + lang + '.py'))
                 for lang in ('en', 'pt')}
     choices = []
     for path in sorted((root / config['defaults']['source_root'] / 'default').glob('*.json')):
@@ -85,7 +85,7 @@ def outputs(root=ROOT):
         methods.append('''        if (surface == "%s") return {
 %s
             };''' % (surface, ',\n'.join(entries)))
-    as3 = '''// Generated from Driftkings/interface_catalog.py; regenerate with generate_ui_catalog.py --write.
+    as3 = '''// Generated from driftkings/interface_catalog.py; regenerate with generate_ui_catalog.py --write.
 package driftkings.battle.factory
 {
 %s
@@ -115,11 +115,11 @@ def validate(root=ROOT, plan=None):
     data = read_catalog(root)
     flash, face = data['FLASH_COMPONENTS'], data['GAMEFACE']
     require(bool(flash) and bool(face), 'Empty UI catalog')
-    constants = ast.parse((root / 'mod/res/scripts/client/Driftkings/_constants.py').read_text(encoding='utf-8'))
+    constants = ast.parse((root / 'mod/res/scripts/client/driftkings/_constants.py').read_text(encoding='utf-8'))
     aliases = next(node for node in constants.body if isinstance(node, ast.ClassDef) and node.name == 'BATTLE_ALIASES')
     declared = {ast.literal_eval(node.value) for node in aliases.body if isinstance(node, ast.Assign)}
     require(set(flash) == declared, 'Flash catalog and BATTLE_ALIASES differ')
-    defaults = ast.parse((root / 'mod/res/scripts/client/Driftkings/settings/default_values.py').read_text(encoding='utf-8'))
+    defaults = ast.parse((root / 'mod/res/scripts/client/driftkings/settings/default_values.py').read_text(encoding='utf-8'))
     sections = set(next(ast.literal_eval(node.value) for node in defaults.body if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == 'DEFAULTS' for t in node.targets))) | {'driftkings'}
     for alias, spec in flash.items():
         require(re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*', alias) is not None, 'Invalid Flash alias: ' + alias)
@@ -133,7 +133,7 @@ def validate(root=ROOT, plan=None):
         tree = ast.parse(path.read_text(encoding='utf-8'))
         require(any(isinstance(node, ast.ClassDef) and node.name == name for node in tree.body), 'Missing Python view/controller: ' + spec['python'])
     meta_classes = set()
-    for path in (root / 'mod/res/scripts/client/Driftkings/meta/battle').glob('*.py'):
+    for path in (root / 'mod/res/scripts/client/driftkings/meta/battle').glob('*.py'):
         tree = ast.parse(path.read_text(encoding='utf-8'))
         for node in ast.walk(tree):
             if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == 'FLASH_CLASS' for t in node.targets):

@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 const root = path.resolve(__dirname, '../..');
-const uiRoot = path.join(root, 'mod/res/gui/gameface/mods/Driftkings/DKModSettings');
+const uiRoot = path.join(root, 'mod/res/gui/gameface/mods/driftkings/settings_window');
 let source = fs.readFileSync(path.join(uiRoot, 'js/app.js'), 'utf8');
 const startup = source.lastIndexOf('\n    build();');
 assert(startup > 0);

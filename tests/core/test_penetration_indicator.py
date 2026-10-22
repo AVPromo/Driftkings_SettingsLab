@@ -45,12 +45,12 @@ class PenetrationIndicatorTests(RuntimeTest):
         self.data = {'enabled': True, 'displayOnAllies': False}
         self.colors, self.armor = [], []
         self.api, self.hooks = game_source('battle/penetration_indicator.py', {
-            'Driftkings.settings.service': Settings(self.data).service(),
-            'Driftkings.game_constants': module(SHELL_TYPES=module(HIGH_EXPLOSIVE='HIGH_EXPLOSIVE'),
+            'driftkings.settings.service': Settings(self.data).service(),
+            'driftkings.game_constants': module(SHELL_TYPES=module(HIGH_EXPLOSIVE='HIGH_EXPLOSIVE'),
                                                 SHELL_MECHANICS_TYPE=module(MODERN='MODERN')),
             'gui.Scaleform.daapi.view.battle.shared.crosshair': module(plugins=stub('plugins', ShotResultIndicatorPlugin=NativePlugin)),
-            'Driftkings.ui': module(g_events=module(onMarkerColorChanged=self.colors.append, onArmorChanged=self.armor.append)),
-        }, real=('Driftkings._constants',))
+            'driftkings.ui': module(g_events=module(onMarkerColorChanged=self.colors.append, onArmorChanged=self.armor.append)),
+        }, real=('driftkings._constants',))
         self.shot = self.api['_ShotResult']
         # Native helpers of _CrosshairShotResults, reduced to their armour inputs.
         self.shot._computePenetrationArmor = classmethod(lambda cls, shell, cos, mat: mat.armor / cos)

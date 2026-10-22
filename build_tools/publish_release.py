@@ -33,17 +33,17 @@ def prepare(folder):
     require(manifest['version'] == version.text and manifest['channel'] == channel and report['channel'] == channel,
             'Version/channel mismatch')
     require(manifest.get('schema') == 2, 'New releases must use the complete modpack updater contract')
-    require(manifest['download'] == 'https://github.com/%s/releases/download/v%s/Driftkings.wotmod' % (release['repository'], version.text),
+    require(manifest['download'] == 'https://github.com/%s/releases/download/v%s/driftkings.wotmod' % (release['repository'], version.text),
             'Unexpected release download URL')
     for name, item in report['artifacts'].items():
         path = input_path(folder, name)
         require(path.stat().st_size == item['size'] and sha(path) == item['sha256'], 'Artifact changed: ' + name)
-    require(sha(folder / 'Driftkings.wotmod') == manifest['sha256'] and
-            (folder / 'Driftkings.wotmod').stat().st_size == manifest['size'], 'Release package mismatch')
+    require(sha(folder / 'driftkings.wotmod') == manifest['sha256'] and
+            (folder / 'driftkings.wotmod').stat().st_size == manifest['size'], 'Release package mismatch')
     inventory = verify_modpack(folder, manifest, read_json(folder / 'modpack.json'))
     require(report.get('verification', {}).get('modpack', {}).get('status') == 'passed',
             'Missing packaged Python 2.7 modpack verification')
-    required = {'Driftkings.wotmod', 'release.json', 'modpack.json', 'Driftkings-defaults.zip', inventory.distribution['file']}
+    required = {'driftkings.wotmod', 'release.json', 'modpack.json', 'Driftkings-defaults.zip', inventory.distribution['file']}
     required.update('dependencies/' + Path(item['path']).name for item in inventory.files if item['kind'] == 'dependency')
     require(required.issubset(report['artifacts']), 'Incomplete release artifacts')
     for item in inventory.files:

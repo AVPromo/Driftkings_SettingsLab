@@ -1,8 +1,8 @@
 [
   {
-    "itemID": "mods/Driftkings/HangarClock/model",
+    "itemID": "mods/driftkings/hangar_preferences/clock",
     "type": "Layout",
-    "path": "coui://gui/gameface/mods/Driftkings/HangarClock/model.html",
+    "path": "coui://gui/gameface/mods/driftkings/hangar_preferences/clock.html",
     "parameters": {
       "extension": "",
       "entrance": "main",

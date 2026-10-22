@@ -6,7 +6,7 @@ import os
 from support import RuntimeTest, Settings, game_source, module
 
 ROOT = os.path.join(os.path.dirname(__file__), '..', '..')
-with open(os.path.join(ROOT, 'res', 'configs', 'Driftkings', 'default', 'battle_preferences.json'), 'rb') as stream:
+with open(os.path.join(ROOT, 'res', 'configs', 'driftkings', 'default', 'battle_preferences.json'), 'rb') as stream:
     DEFAULTS = json.loads(stream.read().decode('utf-8-sig'))
 # Every option set to the value that changes the client.
 ACTIVE = dict(hideHint=True, disableSoundCommander=True, showPostmortemDogTag=False, showBattleHint=True,
@@ -33,10 +33,10 @@ class BattlePreferencesTests(RuntimeTest):
         wg = module(getPlayer=lambda: self.player, isReplay=lambda: False,
                     square_position=module(getSquarePosition=lambda: self.square))
         self.api, self.hooks = game_source('battle/battle_preferences.py', {
-            'Driftkings.settings.service': Settings(self.data).service(),
-            'Driftkings.common.utils.wgUtils': wg,
-            'Driftkings.core.callbacks': module(callback=lambda delay, function: self.scheduled.append(function)),
-        }, real=('Driftkings._constants',))
+            'driftkings.settings.service': Settings(self.data).service(),
+            'driftkings.common.utils.wgUtils': wg,
+            'driftkings.core.callbacks': module(callback=lambda delay, function: self.scheduled.append(function)),
+        }, real=('driftkings._constants',))
 
     def wrap(self, *spec, **kwargs):
         # spec is (target, method, *args); keyword arguments go to the wrapper.

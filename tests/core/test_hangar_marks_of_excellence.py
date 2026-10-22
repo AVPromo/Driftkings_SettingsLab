@@ -2,8 +2,8 @@
 """Hangar marks of excellence: progress history, trend, WN8 and the achievement tooltip."""
 from support import RuntimeTest, Settings, game_source, module
 
-REAL = ('Driftkings._constants', 'Driftkings.common.utils.numbers', 'Driftkings.core.marks_calculator',
-        'Driftkings.common.utils.colorRatting')
+REAL = ('driftkings._constants', 'driftkings.common.utils.numbers', 'driftkings.core.marks_calculator',
+        'driftkings.common.utils.colorRatting')
 
 
 class Stats(object):
@@ -43,14 +43,14 @@ class HangarMarksTests(RuntimeTest):
             return self.saved.get(name, default)
 
         self.api, self.hooks = game_source('lobby/hangar_marks_of_excellence.py', {
-            'Driftkings.settings.service': Settings(self.data).service(),
-            'Driftkings.common.config.json_reader': module(loadJson=load_json),
-            'Driftkings.common.utils.wgUtils': module(getPlayer=lambda: module(databaseID=self.account)),
-            'Driftkings.common.utils.exceptions': module(log_exceptions=lambda function: function),
-            'Driftkings.stats.vehinfo': module(getVehicleInfoData=lambda cd: self.expected if cd == 1 else None),
+            'driftkings.settings.service': Settings(self.data).service(),
+            'driftkings.common.config.json_reader': module(loadJson=load_json),
+            'driftkings.common.utils.wgUtils': module(getPlayer=lambda: module(databaseID=self.account)),
+            'driftkings.common.utils.exceptions': module(log_exceptions=lambda function: function),
+            'driftkings.stats.vehinfo': module(getVehicleInfoData=lambda cd: self.expected if cd == 1 else None),
             'gui.Scaleform.daapi.view.lobby.profile.ProfileUtils': module(ProfileUtils=module(getValueOrUnavailable=lambda value: value)),
-            'Driftkings.interface_catalog': module(gameface_spec=lambda feature: {'resource': 'resource'}),
-            'Driftkings.core.cache': module(cache_directory=lambda name: 'cache'),
+            'driftkings.interface_catalog': module(gameface_spec=lambda feature: {'resource': 'resource'}),
+            'driftkings.core.cache': module(cache_directory=lambda name: 'cache'),
         }, real=REAL)
 
     def test_one_snapshot_per_battle_counter(self):

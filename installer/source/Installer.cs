@@ -95,7 +95,7 @@ internal static partial class Installer
                 if (name.StartsWith("res/scripts/client/gui/mods/mod_", StringComparison.Ordinal))
                 {
                     mods++;
-                    Require(name == "res/scripts/client/gui/mods/mod_Driftkings.pyc", "Unexpected entry point");
+                    Require(name == "res/scripts/client/gui/mods/mod_driftkings.pyc", "Unexpected entry point");
                     using (var code = entry.Open())
                         Require(code.ReadByte() == 3 && code.ReadByte() == 243 && code.ReadByte() == 13 && code.ReadByte() == 10, "Wrong bytecode");
                 }
@@ -223,7 +223,7 @@ internal static partial class Installer
 
     static int Apply(string root, Dictionary<string, object> ticket, Stream ready)
     {
-        string target = Path.Combine(root, "mods", (string)ticket["gameVersion"], "Driftkings.wotmod");
+        string target = Path.Combine(root, "mods", (string)ticket["gameVersion"], "driftkings.wotmod");
         string backup = target + ".old";
         string temporary = target + ".new";
         long size = (int)ticket["size"], oldSize = (int)ticket["installedSize"];
@@ -300,7 +300,7 @@ internal static partial class Installer
             Require(String.Equals(Path.GetFileName(executable), "WorldOfTanks.exe", StringComparison.OrdinalIgnoreCase) &&
                     (Path.GetFileName(binaryFolder) == "win64" || Path.GetFileName(binaryFolder) == "win32"), "Unexpected parent image");
             string root = Path.GetDirectoryName(binaryFolder);
-            string cache = Path.Combine(root, "mods", "configs", "Driftkings", "cache", "update");
+            string cache = Path.Combine(root, "mods", "configs", "driftkings", "cache", "update");
             Require(Same(Path.GetDirectoryName(stage), cache) && Path.GetFileName(stage).StartsWith("download-", StringComparison.Ordinal), "Stage outside owned cache");
             Safe(executable, true); Safe(stage, true);
             Require(Same(Assembly.GetExecutingAssembly().Location, Path.Combine(stage, "Driftkings.UpdateInstaller.exe")), "Helper outside stage");
@@ -313,7 +313,7 @@ internal static partial class Installer
                 string ticketPath = Path.Combine(stage, "install.json");
                 string ticketHash;
                 using (var input = File.OpenRead(ticketPath)) ticketHash = Hash(input);
-                string readyPath = Path.Combine(stage, "Driftkings.wotmod.ready"); Safe(readyPath, true);
+                string readyPath = Path.Combine(stage, "driftkings.wotmod.ready"); Safe(readyPath, true);
                 bool restart;
                 int outcome;
                 using (var ready = new FileStream(readyPath, FileMode.Open, FileAccess.Read, FileShare.Read))

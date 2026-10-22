@@ -32,7 +32,7 @@ class HighCaliberTests(RuntimeTest):
     def setUp(self):
         super(HighCaliberTests, self).setUp()
         self.project = self.load('core.high_caliber').project
-        with open(os.path.join(ROOT, 'res/configs/Driftkings/default/high_caliber_progress.json'), 'rb') as stream:
+        with open(os.path.join(ROOT, 'res/configs/driftkings/default/high_caliber_progress.json'), 'rb') as stream:
             self.settings = json.load(stream)
         self.allowed = True
         self.applied = []
@@ -53,18 +53,18 @@ class HighCaliberTests(RuntimeTest):
         self.deps = {
             'Vehicle': module(Vehicle=object),
             'constants': module(ARENA_GUI_TYPE=module(RANDOM=1, EPIC_RANDOM=2)),
-            'Driftkings.core.battle_policy': module(battle_policy=module(decision=lambda name: (self.allowed, ''))),
+            'driftkings.core.battle_policy': module(battle_policy=module(decision=lambda name: (self.allowed, ''))),
             'gui.Scaleform.daapi.view.battle.shared.ribbons_aggregator': module(RibbonsAggregator=object),
             'gui.battle_control.arena_info': module(vos_collections=module(
                 VehiclesInfoCollection=lambda: module(iterator=lambda dp: []))),
             'gui.battle_control.battle_constants': module(FEEDBACK_EVENT_ID=module(PLAYER_DAMAGED_HP_ENEMY=10)),
-            'Driftkings._constants': self.constants,
-            'Driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player),
-            'Driftkings.core.battle_events': module(battleEvents=self.events),
-            'Driftkings.core.hooks': module(override=identity, on_event=identity),
-            'Driftkings.settings.service': module(settings_service=self.service),
-            'Driftkings.settings.definitions.battle.high_caliber_progress': module(HighCaliberProgressSettings=object),
-            'Driftkings.views.battle.high_caliber_gameface': module(MainGunAdapter=object),
+            'driftkings._constants': self.constants,
+            'driftkings.common.utils.wgUtils': module(getPlayer=lambda: self.player),
+            'driftkings.core.battle_events': module(battleEvents=self.events),
+            'driftkings.core.hooks': module(override=identity, on_event=identity),
+            'driftkings.settings.service': module(settings_service=self.service),
+            'driftkings.settings.definitions.battle.high_caliber_progress': module(HighCaliberProgressSettings=object),
+            'driftkings.views.battle.high_caliber_gameface': module(MainGunAdapter=object),
         }
         self.api = source('battle/high_caliber_progress.py', self.deps)
         self.gun, self.scl = self.api['mainGuns'], self.api['scl']
@@ -182,9 +182,9 @@ class HighCaliberTests(RuntimeTest):
     def test_old_presentation_settings_are_removed_without_losing_preferences(self):
         schema = source('settings/controls_schema.py', {})
         definition = source('settings/definitions/battle/high_caliber_progress.py', {
-            'Driftkings._constants': self.constants,
-            'Driftkings.settings.controls_schema': module(control=schema['control'], field=schema['field']),
-            'Driftkings.settings.definitions.base': module(SectionDefinition=object),
+            'driftkings._constants': self.constants,
+            'driftkings.settings.controls_schema': module(control=schema['control'], field=schema['field']),
+            'driftkings.settings.definitions.base': module(SectionDefinition=object),
         })['HighCaliberProgressSettings']()
         old = dict(self.settings, renderer='legacy', format='{mainGun}', shadow={'enabled': True})
         old['background'] = dict(alpha=42, image='custom.png', width=123, height=45)
@@ -257,19 +257,19 @@ class HighCaliberTests(RuntimeTest):
                 child._lastPayload = payload
                 published.append(payload)
 
-        with open(os.path.join(ROOT, 'mod/res/scripts/client/Driftkings/i18n/pt.py'), 'rb') as stream:
+        with open(os.path.join(ROOT, 'mod/res/scripts/client/driftkings/i18n/pt.py'), 'rb') as stream:
             tree = ast.parse(stream.read())
         catalog = next(ast.literal_eval(n.value) for n in tree.body if isinstance(n, ast.Assign))
         component = module(config=module(lang='pt', i18n=catalog['high_caliber_progress']), mainGuns=self.gun)
         ui = module(attach_assets=lambda *args: None, resource_id=lambda path: 42)
         deps = {
             'importlib': module(import_module=lambda name: component),
-            'Driftkings._constants': self.constants,
-            'Driftkings.core.hud_visibility': module(hudVisibility=module(
+            'driftkings._constants': self.constants,
+            'driftkings.core.hud_visibility': module(hudVisibility=module(
                 attach=lambda obj: attached.append(obj), detach=lambda obj: attached.remove(obj))),
-            'Driftkings.settings.service': module(settings_service=self.service),
-            'Driftkings.views.hangar.common': module(publish_card=publish),
-            'Driftkings.views.marks_model': module(moved_panel=self.load('views.marks_model').moved_panel,
+            'driftkings.settings.service': module(settings_service=self.service),
+            'driftkings.views.hangar.common': module(publish_card=publish),
+            'driftkings.views.marks_model': module(moved_panel=self.load('views.marks_model').moved_panel,
                                                   finite=lambda value: None if value == 'bad' else float(value),
                                                   number_locale=lambda lang: {'groupSeparator': u'\u00a0'}),
             'gui.impl.battle.random.hud': module(RandomHUDView=Parent),
@@ -277,14 +277,14 @@ class HighCaliberTests(RuntimeTest):
             'gui.impl.pub.view_component': module(ViewComponent=View),
             'gui.shared': module(events=module(GameEvent=module(GUI_VISIBILITY=1, SHOW_CURSOR=2, HIDE_CURSOR=3)),
                                  EVENT_BUS_SCOPE=module(BATTLE=1, GLOBAL=2)),
-            'Driftkings.core.hooks': module(override=override),
-            'Driftkings.ui.gameface': ui,
-            'Driftkings.interface_catalog': module(gameface_spec=lambda feature: {'resource': 'test'}),
+            'driftkings.core.hooks': module(override=override),
+            'driftkings.ui.gameface': ui,
+            'driftkings.interface_catalog': module(gameface_spec=lambda feature: {'resource': 'test'}),
             'GUI': module(mcursor=lambda: module(visible=False)),
         }
         base = source('views/battle/common.py', deps)
         base['setattr'] = lambda target, name, value: setattr(target, name, value)
-        deps['Driftkings.views.battle.common'] = module(BattleCardAdapter=base['BattleCardAdapter'])
+        deps['driftkings.views.battle.common'] = module(BattleCardAdapter=base['BattleCardAdapter'])
         adapter = source('views/battle/high_caliber_gameface.py', deps)['MainGunAdapter']()
         adapter.install()
         adapter.install()

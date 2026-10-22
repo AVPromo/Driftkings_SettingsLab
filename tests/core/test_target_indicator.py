@@ -31,13 +31,13 @@ class TargetIndicatorTests(RuntimeTest):
             'BigWorld': module(), 'Math': module(),
             'AvatarInputHandler': module(cameras=module()),
             'Vehicle': module(Vehicle=Vehicle),
-            'Driftkings._constants': constants,
-            'Driftkings.core.battle_events': module(battleEvents=module()),
-            'Driftkings.core.callbacks': module(callback=None, cancelCallback=None),
-            'Driftkings.core.overlay': module(Align=None, ElementType=None, overlays=None),
-            'Driftkings.settings.service': module(settings_service=module(
+            'driftkings._constants': constants,
+            'driftkings.core.battle_events': module(battleEvents=module()),
+            'driftkings.core.callbacks': module(callback=None, cancelCallback=None),
+            'driftkings.core.overlay': module(Align=None, ElementType=None, overlays=None),
+            'driftkings.settings.service': module(settings_service=module(
                 getComponentDict=lambda config: {'enabled': True})),
-            'Driftkings.settings.definitions.battle.autoaim_target_indicator': module(
+            'driftkings.settings.definitions.battle.autoaim_target_indicator': module(
                 AutoaimTargetIndicatorSettings=lambda: module(NAME='target')),
         })
         self.controller = api['controller']

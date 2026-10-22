@@ -7,7 +7,7 @@ import os
 from support import Event, RuntimeTest, Settings, game_source, module
 
 ROOT = os.path.join(os.path.dirname(__file__), '..', '..')
-with open(os.path.join(ROOT, 'res', 'configs', 'Driftkings', 'default', 'repair_controls.json'), 'rb') as stream:
+with open(os.path.join(ROOT, 'res', 'configs', 'driftkings', 'default', 'repair_controls.json'), 'rb') as stream:
     DEFAULTS = json.loads(stream.read().decode('utf-8-sig'))
 
 
@@ -51,15 +51,15 @@ class RepairControlsTests(RuntimeTest):
         self.replay = module(isPlaying=False)
         self.keys = set()
         self.api, _ = game_source('battle/repair_controls.py', {
-            'Driftkings.settings.service': Settings(self.data).service(),
+            'driftkings.settings.service': Settings(self.data).service(),
             'gui.battle_control.battle_constants': module(DEVICE_STATE_DESTROYED='destroyed', DEVICE_STATE_NORMAL='normal',
                                                           VEHICLE_VIEW_STATE=module(FIRE='fire', STUN='stun')),
             'gui.shared.gui_items': module(Vehicle=module(getVehicleClassTag=lambda tags: 'heavyTank')),
             'BattleReplay': module(g_replayCtrl=self.replay),
-            'Driftkings.core.callbacks': module(callback=lambda delay, function: None, cancelCallback=lambda handle: None),
-            'Driftkings.common.utils.game': module(checkKeys=lambda keys: str(keys) in self.keys),
+            'driftkings.core.callbacks': module(callback=lambda delay, function: None, cancelCallback=lambda handle: None),
+            'driftkings.common.utils.game': module(checkKeys=lambda keys: str(keys) in self.keys),
             'gui.shared.personality': module(ServicesLocator=module(appLoader=module(getDefBattleApp=lambda: True))),
-        }, real=('Driftkings._constants',))
+        }, real=('driftkings._constants',))
         self.repair = self.api['Repair']()
 
     def battle(self, **kits):

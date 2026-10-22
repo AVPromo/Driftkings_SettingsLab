@@ -1,0 +1,27 @@
+# -*- coding: utf-8 -*-
+from driftkings._constants import TARGET_DISTANCE
+from driftkings.settings.controls_schema import control, slider, options
+from driftkings.settings.definitions.base import SectionDefinition
+
+
+class TargetDistanceSettings(SectionDefinition):
+    NAME = TARGET_DISTANCE.NAME
+
+    TRANSLATED_TITLE = True
+    COLUMNS = (
+        (
+            options(TARGET_DISTANCE.DISPLAY_MODE, ['always', 'onAltPressed']),
+            options(TARGET_DISTANCE.MARKER_TARGET, ['allyAndEnemy', 'onlyEnemy']),
+            options(TARGET_DISTANCE.ANCHOR_POSITION, ['tankMarker', 'tankCenter', 'tankBottom']),
+            control(TARGET_DISTANCE.LOCK_POSITION_OFFSETS),
+            slider(TARGET_DISTANCE.ANCHOR_HORIZONTAL_OFFSET, -150, 150, 1),
+            slider(TARGET_DISTANCE.ANCHOR_VERTICAL_OFFSET, -150, 150, 1),
+        ),
+        (
+            slider(TARGET_DISTANCE.DECIMAL_PRECISION, 0, 3, 1),
+            slider(TARGET_DISTANCE.TEXT_SIZE, 6, 24, 1),
+            control(TARGET_DISTANCE.TEXT_COLOR, 'ColorChoice'),
+            slider(TARGET_DISTANCE.TEXT_ALPHA, 0.0, 1.0, 0.01),
+            control(TARGET_DISTANCE.DRAW_TEXT_SHADOW),
+        ),
+    )

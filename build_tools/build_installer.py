@@ -36,7 +36,7 @@ def definitions(root=ROOT):
     root = Path(root)
     components = installer_catalog(root)
     by_name = {entry['key']: entry for entry in components}
-    catalogs = {lang: catalog(root / ('mod/res/scripts/client/Driftkings/i18n/' + lang + '.py'))
+    catalogs = {lang: catalog(root / ('mod/res/scripts/client/driftkings/i18n/' + lang + '.py'))
                 for lang in ('en', 'pt')}
     options = read_json(root / 'installer/setup/options.json')
     presets = read_json(root / 'installer/setup/presets.json')
@@ -51,7 +51,7 @@ def definitions(root=ROOT):
         require((item['component'], item['key']) not in seen, 'Duplicate installer option')
         seen.add((item['component'], item['key']))
         component = by_name[item['component']]
-        values = read_json(root / 'res/configs/Driftkings' / component['file'])
+        values = read_json(root / 'res/configs/driftkings' / component['file'])
         require(type(values.get(item['key'])) is bool, 'Installer option is not a boolean: ' + item['key'])
         labels = {lang: text(document['TEXT'].get(item['component'], {}).get(item['label_key']))
                   for lang, document in catalogs.items()}
@@ -278,7 +278,7 @@ def main():
             prepare_payload(ROOT, args.artifacts, output)
         if args.compile:
             compiler = args.iscc or shutil.which('ISCC.exe') or 'C:/Program Files (x86)/Inno Setup 6/ISCC.exe'
-            subprocess.run([compiler, '/DInputDir=' + str(output), str(ROOT / 'installer/setup/Driftkings.iss')], check=True)
+            subprocess.run([compiler, '/DInputDir=' + str(output), str(ROOT / 'installer/setup/driftkings.iss')], check=True)
             if args.attach_to_release:
                 manifest = read_json(args.artifacts / 'release.json')
                 name = 'Driftkings-%s-WoT-%s-Setup.exe' % (manifest['version'], manifest['gameVersion'])

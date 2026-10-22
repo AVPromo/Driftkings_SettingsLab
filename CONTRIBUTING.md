@@ -6,7 +6,7 @@ This guide explains how the code is organised and how to make a change safely. F
 
 - **Client scripts run on Python 2.7** (the World of Tanks client). Write code that is valid on both 2.7 and 3: no f-strings, no type hints, no `nonlocal`, no keyword-only arguments. CI parses every client source with Python 2.7.
 - **Gameface JavaScript is ES5.** `npm run lint` enforces this.
-- **Use `logging`, never `print`.** Import `get_logger` from `Driftkings.logger` and declare `LOG = get_logger('Driftkings.<Area>')`. The shared factory preserves client-owned handlers and output. Use `LOG.exception(...)` inside `except` blocks so the traceback reaches the game log.
+- **Use `logging`, never `print`.** Import `get_logger` from `driftkings.logger` and declare `LOG = get_logger('Driftkings.<Area>')`. The shared factory preserves client-owned handlers and output. Use `LOG.exception(...)` inside `except` blocks so the traceback reaches the game log.
 - **Do not swallow exceptions silently.** Catch the narrowest exception type, and either log it or explain in a comment why ignoring it is correct.
 - Prefer **pure, engine-free modules** for logic (see `core/gun_stats.py`, `core/carousel*.py`, `core/high_caliber.py`). They can be tested without the game.
 - Never edit generated files by hand: `settings/default_values.py` and `component_list.py` are generated.
@@ -17,7 +17,7 @@ This guide explains how the code is organised and how to make a change safely. F
 | --- | --- |
 | `mod/res/scripts/client/Driftkings` | Runtime Python (the mod itself) |
 | `mod/res/gui/gameface` | Gameface HTML, CSS and ES5 JavaScript |
-| `res/configs/Driftkings/default` | Canonical default settings (JSON) |
+| `res/configs/driftkings/default` | Canonical default settings (JSON) |
 | `flash_source` | ActionScript sources for the battle SWFs |
 | `installer` | Windows installer script and the native C# helper |
 | `build_data`, `build_tools` | Build contracts, validators, compiler and release tooling |
@@ -47,7 +47,7 @@ Inside the client package:
 Patching game code goes through `core/hooks.py`, never directly through ad-hoc monkeypatching:
 
 ```python
-from Driftkings.core.hooks import override, overrideMethod, on_event
+from driftkings.core.hooks import override, overrideMethod, on_event
 
 @overrideMethod(PlayerAvatar, 'onEnterWorld')
 def onEnterWorld(original, avatar, *args, **kwargs):
@@ -60,7 +60,7 @@ Hooks are declared at import time and **owned by their component**. They are onl
 
 ### Settings
 
-- Defaults live as JSON under `res/configs/Driftkings/default/`. After editing them run `python build_tools/generate_defaults.py --write` (and `--refresh-snapshot` for intentional default changes). CI runs `--check`.
+- Defaults live as JSON under `res/configs/driftkings/default/`. After editing them run `python build_tools/generate_defaults.py --write` (and `--refresh-snapshot` for intentional default changes). CI runs `--check`.
 - A component's settings class lives in `settings/definitions/<area>/<name>.py` and extends `SectionDefinition`. Read values through `settings_service.getComponentDict(config)` and react to changes with `affects(changes, ...)`.
 - Names and menu text are translated through the `i18n` catalogues. Add new keys to **every** language (English text is an acceptable placeholder) and run `python build_tools/validate_locales.py`.
 

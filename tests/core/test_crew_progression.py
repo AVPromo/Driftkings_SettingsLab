@@ -9,9 +9,9 @@ class CrewProgressionTests(RuntimeTest):
         super(CrewProgressionTests, self).setUp()
         self.arithmetic = self.load('core.crew_progression')
         self.collect = source('lobby/crew_progression.py', {
-            'Driftkings.core.crew_progression': self.arithmetic})['collect_tankman']
+            'driftkings.core.crew_progression': self.arithmetic})['collect_tankman']
         self.presentation = source('views/crew_progression_model.py', {
-            'Driftkings.views.marks_model': module(number_locale=lambda lang: {'groupSeparator': ' '})})
+            'driftkings.views.marks_model': module(number_locale=lambda lang: {'groupSeparator': ' '})})
 
     def test_remaining_xp_uses_current_skill_completion_not_total_or_one_percent(self):
         calls = []

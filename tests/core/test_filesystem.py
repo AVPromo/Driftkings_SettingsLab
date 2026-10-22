@@ -49,7 +49,7 @@ class FilesystemTests(RuntimeTest):
         target = os.path.join(self.root, 'data.json')
         with open(target + '.previous', 'wb') as stream:
             stream.write(b'{"enabled": false}')
-        store = source('settings/store.py', {'Driftkings.common.utils.filesystem': self.api})
+        store = source('settings/store.py', {'driftkings.common.utils.filesystem': self.api})
         self.assertIs(store['replace_file'], self.api.replace_file)
         self.assertIs(store['recover_file'], self.api.recover_file)
         self.api.recoverFile(target)

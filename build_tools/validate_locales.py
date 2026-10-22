@@ -35,7 +35,7 @@ def leaves(value, prefix=()):
 
 
 def validate_catalogs(root=ROOT):
-    folder = root / 'mod/res/scripts/client/Driftkings/i18n'
+    folder = root / 'mod/res/scripts/client/driftkings/i18n'
     manifest = json.loads((root / 'build_data/locales.json').read_text(encoding='utf-8'))
     reference = dict(leaves(catalog(folder / 'en.py')))
     errors = []
@@ -73,7 +73,7 @@ ENGLISH_NAMES = frozenset(('Super Mario',))
 
 def english_prose(root=ROOT):
     """Catalog values still identical to an English phrase of two or more words."""
-    folder = root / 'mod/res/scripts/client/Driftkings/i18n'
+    folder = root / 'mod/res/scripts/client/driftkings/i18n'
     manifest = json.loads((root / 'build_data/locales.json').read_text(encoding='utf-8'))
     reference = dict(leaves(catalog(folder / 'en.py')))
     found = []

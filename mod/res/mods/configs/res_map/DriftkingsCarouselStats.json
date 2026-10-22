@@ -1,8 +1,8 @@
 [
   {
-    "itemID": "mods/Driftkings/CarouselStats/model",
+    "itemID": "mods/driftkings/vehicle_carousel/model",
     "type": "Layout",
-    "path": "coui://gui/gameface/mods/Driftkings/CarouselStats/model.html",
+    "path": "coui://gui/gameface/mods/driftkings/vehicle_carousel/model.html",
     "parameters": {
       "extension": "",
       "entrance": "main",

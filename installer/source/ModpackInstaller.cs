@@ -98,12 +98,12 @@ internal static partial class Installer
             var item = Map(raw); Keys(item, "path", "kind", "size", "sha256");
             string path = Relative(Text(item, "path")), kind = Text(item, "kind");
             Require(seen.Add(path), "Duplicate inventory path"); Size(item); Digest(item); total += Size(item);
-            if (kind == "code") { Require(path == "mods/" + game + "/Driftkings.wotmod", "Invalid code path"); code++; }
+            if (kind == "code") { Require(path == "mods/" + game + "/driftkings.wotmod", "Invalid code path"); code++; }
             else if (kind == "dependency")
             {
                 string prefix = "mods/" + game + "/";
                 Require(path.StartsWith(prefix, StringComparison.Ordinal) && path.Substring(prefix.Length).IndexOf('/') < 0 &&
-                        path.EndsWith(".wotmod", StringComparison.Ordinal) && path != prefix + "Driftkings.wotmod", "Invalid dependency path");
+                        path.EndsWith(".wotmod", StringComparison.Ordinal) && path != prefix + "driftkings.wotmod", "Invalid dependency path");
             }
             else if (kind == "defaults") { Require(path == "Driftkings-defaults.zip", "Invalid defaults"); defaults++; }
             else if (kind == "instructions") { Require(path == "INSTALL.txt", "Invalid instructions"); instructions++; }
@@ -116,8 +116,8 @@ internal static partial class Installer
         {
             var item = Map(raw); Keys(item, "path", "kind", "size", "sha256");
             string path = Relative(Text(item, "path")); Size(item); Digest(item); total += Size(item);
-            Require(seen.Add(path) && Text(item, "kind") == "config" && path.StartsWith("mods/configs/Driftkings/", StringComparison.Ordinal) &&
-                    !path.StartsWith("mods/configs/Driftkings/cache/", StringComparison.Ordinal) && path.EndsWith(".json", StringComparison.Ordinal), "Invalid default path");
+            Require(seen.Add(path) && Text(item, "kind") == "config" && path.StartsWith("mods/configs/driftkings/", StringComparison.Ordinal) &&
+                    !path.StartsWith("mods/configs/driftkings/cache/", StringComparison.Ordinal) && path.EndsWith(".json", StringComparison.Ordinal), "Invalid default path");
         }
         Require(seen.Count > 0 && total <= 128L * 1024 * 1024, "Inventory exceeds limit");
         return result;
@@ -176,7 +176,7 @@ internal static partial class Installer
             else { Require(false, "Conflicting dependency or modified owned code"); expected = "conflict"; }
             Require(action == expected && EqualSig(item["after"], after), "Operation differs from inventory");
             if (after != null && (action == "install" || action == "replace" || previousOwned.Contains(path))) nextOwned.Add(path);
-            if (path == "mods/" + game + "/Driftkings.wotmod") Require(EqualSig(item["before"], installedSig), "Installed code mismatch");
+            if (path == "mods/" + game + "/driftkings.wotmod") Require(EqualSig(item["before"], installedSig), "Installed code mismatch");
         }
         Require(observed.SetEquals(candidates) && nextOwned.SetEquals(Owned(ticket["owned"], files)), "Ownership plan differs");
     }
@@ -263,7 +263,7 @@ internal static partial class Installer
         byte[] receipt = Encoding.UTF8.GetBytes(Json.Serialize(new { schema = 1, inventory = ticket["inventory"], owned = ticket["owned"] }));
         Require(receipt.Length <= 65536, "Ownership receipt exceeds limit");
         byte[] previous = ticket["previousReceipt"] == null ? null : Encoding.UTF8.GetBytes(Text(ticket, "previousReceipt"));
-        result.Add(new Change { Target = Path.Combine(root, "mods", "configs", "Driftkings", "cache", "update", "ownership." + Text(ticket, "gameVersion") + ".json"),
+        result.Add(new Change { Target = Path.Combine(root, "mods", "configs", "driftkings", "cache", "update", "ownership." + Text(ticket, "gameVersion") + ".json"),
                                 Before = previous == null ? null : ByteSig(previous), After = ByteSig(receipt), Bytes = receipt });
         for (int index = 0; index < result.Count; index++)
         {
@@ -339,7 +339,7 @@ internal static partial class Installer
             Safe(Path.GetDirectoryName(change.Target), true);
         }
         VerifyKept(root, ticket);
-        string oldCode = Path.Combine(root, "mods", Text(ticket, "gameVersion"), "Driftkings.wotmod");
+        string oldCode = Path.Combine(root, "mods", Text(ticket, "gameVersion"), "driftkings.wotmod");
         using (var code = File.OpenRead(oldCode)) Package(code, Text(ticket, "installedVersion"));
         // A journal precedes even temporary creation. After a crash all target
         // states can be inferred from recorded before/after hashes and backups.

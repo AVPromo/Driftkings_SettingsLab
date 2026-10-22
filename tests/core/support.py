@@ -11,7 +11,7 @@ except ImportError:
     import __builtin__ as builtins
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-CLIENT = os.path.join(ROOT, 'mod', 'res', 'scripts', 'client', 'Driftkings')
+CLIENT = os.path.join(ROOT, 'mod', 'res', 'scripts', 'client', 'driftkings')
 
 
 def module(**values):
@@ -23,27 +23,27 @@ def module(**values):
 class RuntimeTest(unittest.TestCase):
     def setUp(self):
         self.saved = dict((key, value) for key, value in sys.modules.items()
-                          if key == 'Driftkings' or key.startswith('Driftkings.'))
+                          if key == 'driftkings' or key.startswith('driftkings.'))
         self.addCleanup(self.restore_modules)
         for key in self.saved:
             del sys.modules[key]
-        for name, relative in (('Driftkings', ''), ('Driftkings.core', 'core'),
-                               ('Driftkings.common', 'common'), ('Driftkings.common.utils', 'common/utils')):
+        for name, relative in (('driftkings', ''), ('driftkings.core', 'core'),
+                               ('driftkings.common', 'common'), ('driftkings.common.utils', 'common/utils')):
             package = types.ModuleType(name)
             package.__path__ = [os.path.join(CLIENT, *relative.split('/'))]
             sys.modules[name] = package
-        sys.modules['Driftkings'].VERSION = '1.0.0'
+        sys.modules['driftkings'].VERSION = '1.0.0'
 
     def restore_modules(self):
         for key in list(sys.modules):
-            if key == 'Driftkings' or key.startswith('Driftkings.'):
+            if key == 'driftkings' or key.startswith('driftkings.'):
                 del sys.modules[key]
         sys.modules.update(self.saved)
 
     def load(self, relative):
-        module = importlib.import_module('Driftkings.' + relative)
+        module = importlib.import_module('driftkings.' + relative)
         # Tests must not depend on the production trust anchor: start every test with no trusted keys.
-        signature = sys.modules.get('Driftkings.core.updater.signature')
+        signature = sys.modules.get('driftkings.core.updater.signature')
         if signature is not None and signature is not self.__dict__.get('_signature_reset'):
             signature.TRUSTED_KEYS = ()
             self._signature_reset = signature
@@ -139,9 +139,9 @@ def game_source(relative, stubs=None, real=(), extra_builtins=None):
     `extra_builtins` supplies Python 2 names such as unicode. Returns (namespace, hooks).
     """
     stubs = dict(stubs or {})
-    hooks = stubs.setdefault('Driftkings.core.hooks', None) or Hooks()
+    hooks = stubs.setdefault('driftkings.core.hooks', None) or Hooks()
     if isinstance(hooks, Hooks):
-        stubs['Driftkings.core.hooks'] = module(override=hooks.override, on_event=hooks.on_event, hooks=module(current=None),
+        stubs['driftkings.core.hooks'] = module(override=hooks.override, on_event=hooks.on_event, hooks=module(current=None),
                                                 overrideMethod=hooks.typed, overrideClassMethod=hooks.typed,
                                                 overrideStaticMethod=hooks.typed)
     original = builtins.__import__
@@ -149,7 +149,7 @@ def game_source(relative, stubs=None, real=(), extra_builtins=None):
     def importing(name, globals=None, locals=None, fromlist=(), level=0):
         if name in stubs:
             return stubs[name]
-        if name in real or name == 'Driftkings.logger' or name.split('.')[0] in STDLIB or name == '__future__':
+        if name in real or name == 'driftkings.logger' or name.split('.')[0] in STDLIB or name == '__future__':
             return original(name, globals, locals, fromlist, level)
         return auto(name) if fromlist else auto(name.split('.')[0])
 

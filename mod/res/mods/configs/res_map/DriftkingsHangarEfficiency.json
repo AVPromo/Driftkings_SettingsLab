@@ -1,8 +1,8 @@
 [
   {
-    "itemID": "mods/Driftkings/HangarEfficiency/model",
+    "itemID": "mods/driftkings/hangar_efficiency/model",
     "type": "Layout",
-    "path": "coui://gui/gameface/mods/Driftkings/HangarEfficiency/model.html",
+    "path": "coui://gui/gameface/mods/driftkings/hangar_efficiency/model.html",
     "parameters": {
       "extension": "",
       "entrance": "main",

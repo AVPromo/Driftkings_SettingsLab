@@ -38,12 +38,12 @@ class GeneratorTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
-        for relative in ('res/configs/Driftkings', 'installer/setup'):
+        for relative in ('res/configs/driftkings', 'installer/setup'):
             shutil.copytree(ROOT / relative, self.root / relative,
                             ignore=shutil.ignore_patterns('*.png', '*.bmp', '*.ico') if relative == 'installer/setup' else None)
         for relative in ('build_data/build_config.json', 'build_data/components.json',
-                         'mod/res/scripts/client/Driftkings/_constants.py',
-                         'mod/res/scripts/client/Driftkings/i18n/en.py', 'mod/res/scripts/client/Driftkings/i18n/pt.py'):
+                         'mod/res/scripts/client/driftkings/_constants.py',
+                         'mod/res/scripts/client/driftkings/i18n/en.py', 'mod/res/scripts/client/driftkings/i18n/pt.py'):
             path = self.root / relative
             path.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(ROOT / relative, path)
@@ -71,19 +71,19 @@ class GeneratorTests(unittest.TestCase):
 
     def test_every_top_level_enabled_has_translated_labels_group_and_real_path(self):
         choices = installer_catalog(self.root)
-        expected = {path.stem for path in (self.root / 'res/configs/Driftkings/default').glob('*.json')
+        expected = {path.stem for path in (self.root / 'res/configs/driftkings/default').glob('*.json')
                     if 'enabled' in json.loads(path.read_text())}
         self.assertEqual({entry['key'] for entry in choices}, expected)
         self.assertNotIn('sound_bank_loader', expected)
         for entry in choices:
-            self.assertTrue((self.root / 'res/configs/Driftkings' / entry['file']).is_file())
+            self.assertTrue((self.root / 'res/configs/driftkings' / entry['file']).is_file())
             for lang in ('en', 'pt'):
                 self.assertTrue(entry['labels'][lang])
                 self.assertTrue(entry['descriptions'][lang])
                 self.assertTrue(entry['group_labels'][lang])
 
     def test_missing_label_fails_instead_of_using_internal_name(self):
-        path = self.root / 'mod/res/scripts/client/Driftkings/i18n/pt.py'
+        path = self.root / 'mod/res/scripts/client/driftkings/i18n/pt.py'
         text = path.read_text(encoding='utf-8')
         # Remove the actual first description; leave a valid catalog document.
         import re
@@ -171,10 +171,10 @@ class GeneratorTests(unittest.TestCase):
         config = json.loads((self.root / 'build_data/build_config.json').read_text())
         game = config['game']['version']
         version = '1.0.0'
-        names = ('Driftkings.wotmod', 'first.wotmod', 'second.wotmod')
+        names = ('driftkings.wotmod', 'first.wotmod', 'second.wotmod')
         defaults = io.BytesIO()
         with zipfile.ZipFile(defaults, 'w') as archive:
-            archive.writestr('mods/configs/Driftkings/default/example.json', b'{}')
+            archive.writestr('mods/configs/driftkings/default/example.json', b'{}')
         distribution = artifacts / ('Driftkings-%s-WoT-%s.zip' % (version, game))
         with zipfile.ZipFile(distribution, 'w') as archive:
             for name in names:
@@ -184,14 +184,14 @@ class GeneratorTests(unittest.TestCase):
                 archive.writestr('mods/' + game + '/' + name, data)
             archive.writestr('INSTALL.txt', b'instructions')
             archive.writestr('Driftkings-defaults.zip', defaults.getvalue())
-        modpack = create_modpack(artifacts, version, 'stable', game, {'mods/configs/Driftkings/default/example.json': b'{}'})
+        modpack = create_modpack(artifacts, version, 'stable', game, {'mods/configs/driftkings/default/example.json': b'{}'})
         code = (artifacts / names[0]).read_bytes()
         manifest = dict(version=version, channel='stable', gameVersion=game, size=len(code), sha256=hashlib.sha256(code).hexdigest(),
                         schema=2, modpack=modpack)
         (artifacts / 'release.json').write_text(json.dumps(manifest))
         (artifacts / 'modpack.json').write_text(json.dumps(modpack))
         inputs = {path.relative_to(self.root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-                  for path in (self.root / 'res/configs/Driftkings').rglob('*.json')}
+                  for path in (self.root / 'res/configs/driftkings').rglob('*.json')}
         (artifacts / 'build-report.json').write_text(json.dumps(dict(status='success', version=version, realm=config['game']['realm'], inputs=inputs)))
         out = self.root / 'generated'
         generate_components(self.root, out)
@@ -230,7 +230,7 @@ class GeneratorTests(unittest.TestCase):
                 supported_realms(config)
 
     def test_runtime_loader_merges_partial_file_without_rewriting_it(self):
-        client = ROOT / 'mod/res/scripts/client/Driftkings'
+        client = ROOT / 'mod/res/scripts/client/driftkings'
         def load(relative, dependencies=None):
             dependencies = dependencies or {}
             def importing(name, globals=None, locals=None, fromlist=(), level=0):
@@ -239,19 +239,20 @@ class GeneratorTests(unittest.TestCase):
             eval(compile((client / relative).read_bytes(), str(client / relative), 'exec'), namespace)
             return types.SimpleNamespace(**{key: value for key, value in namespace.items() if not key.startswith('__')})
         filesystem = load('common/utils/filesystem.py')
-        store = load('settings/store.py', {'Driftkings.common.utils.filesystem': filesystem})
+        store = load('settings/store.py', {'driftkings.common.utils.filesystem': filesystem})
         sections = load('settings/sections.py')
         loader = load('settings/loader.py', {
-            'Driftkings.settings.settings_data': types.SimpleNamespace(SettingsData=object, user_settings={}, part_name=lambda value: value),
-            'Driftkings.settings.default_values': types.SimpleNamespace(SELECTOR={'loadConfig': 'default'}),
-            'Driftkings.settings.sections': sections, 'Driftkings.settings.store': store})
+            'driftkings.logger': load('logger.py'),
+            'driftkings.settings.settings_data': types.SimpleNamespace(SettingsData=object, user_settings={}, part_name=lambda value: value),
+            'driftkings.settings.default_values': types.SimpleNamespace(SELECTOR={'loadConfig': 'default'}),
+            'driftkings.settings.sections': sections, 'driftkings.settings.store': store})
         folder = self.root / 'profile'
         (folder / 'default').mkdir(parents=True)
         path = folder / 'default/clan_reward_collection.json'
         original = b'{"enabled": false}'
         path.write_bytes(original)
         (folder / 'load.json').write_text('{"loadConfig":"default"}')
-        defaults = json.loads((ROOT / 'res/configs/Driftkings/default/clan_reward_collection.json').read_text())
+        defaults = json.loads((ROOT / 'res/configs/driftkings/default/clan_reward_collection.json').read_text())
         value = loader.SettingsLoader(str(folder), settings=object()).load('clan_reward_collection', defaults)
         expected = copy.deepcopy(defaults)
         expected['enabled'] = False
@@ -259,7 +260,7 @@ class GeneratorTests(unittest.TestCase):
         self.assertEqual(path.read_bytes(), original)
 
     def test_runtime_loader_removes_previous_settings_after_migration(self):
-        client = ROOT / 'mod/res/scripts/client/Driftkings'
+        client = ROOT / 'mod/res/scripts/client/driftkings'
         def load(relative, dependencies=None):
             dependencies = dependencies or {}
             def importing(name, globals=None, locals=None, fromlist=(), level=0):
@@ -268,12 +269,13 @@ class GeneratorTests(unittest.TestCase):
             eval(compile((client / relative).read_bytes(), str(client / relative), 'exec'), namespace)
             return types.SimpleNamespace(**{key: value for key, value in namespace.items() if not key.startswith('__')})
         filesystem = load('common/utils/filesystem.py')
-        store = load('settings/store.py', {'Driftkings.common.utils.filesystem': filesystem})
+        store = load('settings/store.py', {'driftkings.common.utils.filesystem': filesystem})
         sections = load('settings/sections.py')
         loader = load('settings/loader.py', {
-            'Driftkings.settings.settings_data': types.SimpleNamespace(SettingsData=object, user_settings={}, part_name=lambda value: value),
-            'Driftkings.settings.default_values': types.SimpleNamespace(SELECTOR={'loadConfig': 'default'}),
-            'Driftkings.settings.sections': sections, 'Driftkings.settings.store': store})
+            'driftkings.logger': load('logger.py'),
+            'driftkings.settings.settings_data': types.SimpleNamespace(SettingsData=object, user_settings={}, part_name=lambda value: value),
+            'driftkings.settings.default_values': types.SimpleNamespace(SELECTOR={'loadConfig': 'default'}),
+            'driftkings.settings.sections': sections, 'driftkings.settings.store': store})
         folder = self.root / 'migration'
         profile = folder / 'default'
         profile.mkdir(parents=True)
@@ -285,7 +287,7 @@ class GeneratorTests(unittest.TestCase):
         kept.mkdir()
         (kept / 'carousel.json').write_text('{}')
         (kept / 'readme.txt').write_text('user file')
-        defaults = json.loads((ROOT / 'res/configs/Driftkings/default/clan_reward_collection.json').read_text())
+        defaults = json.loads((ROOT / 'res/configs/driftkings/default/clan_reward_collection.json').read_text())
         settings = loader.SettingsLoader(str(folder), settings=object())
         settings.discard_removed()
         value = settings.load('clan_reward_collection', defaults)
@@ -320,7 +322,7 @@ class AssetTests(unittest.TestCase):
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)
         root = Path(temp.name)
-        path = root / 'mod/res/scripts/client/Driftkings/core/updater/inventory.py'
+        path = root / 'mod/res/scripts/client/driftkings/core/updater/inventory.py'
         path.parent.mkdir(parents=True)
         shutil.copy2(ROOT / path.relative_to(root), path)
         audio = root / 'mod/res/audioww'
@@ -351,7 +353,7 @@ class AssetTests(unittest.TestCase):
 
     def test_bank_size_uses_the_inventory_limit(self):
         root, audio = self.fixture()
-        path = root / 'mod/res/scripts/client/Driftkings/core/updater/inventory.py'
+        path = root / 'mod/res/scripts/client/driftkings/core/updater/inventory.py'
         text = path.read_text(encoding='utf-8').replace('MAX_FILE = 64 * 1024 * 1024', 'MAX_FILE = 3')
         path.write_text(text, encoding='utf-8')
         (audio / 'new.bnk').write_bytes(b'1234')
@@ -375,7 +377,7 @@ class AssetTests(unittest.TestCase):
 
     def test_documentation_is_excluded_and_no_loose_media_are_installed(self):
         self.assertFalse(any(entry['source'].endswith('/README.md') for entry in self.assets))
-        script = (ROOT / 'installer/setup/Driftkings.iss').read_text(encoding='utf-8')
+        script = (ROOT / 'installer/setup/driftkings.iss').read_text(encoding='utf-8')
         code = (ROOT / 'installer/setup/wizard.iss').read_text(encoding='utf-8')
         self.assertIn('components.generated.iss', script)
         self.assertIn('payload.generated.iss', script)
@@ -389,7 +391,7 @@ class AssetTests(unittest.TestCase):
 class DiscoveryContractTests(unittest.TestCase):
     def setUp(self):
         self.code = (ROOT / 'installer/setup/wizard.iss').read_text(encoding='utf-8-sig')
-        self.setup = (ROOT / 'installer/setup/Driftkings.iss').read_text(encoding='utf-8-sig')
+        self.setup = (ROOT / 'installer/setup/driftkings.iss').read_text(encoding='utf-8-sig')
 
     def test_root_validation_precedes_copy_and_directory_page_advance(self):
         for marker in ('\\version.xml', '\\res\\packages', '\\win64\\WorldOfTanks.exe',

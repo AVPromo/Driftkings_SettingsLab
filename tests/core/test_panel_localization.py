@@ -28,14 +28,14 @@ class PanelLocalizationTests(RuntimeTest):
         profiles = ('none', 'short', 'medium', 'medium2', 'large')
         settings_data = module(PROFILES=profiles, defaults=lambda name: {}, profile_for_mode=lambda name: name)
         store = source('settings/team_panel_store.py', {
-            'Driftkings.core.keycodes': module(valid_key_code=lambda key: True),
-            'Driftkings.settings.panel_validation': module(macro_issues=lambda text: []),
-            'Driftkings.settings.settings_data': settings_data,
-            'Driftkings.settings.store': module(merge=None, JsonDocuments=object, read_object=None),
+            'driftkings.core.keycodes': module(valid_key_code=lambda key: True),
+            'driftkings.settings.panel_validation': module(macro_issues=lambda text: []),
+            'driftkings.settings.settings_data': settings_data,
+            'driftkings.settings.store': module(merge=None, JsonDocuments=object, read_object=None),
         })
         self.roster = source('core/panel_model.py', {
-            'Driftkings._constants': constants,
-            'Driftkings.settings.team_panel_store': module(resolve_fields=store['resolve_fields']),
+            'driftkings._constants': constants,
+            'driftkings.settings.team_panel_store': module(resolve_fields=store['resolve_fields']),
         })['Roster']
         self.data = copy.deepcopy(literal_assignment('settings/default_values.py', 'DEFAULTS')['team_panels'])
         screen = {'enabled': True, 'showUnavailable': True,
@@ -51,21 +51,21 @@ class PanelLocalizationTests(RuntimeTest):
                                  'name': 'Example', 'team': 1, 'accountDBID': 1500000000,
                                  'isAlive': False}}))
         self.api = source('views/battle/player_ratings.py', {
-            'Driftkings._constants': constants,
-            'Driftkings.settings.service': module(settings_service=module(getComponentDict=lambda config: self.data),
+            'driftkings._constants': constants,
+            'driftkings.settings.service': module(settings_service=module(getComponentDict=lambda config: self.data),
                                                  SettingsChanges=lambda *args: (), changed_paths=lambda *args: (),
                                                  affects=lambda *args: True),
             'BigWorld': module(player=lambda: self.player),
             'realm': module(CURRENT_REALM='EU'),
-            'Driftkings.meta.battle.players_panel': module(PlayersPanelMeta=object),
+            'driftkings.meta.battle.players_panel': module(PlayersPanelMeta=object),
             'gui.Scaleform.daapi.view.battle.classic.players_panel': module(PlayersPanel=object),
             'gui.Scaleform.daapi.view.meta.BattleStatisticDataControllerMeta': module(BattleStatisticDataControllerMeta=object),
             'gui.shared': module(g_eventBus=None, events=None, EVENT_BUS_SCOPE=None),
-            'Driftkings.core.hooks': module(override=None),
-            'Driftkings.core.battle_events': module(battleEvents=None),
-            'Driftkings.core.panel_model': module(Roster=self.roster),
-            'Driftkings.settings.settings_data': settings_data,
-            'Driftkings.common.utils.colorRatting': module(getStatisticColor=lambda *args: '#FFFFFF'),
+            'driftkings.core.hooks': module(override=None),
+            'driftkings.core.battle_events': module(battleEvents=None),
+            'driftkings.core.panel_model': module(Roster=self.roster),
+            'driftkings.settings.settings_data': settings_data,
+            'driftkings.common.utils.colorRatting': module(getStatisticColor=lambda *args: '#FFFFFF'),
         })
         self.view = self.api['RatingViews'](self.config, module(getPlayersInfo=lambda ident: {}))
 

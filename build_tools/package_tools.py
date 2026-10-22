@@ -57,7 +57,7 @@ def verify_package(path, expected, version, package_id):
                 'Package exceeds installer limits')
         require(len({name.casefold() for name in names}) == len(names), 'Duplicate WOTMOD entries')
         entrypoints = [n for n in names if n.startswith('res/scripts/client/gui/mods/mod_')]
-        require(entrypoints == ['res/scripts/client/gui/mods/mod_Driftkings.pyc'], 'Unexpected mod entrypoints')
+        require(entrypoints == ['res/scripts/client/gui/mods/mod_driftkings.pyc'], 'Unexpected mod entrypoints')
         for item in archive.infolist():
             relative_path(item.filename)
             require(item.compress_type == zipfile.ZIP_STORED, 'WOTMOD compression must be stored')
@@ -71,7 +71,7 @@ def verify_package(path, expected, version, package_id):
         meta = ET.fromstring(archive.read('meta.xml'))
         require(meta.findtext('id') == package_id and meta.findtext('version') == version, 'Wrong package identity/version')
         for prefix, executable in (('updater', 'Driftkings.UpdateInstaller.exe'), ('windows-files', 'Driftkings.WindowsFiles.exe')):
-            base = 'res/gui/Driftkings/' + prefix + '/'
+            base = 'res/gui/driftkings/' + prefix + '/'
             binary = archive.read(base + executable)
             helper = json.loads(archive.read(base + 'helper.json').decode('utf-8'))
             require(binary.startswith(b'MZ') and helper == dict(schema=1, size=len(binary), sha256=hashlib.sha256(binary).hexdigest()),

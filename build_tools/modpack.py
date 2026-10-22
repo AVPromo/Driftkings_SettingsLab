@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def contract(root=ROOT):
-    spec = importlib.util.spec_from_file_location('_dk_modpack_inventory', root / 'mod/res/scripts/client/Driftkings/core/updater/inventory.py')
+    spec = importlib.util.spec_from_file_location('_dk_modpack_inventory', root / 'mod/res/scripts/client/driftkings/core/updater/inventory.py')
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
@@ -25,7 +25,7 @@ def create(folder, version, channel, game_version, defaults):
             target = member.filename
             kind = ('defaults' if target == 'Driftkings-defaults.zip' else
                     'instructions' if target == 'INSTALL.txt' else
-                    'code' if target.endswith('/Driftkings.wotmod') else 'dependency')
+                    'code' if target.endswith('/driftkings.wotmod') else 'dependency')
             files.append(dict(path=target, kind=kind, size=member.file_size, sha256=model.sha(archive.read(member))))
     document = dict(schema=1, packageId='driftkings.modpack', version=version, channel=channel, gameVersion=game_version,
                     distribution=dict(file=name, size=path.stat().st_size, sha256=sha(path)), files=files,

@@ -11,17 +11,17 @@ class CameraSettingsTests(RuntimeTest):
     def setUp(self):
         super(CameraSettingsTests, self).setUp()
         self.policy = self.load('core.camera_settings')
-        with open(os.path.join(ROOT, 'res/configs/Driftkings/default/third_person_zoom.json'), 'rb') as stream:
+        with open(os.path.join(ROOT, 'res/configs/driftkings/default/third_person_zoom.json'), 'rb') as stream:
             self.values = json.load(stream)
         self.api = source('battle/third_person_zoom.py', {
             'AvatarInputHandler.DynamicCameras.ArcadeCamera': module(ArcadeCamera=object),
             'AvatarInputHandler.DynamicCameras.StrategicCamera': module(StrategicCamera=object),
             'AvatarInputHandler.DynamicCameras.ArtyCamera': module(ArtyCamera=object),
             'AvatarInputHandler.control_modes': module(PostMortemControlMode=object),
-            'Driftkings._constants': module(MinMax=namedtuple('MinMax', 'min max')),
-            'Driftkings.core.hooks': module(override=lambda *args: lambda fn: fn),
-            'Driftkings.settings.service': module(settings_service=module(getComponentDict=lambda cfg: self.values)),
-            'Driftkings.settings.definitions.battle.third_person_zoom': module(ThirdPersonZoomSettings=object),
+            'driftkings._constants': module(MinMax=namedtuple('MinMax', 'min max')),
+            'driftkings.core.hooks': module(override=lambda *args: lambda fn: fn),
+            'driftkings.settings.service': module(settings_service=module(getComponentDict=lambda cfg: self.values)),
+            'driftkings.settings.definitions.battle.third_person_zoom': module(ThirdPersonZoomSettings=object),
         })
 
     def test_legacy_values_migrate_once_preserving_explicit_new_values(self):
@@ -103,10 +103,10 @@ class CameraSettingsTests(RuntimeTest):
 
     def test_loader_migrates_before_merging_defaults_and_drops_dynamic_zoom(self):
         loader = source('settings/loader.py', {
-            'Driftkings.settings.settings_data': module(SettingsData=object, user_settings={}, part_name=lambda name: name),
-            'Driftkings.settings.default_values': module(SELECTOR={}),
-            'Driftkings.settings.sections': module(previous_name=None, previous_sections=None, section_aliases=None),
-            'Driftkings.settings.store': module(SettingsStore=object, merge=None, recover_file=None, read_object=None),
+            'driftkings.settings.settings_data': module(SettingsData=object, user_settings={}, part_name=lambda name: name),
+            'driftkings.settings.default_values': module(SELECTOR={}),
+            'driftkings.settings.sections': module(previous_name=None, previous_sections=None, section_aliases=None),
+            'driftkings.settings.store': module(SettingsStore=object, merge=None, recover_file=None, read_object=None),
         })
         old = loader['migrate_values']('third_person_zoom', {'min': 15, 'max': 250})
         self.assertEqual(old['arcade']['min'], 15)

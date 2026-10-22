@@ -21,7 +21,7 @@ end;
 function ConfigRoot: String;
 begin
   // The directory page exists during InitializeWizard; {app} is not ready yet.
-  Result := AddBackslash(WizardDirValue) + 'mods\configs\Driftkings';
+  Result := AddBackslash(WizardDirValue) + 'mods\configs\driftkings';
 end;
 
 function IsReparseDirectory(const Folder: String): Boolean;
@@ -60,7 +60,7 @@ var
 begin
   Result := FileExists(ConfigRoot + '\load.json') or
     FileExists(ConfigRoot + '\load.json.previous') or
-    FileExists(ConfigRoot + '\Driftkings.json') or DirExists(ConfigRoot + '\default');
+    FileExists(ConfigRoot + '\driftkings.json') or DirExists(ConfigRoot + '\default');
   if Result then Exit;
   if FindFirst(ConfigRoot + '\*.json', Item) then begin
     Result := True;
@@ -542,5 +542,5 @@ begin
   VerifyInstalledPayload;
   if not PreserveProfile then ApplyConfiguration;
   WriteMediaReadme('SixthSense', 'Custom Sixth Sense icon: SixthSenseIcon.png. Select it in the Driftkings settings panel. This folder is never removed by the uninstaller.');
-  WriteMediaReadme('images', 'Custom overlay images: use mods/configs/Driftkings/images/<filename>.png in the settings panel. This folder is never removed by the uninstaller.');
+  WriteMediaReadme('images', 'Custom overlay images: use mods/configs/driftkings/images/<filename>.png in the settings panel. This folder is never removed by the uninstaller.');
 end;

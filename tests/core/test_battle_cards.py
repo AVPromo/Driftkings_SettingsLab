@@ -55,16 +55,16 @@ class BattleCardTests(RuntimeTest):
                         disconnect=lambda handler: self.connections.__setitem__(slice(None),
                             [entry for entry in self.connections if entry[0] != handler]))
         self.deps = {
-            'Driftkings.settings.service': module(settings_service=module(onModSettingsChanged=signal)),
-            'Driftkings.views.hangar.common': module(publish_card=lambda child, payload: self.published.append(payload)),
+            'driftkings.settings.service': module(settings_service=module(onModSettingsChanged=signal)),
+            'driftkings.views.hangar.common': module(publish_card=lambda child, payload: self.published.append(payload)),
             'gui.impl.battle.random.hud': module(RandomHUDView=Parent),
             'frameworks.wulf': module(ViewModel=Model),
             'gui.impl.pub.view_component': module(ViewComponent=View),
             'gui.shared': module(events=module(GameEvent=module(GUI_VISIBILITY=1, SHOW_CURSOR=2, HIDE_CURSOR=3)),
                                  EVENT_BUS_SCOPE=module(BATTLE=1, GLOBAL=2)),
-            'Driftkings.core.hooks': module(override=override),
-            'Driftkings.ui.gameface': module(attach_assets=lambda *args: None, resource_id=lambda path: self.resource),
-            'Driftkings.interface_catalog': module(gameface_spec=lambda feature: {'resource': 'test'}),
+            'driftkings.core.hooks': module(override=override),
+            'driftkings.ui.gameface': module(attach_assets=lambda *args: None, resource_id=lambda path: self.resource),
+            'driftkings.interface_catalog': module(gameface_spec=lambda feature: {'resource': 'test'}),
             'GUI': module(mcursor=lambda: module(visible=self.cursor)),
         }
         base = source('views/battle/common.py', self.deps)
@@ -170,19 +170,19 @@ class BattleCardTests(RuntimeTest):
         signal = self.load('core.signals').Signal()
         state = module(changed=signal, clear=lambda context: cleared.append(context),
                        snapshot=lambda context: {'state': 'progress'}, publish=lambda *args: True)
-        service = self.deps['Driftkings.settings.service'].settings_service
+        service = self.deps['driftkings.settings.service'].settings_service
         service.getComponentDict = lambda config: settings
         service.apply = lambda config, values: changes.append(values)
         component = module(config=module(lang='en', i18n={'UI_description': 'Marks'}))
         deps = dict(self.deps)
         deps.update({
             'importlib': module(import_module=lambda name: component),
-            'Driftkings._constants': constants,
-            'Driftkings.views.battle.common': module(BattleCardAdapter=self.base),
-            'Driftkings.core.marks_state': module(marks_state=state),
-            'Driftkings.core.hud_visibility': module(hudVisibility=module(
+            'driftkings._constants': constants,
+            'driftkings.views.battle.common': module(BattleCardAdapter=self.base),
+            'driftkings.core.marks_state': module(marks_state=state),
+            'driftkings.core.hud_visibility': module(hudVisibility=module(
                 attach=lambda adapter: attached.append(adapter), detach=lambda adapter: attached.remove(adapter))),
-            'Driftkings.views.marks_model': module(moved_panel=self.load('views.marks_model').moved_panel,
+            'driftkings.views.marks_model': module(moved_panel=self.load('views.marks_model').moved_panel,
                                                   finite=lambda value: float(value),
                 number_locale=lambda language: {'decimalSeparator': '.', 'groupSeparator': ','}),
             'BattleReplay': module(isPlaying=lambda: True),
@@ -207,7 +207,7 @@ class BattleCardTests(RuntimeTest):
         self.assertEqual(attached, [])
         self.assertEqual(cleared, ['battle', 'battle'])
         # Avoid a second stop in dispose: native HudVisibility.detach is idempotent.
-        deps['Driftkings.core.hud_visibility'].hudVisibility.detach = lambda adapter: None
+        deps['driftkings.core.hud_visibility'].hudVisibility.detach = lambda adapter: None
         adapter.dispose()
         adapter.refresh = lambda: changes.append('unexpected refresh')
         signal('battle')

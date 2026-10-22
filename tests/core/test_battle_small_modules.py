@@ -9,9 +9,9 @@ class ServerTurretSyncTests(RuntimeTest):
         self.data = {'enabled': True, 'serverTurret': True, 'activateMessage': True}
         self.scheduled = []
         self.api, self.hooks = game_source('battle/server_turret_sync.py', {
-            'Driftkings.settings.service': Settings(self.data).service(),
-            'Driftkings.core.callbacks': module(callback=lambda delay, function: self.scheduled.append(delay)),
-        }, real=('Driftkings._constants',))
+            'driftkings.settings.service': Settings(self.data).service(),
+            'driftkings.core.callbacks': module(callback=lambda delay, function: self.scheduled.append(delay)),
+        }, real=('driftkings._constants',))
         self.wrapper = self.hooks.get('VehicleGunRotator', 'setShotPosition')
 
     def rotate(self):
@@ -40,7 +40,7 @@ class ServerTurretSyncTests(RuntimeTest):
         self.assertNotIn('gun_rotation_shared', self.api)
 
     def test_activation_message_is_scheduled_at_battle_start(self):
-        start = self.hooks.events['Driftkings.common.utils.events.PlayerAvatar.startGUI.after'][0]
+        start = self.hooks.events['driftkings.common.utils.events.PlayerAvatar.startGUI.after'][0]
         start()
         self.data['activateMessage'] = False
         start()
@@ -67,10 +67,10 @@ class TargetDistanceTests(RuntimeTest):
                 test.moves.append((dx, dy))
 
         self.api, self.hooks = game_source('battle/target_distance.py', {
-            'Driftkings.settings.service': Settings(self.data).service(),
-            'Driftkings.views.battle.target_distance': module(DistanceMarkerController=Controller,
+            'driftkings.settings.service': Settings(self.data).service(),
+            'driftkings.views.battle.target_distance': module(DistanceMarkerController=Controller,
                                                               DistanceMarkerView=object, ALIAS='alias'),
-        }, real=('Driftkings._constants',))
+        }, real=('driftkings._constants',))
 
     def test_marker_lives_between_plugin_start_and_stop(self):
         plugin = module(_clazz='markers')
@@ -93,7 +93,7 @@ class TargetDistanceTests(RuntimeTest):
 class EntryPointTests(RuntimeTest):
     def test_view_modules_register_their_battle_view(self):
         for name, view in (('aiming_countdown', 'DispersionTimer'), ('shell_flight_time', None), ('vehicle_health', None)):
-            api, _ = game_source('battle/%s.py' % name, real=('Driftkings._constants',))
+            api, _ = game_source('battle/%s.py' % name, real=('driftkings._constants',))
             views = api['getBattleViews']()
             self.assertEqual(len(views), 1, name)
             alias, view_class, config = views[0]
@@ -105,10 +105,10 @@ class BattlePerformanceWn8Tests(RuntimeTest):
     def test_expected_values_below_one_are_not_rounded_up(self):
         expected = {'level': 8, 'wn8expDamage': 1500.0, 'wn8expSpot': 1.2, 'wn8expFrag': 0.9, 'wn8expDef': 0.6, 'wn8expWinRate': 52.0}
         api, _ = game_source('components/battle_performance.py', {
-            'Driftkings.stats.vehinfo': module(getVehicleInfoData=lambda cd: expected, calculateXvmScale=lambda name, value: 0,
+            'driftkings.stats.vehinfo': module(getVehicleInfoData=lambda cd: expected, calculateXvmScale=lambda name, value: 0,
                                                calculateXTE=lambda cd, damage, frags: 0),
-            'Driftkings.settings.service': Settings({'enabled': True}).service(),
-        }, real=('Driftkings._constants',))
+            'driftkings.settings.service': Settings({'enabled': True}).service(),
+        }, real=('driftkings._constants',))
         calculator = api['EfficiencyCalculator']()
         calculator.registerVInfoData(1)
         ratios = calculator.calculate_ratios(1500, 1.2, 0.9, 0.6, False)
