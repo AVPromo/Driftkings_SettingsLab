@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 """Accounts shared by EU and NA clients keep the region they were saved in."""
-from support import RuntimeTest
+import io
+import os
+import re
+
+from support import CLIENT, ROOT, RuntimeTest
 
 AUTO = ('auto.login.app:0000', 'Auto', 0, None)
 EU = [AUTO, ('login.p1.worldoftanks.eu:20016', 'WOT EU1', 0, 201), ('login.p2.worldoftanks.eu:20016', 'WOT EU2', 0, 202)]
@@ -81,5 +85,26 @@ class AccountRegionTests(RuntimeTest):
 
     def test_new_account_requires_a_server(self):
         accounts, eu = self.service(Store(), EU, 'EU')
-        with self.assertRaises(accounts.AccountError):
+        with self.assertRaises(accounts.AccountError) as raised:
             eu.save('', 'New', 'n@example.com', 'p', -1)
+        self.assertEqual(raised.exception.key, 'errorServer')
+
+    def test_region_error_names_the_region_for_translation(self):
+        store = Store([{'id': 'na', 'title': 'NA', 'email': 'e', 'password': 'p', 'cluster': 1,
+                        'server': NA[1][0], 'realm': 'NA'}])
+        accounts, eu = self.service(store, EU, 'EU')
+        with self.assertRaises(accounts.AccountError) as raised:
+            eu.credentials('na')
+        self.assertEqual((raised.exception.key, raised.exception.values), ('errorRegion', {'realm': 'NA'}))
+        self.assertIn('NA client', str(raised.exception))
+
+    def test_every_account_error_key_has_english_text(self):
+        with io.open(os.path.join(ROOT, 'mod', 'res', 'mods', 'driftkings', 'text', 'en.yml'), encoding='utf-8') as stream:
+            catalog = stream.read()
+        keys = set()
+        for relative in ('core/accounts.py', 'components/account_manager.py'):
+            with io.open(os.path.join(CLIENT, *relative.split('/')), encoding='utf-8') as stream:
+                keys.update(re.findall(r"AccountError\('(\w+)'", stream.read()))
+        self.assertTrue(keys)
+        for key in keys:
+            self.assertIn('\naccount_manager.UI_setting_%s: ' % key, catalog)

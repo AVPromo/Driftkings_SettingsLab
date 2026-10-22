@@ -8,7 +8,7 @@ from gui.impl.pub import ViewImpl
 from gui.impl.pub.window_impl import WindowImpl
 from importlib import import_module
 
-from driftkings.core.accounts import AccountError
+from driftkings.core.accounts import AccountError, READ_ERROR
 from driftkings.interface_catalog import gameface_spec
 from driftkings.logger import get_logger
 from driftkings.ui.gameface import resource_id
@@ -37,6 +37,18 @@ def labels():
         result[name] = re.sub('<[^>]*>', '', value)
     result['close'] = 'X'
     return result
+
+
+def error_text(error):
+    """Translated text of an AccountError; English when a catalog lacks the key."""
+    value = _component().config.i18n.get('UI_setting_' + error.key)
+    if isinstance(value, bytes):
+        value = value.decode('utf-8')
+    try:
+        return re.sub('<[^>]*>', '', value).format(**error.values)
+    except (AttributeError, TypeError, KeyError, IndexError, ValueError):
+        # A missing key or a user override with different macros keeps the English text.
+        return str(error)
 
 
 class AccountsModel(ViewModel):
@@ -89,7 +101,7 @@ class AccountsView(ViewImpl):
             payload['accounts'] = service.rows()
             payload['servers'] = [{'id': index, 'label': host[1]} for index, host in enumerate(service.hosts())]
             if getattr(service.store, 'read_error', False):
-                payload['message'] = 'The accounts file could not be read. The original file was preserved.'
+                payload['message'] = error_text(AccountError('errorRead', READ_ERROR))
         with self.getViewModel().transaction() as model:
             model._setString(0, json.dumps(payload))
 
@@ -131,7 +143,7 @@ class AccountsView(ViewImpl):
                     self.getParentWindow().destroy()
                 return
         except AccountError as error:
-            self.message = str(error)
+            self.message = error_text(error)
         except Exception:
             # Credentials are never part of the message; the traceback names the failing step.
             LOG.exception('Account action failed')

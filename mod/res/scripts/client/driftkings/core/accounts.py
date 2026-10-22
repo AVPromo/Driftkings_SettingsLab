@@ -6,10 +6,14 @@ import uuid
 # Records written before regions were stored only have a login URL. The automatic
 # server URL is identical in every region, so it cannot identify one.
 REALM_DOMAINS = (('worldoftanks.eu', 'EU'), ('worldoftanks.com', 'NA'), ('worldoftanks.asia', 'ASIA'))
+READ_ERROR = 'The accounts file could not be read. The original file was preserved.'
 
 
 class AccountError(ValueError):
-    pass
+    """Names its translation key; the English text is the fallback."""
+    def __init__(self, key, text, **values):
+        super(AccountError, self).__init__(text.format(**values))
+        self.key, self.values = key, values
 
 
 class AccountService(object):
@@ -22,7 +26,7 @@ class AccountService(object):
         for account in self.store.accounts:
             if str(account['id']) == str(account_id):
                 return account
-        raise AccountError('Account no longer exists.')
+        raise AccountError('errorMissing', 'Account no longer exists.')
 
     def _index(self, account, hosts):
         if account.get('server'):
@@ -85,7 +89,7 @@ class AccountService(object):
 
     def _commit(self, accounts):
         if getattr(self.store, 'read_error', False):
-            raise AccountError('The accounts file could not be read. The original file was preserved.')
+            raise AccountError('errorRead', READ_ERROR)
         previous = self.store.accounts
         self.store.accounts = accounts
         try:
@@ -94,12 +98,12 @@ class AccountService(object):
             saved = False
         if not saved:
             self.store.accounts = previous
-            raise AccountError('Could not save accounts. The previous file was preserved.')
+            raise AccountError('errorSave', 'Could not save accounts. The previous file was preserved.')
 
     def save(self, account_id, title, email, password, cluster):
         title, email = title.strip(), email.strip()
         if not title or not email or (not account_id and not password):
-            raise AccountError('Fill in the name, email and password.')
+            raise AccountError('errorRequired', 'Fill in the name, email and password.')
         hosts = self.hosts()
         cluster = int(cluster)
         accounts = copy.deepcopy(self.store.accounts)
@@ -110,7 +114,7 @@ class AccountService(object):
             if self.realm:
                 account['realm'] = self.realm
         elif not (original and self.foreign(original, hosts)):
-            raise AccountError('Select an available server.')
+            raise AccountError('errorServer', 'Select an available server.')
         # Without a new selection, an account of another region keeps its server.
         account.update(title=title, email=self.protect(email))
         if password:
@@ -130,6 +134,7 @@ class AccountService(object):
         index = self.cluster(account)
         if index < 0:
             if self.foreign(account):
-                raise AccountError('This account belongs to the %s region. Use the %s client.' % ((self.accountRealm(account),) * 2))
-            raise AccountError('Edit this account and select an available server.')
+                raise AccountError('errorRegion', 'This account belongs to the {realm} region. Use the {realm} client.',
+                                   realm=self.accountRealm(account))
+            raise AccountError('errorEditServer', 'Edit this account and select an available server.')
         return self.unprotect(account['email']), self.unprotect(account['password']), self.hosts()[index][0], index

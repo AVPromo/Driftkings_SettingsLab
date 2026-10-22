@@ -175,10 +175,10 @@ class AccountsManagerController(object):
 
     def useAccount(self, account_id, auto_enter):
         if not self.canLogin():
-            raise AccountError('Return to the login screen to select an account.')
+            raise AccountError('loginOnly', 'Select an account on the login screen.')
         login = self.login()
         if login.loginManager.isWgcSteam:
-            raise AccountError('This client uses Steam. Select the account through Steam.')
+            raise AccountError('errorSteam', 'This client uses Steam. Select the account through Steam.')
         email, password, server, index = service.credentials(account_id)
         # Explicitly leave the WGC stored-account mode before choosing credentials;
         # changeAccount only stops WGC, so update() redraws the credentials form.
