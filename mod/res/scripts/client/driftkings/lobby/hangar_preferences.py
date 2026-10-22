@@ -410,6 +410,10 @@ RESOURCE = gameface_spec(FEATURE)['resource']
 g_clockController = ClockController()
 def init():
     controller.start()
+    from driftkings.views.hangar.profile_ratings import install
+    install()
+    from driftkings.views.hangar.profile_statistics import install as install_profile_statistics
+    install_profile_statistics()
     try:
         install_clock_gameface()
         install_header_options()

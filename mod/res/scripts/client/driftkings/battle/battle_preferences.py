@@ -38,7 +38,7 @@ from driftkings.core.fog_package import FogPackageController
 from driftkings.core.hooks import override, on_event
 from driftkings.settings.service import settings_service
 from driftkings.ui import g_events
-from driftkings.views.battle.battle_preferences import BattleClock, destroy_clock
+from driftkings.views.battle.debug_panel import DebugPanelView
 from driftkings.settings.definitions.battle.battle_preferences import BattlePreferencesSettings as Settings
 
 _cache = set()
@@ -46,13 +46,8 @@ config = Settings()
 fog_package = FogPackageController(config)
 
 
-# Battle Clock
-battle_clock = BattleClock()
-
-
-@on_event(events.PlayerAvatar.startGUI.after)
-def new_startGUI(*args):
-    battle_clock.start()
+def getBattleViews():
+    return (('DriftkingsDebugPanel', DebugPanelView, config),)
 
 
 # disable battle hints
@@ -166,12 +161,6 @@ def new_getBorderColor(func, self, colorBlind):
         alpha = (alpha / 100.0)
         return red, green, blue, alpha
     return result
-
-
-@on_event(events.PlayerAvatar.destroyGUI.after)
-def new_destroyGUI(*args):
-    # Always balance start(): the option may have changed during the battle.
-    battle_clock.stop()
 
 
 # Friends
@@ -335,7 +324,6 @@ def init():
         fog_package.start()
     except Exception as error:
         LOG.info(('Fog package unavailable: {}').format(error))
-    battle_clock.createUI()
     g_playerEvents.onGuiCacheSyncCompleted += __onGuiCacheSyncCompleted
     g_events.onVehicleChangedDelayed += onVehicleChanged
 
@@ -344,6 +332,4 @@ def fini():
     fog_package.stop()
     g_playerEvents.onGuiCacheSyncCompleted -= __onGuiCacheSyncCompleted
     g_events.onVehicleChangedDelayed -= onVehicleChanged
-    battle_clock.stop()
-    destroy_clock()
 

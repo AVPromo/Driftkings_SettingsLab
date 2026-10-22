@@ -510,6 +510,7 @@ HANDLER_VALUES = {
 
 
 class BATTLE_ALIASES(object):
+    DEBUG_PANEL = 'DriftkingsDebugPanel'
     PENETRATION_INDICATOR = 'ArmorCalculatorView'
     AIMING_COUNTDOWN = 'DispersionTimerView'
     TARGET_DISTANCE = 'DistanceMarkerView'

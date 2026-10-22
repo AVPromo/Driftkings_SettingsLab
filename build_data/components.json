@@ -289,6 +289,16 @@
       ],
       "assets": [
         {
+          "source": "mod/res/gui/gameface/mods/driftkings/profile_ratings/**",
+          "target": "res/gui/gameface/mods/driftkings/profile_ratings/**",
+          "generator": null
+        },
+        {
+          "source": "mod/res/gui/gen_resources/driftkings.profile_ratings.json",
+          "target": "res/gui/gen_resources/driftkings.profile_ratings.json",
+          "generator": null
+        },
+        {
           "source": "mod/res/gui/gameface/mods/driftkings/hangar_preferences/clock.css",
           "target": "res/gui/gameface/mods/driftkings/hangar_preferences/clock.css",
           "generator": null

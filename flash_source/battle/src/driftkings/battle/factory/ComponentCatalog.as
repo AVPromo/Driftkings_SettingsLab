@@ -2,6 +2,7 @@
 package driftkings.battle.factory
 {
     import driftkings.battle.components.armor_calculator.ArmorCalculatorUI;
+    import driftkings.battle.components.debug_panel.DebugPanelUI;
     import driftkings.battle.components.dispersion_timer.DispersionTimerUI;
     import driftkings.battle.components.distance_marker.DistanceMarkerUI;
     import driftkings.battle.components.flight_timer.FlightTimerUI;
@@ -19,6 +20,7 @@ package driftkings.battle.factory
                 ArmorCalculatorView:ArmorCalculatorUI,
                 DispersionTimerView:DispersionTimerUI,
                 DistanceMarkerView:DistanceMarkerUI,
+                DriftkingsDebugPanel:DebugPanelUI,
                 DriftkingsOverlay:OverlayUI,
                 DriftkingsRatingScreens:RatingScreens,
                 FlightTimerView:FlightTimerUI,

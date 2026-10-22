@@ -100,6 +100,13 @@
                 "coui://gui/gameface/mods/driftkings/tech_tree_marks_of_excellence/marks.css"
             ]
         },
+        "DriftkingsProfileRatings": {
+            "owner": "__dkProfileRatings",
+            "scripts": [
+                "coui://gui/gameface/mods/driftkings/profile_ratings/ratings.js"
+            ],
+            "styles": []
+        },
         "DriftkingsRatingPlayers": {
             "owner": "__dkPlayerRatings",
             "scripts": [

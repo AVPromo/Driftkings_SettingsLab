@@ -1,0 +1,8 @@
+[
+  {
+    "type": "Layout",
+    "path": "coui://gui/gameface/mods/driftkings/profile_ratings/model.html",
+    "parameters": {"entrance": "main", "impl": "gameface"},
+    "id": "R.mods.driftkings.profile_ratings.model"
+  }
+]

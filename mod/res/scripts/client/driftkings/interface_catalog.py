@@ -20,6 +20,11 @@ FLASH_COMPONENTS = {'ArmorCalculatorView': {'as3': 'driftkings.battle.components
                         'python': 'driftkings.views.battle.target_distance.DistanceMarkerView',
                         'section': 'target_distance',
                         'surfaces': ['battle']},
+ 'DriftkingsDebugPanel': {'as3': 'driftkings.battle.components.debug_panel.DebugPanelUI',
+                         'component': 'battle.battle_preferences',
+                         'python': 'driftkings.views.battle.debug_panel.DebugPanelView',
+                         'section': 'battle_preferences',
+                         'surfaces': ['battle']},
  'DriftkingsOverlay': {'as3': 'driftkings.battle.components.overlay.OverlayUI',
                        'component': None,
                        'python': 'driftkings.views.battle.overlay.OverlayView',
@@ -51,7 +56,16 @@ FLASH_COMPONENTS = {'ArmorCalculatorView': {'as3': 'driftkings.battle.components
                     'section': 'sixth_sense_alert',
                     'surfaces': ['battle']}}
 
-GAMEFACE = {'DriftkingsMainGun': {
+GAMEFACE = {'DriftkingsProfileRatings': {
+    'context': 'hangar',
+    'layout': 'coui://gui/gameface/mods/driftkings/profile_ratings/model.html',
+    'owner': '__dkProfileRatings',
+    'python': 'driftkings.views.hangar.profile_ratings',
+    'resource': 'mods/driftkings/profile_ratings/model',
+    'scripts': ['coui://gui/gameface/mods/driftkings/profile_ratings/ratings.js'],
+    'section': 'hangar_preferences',
+    'styles': []},
+ 'DriftkingsMainGun': {
     'context': 'battle',
     'layout': 'coui://gui/gameface/mods/driftkings/high_caliber_gameface/model.html',
     'owner': '__dkMainGun',
