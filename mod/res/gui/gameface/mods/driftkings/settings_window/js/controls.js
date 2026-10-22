@@ -218,8 +218,9 @@
             var timing = def.metadata && def.metadata.applyTiming;
             if (['live', 'battle', 'view', 'restart'].indexOf(timing) >= 0) {
                 var labels = (ctx && ctx.labels) || {};
-                var badge = el('div', 'dk-apply-timing dk-apply-timing--' + timing,
-                    (timing === 'restart' ? '↻ ' : '• ') + label(ctx, 'timing.' + timing, {live: 'Immediate', battle: 'Next battle', view: 'Next view opening', restart: 'Requires restart'}[timing]), api.node);
+                var badge = el('div', 'dk-apply-timing dk-apply-timing--' + timing, null, api.node);
+                if (timing === 'restart') { el('span', 'dk-alert-icon', null, badge); }
+                el('span', '', (timing === 'restart' ? '' : '• ') + label(ctx, 'timing.' + timing, {live: 'Immediate', battle: 'Next battle', view: 'Next view opening', restart: 'Requires restart'}[timing]), badge);
                 badge.title = labels['applyTiming.' + timing] || '';
             }
             if (def.preview && def.preview.kind === 'image') {

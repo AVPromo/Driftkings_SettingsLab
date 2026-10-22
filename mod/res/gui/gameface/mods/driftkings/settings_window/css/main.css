@@ -203,6 +203,14 @@ textarea { font-family: Warhelios; font-size: 15rem; color: #e8e4da; }
 
 .dk-compatibility-warnings { color:#c9ab72;font-size:12rem;line-height:1.4;white-space:normal;margin-top:5rem; }
 
+/* Native client alert icon for restart, error, dependency and compatibility notices. */
+.dk-alert-icon {
+    display: inline-block; flex: 0 0 auto; width: 16rem; height: 16rem; margin-right: 4rem; vertical-align: middle;
+    background-image: url('coui://gui/maps/uiKit/dialogs/icons/alert.png'); background-repeat: no-repeat;
+    background-position: center; background-size: contain;
+}
+.dk-alert-icon.is-hidden { display: none; }
+
 /* Keep state colors independent of dependency/restart warnings beside them. */
 .dk-status-state.is-on { color:#65d88b; }
 .dk-status-state.is-off { color:#ef7777; }

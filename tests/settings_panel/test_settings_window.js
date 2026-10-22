@@ -92,7 +92,7 @@ const defs = [
     {id: 'size', type: 'slider', label: 'Size', min: 0, max: 10, step: 0.5, default: 5},
     {id: 'count', type: 'number', label: 'Count', min: 0, max: 5, step: 1, metadata: {sourceType: 'NumericStepper'}},
     {id: 'pick', type: 'dropdown', label: 'Pick', options: [option(1, 'One'), option(2, 'Two')], metadata: {sourceType: 'RadioButtonGroup'}},
-    {id: 'name', type: 'text', label: 'Name', default: ''},
+    {id: 'name', type: 'text', label: 'Name', default: '', metadata: {applyTiming: 'restart'}},
     {id: 'note', type: 'textarea', label: 'Note'},
     {id: 'secret', type: 'password', label: 'Secret'},
     {id: 'tint', type: 'color', label: 'Tint', default: '#FF0000', metadata: {allowAlpha: true, alphaKey: 'alpha', applyTiming: 'live'},
@@ -124,6 +124,19 @@ assert(window_.querySelectorAll('.dk-row').length >= 12, 'every value control re
 assert(window_.querySelectorAll('.dk-updates').length === 1, 'updates section on the Driftkings page');
 const status = window_.querySelectorAll('.dk-update-line');
 assert.strictEqual(status[0].textContent, 'Installed: 1.0');
+
+// The native alert icon marks restart-only controls and modules that need attention.
+const restartBadge = window_.querySelectorAll('.dk-apply-timing--restart')[0];
+assert.strictEqual(restartBadge.querySelectorAll('.dk-alert-icon').length, 1, 'restart badge has the alert icon');
+assert.strictEqual(window_.querySelectorAll('.dk-apply-timing--live')[0].querySelectorAll('.dk-alert-icon').length, 0);
+// Statuses: "✓ On" for the active page, "Error • Missing dependency: x" for the other module.
+const alertShown = text => window_.querySelectorAll('.dk-nav-status').filter(node => node.textContent.indexOf(text) >= 0)
+    .map(node => node.childNodes[0].className.indexOf('is-hidden') < 0)[0];
+assert.strictEqual(alertShown('On'), false, 'an active module has no alert icon');
+assert.strictEqual(alertShown('Missing dependency'), true, 'an errored module with a missing dependency shows the alert icon');
+callbacks.state(Object.assign({}, state, {restartRequired: ['dk.settings']}));
+assert.strictEqual(alertShown('On'), true, 'a pending restart shows the alert icon');
+callbacks.state(state);
 
 // The dropdown popup opens in the layer and a choice commits through the bridge.
 const dropdown = window_.querySelectorAll('.dk-dropdown')[0];

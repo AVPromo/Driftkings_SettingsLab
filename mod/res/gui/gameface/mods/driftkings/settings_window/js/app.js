@@ -52,6 +52,8 @@
         ui.modDependencies = el('div', 'dk-mod-dependencies', null, head);
         ui.compatibilityWarnings = el('div', 'dk-compatibility-warnings', null, head);
         ui.banner = el('div', 'dk-banner', null, head);
+        el('span', 'dk-alert-icon', null, ui.banner);
+        ui.bannerText = el('span', '', null, ui.banner);
         ui.themeReset = footerButton(head, function () { send('reset_theme'); }, 'dk-theme-reset');
         ui.tabs = el('div', 'dk-tabs', null, content);
         var controlArea = el('div', 'dk-control-area', null, content);
@@ -230,26 +232,45 @@
 
     function statusParts(id) {
         var mod = mods[id], current = (state.status || {})[id] || {}, parts = [];
-        if (current.status === 'configError') { parts.push('! ' + label('statusConfigError', 'Configuration error')); }
-        else if (current.status === 'error') { parts.push('! ' + label('statusError', 'Error')); }
-        else if (current.status && current.status !== 'active') { parts.push('! ' + label('status.unavailable', 'Unavailable')); }
+        if (current.status === 'configError') { parts.push(label('statusConfigError', 'Configuration error')); }
+        else if (current.status === 'error') { parts.push(label('statusError', 'Error')); }
+        else if (current.status && current.status !== 'active') { parts.push(label('status.unavailable', 'Unavailable')); }
         else if (current.status === 'active' || current.enabled !== undefined) {
             parts.push(current.enabled === false ? label('status.disabled', label('off', 'Off')) : '✓ ' + label('status.enabled', label('on', 'Active')));
         } else { parts.push(label('status.unknown', 'Status unavailable')); }
         (mod.dependencies || []).forEach(function (dependency) {
-            if (!dependency.installed) { parts.push('! ' + label('dependencyMissing', 'Missing dependency') + ': ' + dependency.id); }
+            if (!dependency.installed) { parts.push(label('dependencyMissing', 'Missing dependency') + ': ' + dependency.id); }
         });
-        if (current.restartRequired || contains(state.restartRequired, id)) { parts.push('↻ ' + label('status.restart', 'Restart required')); }
+        if (restartRequired(id)) { parts.push(label('status.restart', 'Restart required')); }
         return parts;
+    }
+
+    function restartRequired(id) {
+        return !!((state.status || {})[id] || {}).restartRequired || contains(state.restartRequired, id);
+    }
+    function missingDependency(id) {
+        return (mods[id].dependencies || []).some(function (dependency) { return !dependency.installed; });
+    }
+    // The alert icon marks errors, missing dependencies and pending restarts.
+    function needsAttention(id) {
+        var current = (state.status || {})[id] || {};
+        return (!!current.status && current.status !== 'active') || missingDependency(id) || restartRequired(id);
+    }
+    function alertText(parent, text) {
+        var row = el('div', '', null, parent);
+        el('span', 'dk-alert-icon', null, row);
+        el('span', '', text, row);
     }
 
     function statusText(id) { return statusParts(id).join(' • '); }
     function renderStatus(node, id) {
         if (!node.stateText) {
             node.textContent = '';
+            node.alertIcon = el('span', 'dk-alert-icon', null, node);
             node.stateText = el('span', '', null, node);
             node.stateDetails = el('span', '', null, node);
         }
+        setClass(node.alertIcon, 'is-hidden', !mods[id] || !needsAttention(id));
         if (!mods[id]) { node.stateText.textContent = ''; node.stateDetails.textContent = ''; return; }
         var current = (state.status || {})[id] || {}, parts = statusParts(id);
         var error = !!current.status && current.status !== 'active';
@@ -282,20 +303,19 @@
             setClass(item, 'is-selected', id === modId);
             setClass(item, 'is-changed', (state.changed[id] || []).length > 0);
             var current = (state.status || {})[id] || {};
-            var missing = (mods[id].dependencies || []).some(function (dependency) { return !dependency.installed; });
             setClass(item, 'is-error', !!current.status && current.status !== 'active');
             setClass(item, 'is-off', current.enabled === false);
-            setClass(item, 'is-warning', missing || !!current.restartRequired || contains(state.restartRequired, id));
+            setClass(item, 'is-warning', missingDependency(id) || restartRequired(id));
             renderStatus(ui.navStatus[id], id);
             item.title = mods[id].name + ' — ' + statusText(id);
         });
         renderStatus(ui.modStatus, modId);
         var warnings = (state.compatibilityWarnings || {})[modId] || [];
         while (ui.compatibilityWarnings.firstChild) { ui.compatibilityWarnings.removeChild(ui.compatibilityWarnings.firstChild); }
-        warnings.forEach(function (warning) { el('div', '', '⚠ ' + warning.text, ui.compatibilityWarnings); });
+        warnings.forEach(function (warning) { alertText(ui.compatibilityWarnings, warning.text); });
         ui.compatibilityWarnings.style.display = warnings.length ? '' : 'none';
         var status = state.status[modId] && state.status[modId].status, text = labels();
-        ui.banner.textContent = status === 'configError' ? text.statusConfigError : status === 'error' ? text.statusError : '';
+        ui.bannerText.textContent = status === 'configError' ? text.statusConfigError : status === 'error' ? text.statusError : '';
         setClass(ui.banner, 'is-visible', status === 'configError' || status === 'error');
         var mod = mods[modId];
         var hasValues = !!mod && mod.controls.some(function (def) { return 'default' in def; });
