@@ -1,8 +1,19 @@
 #dk-battle-efficiency {
-    position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%);
-    z-index: 100; max-width: 85%; padding: 10px 20px;
-    background: rgba(12, 15, 20, .9); border: 1px solid rgba(220, 210, 185, .3);
-    color: #eee; font: 16px Arial, sans-serif; text-align: center;
+    display: flex; align-items: center; flex-shrink: 0;
+    color: rgba(var(--color-general-primary-rgb), .5);
+    font: inherit; font-size: 16rem; line-height: 1; white-space: pre;
     pointer-events: none;
 }
+.mediaMedium #dk-battle-efficiency { font-size: 18rem; }
+.mediaLarge #dk-battle-efficiency { font-size: 22rem; }
+#dk-battle-efficiency::before {
+    width: 1rem; height: 100%; margin: 0 12rem;
+    background-color: var(--color-general-primary); opacity: .25; content: "";
+}
+#dk-battle-efficiency span { font-size: inherit !important; }
 #dk-battle-efficiency p { margin: 0; }
+#dk-battle-efficiency .dk-results-separator {
+    display: inline-block; width: 1rem; height: 1em; margin: 0 12rem;
+    vertical-align: middle; background-color: var(--color-general-primary); opacity: .25;
+}
+#dk-battle-efficiency .dk-results-tab { display: inline-block; width: 24rem; }

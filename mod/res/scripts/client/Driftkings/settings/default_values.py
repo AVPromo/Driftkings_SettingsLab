@@ -10,7 +10,7 @@ SOURCE_HASHES = {'default/aiming_countdown.json': '49d3755f130e78a2f6d4c460b0836
  'default/artillery_blast_radius.json': 'c714b8b8de98ac3c34fa5a2415a85266d29dfe581a5afbf90e2a4afce0b01985',
  'default/autoaim_target_indicator.json': 'ece350068c8548195b1a9497ac6844e98929cf90f85d739b1bd91245e5a62ed9',
  'default/battle_marks_of_excellence.json': 'b9d361fee024f939412223b4b162324325b1316546eac9fe9d27ae7788192221',
- 'default/battle_performance.json': 'bfa3345eb9efba7217cf2b1bb3699df83ab11acf0bd4351cefe6a95547e1f2ce',
+ 'default/battle_performance.json': '7f08f467b6e5c0318cb56444de8a49b49579024d55def4a2eda971ac6ea5b7df',
  'default/battle_preferences.json': 'b4a45d7985358473a77524cc8e2a59de0cf4a10d84597164b95de80aba4c3997',
  'default/battle_statistics.json': 'e1425e65364f3db596c5412f795df2f2f76a0a77f4eb55829c022c32821a9195',
  'default/clan_reward_collection.json': 'e94734de55f36887bfa76301a3622929fad6ab3105eb1ab37f3f9315da19ec93',
@@ -120,11 +120,10 @@ DEFAULTS = {'aiming_countdown': {'align': 'left',
                                 'showMarks': True,
                                 'showProgress': True,
                                 'showTargets': True},
- 'battle_performance': {'battleResultsFormat': "<textformat leading='-2' tabstops='[0, 300]'>\t<font "
-                                               "color='#FFFFFF' size='15'>{mapName} - {battleType}    "
-                                               "WN8:<font color='{c:wn8}'>{wn8}</font>|=|EFF:<font "
-                                               "color='{c:eff}'>{eff}</font>|=|Xte:<font "
-                                               "color='{c:xte}'>{xte}</font></font></textformat>",
+ 'battle_performance': {'battleResultsFormat': "<font face='PFDINMax' color='#EDE6D9' alpha='#80'>WN8: <font "
+                                               "color='{c:wn8}'>{wn8}</font> | EFF: <font "
+                                               "color='{c:eff}'>{eff}</font> | XTE: <font "
+                                               "color='{c:xte}'>{xte}</font></font>",
                         'battleResultsWindow': True,
                         'colorRatting': 0,
                         'enabled': True,

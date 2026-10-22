@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from Driftkings.logger import get_logger
 import math
+import re
 import weakref
 from collections import namedtuple
 from constants import ARENA_BONUS_TYPE
@@ -303,7 +304,12 @@ def make_results_payload(battle_results):
         macros['{c:%s}' % key] = g_battleEfficiency.read_colors(key, value)
     # Historical templates also advertised this shared X-scale color macro.
     macros['{c:x}'] = macros['{c:xwn8}']
-    return {'enabled': True, 'html': replaceMacros(settings_service.getComponentDict(config)[BATTLE_PERFORMANCE.BATTLE_RESULTS_FORMAT], macros)}
+    template = settings_service.getComponentDict(config)[BATTLE_PERFORMANCE.BATTLE_RESULTS_FORMAT]
+    # The native BattleInfo already owns the map and mode. Remove the legacy
+    # header before expanding macros, preserving the user's rating template.
+    template = re.sub(u'\\{mapName\\}\\s*[-\u2013\u2014]?\\s*\\{battleType\\}\\s*', '', template)
+    template = template.replace('{mapName}', '').replace('{battleType}', '')
+    return {'enabled': True, 'html': replaceMacros(template, macros)}
 
 
 def init():

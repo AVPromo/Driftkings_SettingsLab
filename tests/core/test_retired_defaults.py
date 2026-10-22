@@ -8,6 +8,24 @@ from support import ROOT, RuntimeTest, module, source
 
 
 class RetiredDefaultsTests(RuntimeTest):
+    def test_results_upgrade_only_shipped_template_and_preserve_custom_macros(self):
+        defaults = self.defaults('battle_performance')
+        api = source('settings/definitions/components/battle_performance.py', {
+            'Driftkings._constants': self.load('_constants'),
+            'Driftkings.settings.controls_schema': module(control=None, options=None),
+            'Driftkings.settings.definitions.base': module(SectionDefinition=object),
+            'Driftkings.settings.default_values': module(DEFAULTS={'battle_performance': defaults}),
+        })
+        definition = api['BattlePerformanceSettings']()
+        legacy = "<textformat leading='-2' tabstops='[0, 300]'>\t<font color='#FFFFFF' size='15'>{mapName} - {battleType}    WN8:<font color='{c:wn8}'>{wn8}</font>|=|EFF:<font color='{c:eff}'>{eff}</font>|=|Xte:<font color='{c:xte}'>{xte}</font></font></textformat>"
+        result = definition.normalize_loaded({'battleResultsFormat': legacy, 'enabled': False})
+        self.assertEqual(result, {'battleResultsFormat': defaults['battleResultsFormat'], 'enabled': False})
+        self.assertEqual(definition.normalize_loaded(copy.deepcopy(result)), result)
+        custom = {'battleResultsFormat': "DIFF: {diff} / <font color='{c:xwn8}'>{xwn8}</font>"}
+        self.assertEqual(definition.normalize_loaded(copy.deepcopy(custom)), custom)
+        self.assertNotIn('size=', defaults['battleResultsFormat'])
+        self.assertNotIn('{mapName}', defaults['battleResultsFormat'])
+
     def definition(self, relative, name, section):
         schema = source('settings/controls_schema.py', {})
         api = source(relative, {
