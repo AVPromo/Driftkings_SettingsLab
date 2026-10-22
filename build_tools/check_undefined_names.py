@@ -12,7 +12,7 @@ from pyflakes import api, messages
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CLIENT = os.path.join(ROOT, 'mod', 'res', 'scripts', 'client')
 ALLOWED = ('unicode', 'long', 'xrange', 'StandardError', 'basestring', 'reduce', 'unichr', 'file', 'cmp', 'raw_input')
-SKIP_DIRS = ('i18n',)
+SKIP_DIRS = ()
 
 
 class Reporter(object):

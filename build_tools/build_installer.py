@@ -36,7 +36,7 @@ def definitions(root=ROOT):
     root = Path(root)
     components = installer_catalog(root)
     by_name = {entry['key']: entry for entry in components}
-    catalogs = {lang: catalog(root / ('mod/res/scripts/client/driftkings/i18n/' + lang + '.py'))
+    catalogs = {lang: catalog(root / ('mod/res/mods/driftkings/text/' + lang + '.yml'))
                 for lang in ('en', 'pt')}
     options = read_json(root / 'installer/setup/options.json')
     presets = read_json(root / 'installer/setup/presets.json')

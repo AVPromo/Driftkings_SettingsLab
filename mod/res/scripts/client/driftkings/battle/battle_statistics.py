@@ -381,7 +381,8 @@ class BattleStatDisplay(CallbackDelayer):
             self.macro['{%s}' % key] = str(value)
 
     def formatText(self, ally_text, enemy_text, ally, enemy):
-        data = {'header': 'Chances', 'allyChance': ally_text, 'enemyChance': enemy_text, 'compareSign': self.compare_sign(ally, enemy)}
+        header = getattr(config, 'i18n', {}).get('UI_teamStrength', 'Team strength')
+        data = {'header': header, 'allyChance': ally_text, 'enemyChance': enemy_text, 'compareSign': self.compare_sign(ally, enemy)}
         self.updateMacros(data)
         return replaceMacros(settings_service.getComponentDict(config)[BATTLE_STATISTICS.FORMAT], self.macro)
 

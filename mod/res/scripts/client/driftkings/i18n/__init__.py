@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """One catalog per language, with unified optional JSON overrides."""
 import copy
-import importlib
 import json
 from driftkings.logger import get_logger
 import os
 
+from driftkings.i18n.resources import resources
 from driftkings.locale_support import language_code
 from driftkings.settings.sections import previous_name, section_name, section_aliases
 from driftkings.settings.store import SettingsStore, merge, recover_file
@@ -58,10 +58,10 @@ class TranslationCatalog(object):
         self.cache = {}
 
     def bundled(self, language):
-        english = importlib.import_module('driftkings.i18n.en').TEXT
+        english = resources.load('en')['TEXT']
         if language == 'en':
             return copy.deepcopy(english)
-        return merge(english, importlib.import_module('driftkings.i18n.' + language).TEXT)
+        return merge(english, resources.load(language)['TEXT'])
 
     def migrate(self, language, components, path):
         sections = {}

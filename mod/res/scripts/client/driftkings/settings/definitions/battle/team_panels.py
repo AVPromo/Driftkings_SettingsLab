@@ -60,12 +60,12 @@ def player_panel_columns(config):
             item.update(type='TextInput',value=json.dumps(value,ensure_ascii=False),jsonValue=True)
         elif key in ('startMode','altMode'):
             choices=[None]+list(PROFILES)
-            item.update(type='Dropdown',options=[{'label':name or 'Cliente'} for name in choices],optionValues=choices)
+            item.update(type='Dropdown',options=[{'label':name or labels['UI_panel_clientDefault']} for name in choices],optionValues=choices)
         elif isinstance(value,(str,type(u''))) and re.match(r'^(?:#|0x)[0-9a-fA-F]{6}$',value):
             item['type']='ColorChoice'
         else: item['type']='TextInput'
         columns[column].append(item)
-    general='Geral'
+    general=labels['UI_panel_generalTab']
     for key in (TEAM_PANELS.STATS_ENABLED,TEAM_PANELS.HP_VISIBILITY,TEAM_PANELS.HP_KEY,TEAM_PANELS.SPOTTED_ENABLED,TEAM_PANELS.RATING,TEAM_PANELS.COLOR_SCALE):
         add([key],settings_service.getComponentDict(config)[key],general)
     add([TEAM_PANELS.PERFORMANCE,'diagnostics'],settings_service.getComponentDict(config)[TEAM_PANELS.PERFORMANCE].get('diagnostics',False),general)
@@ -77,12 +77,12 @@ def player_panel_columns(config):
             choices=['wn8','eff','wgr','winrate','xwn8','xeff']
             item.update(type='Dropdown',options=[{'label':name} for name in choices],optionValues=choices)
     for key,value in sorted(settings_service.getComponentDict(config)[TEAM_PANELS.PLAYERS_PANEL].items()): add([TEAM_PANELS.PLAYERS_PANEL,key],value,general)
-    for path,title in (([TEAM_PANELS.LOADING],'Loading'),([TEAM_PANELS.TAB],'TAB')):
+    for path,title in (([TEAM_PANELS.LOADING],labels['UI_panel_loadingTab']),([TEAM_PANELS.TAB],'TAB')):
         settings=settings_service.getComponentDict(config)[path[0]]
         for key,value in sorted(settings.items()):
             add(path+[key],value,title)
     for profile in PROFILES:
         for key,value in sorted(settings_service.getComponentDict(config)[TEAM_PANELS.PROFILES][profile].items()):
             add([TEAM_PANELS.PROFILES,profile,key],value,profile)
-    for key,value in sorted(settings_service.getComponentDict(config)[TEAM_PANELS.TEMPLATES].items()): add([TEAM_PANELS.TEMPLATES,key],value,'Campos comuns')
+    for key,value in sorted(settings_service.getComponentDict(config)[TEAM_PANELS.TEMPLATES].items()): add([TEAM_PANELS.TEMPLATES,key],value,labels['UI_panel_templatesTab'])
     return columns

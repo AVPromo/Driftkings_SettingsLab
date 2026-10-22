@@ -1,6 +1,6 @@
 """Check bundled catalog coverage and formatting against the English source."""
 import argparse
-import ast
+import runpy
 from collections import Counter
 import json
 from pathlib import Path
@@ -13,16 +13,14 @@ FORMATTING = re.compile(
 PATHS = re.compile(r'[A-Za-z0-9_./-]+\.(?:json|xml|png|jpg|jpeg|wotmod|pyc|py|bnk|log)\b')
 
 
+# Share the engine-free runtime parser; importing the game package is unnecessary.
+parse_catalog = runpy.run_path(str(ROOT / 'mod/res/scripts/client/driftkings/core/locale_catalog.py'))['parse_catalog']
+
+
 def catalog(path):
-    tree = ast.parse(path.read_text(encoding='utf-8'))
-    result = {}
-    for node in tree.body:
-        if isinstance(node, ast.Assign):
-            for target in node.targets:
-                if isinstance(target, ast.Name) and target.id in ('TEXT', 'PANEL'):
-                    result[target.id] = ast.literal_eval(node.value)
-    if set(result) != {'TEXT', 'PANEL'}:
-        raise ValueError('Missing TEXT or PANEL catalog: ' + str(path))
+    result = parse_catalog(path.read_bytes())
+    if not result['TEXT'] or not result['PANEL']:
+        raise ValueError('Missing component or panel catalog: ' + str(path))
     return result
 
 
@@ -35,12 +33,12 @@ def leaves(value, prefix=()):
 
 
 def validate_catalogs(root=ROOT):
-    folder = root / 'mod/res/scripts/client/driftkings/i18n'
+    folder = root / 'mod/res/mods/driftkings/text'
     manifest = json.loads((root / 'build_data/locales.json').read_text(encoding='utf-8'))
-    reference = dict(leaves(catalog(folder / 'en.py')))
+    reference = dict(leaves(catalog(folder / 'en.yml')))
     errors = []
     for code in manifest['locales']:
-        actual = dict(leaves(catalog(folder / (code + '.py'))))
+        actual = dict(leaves(catalog(folder / (code + '.yml'))))
         for key in sorted(set(reference) - set(actual)):
             errors.append('%s: missing %s' % (code, '.'.join(key)))
         for key in sorted(set(actual) - set(reference)):
@@ -61,9 +59,9 @@ def validate_catalogs(root=ROOT):
                         errors.append('%s: changed resource path at %s: %s' % (code, '.'.join(key), path))
     if errors:
         raise ValueError('Locale validation failed:\n' + '\n'.join(errors[:60]))
-    english = catalog(folder / 'en.py')
+    english = catalog(folder / 'en.yml')
     return {'locales': len(manifest['locales']),
-            'componentKeys': sum(len(section) for section in english['TEXT'].values()),
+            'componentKeys': len(dict(leaves(english['TEXT']))),
             'panelKeys': len(english['PANEL']), 'untranslated': len(english_prose(root)), 'status': 'passed'}
 
 
@@ -73,14 +71,14 @@ ENGLISH_NAMES = frozenset(('Super Mario',))
 
 def english_prose(root=ROOT):
     """Catalog values still identical to an English phrase of two or more words."""
-    folder = root / 'mod/res/scripts/client/driftkings/i18n'
+    folder = root / 'mod/res/mods/driftkings/text'
     manifest = json.loads((root / 'build_data/locales.json').read_text(encoding='utf-8'))
-    reference = dict(leaves(catalog(folder / 'en.py')))
+    reference = dict(leaves(catalog(folder / 'en.yml')))
     found = []
     for code in manifest['locales']:
         if code == 'en':
             continue
-        actual = dict(leaves(catalog(folder / (code + '.py'))))
+        actual = dict(leaves(catalog(folder / (code + '.yml'))))
         for key, source in reference.items():
             if not isinstance(source, str) or source in ENGLISH_NAMES or actual.get(key) != source:
                 continue

@@ -618,6 +618,11 @@
           "source": "mod/res/gui/gameface/mods/driftkings/shared/flash_text.js",
           "target": "res/gui/gameface/mods/driftkings/shared/flash_text.js",
           "generator": null
+        },
+        {
+          "source": "mod/res/mods/driftkings/text/**",
+          "target": "res/mods/driftkings/text/**",
+          "generator": null
         }
       ]
     },

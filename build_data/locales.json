@@ -22,7 +22,7 @@
   ],
   "source": "Wargaming World of Tanks regional portal language selectors (EU, NA, ASIA)",
   "game_version": "2.4.1.0",
-  "translation_method": "Existing localized text preserved. Missing entries and English prose completed with machine translation from en.py. Formatting macros, markup, paths and colors protected; native-speaker terminology review pending. English fallback retained.",
+  "translation_method": "Existing localized text preserved. Missing entries and English prose completed with machine translation from the English catalog (now en.yml). Formatting macros, markup, paths and colors protected; native-speaker terminology review pending. English fallback retained.",
   "regions": {
     "EU": [
       "cs",
@@ -75,8 +75,8 @@
     "https://worldoftanks.asia/th/content/guide/clans/global-map/"
   ],
   "coverage": {
-    "component_keys": 909,
-    "panel_keys": 160,
+    "component_keys": 964,
+    "panel_keys": 167,
     "complete_key_coverage": [
       "cs",
       "de",
@@ -98,5 +98,19 @@
       "zh_tw"
     ],
     "native_speaker_review": "pending for machine-translated entries"
+  },
+  "semantic_review": {
+    "date": "2026-10-22",
+    "basis": "Current runtime and settings definitions; live controls resolved in all 18 locales.",
+    "retired_keys_per_locale": 91,
+    "updated_english_keys": 23,
+    "added_keys_per_locale": 4,
+    "scope": [
+      "Retired autoaim, mark presentation, team-panel and clock options",
+      "Native battle result ratings, supported macros and UI sizing",
+      "Free XP research calculation, depot directives and large consumables",
+      "Replay and spotting timer estimates",
+      "Localized distance dropdowns, team-panel tabs and team-strength header"
+    ]
   }
 }

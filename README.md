@@ -8,28 +8,60 @@ Modpack for Wargaming World of Tanks: battle overlays, hangar improvements and a
 
 Current version: **0.1.2-beta.5**, for **WoT 2.4.1.0**. Beta releases remain under refinement.
 
-## Battle interface and statistics
+## Included mods and functions
 
-- Player panels and battle-loading statistics.
-- Gameface gun-mark panels in battle and hangar, battle statistics and High Caliber progress.
-- Own-vehicle health, target information and distance markers.
-- Minimap options, spotted indicators and Sixth Sense customization.
+The names below match the settings labels. The module column identifies the corresponding Python file, without the `.py` extension. Components can be enabled or configured individually; availability depends on the vehicle, battle mode and selected options.
 
-## Camera and aiming
+### Battle interface and statistics
 
-- Zoom and aiming-angle options.
-- Dispersion circle, aiming timer and shell flight time.
-- Armor calculator, artillery splash and server-turret display.
-- Native autoaim target highlighting.
+| Mod | Module | Function |
+| --- | --- | --- |
+| Team panels and battle loading | `team_panels` | Customizes player panels, the team statistics screen and battle-loading information, including player ratings. |
+| Battle performance | `battle_performance` | Calculates battle efficiency ratings such as WN8, EFF and XTE. Adds configurable macro text to the native results information line, with automatic UI sizing, spacing and vertical separators. |
+| Battle statistics | `battle_statistics` | Compares team statistics and displays an estimated team-strength comparison. Estimates are not a guarantee of the battle outcome. |
+| Marks of Excellence in battle | `battle_marks_of_excellence` | Displays estimated gun-mark progress and combined damage during battle in a movable Gameface panel. |
+| High Caliber progress | `high_caliber_progress` | Tracks damage, the current High Caliber target, remaining damage and eligibility in a Gameface panel. Reaching the displayed target does not guarantee the server award. |
+| Vehicle health | `vehicle_health` | Displays the player's vehicle health with configurable text and positioning. |
+| Target information | `target_information` | Shows configurable information about the targeted vehicle. |
+| Target distance | `target_distance` | Displays the distance to the current target. |
+| Minimap enhancements | `minimap_enhancements` | Customizes minimap labels, circles, lines and vehicle information. |
+| Spotted and assist notifications | `enemy_spotting_status` | Displays notifications for detected vehicles and spotting, tracking or stun assistance, with configurable text, colors and sound. |
+| Sixth Sense alert | `sixth_sense_alert` | Customizes the Sixth Sense alert, including its icon, sound and timing. |
+| Battle damage log | `game_log_manager` | Filters native damage-log event types and optionally swaps the top and bottom log positions. |
+| Battle preferences | `battle_preferences` | Groups battle presentation and convenience options, including the clock, hints, notifications and other native interface controls. |
 
-## Hangar and utilities
+### Camera, aiming and controls
 
-- Carousel statistics and gun-mark information.
-- Hangar presentation and crew options.
-- Clan reward collection and battle-efficiency information.
-- Integrated settings, profiles and beta/stable update channels.
+| Mod | Module | Function |
+| --- | --- | --- |
+| Third-person camera zoom | `third_person_zoom` | Adjusts third-person zoom steps, limits and camera behavior. |
+| Sniper camera | `sniper_camera` | Customizes sniper-camera zoom and related camera options. |
+| Gun traverse limits | `gun_traverse_limits` | Displays the gun's aiming-angle limits. |
+| Aiming reticles | `aiming_reticles` | Customizes aiming-circle size and client/server reticle presentation. |
+| Aiming countdown | `aiming_countdown` | Displays the estimated remaining aiming time. |
+| Shell flight time | `shell_flight_time` | Displays the estimated shell travel time to the aiming point. |
+| Armour penetration indicator | `penetration_indicator` | Displays armour and penetration information for the aimed surface. |
+| Artillery blast radius | `artillery_blast_radius` | Visualizes the shell blast radius for supported artillery aiming modes. |
+| Server turret synchronization | `server_turret_sync` | Synchronizes turret presentation with server aiming data. |
+| Autoaim target indicator | `autoaim_target_indicator` | Highlights the native autoaim target with a configurable indicator color. |
+| Repair controls | `repair_controls` | Provides configurable shortcuts and priorities for repairs, crew treatment and fire extinguishing using available consumables. |
 
-Available behavior depends on configuration, vehicle and game mode.
+### Hangar and utilities
+
+| Mod | Module | Function |
+| --- | --- | --- |
+| Vehicle carousel | `vehicle_carousel` | Customizes carousel layout, filters and vehicle statistics. |
+| Marks of Excellence in the hangar | `hangar_marks_of_excellence` | Shows gun-mark information and progress for the selected vehicle in a Gameface panel. |
+| Marks of Excellence in the tech tree | `tech_tree_marks_of_excellence` | Adds gun-mark information to supported tech-tree vehicle displays. |
+| Crew management | `crew_management` | Supports automatic crew return and adds crew details, progression, remaining XP and estimated battles in supported crew screens and tooltips. |
+| Hangar preferences | `hangar_preferences` | Configures the hangar clock, header buttons, widgets, notifications and other garage convenience options. |
+| AccountManager | `account_manager` | Provides the account-management interface, controlled through Hangar preferences. |
+| Clan reward collection | `clan_reward_collection` | Collects eligible clan rewards automatically when the option is enabled. |
+| Sound bank loader | `sound_bank_loader` | Loads the mod's custom sound banks. |
+
+The integrated settings window (`settings_window`) provides controls, profiles, themes and update settings, including stable/beta channels. Gameface folders and native resource files use the corresponding presentation-module names under `mod/res/gui/gameface/mods/driftkings/` and `mod/res/gui/gen_resources/`.
+
+The archived `hangar_efficiency` panel is inactive and is not compiled or included in the modpack.
 
 ## Installation
 
@@ -38,7 +70,7 @@ For guided setup, download `Driftkings-0.1.2-beta.5-WoT-2.4.1.0-Setup.exe` from 
 1. Close World of Tanks.
 2. Download `Driftkings-0.1.2-beta.5-WoT-2.4.1.0.zip` from the release assets.
 3. Extract its `mods` folder into the game installation, merging folders. It includes Driftkings and the required ModsListAPI and OpenWG Gameface packages under `mods/2.4.1.0/`.
-4. For a new installation, extract the separate `Driftkings-defaults.zip` into the game installation. Preserve existing `mods/configs/Driftkings` settings when updating.
+4. For a new installation, extract the separate `Driftkings-defaults.zip` into the game installation. Preserve existing `mods/configs/driftkings` settings when updating.
 5. Start the game and open Driftkings settings through the mods list.
 
 The defaults are the author's selected mod configurations. Existing personal JSON files take precedence. The in-game updater preserves those configurations; missing settings use packaged defaults.
@@ -49,11 +81,13 @@ The installer creates user-media folders `mods/configs/driftkings/SixthSense/` (
 
 ## Compatibility and beta status
 
-Designed for Wargaming EU, NA and ASIA clients; Mir Tankov/RU is outside scope. This beta was checked locally on EU 2.4.1.0, including normal startup and a battle replay. Other realms and every feature have not been fully validated in-game. MarksOnGun panel dragging was confirmed on NA in the hangar and battle replay; complete mark estimates still need live-battle validation. A complete update through the in-game updater remains to be validated.
+Designed for Wargaming World of Tanks **EU, NA and ASIA** clients, for **WoT 2.4.1.0**. All included features have been tested in-game and confirmed working across these regions, including live battles, replays, Gameface panel dragging and the in-game updater. Mir Tankov/RU is outside scope.
+
+The beta label reflects ongoing development and refinement; it does not indicate untested features.
 
 ## Languages
 
-Settings translations: Czech, German, English, Spanish, French, Hungarian, Italian, Japanese, Korean, Polish, Portuguese, Russian, Thai, Turkish, Ukrainian, Vietnamese, Simplified Chinese and Traditional Chinese. Translation corrections are welcome.
+Settings translations: Czech, German, English, Spanish, French, Hungarian, Italian, Japanese, Korean, Polish, Portuguese, Russian, Thai, Turkish, Ukrainian, Vietnamese, Simplified Chinese and Traditional Chinese. Translation corrections are welcome. Bundled translations are editable UTF-8 `.yml` files in `mod/res/mods/driftkings/text/`; see [CONTRIBUTING.md](CONTRIBUTING.md#translation-resources) for the format and JSON override paths.
 
 ## Build from source
 

@@ -257,9 +257,8 @@ class HighCaliberTests(RuntimeTest):
                 child._lastPayload = payload
                 published.append(payload)
 
-        with open(os.path.join(ROOT, 'mod/res/scripts/client/driftkings/i18n/pt.py'), 'rb') as stream:
-            tree = ast.parse(stream.read())
-        catalog = next(ast.literal_eval(n.value) for n in tree.body if isinstance(n, ast.Assign))
+        with open(os.path.join(ROOT, 'mod/res/mods/driftkings/text/pt.yml'), 'rb') as stream:
+            catalog = self.load('core.locale_catalog').parse_catalog(stream.read())['TEXT']
         component = module(config=module(lang='pt', i18n=catalog['high_caliber_progress']), mainGuns=self.gun)
         ui = module(attach_assets=lambda *args: None, resource_id=lambda path: 42)
         deps = {

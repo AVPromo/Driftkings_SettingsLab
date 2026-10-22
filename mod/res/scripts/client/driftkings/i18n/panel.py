@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 """Interface catalogs; English is complete and the fallback for every key.
 
-Add a language with PANEL and register it in driftkings.locale_support.
+Add a text/<code>.yml resource and register it in driftkings.locale_support.
 Optional overrides: <config root>/locales/<code>.json (strings only).
 """
 import json
 from driftkings.logger import get_logger
 import os
 
+from driftkings.i18n.resources import resources
 from driftkings.locale_support import LANGUAGES, language_code as normalize
 
 logger = get_logger('driftkings.i18n.panel')
@@ -21,8 +22,7 @@ def is_text(value):
     return isinstance(value, text_types)
 
 def _catalog(code):
-    module = __import__('driftkings.i18n.' + code, fromlist=['PANEL'])
-    return dict(module.PANEL)
+    return resources.load(code)['PANEL']
 
 
 def load(language, override_root=None):

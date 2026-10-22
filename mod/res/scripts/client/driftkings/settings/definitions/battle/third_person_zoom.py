@@ -18,10 +18,12 @@ class ThirdPersonZoomSettings(SectionDefinition):
                 column.append(field([mode, 'useClientDefaults'], title + self.i18n['UI_camera_native']))
             for key, low, high in (('min', 1, 450), ('max', 1, 450), ('scrollSensitivity', 1, 100)):
                 column.append(field([mode, key], title + self.i18n['UI_setting_' + key + '_text'],
-                                    'Slider', low, high, step=1))
+                                    'Slider', low, high, step=1,
+                                    tooltip=self.i18n['UI_setting_' + key + '_tooltip']))
             if mode in ('arcade', 'postmortem'):
                 column.append(field([mode, 'startDist'], title + self.i18n['UI_setting_startDeadDist_text'],
-                                    'Slider', 1, 450, step=1))
+                                    'Slider', 1, 450, step=1,
+                                    tooltip=self.i18n['UI_setting_startDeadDist_tooltip']))
         return columns
 
     def normalize_loaded(self, values):

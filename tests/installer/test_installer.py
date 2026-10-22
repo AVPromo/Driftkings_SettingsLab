@@ -43,7 +43,7 @@ class GeneratorTests(unittest.TestCase):
                             ignore=shutil.ignore_patterns('*.png', '*.bmp', '*.ico') if relative == 'installer/setup' else None)
         for relative in ('build_data/build_config.json', 'build_data/components.json',
                          'mod/res/scripts/client/driftkings/_constants.py',
-                         'mod/res/scripts/client/driftkings/i18n/en.py', 'mod/res/scripts/client/driftkings/i18n/pt.py'):
+                         'mod/res/mods/driftkings/text/en.yml', 'mod/res/mods/driftkings/text/pt.yml'):
             path = self.root / relative
             path.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(ROOT / relative, path)
@@ -83,15 +83,15 @@ class GeneratorTests(unittest.TestCase):
                 self.assertTrue(entry['group_labels'][lang])
 
     def test_missing_label_fails_instead_of_using_internal_name(self):
-        path = self.root / 'mod/res/scripts/client/driftkings/i18n/pt.py'
+        path = self.root / 'mod/res/mods/driftkings/text/pt.yml'
         text = path.read_text(encoding='utf-8')
         # Remove the actual first description; leave a valid catalog document.
         import re
-        text, count = re.subn(r"('UI_description':\s*)[^\n]+", r"\1'',", text, count=1)
+        text, count = re.subn(r'(^[a-z_]+\.UI_description: )[^\n]+', r'\1""', text, count=1, flags=re.M)
         self.assertEqual(count, 1)
         path.write_text(text, encoding='utf-8')
         # The first section may not be an enabled choice, so remove all descriptions.
-        text = re.sub(r"('UI_description':\s*)[^\n]+", r"\1'',", text)
+        text = re.sub(r'(^[a-z_]+\.UI_description: )[^\n]+', r'\1""', text, flags=re.M)
         path.write_text(text, encoding='utf-8')
         with self.assertRaisesRegex(ValueError, 'Missing installer label'):
             installer_catalog(self.root)

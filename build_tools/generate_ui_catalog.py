@@ -35,7 +35,7 @@ def installer_catalog(root=ROOT):
     root = Path(root)
     config = json.loads((root / 'build_data/build_config.json').read_text(encoding='utf-8'))
     manifests = {item['id']: item for item in read_components(root, config['components']['source'])}
-    catalogs = {lang: catalog(root / ('mod/res/scripts/client/driftkings/i18n/' + lang + '.py'))
+    catalogs = {lang: catalog(root / ('mod/res/mods/driftkings/text/' + lang + '.yml'))
                 for lang in ('en', 'pt')}
     choices = []
     for path in sorted((root / config['defaults']['source_root'] / 'default').glob('*.json')):

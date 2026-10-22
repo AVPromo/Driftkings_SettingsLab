@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import copy
 from driftkings._constants import TARGET_DISTANCE
 from driftkings.settings.controls_schema import control, slider, options
 from driftkings.settings.definitions.base import SectionDefinition
@@ -25,3 +26,12 @@ class TargetDistanceSettings(SectionDefinition):
             control(TARGET_DISTANCE.DRAW_TEXT_SHADOW),
         ),
     )
+
+    def getControlColumns(self):
+        columns = copy.deepcopy(self.COLUMNS)
+        for column in columns:
+            for item in column:
+                for option in item.get('options', []):
+                    key = 'UI_setting_' + item['varName'] + '_' + option['label']
+                    option['label'] = self.i18n[key]
+        return columns

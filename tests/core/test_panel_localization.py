@@ -4,7 +4,7 @@ import ast
 import copy
 import os
 
-from support import CLIENT, RuntimeTest, module, source
+from support import CLIENT, ROOT, RuntimeTest, module, source
 
 
 def literal_assignment(relative, name):
@@ -16,6 +16,10 @@ def literal_assignment(relative, name):
 
 
 class PanelLocalizationTests(RuntimeTest):
+    def locale(self, code):
+        with open(os.path.join(ROOT, 'mod/res/mods/driftkings/text', code + '.yml'), 'rb') as stream:
+            return self.load('core.locale_catalog').parse_catalog(stream.read())
+
     def setUp(self):
         super(PanelLocalizationTests, self).setUp()
         with open(os.path.join(CLIENT, '_constants.py'), 'rb') as stream:
@@ -81,7 +85,7 @@ class PanelLocalizationTests(RuntimeTest):
     def test_language_changes_invalidate_cached_screens_and_extra_fields(self):
         self.view.rows()
         for language in ('pt', 'de', 'fr', 'ru', 'ja', 'en'):
-            text = literal_assignment('i18n/' + language + '.py', 'TEXT')['team_panels']['UI_panel_destroyed']
+            text = self.locale(language)['TEXT']['team_panels']['UI_panel_destroyed']
             self.config.i18n['UI_panel_destroyed'] = text
             row = self.view.rows()[0]
             for screen in (row['panels']['large'], row['loading'], row['tab']):
@@ -89,10 +93,10 @@ class PanelLocalizationTests(RuntimeTest):
                 self.assertEqual(screen['fields'][0]['format'], text)
 
     def test_every_catalog_has_a_translation_and_unknown_macro_falls_back_to_its_name(self):
-        for filename in os.listdir(os.path.join(CLIENT, 'i18n')):
-            if filename in ('__init__.py', 'panel.py') or not filename.endswith('.py'):
+        for filename in os.listdir(os.path.join(ROOT, 'mod/res/mods/driftkings/text')):
+            if not filename.endswith('.yml'):
                 continue
-            text = literal_assignment('i18n/' + filename, 'TEXT')['team_panels']['UI_panel_destroyed']
+            text = self.locale(filename[:-4])['TEXT']['team_panels']['UI_panel_destroyed']
             self.assertTrue(text.strip(), filename)
         result = self.roster().screen({'format': '{{l10n:Unknown}}'}, {'xvm-stat': ''},
                                       {'templates': {}}, 'Left')

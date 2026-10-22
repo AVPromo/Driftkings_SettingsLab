@@ -220,11 +220,10 @@ def build_plan(root=ROOT, check_generated=False, check_game=False, check_compone
     for region, codes in locales['regions'].items():
         require(set(codes) <= set(locales['locales']), 'Unknown locale in region: %s' % region)
     for language in locales['locales']:
-        require((python_root / 'driftkings/i18n' / (language + '.py')).is_file(), 'Missing locale: %s' % language)
-        catalog_source = ast.parse((python_root / 'driftkings/i18n' / (language + '.py')).read_text(encoding='utf-8'))
-        require(any(isinstance(node, ast.Assign) and any(isinstance(target, ast.Name) and target.id == 'PANEL'
-                                                       for target in node.targets) for node in catalog_source.body),
-                'Missing panel translations in locale: %s' % language)
+        resource = 'res/mods/driftkings/text/' + language + '.yml'
+        require((root / 'mod' / resource).is_file(), 'Missing locale: %s' % language)
+        require(any(item['target'] == resource for item in plan['assets']),
+                'Locale is not packaged: %s' % language)
     validate_catalogs(root)
     validate_ui_catalog(root, plan)
     if check_defaults:
