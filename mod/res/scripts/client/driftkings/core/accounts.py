@@ -3,14 +3,20 @@
 import copy
 import uuid
 
+# Records written before regions were stored only have a login URL. The automatic
+# server URL is identical in every region, so it cannot identify one.
+REALM_DOMAINS = (('worldoftanks.eu', 'EU'), ('worldoftanks.com', 'NA'), ('worldoftanks.asia', 'ASIA'))
+
 
 class AccountError(ValueError):
     pass
 
 
 class AccountService(object):
-    def __init__(self, store, protect, unprotect, hosts):
+    def __init__(self, store, protect, unprotect, hosts, realm=''):
         self.store, self.protect, self.unprotect, self.hosts = store, protect, unprotect, hosts
+        # EU, NA and ASIA clients share the preferences folder, and therefore this file.
+        self.realm = realm
 
     def find(self, account_id):
         for account in self.store.accounts:
@@ -18,8 +24,7 @@ class AccountService(object):
                 return account
         raise AccountError('Account no longer exists.')
 
-    def cluster(self, account):
-        hosts = self.hosts()
+    def _index(self, account, hosts):
         if account.get('server'):
             for index, host in enumerate(hosts):
                 if host[0] == account['server']:
@@ -31,17 +36,52 @@ class AccountService(object):
             return -1
         return index if 0 <= index < len(hosts) else -1
 
+    def accountRealm(self, account, hosts=None):
+        """Region of the account, or None when an older record cannot tell."""
+        if account.get('realm'):
+            return account['realm']
+        server = account.get('server')
+        if not server:
+            return None
+        if any(host[0] == server and host[3] is not None for host in hosts or self.hosts()):
+            return self.realm or None
+        name = server.split(':')[0].lower()
+        for domain, realm in REALM_DOMAINS:
+            if name == domain or name.endswith('.' + domain):
+                return realm
+        return None
+
+    def foreign(self, account, hosts=None):
+        realm = self.accountRealm(account, hosts)
+        return bool(self.realm) and realm is not None and realm != self.realm
+
+    def cluster(self, account):
+        hosts = self.hosts()
+        if self.realm and self.accountRealm(account, hosts) != self.realm:
+            return -1
+        return self._index(account, hosts)
+
     def rows(self):
         hosts = self.hosts()
         rows = []
         for account in self.store.accounts:
-            index = self.cluster(account)
-            rows.append({'id': str(account['id']), 'title': account['title'], 'server': hosts[index][1] if index >= 0 else '-', 'available': index >= 0})
+            realm = self.accountRealm(account, hosts)
+            index = self._index(account, hosts)
+            server = hosts[index][1] if index >= 0 else '-'
+            if self.foreign(account, hosts):
+                server = realm + (u' · ' + account['serverName'] if account.get('serverName') else '')
+            elif self.realm and realm is None:
+                # Unconfirmed region: saving the account in this client assigns it.
+                server += ' (?)'
+            rows.append({'id': str(account['id']), 'title': account['title'], 'server': server,
+                         'available': self.cluster(account) >= 0})
         return rows
 
     def edit(self, account_id):
         account = self.find(account_id)
-        return {'id': str(account['id']), 'title': account['title'], 'email': self.unprotect(account['email']), 'cluster': self.cluster(account)}
+        hosts = self.hosts()
+        index = -1 if self.foreign(account, hosts) else self._index(account, hosts)
+        return {'id': str(account['id']), 'title': account['title'], 'email': self.unprotect(account['email']), 'cluster': index}
 
     def _commit(self, accounts):
         if getattr(self.store, 'read_error', False):
@@ -62,12 +102,17 @@ class AccountService(object):
             raise AccountError('Fill in the name, email and password.')
         hosts = self.hosts()
         cluster = int(cluster)
-        if not 0 <= cluster < len(hosts):
-            raise AccountError('Select an available server.')
         accounts = copy.deepcopy(self.store.accounts)
         original = self.find(account_id) if account_id else None
         account = copy.deepcopy(original) if original else {'id': uuid.uuid4().hex}
-        account.update(title=title, email=self.protect(email), cluster=cluster, server=hosts[cluster][0])
+        if 0 <= cluster < len(hosts):
+            account.update(cluster=cluster, server=hosts[cluster][0], serverName=hosts[cluster][1])
+            if self.realm:
+                account['realm'] = self.realm
+        elif not (original and self.foreign(original, hosts)):
+            raise AccountError('Select an available server.')
+        # Without a new selection, an account of another region keeps its server.
+        account.update(title=title, email=self.protect(email))
         if password:
             account['password'] = self.protect(password)
         if original:
@@ -84,5 +129,7 @@ class AccountService(object):
         account = self.find(account_id)
         index = self.cluster(account)
         if index < 0:
+            if self.foreign(account):
+                raise AccountError('This account belongs to the %s region. Use the %s client.' % ((self.accountRealm(account),) * 2))
             raise AccountError('Edit this account and select an available server.')
         return self.unprotect(account['email']), self.unprotect(account['password']), self.hosts()[index][0], index

@@ -15,6 +15,7 @@ from external_strings_utils import unicode_from_utf8
 from gui.Scaleform.daapi.view.login.LoginView import LoginView
 from gui.Scaleform.daapi.view.login.login_modes.wgc_mode import WgcMode
 from predefined_hosts import g_preDefinedHosts
+from realm import CURRENT_REALM
 from helpers import getClientLanguage
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
@@ -218,7 +219,7 @@ service = None
 def init():
     global service
     BigWorld.wh_data = UserAccounts()
-    service = AccountService(BigWorld.wh_data, BigWorld.wg_cpdata, BigWorld.wg_ucpdata, g_preDefinedHosts.shortList)
+    service = AccountService(BigWorld.wh_data, BigWorld.wg_cpdata, BigWorld.wg_ucpdata, g_preDefinedHosts.shortList, CURRENT_REALM)
     controller.active = True
 
 
