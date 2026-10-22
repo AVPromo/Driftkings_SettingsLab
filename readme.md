@@ -136,8 +136,6 @@ This imports those notes into the signed changelog, rebuilds the mod and install
 | `build_tools` | Compiler, validators and release tooling |
 | `res` | Canonical defaults, dependencies and resource sources |
 
-The next beta introduces descriptive module and configuration names, with migration for existing profiles.
-
 ## Image paths in the next beta
 
 Overlay images and custom Sixth Sense icons accept `gui/maps/driftkings/...` resources or user files in `mods/configs/driftkings/...`, including their fixed SWF-relative forms. `img://` prefixes remain supported. Move custom images from other folders into `mods/configs/driftkings/` and update their configuration paths. External URLs, absolute paths and directory traversal are rejected; overlays use their configured alternative image, and Sixth Sense uses its embedded fallback icon when loading fails.
