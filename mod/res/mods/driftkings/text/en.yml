@@ -1215,3 +1215,8 @@ profile_ratings.UI_setting_summaryColors_text: "Color overview"
 profile_ratings.UI_setting_survivalThresholds_text: "Survival limits (%)"
 profile_ratings.UI_setting_survivalThresholds_tooltip: "Enter five increasing limits separated by commas. Survival: 0–100%; received damage: 0–500% of vehicle HP. Use a dot for decimals."
 profile_ratings.UI_setting_vehicleColors_text: "Color vehicles"
+
+vehicle_carousel.UI_carousel_infoImg: "Status icon"
+vehicle_carousel.UI_carousel_rentInfo: "Rental information"
+vehicle_carousel.UI_carousel_crystalsIcon: "Bonds icon"
+vehicle_carousel.UI_carousel_coreBorder: "Battle Pass highlight"

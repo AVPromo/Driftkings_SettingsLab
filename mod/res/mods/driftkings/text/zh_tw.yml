@@ -1215,3 +1215,8 @@ profile_ratings.UI_setting_summaryColors_text: "為總覽著色"
 profile_ratings.UI_setting_survivalThresholds_text: "存活率門檻 (%)"
 profile_ratings.UI_setting_survivalThresholds_tooltip: "輸入五個遞增門檻，以逗號分隔。存活率：0–100%；受到傷害：車輛生命值的0–500%。小數使用點號。"
 profile_ratings.UI_setting_vehicleColors_text: "為車輛著色"
+
+vehicle_carousel.UI_carousel_infoImg: "狀態圖示"
+vehicle_carousel.UI_carousel_rentInfo: "租用資訊"
+vehicle_carousel.UI_carousel_crystalsIcon: "戰爭債券圖示"
+vehicle_carousel.UI_carousel_coreBorder: "戰鬥通行證醒目提示"

@@ -12,7 +12,7 @@ except NameError:
     text_type = str
     string_types = (str,)
 
-FIELD_NAMES = ('flag', 'tankIcon', 'tankType', 'level', 'xp', 'tankName', 'info', 'favorite', 'progressionPoints')
+FIELD_NAMES = ('flag', 'tankIcon', 'tankType', 'level', 'xp', 'tankName', 'info', 'favorite', 'progressionPoints', 'infoImg', 'rentInfo', 'crystalsIcon', 'coreBorder')
 ALIASES = {'tdb': 'avgDamage', 'winrate': 'winRate', 't_battles': 'battles', 'damageRating': 'marks', 'name': 'vehicle', 'tier': 'level', 'tfb': 'avgFrags', 'hitsRatio': 'hitRate', 'markOfMastery': 'mastery'}
 MACRO = re.compile(r'\{\{([^{}]+)\}\}')
 EXPR = re.compile(r'^(?P<key>(?:v\.)?(?:c:|c_|icon:)?[A-Za-z][\w-]*)(?P<fmt>%[-0-9.]*[dfs]|:\.[0-3]f|:d)?(?:~(?P<suffix>[^|]*))?(?:\|(?P<fallback>.*))?$')

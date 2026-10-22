@@ -1215,3 +1215,8 @@ profile_ratings.UI_setting_summaryColors_text: "为总览着色"
 profile_ratings.UI_setting_survivalThresholds_text: "存活率阈值 (%)"
 profile_ratings.UI_setting_survivalThresholds_tooltip: "输入五个递增阈值，以逗号分隔。存活率：0–100%；受到伤害：坦克生命值的0–500%。小数使用点号。"
 profile_ratings.UI_setting_vehicleColors_text: "为坦克着色"
+
+vehicle_carousel.UI_carousel_infoImg: "状态图标"
+vehicle_carousel.UI_carousel_rentInfo: "租用信息"
+vehicle_carousel.UI_carousel_crystalsIcon: "战争债券图标"
+vehicle_carousel.UI_carousel_coreBorder: "战斗通行证高亮"

@@ -54,7 +54,10 @@
     },
     "coreBorder": {
       "alpha": 100,
-      "enabled": true
+      "dx": 0,
+      "dy": 0,
+      "enabled": true,
+      "scale": 1
     },
     "crystalsBorder": {
       "alpha": 100,
@@ -64,7 +67,8 @@
       "alpha": 100,
       "dx": 0,
       "dy": 0,
-      "enabled": true
+      "enabled": true,
+      "scale": 1
     },
     "favorite": {
       "alpha": 100,
@@ -120,6 +124,13 @@
       "scale": 1
     },
     "progressionPoints": {
+      "alpha": 100,
+      "dx": 0,
+      "dy": 0,
+      "enabled": true,
+      "scale": 1
+    },
+    "rentInfo": {
       "alpha": 100,
       "dx": 0,
       "dy": 0,

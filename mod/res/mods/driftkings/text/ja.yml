@@ -1215,3 +1215,8 @@ profile_ratings.UI_setting_summaryColors_text: "概要を色分け"
 profile_ratings.UI_setting_survivalThresholds_text: "生還率の境界値 (%)"
 profile_ratings.UI_setting_survivalThresholds_tooltip: "カンマ区切りで昇順の境界値を5つ入力します。生還率は0–100%、被ダメージは車輌HPの0–500%。小数点はドットを使用します。"
 profile_ratings.UI_setting_vehicleColors_text: "車輌を色分け"
+
+vehicle_carousel.UI_carousel_infoImg: "状態アイコン"
+vehicle_carousel.UI_carousel_rentInfo: "レンタル情報"
+vehicle_carousel.UI_carousel_crystalsIcon: "ボンズアイコン"
+vehicle_carousel.UI_carousel_coreBorder: "バトルパスの強調表示"

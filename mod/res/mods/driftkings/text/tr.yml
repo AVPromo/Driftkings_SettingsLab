@@ -1215,3 +1215,8 @@ profile_ratings.UI_setting_summaryColors_text: "Genel bakışı renklendir"
 profile_ratings.UI_setting_survivalThresholds_text: "Hayatta kalma eşikleri (%)"
 profile_ratings.UI_setting_survivalThresholds_tooltip: "Virgülle ayrılmış beş artan eşik girin. Hayatta kalma: %0–100; alınan hasar: araç CP değerinin %0–500’ü. Ondalık için nokta kullanın."
 profile_ratings.UI_setting_vehicleColors_text: "Araçları renklendir"
+
+vehicle_carousel.UI_carousel_infoImg: "Durum simgesi"
+vehicle_carousel.UI_carousel_rentInfo: "Kiralama bilgisi"
+vehicle_carousel.UI_carousel_crystalsIcon: "Tahvil simgesi"
+vehicle_carousel.UI_carousel_coreBorder: "Savaş Kartı vurgusu"

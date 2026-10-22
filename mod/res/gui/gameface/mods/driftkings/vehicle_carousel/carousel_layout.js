@@ -5,10 +5,12 @@
     'use strict';
     var selectors = {
         flag:'[class*="Background_flag_"]', tankIcon:'[class*="Background_vehicle_"]',
-        tankType:'[class*="Information_identifierIcon_"]', level:'[class*="Information_text__level_"]',
-        xp:'[class*="Background_multiplier_"]', tankName:'[class*="Information_truncatedText_"]',
-        info:'[class*="Information_info_"]', favorite:'[class*="Background_favorite_"]',
-        progressionPoints:'[class*="Information_battlePass_"]'
+        tankType:'[class*="Information_details_"] [class*="VehicleType_base__"]', level:'[class*="Information_text__level_"]',
+        xp:'[class*="Background_multiplier_"],[class*="Bonuses_bonus_"]', tankName:'[class*="Information_truncatedText_"]',
+        info:'[class*="Overlay_alertText_"]', favorite:'[class*="Background_favorite_"]',
+        progressionPoints:'[class*="Information_battlePass_"]',
+        infoImg:'[class*="Overlay_alertIcon_"]', rentInfo:'[class*="Bonuses_rent_"]',
+        crystalsIcon:'[class*="Background_crystal_"]', coreBorder:'[class*="Background_bpBonus_"]'
     };
     function color(value, fallback) {
         value = String(value || '').replace(/^0x/i,'#');
@@ -93,8 +95,8 @@
             var setting=profile.fields[key], nodes=card.querySelectorAll(selectors[key]);
             for(var i=0;i<nodes.length;i++) {
                 var node=nodes[i];
-                if(setting.enabled===false) change(node,'visibility','hidden');
-                if(setting.alpha!==100) change(node,'opacity',String(setting.alpha/100));
+                if(setting.enabled===false) { change(node,'visibility','hidden'); change(node,'opacity','0'); }
+                else if(setting.alpha!==100) change(node,'opacity',String(setting.alpha/100));
                 if(setting.dx || setting.dy || setting.scale!==1) {
                     var base=getComputedStyle(node).transform;
                     change(node,'transform',(base==='none'?'':base+' ')+'translate('+setting.dx+'rem,'+setting.dy+'rem) scale('+setting.scale+')');

@@ -1215,3 +1215,8 @@ profile_ratings.UI_setting_summaryColors_text: "Koloruj podsumowanie"
 profile_ratings.UI_setting_survivalThresholds_text: "Progi przeżywalności (%)"
 profile_ratings.UI_setting_survivalThresholds_tooltip: "Wpisz pięć rosnących progów oddzielonych przecinkami. Przeżywalność: 0–100%; otrzymane uszkodzenia: 0–500% PW pojazdu. Używaj kropki dziesiętnej."
 profile_ratings.UI_setting_vehicleColors_text: "Koloruj pojazdy"
+
+vehicle_carousel.UI_carousel_infoImg: "Ikona stanu"
+vehicle_carousel.UI_carousel_rentInfo: "Informacje o wypożyczeniu"
+vehicle_carousel.UI_carousel_crystalsIcon: "Ikona obligacji"
+vehicle_carousel.UI_carousel_coreBorder: "Wyróżnienie Przepustki bitewnej"

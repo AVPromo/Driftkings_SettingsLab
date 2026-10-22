@@ -1215,3 +1215,8 @@ profile_ratings.UI_setting_summaryColors_text: "Übersicht einfärben"
 profile_ratings.UI_setting_survivalThresholds_text: "Überlebensgrenzen (%)"
 profile_ratings.UI_setting_survivalThresholds_tooltip: "Fünf steigende Grenzwerte, durch Kommas getrennt. Überleben: 0–100 %; erhaltener Schaden: 0–500 % der Fahrzeug-SP. Dezimalpunkt verwenden."
 profile_ratings.UI_setting_vehicleColors_text: "Fahrzeuge einfärben"
+
+vehicle_carousel.UI_carousel_infoImg: "Statussymbol"
+vehicle_carousel.UI_carousel_rentInfo: "Mietinformationen"
+vehicle_carousel.UI_carousel_crystalsIcon: "Anleihensymbol"
+vehicle_carousel.UI_carousel_coreBorder: "Battle-Pass-Hervorhebung"

@@ -1215,3 +1215,8 @@ profile_ratings.UI_setting_summaryColors_text: "Colorir visão geral"
 profile_ratings.UI_setting_survivalThresholds_text: "Limites de sobrevivência (%)"
 profile_ratings.UI_setting_survivalThresholds_tooltip: "Introduz cinco limites por ordem crescente, separados por vírgulas. Sobrevivência: 0–100%; dano recebido: 0–500% da vida do veículo. Usa ponto nos decimais."
 profile_ratings.UI_setting_vehicleColors_text: "Colorir veículos"
+
+vehicle_carousel.UI_carousel_infoImg: "Ícone de estado"
+vehicle_carousel.UI_carousel_rentInfo: "Informação de aluguer"
+vehicle_carousel.UI_carousel_crystalsIcon: "Ícone de obrigações"
+vehicle_carousel.UI_carousel_coreBorder: "Destaque do Passe de Batalha"

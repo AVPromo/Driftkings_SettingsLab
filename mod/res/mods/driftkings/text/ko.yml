@@ -1215,3 +1215,8 @@ profile_ratings.UI_setting_summaryColors_text: "개요 색상 적용"
 profile_ratings.UI_setting_survivalThresholds_text: "생존율 기준 (%)"
 profile_ratings.UI_setting_survivalThresholds_tooltip: "쉼표로 구분하여 오름차순 기준값 5개를 입력하세요. 생존율: 0–100%, 받은 피해: 전차 내구도의 0–500%. 소수점은 점을 사용하세요."
 profile_ratings.UI_setting_vehicleColors_text: "전차 색상 적용"
+
+vehicle_carousel.UI_carousel_infoImg: "상태 아이콘"
+vehicle_carousel.UI_carousel_rentInfo: "대여 정보"
+vehicle_carousel.UI_carousel_crystalsIcon: "전쟁 채권 아이콘"
+vehicle_carousel.UI_carousel_coreBorder: "배틀 패스 강조 표시"

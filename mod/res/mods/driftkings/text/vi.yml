@@ -1215,3 +1215,8 @@ profile_ratings.UI_setting_summaryColors_text: "Tô màu tổng quan"
 profile_ratings.UI_setting_survivalThresholds_text: "Ngưỡng sống sót (%)"
 profile_ratings.UI_setting_survivalThresholds_tooltip: "Nhập năm ngưỡng tăng dần, phân cách bằng dấu phẩy. Sống sót: 0–100%; sát thương nhận: 0–500% HP xe. Dùng dấu chấm thập phân."
 profile_ratings.UI_setting_vehicleColors_text: "Tô màu xe"
+
+vehicle_carousel.UI_carousel_infoImg: "Biểu tượng trạng thái"
+vehicle_carousel.UI_carousel_rentInfo: "Thông tin thuê"
+vehicle_carousel.UI_carousel_crystalsIcon: "Biểu tượng trái phiếu"
+vehicle_carousel.UI_carousel_coreBorder: "Đánh dấu Battle Pass"

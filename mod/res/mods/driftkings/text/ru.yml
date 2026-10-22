@@ -1215,3 +1215,8 @@ profile_ratings.UI_setting_summaryColors_text: "Окрашивать обзор"
 profile_ratings.UI_setting_survivalThresholds_text: "Пороги выживаемости (%)"
 profile_ratings.UI_setting_survivalThresholds_tooltip: "Введите пять возрастающих порогов через запятую. Выживаемость: 0–100%; полученный урон: 0–500% прочности техники. Десятичный разделитель — точка."
 profile_ratings.UI_setting_vehicleColors_text: "Окрашивать технику"
+
+vehicle_carousel.UI_carousel_infoImg: "Значок состояния"
+vehicle_carousel.UI_carousel_rentInfo: "Информация об аренде"
+vehicle_carousel.UI_carousel_crystalsIcon: "Значок бон"
+vehicle_carousel.UI_carousel_coreBorder: "Подсветка Боевого пропуска"

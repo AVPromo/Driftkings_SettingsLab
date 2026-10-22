@@ -1215,3 +1215,8 @@ profile_ratings.UI_setting_summaryColors_text: "Colorear resumen"
 profile_ratings.UI_setting_survivalThresholds_text: "Límites de supervivencia (%)"
 profile_ratings.UI_setting_survivalThresholds_tooltip: "Introduce cinco límites crecientes separados por comas. Supervivencia: 0–100%; daño recibido: 0–500% de los PV del vehículo. Usa punto decimal."
 profile_ratings.UI_setting_vehicleColors_text: "Colorear vehículos"
+
+vehicle_carousel.UI_carousel_infoImg: "Icono de estado"
+vehicle_carousel.UI_carousel_rentInfo: "Información de alquiler"
+vehicle_carousel.UI_carousel_crystalsIcon: "Icono de bonos"
+vehicle_carousel.UI_carousel_coreBorder: "Resaltado del Pase de batalla"

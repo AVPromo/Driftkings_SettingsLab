@@ -1215,3 +1215,8 @@ profile_ratings.UI_setting_summaryColors_text: "ใช้สีในภาพ�
 profile_ratings.UI_setting_survivalThresholds_text: "เกณฑ์การรอดชีวิต (%)"
 profile_ratings.UI_setting_survivalThresholds_tooltip: "ป้อนเกณฑ์เพิ่มขึ้น 5 ค่า คั่นด้วยจุลภาค อัตรารอดชีวิต 0–100% ความเสียหายที่ได้รับ 0–500% ของ HP รถถัง ใช้จุดทศนิยม"
 profile_ratings.UI_setting_vehicleColors_text: "ใช้สีในรถถัง"
+
+vehicle_carousel.UI_carousel_infoImg: "ไอคอนสถานะ"
+vehicle_carousel.UI_carousel_rentInfo: "ข้อมูลการเช่า"
+vehicle_carousel.UI_carousel_crystalsIcon: "ไอคอนพันธบัตร"
+vehicle_carousel.UI_carousel_coreBorder: "ไฮไลต์แบทเทิลพาส"

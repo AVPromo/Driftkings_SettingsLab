@@ -1215,3 +1215,8 @@ profile_ratings.UI_setting_summaryColors_text: "Áttekintés színezése"
 profile_ratings.UI_setting_survivalThresholds_text: "Túlélési határok (%)"
 profile_ratings.UI_setting_survivalThresholds_tooltip: "Adjon meg öt növekvő határt vesszővel elválasztva. Túlélés: 0–100%; kapott sebzés: a jármű HP 0–500%-a. Tizedesjelként pontot használjon."
 profile_ratings.UI_setting_vehicleColors_text: "Járművek színezése"
+
+vehicle_carousel.UI_carousel_infoImg: "Állapotikon"
+vehicle_carousel.UI_carousel_rentInfo: "Bérlési információk"
+vehicle_carousel.UI_carousel_crystalsIcon: "Kötvényikon"
+vehicle_carousel.UI_carousel_coreBorder: "Csatabérlet kiemelése"

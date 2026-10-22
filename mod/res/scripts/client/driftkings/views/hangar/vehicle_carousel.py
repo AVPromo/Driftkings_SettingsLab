@@ -34,9 +34,17 @@ def get_view_config(config, row_models):
 class CarouselController(HangarController):
     def start(self):
         settings_service.onModSettingsChanged.connect(self.onSettingsChanged, VEHICLE_CAROUSEL)
+        # Dossier synchronization can finish while the hangar view is destroyed.
+        ServicesLocator.itemsCache.onSyncCompleted += self.onItemsSyncCompleted
 
     def stop(self):
+        ServicesLocator.itemsCache.onSyncCompleted -= self.onItemsSyncCompleted
         settings_service.onModSettingsChanged.disconnect(self.onSettingsChanged)
+
+    def onItemsSyncCompleted(self, *args):
+        _component().g_data.invalidate()
+        for child in list(self.views.values()):
+            child.refresh()
 
     def onSettingsChanged(self, component, changes):
         self.onApplySettings(changes)
@@ -89,7 +97,8 @@ def install_gameface():
         def _onLoading(self, *args, **kwargs):
             super(CarouselView, self)._onLoading(*args, **kwargs)
             self._carouselActive = True
-            self.refresh()
+            # Never reuse a pre-battle dossier when a new hangar card is loaded.
+            self.invalidate()
 
         def _finalize(self):
             self._carouselActive = False

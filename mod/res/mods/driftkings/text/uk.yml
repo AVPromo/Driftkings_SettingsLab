@@ -1215,3 +1215,8 @@ profile_ratings.UI_setting_summaryColors_text: "Забарвлювати огл�
 profile_ratings.UI_setting_survivalThresholds_text: "Пороги виживання (%)"
 profile_ratings.UI_setting_survivalThresholds_tooltip: "Введіть п’ять зростаючих порогів через кому. Виживання: 0–100%; отримана шкода: 0–500% міцності техніки. Десятковий роздільник — крапка."
 profile_ratings.UI_setting_vehicleColors_text: "Забарвлювати техніку"
+
+vehicle_carousel.UI_carousel_infoImg: "Значок стану"
+vehicle_carousel.UI_carousel_rentInfo: "Інформація про оренду"
+vehicle_carousel.UI_carousel_crystalsIcon: "Значок бонів"
+vehicle_carousel.UI_carousel_coreBorder: "Підсвічування Бойової перепустки"

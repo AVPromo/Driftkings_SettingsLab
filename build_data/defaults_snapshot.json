@@ -220,12 +220,12 @@
     {
       "path": "default/vehicle_carousel/carouselnormal.json",
       "source_sha256": "86d8fccfbfc61ed70d22c4426b287223f38a533e84c72da93b9bb581306c3f13",
-      "sha256": "d0c0e2fdeb28a0955337adf7428b3f688f8fbfea3db5bb3a7b690a9f73930f89"
+      "sha256": "470fcb350bfd00e665c7d0b6132ecf614e903ecc21e1b16a458f573baa06d7bf"
     },
     {
       "path": "default/vehicle_carousel/carouselsmall.json",
       "source_sha256": "e6b3cc21a73acb53ef9e5f3d3616747327fd6a2b860a5b7a51dd4da18d4b6864",
-      "sha256": "8c926a8556c3861fb87805344948a62905ba14a627e714449dd2d849129071c2"
+      "sha256": "bd7e323d06d4821ef483cebdd23a71684a6f7b374aa3869b487e30aa048e0fd8"
     },
     {
       "path": "default/vehicle_health.json",

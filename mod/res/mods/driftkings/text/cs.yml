@@ -1215,3 +1215,8 @@ profile_ratings.UI_setting_summaryColors_text: "Obarvit přehled"
 profile_ratings.UI_setting_survivalThresholds_text: "Hranice přežití (%)"
 profile_ratings.UI_setting_survivalThresholds_tooltip: "Zadejte pět rostoucích hranic oddělených čárkami. Přežití: 0–100 %; obdržené poškození: 0–500 % HP vozidla. Desetinná místa oddělujte tečkou."
 profile_ratings.UI_setting_vehicleColors_text: "Obarvit vozidla"
+
+vehicle_carousel.UI_carousel_infoImg: "Ikona stavu"
+vehicle_carousel.UI_carousel_rentInfo: "Informace o pronájmu"
+vehicle_carousel.UI_carousel_crystalsIcon: "Ikona bonů"
+vehicle_carousel.UI_carousel_coreBorder: "Zvýraznění Battle Passu"

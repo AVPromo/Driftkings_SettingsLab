@@ -3,6 +3,7 @@ require('./test_main_gun.js');
 require('./test_flash_text.js');
 require('./test_profile_ratings.js');
 require('./test_carousel_assets.js');
+require('./test_carousel_fields.js');
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');

@@ -1215,3 +1215,8 @@ profile_ratings.UI_setting_summaryColors_text: "Colorer la vue générale"
 profile_ratings.UI_setting_survivalThresholds_text: "Seuils de survie (%)"
 profile_ratings.UI_setting_survivalThresholds_tooltip: "Saisissez cinq seuils croissants séparés par des virgules. Survie : 0–100 % ; dégâts reçus : 0–500 % des PS du véhicule. Utilisez le point décimal."
 profile_ratings.UI_setting_vehicleColors_text: "Colorer les véhicules"
+
+vehicle_carousel.UI_carousel_infoImg: "Icône d’état"
+vehicle_carousel.UI_carousel_rentInfo: "Informations de location"
+vehicle_carousel.UI_carousel_crystalsIcon: "Icône des obligations"
+vehicle_carousel.UI_carousel_coreBorder: "Surbrillance du Passe de combat"
