@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import logging
-LOG = logging.getLogger('Driftkings.battle.battle_statistics')
+from Driftkings.logger import get_logger
+LOG = get_logger('Driftkings.battle.battle_statistics')
 from Driftkings.core.battle_policy import battle_policy
 from helpers.CallbackDelayer import CallbackDelayer
 from items import vehicles

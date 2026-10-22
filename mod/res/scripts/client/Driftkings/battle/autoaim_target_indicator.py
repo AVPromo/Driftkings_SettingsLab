@@ -2,7 +2,7 @@
 """Display a box for the native locked target; never acquire or steer aim."""
 import BigWorld
 import Math
-import logging
+from Driftkings.logger import get_logger
 import math
 from AvatarInputHandler import cameras
 from Vehicle import Vehicle
@@ -14,7 +14,7 @@ from Driftkings.core.overlay import Align, ElementType, overlays
 from Driftkings.settings.definitions.battle.autoaim_target_indicator import AutoaimTargetIndicatorSettings as Settings
 from Driftkings.settings.service import settings_service
 
-LOG = logging.getLogger('Driftkings.AutoAimOptimize')
+LOG = get_logger('Driftkings.AutoAimOptimize')
 BOX_COLOR = '#F98600'
 BOX_THICKNESS = 2
 UPDATE_INTERVAL = 0.05

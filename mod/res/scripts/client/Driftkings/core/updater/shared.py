@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Shared updater scheduling constants and diagnostic logger."""
-import logging
+from Driftkings.logger import get_logger
 
-LOG = logging.getLogger('Driftkings.Updater')
+LOG = get_logger('Driftkings.Updater')
 INTERVAL = 4 * 60 * 60

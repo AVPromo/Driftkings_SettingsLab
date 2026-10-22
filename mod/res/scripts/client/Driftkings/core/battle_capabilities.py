@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """Read-only battle context queries; no subscriptions, hooks or module rules."""
-import logging
+from Driftkings.logger import get_logger
 import sys
 
 from Driftkings.core.mod_compatibility import read
 
-LOG = logging.getLogger('Driftkings.BattleCapabilities')
+LOG = get_logger('Driftkings.BattleCapabilities')
 # Battles that update the account statistics: random battles, including the
 # bot-filled ones for new (RANDOM_NP2) and returning (WINBACK) players.
 STATISTICS_BATTLES = ('REGULAR', 'RANDOM_NP2', 'WINBACK')

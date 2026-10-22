@@ -4,7 +4,7 @@ Vehicle information and statistics module for Driftkings.
 Handles loading, processing and calculation of various tank statistics.
 """
 import json
-import logging
+from Driftkings.logger import get_logger
 import math
 import os
 import threading
@@ -23,7 +23,7 @@ from items import vehicles
 from Driftkings.core.callbacks import callback
 from Driftkings.common.utils.filesystem import atomicWrite, recoverFile
 from Driftkings.core.cache import cache_directory
-LOG = logging.getLogger('Driftkings.Stats')
+LOG = get_logger('Driftkings.Stats')
 try:
     integer_types = (int, long)
 except NameError:

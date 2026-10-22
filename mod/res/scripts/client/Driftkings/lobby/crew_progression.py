@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """Read current native crew costs without modifying inventory or training."""
-import logging
+from Driftkings.logger import get_logger
 
 from Driftkings.core.crew_progression import progression
 
-LOG = logging.getLogger('Driftkings.CrewProgression')
+LOG = get_logger('Driftkings.CrewProgression')
 
 
 def collect_tankman(tankman, items, slot=None):

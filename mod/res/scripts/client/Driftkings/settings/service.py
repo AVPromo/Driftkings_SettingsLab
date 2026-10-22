@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """Shared settings access and notifications after successful application."""
 import copy
-import logging
+from Driftkings.logger import get_logger
 
 from Driftkings.settings.settings_data import user_settings, part_name
 from Driftkings.settings.store import merge
 
-LOG = logging.getLogger('Driftkings.Settings')
+LOG = get_logger('Driftkings.Settings')
 
 
 def changed_paths(before, after, prefix=()):

@@ -1,26 +1,17 @@
 # -*- coding: utf-8 -*-
-"""[Driftkings.Settings] log channel; uses the client log when available, never logs secrets."""
-import logging
+"""Settings logging compatibility facade using the shared mod format."""
+from Driftkings.logger import get_logger
+import sys
 
 CHANNEL = 'Driftkings.Settings'
-_fallback = logging.getLogger(CHANNEL)
+_fallback = get_logger(CHANNEL)
 _state = {'debug': False}
 
-try:
-    import BigWorld
-    _native = all(hasattr(BigWorld, name) for name in ('logInfo', 'logWarning', 'logError'))
-except ImportError:
-    BigWorld = None
-    _native = False
-
-
-def _text(message, args):
-    if args:
-        try:
-            message = message % args
-        except (TypeError, ValueError):
-            message = message + ' ' + repr(args)
-    return message
+def _location():
+    frame = sys._getframe(2)
+    return {
+        'driftkings_filename': frame.f_code.co_filename.replace('\\', '/').rsplit('/', 1)[-1],
+        'driftkings_lineno': frame.f_lineno}
 
 
 def set_debug(enabled):
@@ -31,34 +22,24 @@ def set_debug(enabled):
 
 
 def info(message, *args):
-    message = _text(message, args)
-    if _native:
-        BigWorld.logInfo(CHANNEL, message, None)
-    else:
-        _fallback.info('[%s] %s', CHANNEL, message)
+    _fallback.info(message, *args, extra=_location())
 
 
 def warning(message, *args):
-    message = _text(message, args)
-    if _native:
-        BigWorld.logWarning(CHANNEL, message, None)
-    else:
-        _fallback.warning('[%s] %s', CHANNEL, message)
+    _fallback.warning(message, *args, extra=_location())
 
 
 def error(message, *args):
-    message = _text(message, args)
-    if _native:
-        BigWorld.logError(CHANNEL, message, None)
-    else:
-        _fallback.error('[%s] %s', CHANNEL, message)
+    _fallback.error(message, *args, extra=_location())
 
 
 def exception(message, *args):
-    import traceback
-    error('%s\n%s', _text(message, args), traceback.format_exc())
+    _fallback.exception(message, *args, extra=_location())
 
 
 def debug(message, *args):
     if _state['debug']:
-        info('[DEBUG] ' + message, *args)
+        # Explicit panel debug mode remains visible at the client's INFO level.
+        location = _location()
+        location['driftkings_levelname'] = 'DEBUG'
+        _fallback.info(message, *args, extra=location)

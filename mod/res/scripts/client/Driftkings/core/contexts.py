@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Application-space lifecycle shared by login, lobby and battle controllers."""
-import logging
-LOG = logging.getLogger('Driftkings.Contexts')
+from Driftkings.logger import get_logger
+LOG = get_logger('Driftkings.Contexts')
 
 
 class Contexts(object):

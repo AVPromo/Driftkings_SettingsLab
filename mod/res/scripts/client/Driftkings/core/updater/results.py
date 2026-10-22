@@ -2,7 +2,7 @@
 """Bounded local receipts, separate from Installer and profile persistence."""
 import hashlib
 import json
-import logging
+from Driftkings.logger import get_logger
 import os
 import re
 import time
@@ -12,7 +12,7 @@ from Driftkings.core.updater.installer import read_json, digest, validate_packag
 from Driftkings.core.updater.manifest import Manifest, INTEGER
 from Driftkings.core.updater.versioning import Version, TEXT, normalize_game_version
 
-LOG = logging.getLogger('Driftkings.Updater')
+LOG = get_logger('Driftkings.Updater')
 FINAL_STATUSES = frozenset(('installed', 'rolledBack', 'rolled_back', 'cancelled', 'error', 'failed'))
 # Interrupted downloads are kept this long in case the same session is still writing them.
 ABANDONED_SECONDS = 24 * 60 * 60

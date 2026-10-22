@@ -10,7 +10,7 @@ class CommonUtilsTests(RuntimeTest):
         class Logger(object):
             def exception(self, *args):
                 records.append(args)
-        api.logging = module(getLogger=lambda name: Logger())
+        api.get_logger = lambda name: Logger()
         @api.log_exceptions
         def guarded(secret):
             raise ValueError('failed')

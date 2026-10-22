@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Carousel PNGs from the resource tree mounted by the client's .wotmod loader."""
 import base64
-import logging
+from Driftkings.logger import get_logger
 import os
 import re
 
@@ -48,7 +48,7 @@ class CarouselImages(object):
             return result
         if path not in self.missing:
             self.missing.add(path)
-            logging.getLogger('Driftkings.CarouselStats').warning('Packaged carousel icon not found: %s', resource)
+            get_logger('Driftkings.CarouselStats').warning('Packaged carousel icon not found: %s', resource)
         return ''
 
     def collect(self, vehicles):

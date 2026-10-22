@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Observable runtime snapshot. Never stored in configuration or profiles."""
 import copy
-import logging
+from Driftkings.logger import get_logger
 
 from Driftkings import VERSION
 
@@ -15,7 +15,7 @@ INSTALLING = 'INSTALLING'
 RESTART_REQUIRED = 'RESTART_REQUIRED'
 ERROR = 'ERROR'
 ACTIVE_STATES = frozenset((IDLE, CHECKING, AVAILABLE, DOWNLOADING, VERIFYING, READY, INSTALLING, RESTART_REQUIRED, ERROR))
-LOG = logging.getLogger('Driftkings.Updater')
+LOG = get_logger('Driftkings.Updater')
 
 
 class State(object):

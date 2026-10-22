@@ -6,7 +6,7 @@ This guide explains how the code is organised and how to make a change safely. F
 
 - **Client scripts run on Python 2.7** (the World of Tanks client). Write code that is valid on both 2.7 and 3: no f-strings, no type hints, no `nonlocal`, no keyword-only arguments. CI parses every client source with Python 2.7.
 - **Gameface JavaScript is ES5.** `npm run lint` enforces this.
-- **Use `logging`, never `print`.** Each module declares `LOG = logging.getLogger('Driftkings.<Area>')`. Use `LOG.exception(...)` inside `except` blocks so the traceback reaches the game log.
+- **Use `logging`, never `print`.** Import `get_logger` from `Driftkings.logger` and declare `LOG = get_logger('Driftkings.<Area>')`. The shared factory preserves client-owned handlers and output. Use `LOG.exception(...)` inside `except` blocks so the traceback reaches the game log.
 - **Do not swallow exceptions silently.** Catch the narrowest exception type, and either log it or explain in a comment why ignoring it is correct.
 - Prefer **pure, engine-free modules** for logic (see `core/gun_stats.py`, `core/carousel*.py`, `core/high_caliber.py`). They can be tested without the game.
 - Never edit generated files by hand: `settings/default_values.py` and `component_list.py` are generated.

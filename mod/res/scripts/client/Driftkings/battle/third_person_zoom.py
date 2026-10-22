@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Independent arcade, postmortem and artillery camera configuration."""
-import logging
+from Driftkings.logger import get_logger
 from AvatarInputHandler.DynamicCameras.ArcadeCamera import ArcadeCamera
 from AvatarInputHandler.DynamicCameras.ArtyCamera import ArtyCamera
 from AvatarInputHandler.DynamicCameras.StrategicCamera import StrategicCamera
@@ -12,7 +12,7 @@ from Driftkings.core.hooks import override
 from Driftkings.settings.definitions.battle.third_person_zoom import ThirdPersonZoomSettings as Settings
 from Driftkings.settings.service import settings_service
 
-LOG = logging.getLogger('Driftkings.Camera')
+LOG = get_logger('Driftkings.Camera')
 config = Settings()
 
 

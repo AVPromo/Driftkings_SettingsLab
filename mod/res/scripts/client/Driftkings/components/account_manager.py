@@ -4,7 +4,7 @@ from Driftkings.settings.service import settings_service
 """Account persistence and native login lifecycle; presentation is Gameface."""
 import base64
 import json
-import logging
+from Driftkings.logger import get_logger
 import os
 import weakref
 import zlib
@@ -26,7 +26,7 @@ from Driftkings.common.utils import events
 from Driftkings.i18n import catalog
 from Driftkings.settings.settings_data import defaults
 
-LOG = logging.getLogger('Driftkings.AccountManager')
+LOG = get_logger('Driftkings.AccountManager')
 
 
 class AccountsConfiguration(object):

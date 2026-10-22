@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import logging
-LOG = logging.getLogger('Driftkings.core.player_ratings')
+from Driftkings.logger import get_logger
+LOG = get_logger('Driftkings.core.player_ratings')
 import json
 import math
 import re

@@ -2,7 +2,7 @@
 """Schedule the optional map package; the native worker applies it after exit."""
 import hashlib
 import json
-import logging
+from Driftkings.logger import get_logger
 import os
 import subprocess
 import xml.etree.ElementTree as ET
@@ -13,7 +13,7 @@ from Driftkings.core.updater.installer import read_resource
 from Driftkings.core.updater.versioning import normalize_game_version
 from Driftkings.settings.service import settings_service
 
-LOG = logging.getLogger('Driftkings.Fog')
+LOG = get_logger('Driftkings.Fog')
 RESOURCE = 'gui/Driftkings/fog/Driftkings.FogPackage.exe'
 INFO = 'gui/Driftkings/fog/helper.json'
 PACKAGE = 'Driftkings.RemoveFog.wotmod'

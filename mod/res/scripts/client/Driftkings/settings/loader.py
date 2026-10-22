@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Python defaults, selected profile and per-feature JSON persistence."""
 import copy
-import logging
+from Driftkings.logger import get_logger
 import math
 import os
 import re
@@ -20,7 +20,7 @@ except NameError:
     string_types = (str,)
     number_types = (int, float)
 
-LOG = logging.getLogger('Driftkings.Settings')
+LOG = get_logger('Driftkings.Settings')
 # Features removed from the mod; their files are never read again.
 REMOVED_SECTIONS = ('safe_shot',)
 

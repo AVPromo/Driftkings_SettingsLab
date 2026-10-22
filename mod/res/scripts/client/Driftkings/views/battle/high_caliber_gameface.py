@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """MainGun HUD presentation. All targets and states arrive from the battle component."""
-import logging
+from Driftkings.logger import get_logger
 from importlib import import_module
 
 from Driftkings._constants import GLOBAL, HIGH_CALIBER_PROGRESS
@@ -9,7 +9,7 @@ from Driftkings.settings.service import settings_service
 from Driftkings.views.battle.common import BattleCardAdapter
 from Driftkings.views.marks_model import moved_panel, number_locale
 
-LOG = logging.getLogger('Driftkings.MainGunBattle')
+LOG = get_logger('Driftkings.MainGunBattle')
 FEATURE = 'DriftkingsMainGun'
 
 

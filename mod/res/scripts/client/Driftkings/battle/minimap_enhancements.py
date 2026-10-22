@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import logging
-LOG = logging.getLogger('Driftkings.battle.minimap_enhancements')
+from Driftkings.logger import get_logger
+LOG = get_logger('Driftkings.battle.minimap_enhancements')
 import weakref
 from math import degrees
 

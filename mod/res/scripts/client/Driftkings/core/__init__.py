@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """Explicit composition, dependency gating and reverse-order cleanup."""
 import importlib
-import logging
+from Driftkings.logger import get_logger
 from collections import namedtuple
 
-LOG = logging.getLogger('Driftkings.Loader')
+LOG = get_logger('Driftkings.Loader')
 # Garage and login components; a replay never shows those screens, so they are not imported.
 LOBBY_ONLY = ('components.account_manager',)
 

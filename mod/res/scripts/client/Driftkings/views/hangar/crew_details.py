@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Progression summaries owned by native crew personal views and tooltips."""
-import logging
+from Driftkings.logger import get_logger
 import weakref
 from gui.shared.personality import ServicesLocator
 
@@ -16,7 +16,7 @@ from Driftkings.views.hangar.common import publish_card
 
 FEATURE = 'DriftkingsCrewDetails'
 RESOURCE = gameface_spec(FEATURE)['resource']
-LOG = logging.getLogger('Driftkings.CrewDetails')
+LOG = get_logger('Driftkings.CrewDetails')
 _installed = False
 
 

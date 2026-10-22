@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Create library components when the client loads a native battle page."""
 import BigWorld
-import logging
+from Driftkings.logger import get_logger
 from frameworks.wulf import WindowLayer
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS, VIEW_BATTLE_PAGE_CONFIG_BY_ARENA_GUI_TYPE
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
@@ -11,7 +11,7 @@ from gui.shared import EVENT_BUS_SCOPE
 from Driftkings.interface_catalog import selected_components, surface_aliases
 from Driftkings.views import BATTLE_COMPONENTS, BATTLE_HANDLERS
 
-LOG = logging.getLogger('Driftkings.Views')
+LOG = get_logger('Driftkings.Views')
 
 
 def battlePageAliases():

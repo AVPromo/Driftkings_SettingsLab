@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import logging
-LOG = logging.getLogger('Driftkings.battle.target_distance')
+from Driftkings.logger import get_logger
+LOG = get_logger('Driftkings.battle.target_distance')
 from AvatarInputHandler import AvatarInputHandler
 from gui.Scaleform.daapi.view.battle.shared.markers2d.vehicle_plugins import VehicleMarkerPlugin
 

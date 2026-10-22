@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import logging
+from Driftkings.logger import get_logger
 import math
 import weakref
 from collections import namedtuple
@@ -22,7 +22,7 @@ from Driftkings.stats.vehinfo import getVehicleInfoData, calculateXvmScale, calc
 from Driftkings.views.battle.battle_performance import _startFlash
 from Driftkings.views.hangar.battle_performance import install_results_gameface
 
-LOG = logging.getLogger('Driftkings.BattleEfficiency')
+LOG = get_logger('Driftkings.BattleEfficiency')
 _results_views = weakref.WeakKeyDictionary()
 
 DEF_RESULTS_LEN = 16

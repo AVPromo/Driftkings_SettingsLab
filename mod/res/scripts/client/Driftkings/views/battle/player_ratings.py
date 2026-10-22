@@ -3,7 +3,7 @@ from Driftkings._constants import GLOBAL, TEAM_PANELS
 from Driftkings.settings.service import settings_service, SettingsChanges, changed_paths, affects
 """Native roster bridge; all three screens share identity, health and macros."""
 from Driftkings._constants import BATTLE_ALIASES
-import logging
+from Driftkings.logger import get_logger
 import time
 import weakref
 from copy import deepcopy
@@ -20,7 +20,7 @@ from Driftkings.settings.settings_data import PROFILES, profile_for_mode
 from Driftkings.common.utils.colorRatting import getStatisticColor
 from Driftkings.core.battle_capabilities import battle_capabilities
 
-LOG=logging.getLogger('Driftkings.PlayerPanelPro')
+LOG=get_logger('Driftkings.PlayerPanelPro')
 ALIAS=BATTLE_ALIASES.PLAYERS_PANEL
 
 class RatingViews(object):

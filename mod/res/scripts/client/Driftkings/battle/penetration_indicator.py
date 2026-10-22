@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import logging
-LOG = logging.getLogger('Driftkings.battle.penetration_indicator')
+from Driftkings.logger import get_logger
+LOG = get_logger('Driftkings.battle.penetration_indicator')
 from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults, computePiercingPowerAtDist
 from DestructibleEntity import DestructibleEntity
 from Vehicle import Vehicle

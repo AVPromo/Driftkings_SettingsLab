@@ -2,7 +2,7 @@
 from Driftkings.common.utils.numbers import finite_number as number
 from Driftkings.interface_catalog import gameface_spec
 """Configurable own-vehicle statistics on EU Gameface carousel cards."""
-import logging
+from Driftkings.logger import get_logger
 import math
 import weakref
 
@@ -24,7 +24,7 @@ from Driftkings.settings.service import settings_service
 from Driftkings.settings.definitions.lobby.vehicle_carousel import VehicleCarouselSettings as Settings
 from Driftkings.views.hangar.vehicle_carousel import CarouselController, get_view_config, install_gameface
 
-LOG = logging.getLogger('Driftkings.CarouselStats')
+LOG = get_logger('Driftkings.CarouselStats')
 FEATURE = 'DriftkingsCarouselStats'
 RESOURCE = gameface_spec(FEATURE)['resource']
 g_controller = None

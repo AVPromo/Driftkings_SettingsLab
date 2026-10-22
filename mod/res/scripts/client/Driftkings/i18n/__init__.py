@@ -3,14 +3,14 @@
 import copy
 import importlib
 import json
-import logging
+from Driftkings.logger import get_logger
 import os
 
 from Driftkings.locale_support import language_code
 from Driftkings.settings.sections import previous_name, section_name, section_aliases
 from Driftkings.settings.store import SettingsStore, merge, recover_file
 
-LOG = logging.getLogger('Driftkings.i18n')
+LOG = get_logger('Driftkings.i18n')
 
 
 def read_catalog(path):

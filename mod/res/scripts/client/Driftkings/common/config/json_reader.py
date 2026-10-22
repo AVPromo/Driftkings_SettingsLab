@@ -3,7 +3,7 @@
 import binascii
 import codecs
 import json
-import logging
+from Driftkings.logger import get_logger
 import os
 import re
 import zlib
@@ -12,7 +12,7 @@ from collections import OrderedDict
 from Driftkings.common.config.utils import smart_update
 from Driftkings.common.utils.filesystem import atomicWrite, recoverFile
 
-LOG = logging.getLogger('Driftkings.Config')
+LOG = get_logger('Driftkings.Config')
 
 __all__ = ('loadJson',)
 

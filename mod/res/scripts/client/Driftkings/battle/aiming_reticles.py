@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import logging
-LOG = logging.getLogger('Driftkings.battle.aiming_reticles')
+from Driftkings.logger import get_logger
+LOG = get_logger('Driftkings.battle.aiming_reticles')
 import AvatarInputHandler
 import BattleReplay
 import BigWorld

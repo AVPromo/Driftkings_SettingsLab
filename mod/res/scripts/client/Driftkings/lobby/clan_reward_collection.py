@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import logging
-LOG = logging.getLogger('Driftkings.lobby.clan_reward_collection')
+from Driftkings.logger import get_logger
+LOG = get_logger('Driftkings.lobby.clan_reward_collection')
 from adisp import adisp_process
 from gui import SystemMessages
 from gui.clans.clan_cache import g_clanCache

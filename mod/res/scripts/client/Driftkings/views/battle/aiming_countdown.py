@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Presentation adapter for DispersionTimer; gameplay state stays in its component."""
-import logging
-LOG = logging.getLogger('Driftkings.views.battle.aiming_countdown')
+from Driftkings.logger import get_logger
+LOG = get_logger('Driftkings.views.battle.aiming_countdown')
 from collections import defaultdict
 from math import ceil, log
 

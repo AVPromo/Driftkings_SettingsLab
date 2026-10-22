@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import glob
-import logging
+from Driftkings.logger import get_logger
 import os
 import zipfile
 from xml.etree import ElementTree
@@ -21,7 +21,7 @@ from Driftkings.common.utils.iter import remDups
 from Driftkings.settings.definitions.components.sound_bank_loader import SoundBankLoaderSettings as Settings
 from Driftkings.settings.service import settings_service
 
-LOG = logging.getLogger('Driftkings.SoundBankLoader')
+LOG = get_logger('Driftkings.SoundBankLoader')
 curCV = ResMgr.openSection('../paths.xml')['Paths'].values()[0].asString
 
 

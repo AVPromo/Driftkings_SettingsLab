@@ -149,7 +149,7 @@ def game_source(relative, stubs=None, real=(), extra_builtins=None):
     def importing(name, globals=None, locals=None, fromlist=(), level=0):
         if name in stubs:
             return stubs[name]
-        if name in real or name.split('.')[0] in STDLIB or name == '__future__':
+        if name in real or name == 'Driftkings.logger' or name.split('.')[0] in STDLIB or name == '__future__':
             return original(name, globals, locals, fromlist, level)
         return auto(name) if fromlist else auto(name.split('.')[0])
 

@@ -2,13 +2,13 @@
 """Section metadata and validation shared by the owned settings panel."""
 import copy
 import json
-import logging
+from Driftkings.logger import get_logger
 import math
 import re
 
 from Driftkings.core.keycodes import valid_key_code
 
-LOG = logging.getLogger('Driftkings.Settings.Validation')
+LOG = get_logger('Driftkings.Settings.Validation')
 
 try:
     string_types = (basestring,)

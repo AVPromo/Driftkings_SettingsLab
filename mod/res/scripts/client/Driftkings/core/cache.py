@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """Disk cache locations shared by all modules, independent of settings profiles."""
-import logging
+from Driftkings.logger import get_logger
 import os
 import re
 import tempfile
 
-LOG = logging.getLogger('Driftkings.Cache')
+LOG = get_logger('Driftkings.Cache')
 CONFIG_ROOT = './mods/configs/Driftkings'
 # Only known data files are migrated; settings, images and account secrets stay
 # in their own stores. The source is retained as a migration backup.

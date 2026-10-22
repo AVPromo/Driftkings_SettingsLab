@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Certificate-verified streaming workers; delivery uses existing Core callbacks."""
-import logging
+from Driftkings.logger import get_logger
 import math
 import socket
 import threading
@@ -19,7 +19,7 @@ from Driftkings.core.updater.endpoints import validate_https
 from Driftkings.core.updater.transport import Response, UnavailableTransport
 
 CHUNK = 64 * 1024
-LOG = logging.getLogger('Driftkings.Updater')
+LOG = get_logger('Driftkings.Updater')
 
 
 class TransferError(ValueError):

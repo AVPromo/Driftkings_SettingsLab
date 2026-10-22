@@ -5,7 +5,7 @@ from Driftkings.settings.service import settings_service
 
 """Gameface roster bridge for the current random TAB."""
 import json
-import logging
+from Driftkings.logger import get_logger
 import math
 import weakref
 from Driftkings.core.hooks import override
@@ -44,9 +44,9 @@ class GamefaceLoading(object):
                         bridge.children[view]={'child':child,'resource':resource,'screen':screen,'data':None,
                             'visible':view.showingStatus in (ShowingStatus.SHOWING,ShowingStatus.SHOWN)}
                         bridge.owner.refresh()
-                        logging.getLogger('Driftkings.PlayerPanelPro').info('Gameface roster attached: %s',screen)
+                        get_logger('Driftkings.PlayerPanelPro').info('Gameface roster attached: %s',screen)
                     except Exception:
-                        logging.getLogger('Driftkings.PlayerPanelPro').exception('Gameface roster bridge failed')
+                        get_logger('Driftkings.PlayerPanelPro').exception('Gameface roster bridge failed')
                 return result
             @override(viewClass,'_finalize')
             def finalize(original,view,*args,**kwargs):
@@ -66,7 +66,7 @@ class GamefaceLoading(object):
             from gui.impl.battle.battle_page.tab_view import TabView
             install(TabView,'_onLoaded','tab')
         except ImportError:
-            logging.getLogger('Driftkings.PlayerPanelPro').debug('TabView unavailable in this client')
+            get_logger('Driftkings.PlayerPanelPro').debug('TabView unavailable in this client')
 
     def active_screens(self):
         return set(record['screen'] for record in self.children.values() if record.get('visible',True))
@@ -94,7 +94,7 @@ class GamefaceLoading(object):
                 return
         except (KeyError, TypeError, ValueError, OverflowError):
             return
-        logging.getLogger('Driftkings.PlayerPanelPro').info(
+        get_logger('Driftkings.PlayerPanelPro').info(
             'Performance Gameface: screen=tab calls=%d avg=%.2fms max=%.2fms window=%.0fms rows=%d reason=%s rowsDrawn=%d rowsReused=%d searches=%d',
             int(calls), total / calls, maximum, elapsed, int(rows), reason, int(drawn), int(reused), int(searches))
 

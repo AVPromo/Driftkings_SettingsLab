@@ -6,7 +6,7 @@ battle field controllers. The GUI start/stop
 wrappers stay: no client event fires at the same moment (onBattleSessionStart is before
 the space and input handler exist, onAvatarReady only when loading ends).
 """
-import logging
+from Driftkings.logger import get_logger
 from Avatar import PlayerAvatar
 from Vehicle import Vehicle
 from VehicleGunRotator import VehicleGunRotator
@@ -16,7 +16,7 @@ from Driftkings.core.keyboard import keyboard
 from Driftkings.core.signals import Signal
 from Driftkings.ui import g_events
 
-LOG = logging.getLogger('Driftkings.BattleEvents')
+LOG = get_logger('Driftkings.BattleEvents')
 
 
 class BattleEvents(object):

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """Passive integration observations. Never imports or initializes external mods."""
-import logging
+from Driftkings.logger import get_logger
 import sys
 
-LOG = logging.getLogger('Driftkings.Compatibility')
+LOG = get_logger('Driftkings.Compatibility')
 ABSENT = 'ABSENT'
 PRESENT = 'PRESENT'
 POSSIBLE_CONFLICT = 'POSSIBLE_CONFLICT'

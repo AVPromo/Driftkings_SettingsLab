@@ -5,12 +5,12 @@ Add a language with PANEL and register it in Driftkings.locale_support.
 Optional overrides: <config root>/locales/<code>.json (strings only).
 """
 import json
-import logging
+from Driftkings.logger import get_logger
 import os
 
 from Driftkings.locale_support import LANGUAGES, language_code as normalize
 
-logger = logging.getLogger('Driftkings.i18n.panel')
+logger = get_logger('Driftkings.i18n.panel')
 try:
     text_types = (str, unicode)
 except NameError:

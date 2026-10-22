@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import logging
+from Driftkings.logger import get_logger
 import math
 from CurrentVehicle import g_currentVehicle
 from dossiers2.ui.achievements import ACHIEVEMENT_BLOCK, MARK_OF_MASTERY_RECORD
@@ -23,7 +23,7 @@ from Driftkings.settings.service import settings_service
 from Driftkings.stats.vehinfo import getVehicleInfoData
 from Driftkings.views.marks_model import delta_model, milestone_model, number_locale
 
-LOG = logging.getLogger('Driftkings.MarksOnGunHangar')
+LOG = get_logger('Driftkings.MarksOnGunHangar')
 FEATURE = 'DriftkingsMarksOnGunHangar'
 RESOURCE = gameface_spec(FEATURE)['resource']
 g_controller = None

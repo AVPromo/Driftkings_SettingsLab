@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import logging
-LOG = logging.getLogger('Driftkings.views.battle.target_distance')
+from Driftkings.logger import get_logger
+LOG = get_logger('Driftkings.views.battle.target_distance')
 from Driftkings._constants import TARGET_DISTANCE
 from Driftkings.settings.service import settings_service
 """Presentation adapter for DistanceMarker; gameplay state stays in its component."""

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import logging
-LOG = logging.getLogger('Driftkings.views.hangar.hangar_preferences')
+from Driftkings.logger import get_logger
+LOG = get_logger('Driftkings.views.hangar.hangar_preferences')
 from Driftkings.interface_catalog import gameface_spec
 from Driftkings._constants import GLOBAL, HANGAR_PREFERENCES
 from Driftkings.settings.service import settings_service, affects

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import logging
-LOG = logging.getLogger('Driftkings.lobby.hangar_preferences')
+from Driftkings.logger import get_logger
+LOG = get_logger('Driftkings.lobby.hangar_preferences')
 from Driftkings.interface_catalog import gameface_spec
 from Driftkings.core.hooks import on_event
 from Driftkings.common.utils import events

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """Core-owned keyboard subscription for configuration hotkeys."""
-import logging
+from Driftkings.logger import get_logger
 
-LOG = logging.getLogger('Driftkings.Keyboard')
+LOG = get_logger('Driftkings.Keyboard')
 
 
 class KeyboardService(object):

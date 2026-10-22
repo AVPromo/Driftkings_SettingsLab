@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Version 2: XVM-shaped JSON, shared references, atomic multi-file saves."""
 import copy
-import logging
+from Driftkings.logger import get_logger
 import os
 
 from Driftkings.core.keycodes import valid_key_code
@@ -165,13 +165,13 @@ class PlayerPanelStore(JsonDocuments):
             if name=='battleLoading.json': obsolete_loading='tips' in saved
             parts.append(merge(default,saved))
         data=join(parts)
-        for message in validate(data): logging.getLogger('Driftkings.PlayerPanelPro').warning('Configuration: %s',message)
+        for message in validate(data): get_logger('Driftkings.PlayerPanelPro').warning('Configuration: %s',message)
         missing=[(os.path.join(self.directory,name),value) for name,value in zip(FILES,split(data)) if old or not os.path.isfile(os.path.join(self.directory,name)) or name=='battleLoading.json' and obsolete_loading]
         self.publish(missing)
         return data
 
     def save(self,data):
         data=join(split(data))
-        for message in validate(data): logging.getLogger('Driftkings.PlayerPanelPro').warning('Configuration: %s',message)
+        for message in validate(data): get_logger('Driftkings.PlayerPanelPro').warning('Configuration: %s',message)
         self.recover()
         self.publish([(os.path.join(self.directory,name),value) for name,value in zip(FILES,split(data))])

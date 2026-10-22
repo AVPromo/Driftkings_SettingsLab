@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Owned data bridge for annotations beside native crew slots."""
-import logging
+from Driftkings.logger import get_logger
 import sys
 import weakref
 from CurrentVehicle import g_currentVehicle
@@ -15,7 +15,7 @@ from Driftkings.views.hangar.common import HangarController, install_card, publi
 
 FEATURE = 'DriftkingsCrewProgression'
 RESOURCE = gameface_spec(FEATURE)['resource']
-LOG = logging.getLogger('Driftkings.CrewProgressionView')
+LOG = get_logger('Driftkings.CrewProgressionView')
 _config = None
 _installed = False
 

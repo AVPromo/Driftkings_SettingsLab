@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import logging
+from Driftkings.logger import get_logger
 import re
 from math import degrees
 from nations import NAMES
@@ -49,7 +49,7 @@ PRESET_TEMPLATES = {
     'driftkings': _card([_FIREPOWER, _GUN, _MOBILITY, _ARMOR, _SHELL], '#D6BE91')
 }
 TEMPLATE_INDEX_TO_KEY = {0: 'default', 1: 'minimal', 2: 'detailed', 3: 'full', 4: 'kmp', 5: 'ndo', 6: 'driftkings'}
-LOG = logging.getLogger('Driftkings.TargetInformation')
+LOG = get_logger('Driftkings.TargetInformation')
 config = Settings()
 g_flash = Flash()
 
