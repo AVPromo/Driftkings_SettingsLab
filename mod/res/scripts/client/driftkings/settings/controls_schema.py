@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Declarative control metadata, independent of storage and panel construction."""
 import copy
+import re
 
 
 def metadata(spec, **values):
@@ -71,8 +72,44 @@ def resolve(item, labels, values):
         tooltip = item.get('tooltip', '')
         if isinstance(tooltip, bytes):
             tooltip = tooltip.decode('utf-8')
-        item['tooltip'] = tooltip % {item['varName']: values[item['varName']]}
+        # Only a %(name)s macro is substituted; plain percentages in the text stay as written.
+        if '%(' in tooltip:
+            try:
+                tooltip = tooltip % {item['varName']: values[item['varName']]}
+            except (KeyError, TypeError, ValueError):
+                pass
+        item['tooltip'] = tooltip
     return item
+
+
+def description_keys(path):
+    """Catalog keys for a nested field, most specific first.
+
+    Repeated fields (carousel slots, panel sides, extra fields) share one text per
+    property: ``UI_tooltip_<parent>_<name>``, then ``UI_tooltip_<name>``. Left/Right
+    variants fall back to their common name.
+    """
+    names = [str(part) for part in path if not isinstance(part, int)]
+    if not names:
+        return []
+    last = names[-1]
+    variants = [last]
+    common = re.sub(r'(Left|Right)$', '', last)
+    if common and common != last:
+        variants.append(common)
+    keys = []
+    for name in variants:
+        keys.extend('UI_tooltip_%s_%s' % (parent, name) for parent in reversed(names[-3:-1]))
+        keys.append('UI_tooltip_' + name)
+    return keys
+
+
+def nested_description(path, labels):
+    for key in description_keys(path):
+        value = labels.get(key)
+        if value:
+            return value
+    return ''
 
 
 def field(path, title, kind='CheckBox', low=None, high=None, choices=None,

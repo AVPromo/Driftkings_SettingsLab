@@ -39,17 +39,19 @@ class SettingsRegistry(object):
     def describe(self, modID):
         config, defaults = self.entries[modID]
         values = config.data
-        from driftkings.settings.controls_schema import resolve
+        from driftkings.settings.controls_schema import nested_description, resolve
         controls = []
         if getattr(config, 'AUTOMATIC_CONTROLS', False):
             for key in sorted(values):
                 value = values[key]
                 kind = 'CheckBox' if type(value) is bool else 'Slider' if type(value) in (int, float) else 'TextInput' if isinstance(value, string_types) else None
                 if kind:
-                    controls.append({'type': kind, 'varName': key, 'text': config.i18n.get('UI_setting_' + key + '_text', key)})
+                    controls.append({'type': kind, 'varName': key, 'text': config.i18n.get('UI_setting_' + key + '_text', key),
+                                     'tooltip': config.i18n.get('UI_setting_' + key + '_tooltip', '')})
         else:
             if 'enabled' in values:
-                controls.append({'type': 'CheckBox', 'varName': 'enabled', 'text': config.i18n.get('UI_native_enabled', 'Enable mod')})
+                controls.append({'type': 'CheckBox', 'varName': 'enabled', 'text': config.i18n.get('UI_native_enabled', 'Enable mod'),
+                                 'tooltip': config.i18n.get('UI_native_enabled_tooltip', '')})
             columns = config.getControlColumns()
             if len(columns) != 2:
                 raise ValueError('Expected two settings columns: ' + config.NAME)
@@ -72,6 +74,8 @@ class SettingsRegistry(object):
             try: defaultValues[key] = copy.deepcopy(path_value(defaults, path))
             except (KeyError, IndexError, TypeError): defaultValues[key] = copy.deepcopy(active[key])
             control.setdefault('text', config.i18n.get('UI_setting_' + key + '_text', key))
+            if not control.get('tooltip'):
+                control['tooltip'] = nested_description(path, config.i18n)
             if control.get('jsonValue'):
                 for source in (active, defaultValues):
                     source[key] = json.dumps(source[key], ensure_ascii=False)

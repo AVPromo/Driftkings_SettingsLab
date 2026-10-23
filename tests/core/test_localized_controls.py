@@ -80,6 +80,35 @@ class LocalizedControlTests(RuntimeTest):
                         if declaration.get('type') != 'Empty':
                             self.assertTrue(resolved.get('text'), (code, config.NAME, declaration))
 
+    def test_every_control_has_a_description_in_every_language(self):
+        missing = []
+        for code, text in self.documents.items():
+            self.text = text
+            if not text.get('common', {}).get('UI_native_enabled_tooltip'):
+                missing.append((code, 'common', 'UI_native_enabled_tooltip'))
+            for definition in self.definitions:
+                config = definition()
+                for column in config.getControlColumns():
+                    for declaration in column:
+                        if declaration.get('type') in ('Empty', 'Label'):
+                            continue
+                        resolved = self.schema.resolve(declaration, config.i18n, config.data)
+                        path = declaration.get('path', [declaration.get('varName')])
+                        if not (resolved.get('tooltip') or self.schema.nested_description(path, config.i18n)):
+                            missing.append((code, config.NAME, declaration.get('varName')))
+        self.assertEqual(missing, [])
+
+    def test_nested_fields_share_descriptions_by_property(self):
+        keys = self.schema.description_keys(['carousel', 'normal', 'fields', 'tankName', 'dx'])
+        self.assertEqual(keys, ['UI_tooltip_tankName_dx', 'UI_tooltip_fields_dx', 'UI_tooltip_dx'])
+        keys = self.schema.description_keys(['loading', 'vehicleIconOffsetXLeft'])
+        self.assertEqual(keys[0], 'UI_tooltip_loading_vehicleIconOffsetXLeft')
+        self.assertIn('UI_tooltip_vehicleIconOffsetX', keys)
+        labels = {'UI_tooltip_extraFields_x': 'Field', 'UI_tooltip_x': 'Generic'}
+        self.assertEqual(self.schema.nested_description(['carousel', 'normal', 'extraFields', 3, 'x'], labels), 'Field')
+        self.assertEqual(self.schema.nested_description(['minimap', 'x'], labels), 'Generic')
+        self.assertEqual(self.schema.nested_description(['unknown'], labels), '')
+
     def test_distance_choices_and_team_tabs_use_each_selected_language(self):
         for code, text in self.documents.items():
             self.text = text
