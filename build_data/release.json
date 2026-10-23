@@ -14,6 +14,6 @@
     "Consolidate battle Gameface lifecycle, Flash text rendering and numeric conversion; preserve feature-specific settings.",
     "Use explicit imports and owned hooks, remove unused constants and replace legacy logging with visible exception reports.",
     "Centralize recoverable file publication and preserve strict updater path and JSON validation.",
-    "Beta: visual in-game checks of the refactored panels and a new automatic-update installation test remain pending."
+    "In-game validation completed: refactored panels and automatic-update installation tested and confirmed working."
   ]
 }
